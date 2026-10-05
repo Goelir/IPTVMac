@@ -1,4 +1,4 @@
 import Testing
 @testable import IPTVCore
 
-@Test func coreLoads() { #expect(iptvCoreVersion == "0.1") }
+@Test func itemTypesAreExactlyThree() { #expect(ItemType.allCases.count == 3) }
