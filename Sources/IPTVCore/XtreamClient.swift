@@ -78,8 +78,13 @@ public struct XtreamClient {
         return EPGEntry(title: tt, start: Date(timeIntervalSince1970: Double(s)), end: Date(timeIntervalSince1970: Double(e)))
     }
 
+    /// The current and upcoming programs of a live channel.
+    public func epgShort(streamId: String, limit: Int) async throws -> [EPGEntry] {
+        try await listings("get_short_epg", streamId, ["limit": String(limit)]).compactMap(entry)
+    }
+
     public func epgNow(streamId: String) async throws -> String? {
-        try await listings("get_short_epg", streamId, ["limit": "1"]).compactMap(entry).first?.title
+        try await epgShort(streamId: streamId, limit: 1).first?.title
     }
 
     public func epgArchive(streamId: String) async throws -> [EPGEntry] {

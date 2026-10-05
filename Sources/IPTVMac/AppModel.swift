@@ -24,10 +24,10 @@ final class AppModel {
     let secrets: SecretStore
     var accounts: [Account] = []
     var account: Account? { didSet { favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch() } }
-    var tab: ItemType = .live { didSet { selectedCategory = "__all"; loadCategories(); scheduleSearch() } }
+    var tab: ItemType = .live { didSet { leavePlayerForBrowsing(); selectedCategory = "__all"; loadCategories(); scheduleSearch() } }
     var categories: [IPTVCore.Category] = []
-    var selectedCategory = "__all" { didSet { scheduleSearch() } }
-    var searchText = "" { didSet { scheduleSearch() } }
+    var selectedCategory = "__all" { didSet { leavePlayerForBrowsing(); scheduleSearch() } }
+    var searchText = "" { didSet { leavePlayerForBrowsing(); scheduleSearch() } }
     var scope: SearchScopeChoice = .category { didSet { scheduleSearch() } }
     var results: [Item] = []
     var syncing = false
@@ -37,10 +37,13 @@ final class AppModel {
     var pip = false
     var openSeries: Item?
     var showGuide = false
+    var showDownloads = false
+    let downloads = DownloadManager()
     /// Set when an Xtream account has no stored password (e.g. after upgrading from the Keychain version).
     var passwordPrompt: Account?
     var favoriteKeys: Set<String> = []
     var epgNow: [String: String] = [:]
+    var schedule: [EPGEntry] = []      // current + upcoming programs of the channel being watched
     private var searchTask: Task<Void, Never>?
     private var pipController: PiPController?
 
@@ -168,6 +171,21 @@ final class AppModel {
                                   start: item.type == .live ? 0 : progress(type: item.type, streamId: item.streamId)))
     }
 
+    /// Movies only: live streams never end, and a series is downloaded per episode.
+    func download(_ item: Item) {
+        if let a = account, !hasPassword(a) { passwordPrompt = a; return }
+        guard item.type == .movie, let url = streamURL(item) else { return }
+        downloads.add(title: item.name, url: url, ext: item.containerExt ?? url.pathExtension)
+    }
+
+    func download(_ episodes: [Episode], of series: Item) {
+        guard let urls = xtreamURLs(), downloads.ensureFolder() else { return }
+        for e in episodes.sorted(by: { ($0.season, $0.number) < ($1.season, $1.number) }) {
+            let url = urls.series(id: e.streamId, ext: e.containerExt)
+            downloads.add(title: String(format: "%@ S%02dE%02d %@", series.name, e.season, e.number, e.title), url: url, ext: e.containerExt)
+        }
+    }
+
     func playEpisode(_ e: Episode, of series: Item) {
         guard let url = xtreamURLs()?.series(id: e.streamId, ext: e.containerExt) else { return }
         startPlayback(PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
@@ -193,6 +211,9 @@ final class AppModel {
         pip = false
         playing = nil
     }
+
+    /// Choosing a tab/category or searching while watching shows the list; the video keeps playing in the floating window.
+    func leavePlayerForBrowsing() { if playing != nil && !pip { enterPiP() } }
 
     func enterPiP() {
         guard let p = player, !pip else { return }
@@ -224,6 +245,16 @@ final class AppModel {
         _ = try? db.dbQueue.write { try UserData.toggleFavorite($0, accountId: aid, type: i.type, streamId: i.streamId) }
         loadFavorites()
         if selectedCategory == "__fav" { scheduleSearch() }
+    }
+
+    /// Keeps `schedule` fresh for the live channel being watched; ends when the calling task is cancelled.
+    func watchSchedule(of item: Item) async {
+        schedule = []
+        guard item.type == .live, let urls = xtreamURLs() else { return }
+        while !Task.isCancelled {
+            if let l = try? await XtreamClient(urls: urls).epgShort(streamId: item.streamId, limit: 3) { schedule = l }
+            try? await Task.sleep(for: .seconds(60))
+        }
     }
 
     func loadEPGNow(_ item: Item) async {

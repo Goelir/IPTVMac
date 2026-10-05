@@ -12,8 +12,8 @@ struct RootView: View {
         }
         .sheet(isPresented: $model.showGuide) { OnboardingView(isFirstRun: false) }
         .sheet(item: $model.openSeries) { SeriesView(series: $0) }
+        .sheet(isPresented: $model.showDownloads) { DownloadsView() }
         .sheet(item: $model.passwordPrompt) { PasswordPrompt(account: $0) }
-        .overlay { if let r = model.playing, !model.pip, let pm = model.player { PlayerScreen(request: r, pm: pm) } }
     }
 
     @ViewBuilder
@@ -35,12 +35,17 @@ struct RootView: View {
             .navigationSplitViewColumnWidth(min: 200, ideal: 240)
         } detail: {
             VStack(spacing: 0) {
-                UpdateBanner()
-                if model.wrappedValue.syncing { ProgressView(L("sync.running")).padding(6) }
-                if let m = model.wrappedValue.syncMessage {
-                    Text("\(L("sync.failed")): \(m). \(L("sync.notUpdated"))").font(.caption).foregroundStyle(.red).padding(6)
+                if let r = model.wrappedValue.playing, !model.wrappedValue.pip, let pm = model.wrappedValue.player {
+                    // Inside the detail column: the tabs, search and Back stay in the toolbar while watching.
+                    PlayerScreen(request: r, pm: pm)
+                } else {
+                    UpdateBanner()
+                    if model.wrappedValue.syncing { ProgressView(L("sync.running")).padding(6) }
+                    if let m = model.wrappedValue.syncMessage {
+                        Text("\(L("sync.failed")): \(m). \(L("sync.notUpdated"))").font(.caption).foregroundStyle(.red).padding(6)
+                    }
+                    ResultsView()
                 }
-                ResultsView()
             }
             .searchable(text: model.searchText, prompt: L("search.prompt"))
             .searchScopes(model.scope) {
@@ -69,6 +74,14 @@ struct RootView: View {
                             ForEach(model.wrappedValue.accounts) { Text($0.name).tag(Optional($0)) }
                         }
                     }
+                }
+                ToolbarItem {
+                    Button { model.wrappedValue.showDownloads = true } label: {
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.down.circle")
+                            if model.wrappedValue.downloads.activeCount > 0 { Text("\(model.wrappedValue.downloads.activeCount)").font(.caption).monospacedDigit() }
+                        }
+                    }.help(L("downloads.title"))
                 }
                 ToolbarItem { Button { Task { await model.wrappedValue.sync() } } label: { Image(systemName: "arrow.clockwise") } }
             }

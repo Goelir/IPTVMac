@@ -84,6 +84,7 @@ import GRDB
         }
         let c = XtreamClient(urls: urls, session: mockSession())
         #expect(try await c.epgNow(streamId: "1") == "Evening News")
+        #expect(try await c.epgShort(streamId: "1", limit: 3).map(\.title) == ["Evening News"])
         let arch = try await c.epgArchive(streamId: "1")
         #expect(arch == [EPGEntry(title: "Evening News", start: Date(timeIntervalSince1970: 1_700_000_000), end: Date(timeIntervalSince1970: 1_700_003_600))])
     }

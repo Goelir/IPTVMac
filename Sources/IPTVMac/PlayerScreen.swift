@@ -43,7 +43,10 @@ struct PlayerScreen: View {
             VStack {
                 HStack {
                     Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }.buttonStyle(.plain)
-                    Text(request.title).lineLimit(1)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(request.title).lineLimit(1)
+                        epgLines
+                    }
                     Spacer()
                     if let item = request.item {
                         Button { model.toggleFavorite(item) } label: {
@@ -57,7 +60,6 @@ struct PlayerScreen: View {
             }
             .foregroundStyle(.white)
         }
-        .ignoresSafeArea()
         .focusable()
         .focused($focused)
         .focusEffectDisabled()
@@ -89,8 +91,23 @@ struct PlayerScreen: View {
                 }
             }
         }
+        .task(id: request.id) { if let item = request.item, request.isLive { await model.watchSchedule(of: item) } else { model.schedule = [] } }
         .onChange(of: subScale) { pm.applySubtitleStyle() }
         .onChange(of: subDelay) { pm.applySubtitleStyle() }
+    }
+
+    /// Now / next from the channel's EPG (live channels only; empty when the provider has no guide).
+    @ViewBuilder private var epgLines: some View {
+        let now = Date()
+        let upcoming = model.schedule.filter { $0.end > now }
+        if request.isLive, let cur = upcoming.first {
+            Text("\(L("epg.now")): \(cur.title)  \(cur.start.formatted(date: .omitted, time: .shortened))–\(cur.end.formatted(date: .omitted, time: .shortened))")
+                .font(.caption).lineLimit(1)
+            if upcoming.count > 1 {
+                Text("\(L("epg.next")): \(upcoming[1].title)  \(upcoming[1].start.formatted(date: .omitted, time: .shortened))")
+                    .font(.caption).foregroundStyle(.white.opacity(0.7)).lineLimit(1)
+            }
+        }
     }
 
     private var controls: some View {

@@ -41,7 +41,10 @@ struct PosterCell: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { model.play(item) }
-        .contextMenu { Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) } }
+        .contextMenu {
+            Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) }
+            if item.type == .movie { Button(L("downloads.add")) { model.download(item) } }
+        }
     }
 }
 

@@ -31,6 +31,13 @@ struct SettingsView: View {
                 Slider(value: $subScale, in: 0.5...3) { Text("\(L("settings.subscale")): \(subScale, specifier: "%.1f")") }
                 Stepper("\(L("settings.subdelay")): \(subDelay, specifier: "%.1f")", value: $subDelay, in: -30...30, step: 0.5)
             }
+            Section(L("downloads.title")) {
+                HStack {
+                    Text(model.downloads.folderPath ?? L("downloads.notChosen")).lineLimit(1).truncationMode(.middle).foregroundStyle(.secondary)
+                    Spacer()
+                    Button(L("downloads.change")) { model.downloads.chooseFolder() }
+                }
+            }
             Section {
                 Text(String(format: L("update.current"), model.currentVersion)).foregroundStyle(.secondary)
                 Toggle(L("update.auto"), isOn: $autoCheck)

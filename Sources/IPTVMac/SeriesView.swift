@@ -21,10 +21,20 @@ struct SeriesView: View {
             else {
                 List {
                     ForEach(Dictionary(grouping: episodes, by: \.season).keys.sorted(), id: \.self) { s in
-                        Section("\(L("series.season")) \(s)") {
+                        Section {
                             ForEach(episodes.filter { $0.season == s }) { e in
-                                Text("\(e.number). \(e.title)").contentShape(Rectangle())
-                                    .onTapGesture { dismiss(); model.playEpisode(e, of: series) }
+                                HStack {
+                                    Text("\(e.number). \(e.title)").frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+                                        .onTapGesture { dismiss(); model.playEpisode(e, of: series) }
+                                    Button { model.download([e], of: series) } label: { Image(systemName: "arrow.down.circle") }
+                                        .buttonStyle(.plain).help(L("downloads.add"))
+                                }
+                            }
+                        } header: {
+                            HStack {
+                                Text("\(L("series.season")) \(s)")
+                                Spacer()
+                                Button(L("downloads.season")) { model.download(episodes.filter { $0.season == s }, of: series) }
                             }
                         }
                     }
