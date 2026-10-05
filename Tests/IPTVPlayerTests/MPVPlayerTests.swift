@@ -147,3 +147,17 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     for _ in 0..<60 where !p.isAtEnd { try await Task.sleep(for: .milliseconds(100)) }
     #expect(p.isAtEnd, "eof-reached never became true")
 }
+
+@Test func doubleSpeedAdvancesTwiceAsFast() async throws {
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    p.setProperty("vo", "null"); p.setProperty("ao", "null")
+    p.load(testVideo, start: 0)
+    for _ in 0..<40 where (p.double("time-pos") ?? 0) < 0.3 { try await Task.sleep(for: .milliseconds(100)) }
+    p.setProperty("speed", "2")
+    #expect(p.double("speed") == 2)
+    let t0 = p.double("time-pos") ?? 0
+    try await Task.sleep(for: .seconds(1))
+    let advanced = (p.double("time-pos") ?? 0) - t0
+    #expect(advanced > 1.5, "advanced \(advanced)s in 1s at 2x")
+}

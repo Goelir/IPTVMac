@@ -45,6 +45,12 @@ struct PlayerScreen: View {
                     Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }.buttonStyle(.plain)
                     Text(request.title).lineLimit(1)
                     Spacer()
+                    if let item = request.item {
+                        Button { model.toggleFavorite(item) } label: {
+                            Image(systemName: model.isFavorite(item) ? "star.fill" : "star").font(.title2)
+                                .foregroundStyle(model.isFavorite(item) ? .yellow : .white)
+                        }.buttonStyle(.plain).help(L(model.isFavorite(item) ? "fav.remove" : "fav.add"))
+                    }
                 }.padding().background(.black.opacity(0.5))
                 Spacer()
                 controls
@@ -60,6 +66,7 @@ struct PlayerScreen: View {
         .onKeyPress(.space) { pm.mpv.togglePause(); return .handled }
         .onKeyPress(.leftArrow) { pm.mpv.seek(by: -10); return .handled }
         .onKeyPress(.rightArrow) { pm.mpv.seek(by: 10); return .handled }
+        .onKeyPress("2") { if !request.isLive { pm.toggleDoubleSpeed() }; return .handled }
         .onKeyPress("f") { NSApp.keyWindow?.toggleFullScreen(nil); return .handled }
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             providers.first?.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { data, _ in
@@ -93,6 +100,11 @@ struct PlayerScreen: View {
                 Slider(value: Binding(get: { pm.position }, set: { pm.mpv.seek(to: $0) }), in: 0...max(pm.duration, 1))
                 Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption)
             } else { Spacer() }
+            if !request.isLive {   // a live stream cannot run faster than real time
+                Button { pm.toggleDoubleSpeed() } label: {
+                    Text("2×").fontWeight(.bold).foregroundStyle(pm.speed == 2 ? .yellow : .white)
+                }.help(L("player.speed"))
+            }
             trackMenu(type: "sub", title: L("player.subtitles"), prop: "sid", icon: "captions.bubble")
             trackMenu(type: "audio", title: L("player.audio"), prop: "aid", icon: "speaker.wave.2")
             if request.item?.tvArchive == true && request.isLive {

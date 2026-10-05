@@ -9,6 +9,7 @@ final class PlayerModel {
     var position = 0.0
     var duration = 0.0
     var paused = false
+    var speed = 1.0
     var tracks: [Track] = []
     var error: String?
     private(set) var request: PlayRequest
@@ -37,6 +38,8 @@ final class PlayerModel {
         }
     }
 
+    func toggleDoubleSpeed() { mpv.setProperty("speed", speed == 2 ? "1" : "2") }
+
     func applySubtitleStyle() {
         let d = UserDefaults.standard
         mpv.setProperty("sub-scale", String(d.object(forKey: "subScale") as? Double ?? 1.0))
@@ -46,6 +49,7 @@ final class PlayerModel {
     func replace(with new: PlayRequest) {
         if !request.isLive { onSaveProgress?(position, duration) }
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
+        mpv.setProperty("speed", "1")
         mpv.load(new.url, start: new.start)
     }
 
@@ -74,6 +78,7 @@ final class PlayerModel {
         }
         duration = mpv.double("duration") ?? 0
         paused = mpv.flag("pause")
+        speed = mpv.double("speed") ?? 1
         ticks += 1
         if ticks % 4 == 0 { tracks = mpv.tracks() }
         if ticks % 20 == 0, !request.isLive { onSaveProgress?(position, duration) }
