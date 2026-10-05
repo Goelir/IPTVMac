@@ -11,6 +11,8 @@ private func getProcAddress(_ ctx: UnsafeMutableRawPointer?, _ name: UnsafePoint
 public final class MPVVideoView: NSOpenGLView {
     private let player: MPVPlayer
     private var render: OpaquePointer?
+    /// Test seam: receives the centre pixel (r, g, b) of every frame right after mpv draws it.
+    public var onFrame: ((UInt8, UInt8, UInt8) -> Void)?
 
     public init(player: MPVPlayer) {
         self.player = player
@@ -61,6 +63,11 @@ public final class MPVVideoView: NSOpenGLView {
                 ]
                 mpv_render_context_render(render, &params)
             }
+        }
+        if let onFrame {
+            var px = [UInt8](repeating: 0, count: 4)
+            glReadPixels(GLint(size.width / 2), GLint(size.height / 2), 1, 1, GLenum(GL_RGBA), GLenum(GL_UNSIGNED_BYTE), &px)
+            onFrame(px[0], px[1], px[2])
         }
         glFlush()
         openGLContext?.flushBuffer()

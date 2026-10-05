@@ -24,7 +24,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 8 | Favorites, history, Keychain | done |
 | 9 | libmpv player kit (needs Homebrew mpv) | done |
 | 10 | App shell, browse, search UI | done |
-| 11 | Player screen, subtitles, series, catch-up | todo |
+| 11 | Player screen, subtitles, series, catch-up | done |
 | 12 | Onboarding, accounts, settings | done |
 | 13 | Localization he/en/ar | done |
 | 14 | README, app script, spec amendments | todo |
@@ -45,9 +45,10 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 ## Blockers / needs the user
 - Homebrew installed; mpv/pkgconf/dylibbundler install in progress (background). Task 9 starts when it finishes.
 - Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
-- Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
+- Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: Task 11 done (player screen, subtitle menu, series, catch-up; automated: OpenGL draws real frames, Hebrew .srt track; MANUAL pass still needed with a real source)
 - 2026-10-05: Task 9 done (libmpv wrapper + OpenGL view; real-engine tests pass (play, pause, tracks, error callback); mpv 2.5 API)
 - 2026-10-05: Homebrew installed by user (first attempt collided with my own `brew list` check; never run brew concurrently with an install). `brew install mpv pkgconf dylibbundler` running in background (log /tmp/brew-install.log). Meanwhile: spec amendments applied, README, scripts/make-app.sh + make-dmg.sh written (not yet run; Task 14/16 verification waits for the player).
 - 2026-10-05: Task 13 done (he/en/ar strings (60 keys, parity + plutil OK), app launches in he and ar)
@@ -64,4 +65,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 11: player screen, subtitles, series, catch-up.
+Task 15: floating PiP (reparent test first).
