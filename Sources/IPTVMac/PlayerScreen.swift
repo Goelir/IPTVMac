@@ -6,8 +6,12 @@ import IPTVPlayer
 /// Hosts the player's single video view. The view is moved here (and to the PiP window), never recreated.
 struct PlayerSurface: NSViewRepresentable {
     let model: PlayerModel
-    func makeNSView(context: Context) -> NSView { let h = NSView(); attach(h); return h }
-    func updateNSView(_ h: NSView, context: Context) { attach(h) }
+    /// Asked at attach time (not captured): while the PiP panel owns the video, SwiftUI still refreshes the main
+    /// window's old surface (with its old inputs, e.g. during the full-screen transition) and it must not steal
+    /// the view back, or the PiP window goes black.
+    var active: () -> Bool = { true }
+    func makeNSView(context: Context) -> NSView { let h = NSView(); if active() { attach(h) }; return h }
+    func updateNSView(_ h: NSView, context: Context) { if active() { attach(h) } }
     static func dismantleNSView(_ h: NSView, coordinator: ()) { h.subviews.forEach { $0.removeFromSuperview() } }
     private func attach(_ h: NSView) {
         let v = model.videoView
@@ -34,7 +38,7 @@ struct PlayerScreen: View {
     var body: some View {
         ZStack {
             Color.black
-            PlayerSurface(model: pm)
+            PlayerSurface(model: pm, active: { [model] in !model.pip })
             if let err = pm.error {
                 VStack(spacing: 12) {
                     Text(err).foregroundStyle(.white)
