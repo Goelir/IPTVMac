@@ -7,6 +7,7 @@ struct SettingsView: View {
     @AppStorage("prefAudioLang") private var audioLang = ""
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
+    @AppStorage("openFullscreen") private var openFullscreen = true
     @AppStorage("autoCheckUpdates") private var autoCheck = true
     @AppStorage("autoInstallUpdates") private var autoInstall = true
     @State private var editing: Account?
@@ -30,6 +31,9 @@ struct SettingsView: View {
                 TextField(L("settings.language.audio"), text: $audioLang, prompt: Text("he,en"))
                 Slider(value: $subScale, in: 0.5...3) { Text("\(L("settings.subscale")): \(subScale, specifier: "%.1f")") }
                 Stepper("\(L("settings.subdelay")): \(subDelay, specifier: "%.1f")", value: $subDelay, in: -30...30, step: 0.5)
+            }
+            Section {
+                Toggle(L("settings.fullscreen"), isOn: $openFullscreen)
             }
             Section(L("downloads.title")) {
                 HStack {

@@ -101,3 +101,4 @@
 "downloads.hint" = "Downloads run one at a time. Many providers allow a single connection, so playing while downloading can fail. Unfinished downloads are not kept when the app quits.";
 "epg.now" = "Now";
 "epg.next" = "Next";
+"settings.fullscreen" = "Open playback in full screen (controls hide until you move the mouse)";

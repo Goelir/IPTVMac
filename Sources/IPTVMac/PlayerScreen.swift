@@ -26,6 +26,8 @@ struct PlayerScreen: View {
     @State private var showCatchup = false
     @State private var importing = false
     @FocusState private var focused: Bool
+    @State private var showBars = true
+    @State private var hideTask: Task<Void, Never>?
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
 
@@ -59,15 +61,18 @@ struct PlayerScreen: View {
                 controls
             }
             .foregroundStyle(.white)
+            .opacity(barsVisible ? 1 : 0).allowsHitTesting(barsVisible)
+            .animation(.easeInOut(duration: 0.2), value: barsVisible)
         }
+        .onContinuousHover { if case .active = $0 { revealBars() } }
         .focusable()
         .focused($focused)
         .focusEffectDisabled()
-        .onAppear { focused = true }
+        .onAppear { focused = true; revealBars() }
         .onKeyPress(.escape) { model.stopPlayback(); return .handled }
-        .onKeyPress(.space) { pm.mpv.togglePause(); return .handled }
-        .onKeyPress(.leftArrow) { pm.mpv.seek(by: -10); return .handled }
-        .onKeyPress(.rightArrow) { pm.mpv.seek(by: 10); return .handled }
+        .onKeyPress(.space) { revealBars(); pm.mpv.togglePause(); return .handled }
+        .onKeyPress(.leftArrow) { revealBars(); pm.mpv.seek(by: -10); return .handled }
+        .onKeyPress(.rightArrow) { revealBars(); pm.mpv.seek(by: 10); return .handled }
         .onKeyPress("2") { if !request.isLive { pm.toggleDoubleSpeed() }; return .handled }
         .onKeyPress("f") { NSApp.keyWindow?.toggleFullScreen(nil); return .handled }
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
@@ -107,6 +112,20 @@ struct PlayerScreen: View {
                 Text("\(L("epg.next")): \(upcoming[1].title)  \(upcoming[1].start.formatted(date: .omitted, time: .shortened))")
                     .font(.caption).foregroundStyle(.white.opacity(0.7)).lineLimit(1)
             }
+        }
+    }
+
+    private var barsVisible: Bool { showBars || pm.paused || pm.error != nil }
+
+    /// Title bar and controls fade out after 3 s without mouse movement, so a full-screen video shows nothing on top.
+    private func revealBars() {
+        showBars = true
+        hideTask?.cancel()
+        hideTask = Task {
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            showBars = false
+            NSCursor.setHiddenUntilMouseMoves(true)
         }
     }
 

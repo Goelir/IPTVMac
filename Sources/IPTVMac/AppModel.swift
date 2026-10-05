@@ -46,6 +46,20 @@ final class AppModel {
     var schedule: [EPGEntry] = []      // current + upcoming programs of the channel being watched
     private var searchTask: Task<Void, Never>?
     private var pipController: PiPController?
+    private var enteredFullscreen = false
+
+    var openFullscreen: Bool { UserDefaults.standard.object(forKey: "openFullscreen") as? Bool ?? true }
+    /// True while the video fills the window (sidebar hidden too).
+    var playerFullscreen: Bool { playing != nil && !pip && openFullscreen }
+
+    /// Full screen only for the main window (never the floating PiP panel). `enteredFullscreen` makes us leave only what we entered.
+    private func setFullscreen(_ on: Bool) {
+        guard let w = NSApp.windows.first(where: { $0.isVisible && !($0 is NSPanel) && $0.canBecomeMain }) else { return }
+        let isFull = w.styleMask.contains(.fullScreen)
+        if on == isFull { return }
+        if on { enteredFullscreen = true; w.toggleFullScreen(nil) }
+        else if enteredFullscreen { enteredFullscreen = false; w.toggleFullScreen(nil) }
+    }
 
     // MARK: Updates
     var update: AppUpdate?
@@ -194,6 +208,7 @@ final class AppModel {
 
     func startPlayback(_ r: PlayRequest) {
         if pip { exitPiP() }
+        if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
         if let p = player { p.replace(with: r); playing = r; return }
         playing = r
@@ -210,6 +225,7 @@ final class AppModel {
         player?.close(); player = nil
         pip = false
         playing = nil
+        setFullscreen(false)
     }
 
     /// Choosing a tab/category or searching while watching shows the list; the video keeps playing in the floating window.
@@ -218,6 +234,7 @@ final class AppModel {
     func enterPiP() {
         guard let p = player, !pip else { return }
         pip = true
+        setFullscreen(false)
         let c = PiPController(model: p, title: playing?.title ?? "",
                               onReturn: { [weak self] in self?.exitPiP() },
                               onClose: { [weak self] in self?.stopPlayback() })
@@ -228,6 +245,7 @@ final class AppModel {
     func exitPiP() {
         pipController?.dismiss(); pipController = nil
         pip = false
+        if playing != nil && openFullscreen { setFullscreen(true) }
     }
 
     func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {

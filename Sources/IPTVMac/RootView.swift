@@ -4,6 +4,7 @@ import IPTVCore
 struct RootView: View {
     @Environment(AppModel.self) var model
     @State private var catFilter = ""
+    @State private var columns = NavigationSplitViewVisibility.automatic
 
     var body: some View {
         @Bindable var model = model
@@ -18,7 +19,7 @@ struct RootView: View {
 
     @ViewBuilder
     private func main(model: Bindable<AppModel>) -> some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columns) {
             VStack(spacing: 0) {
                 TextField(L("cat.filter"), text: $catFilter).textFieldStyle(.roundedBorder).padding(8)
                 List(selection: model.selectedCategory) {
@@ -86,5 +87,6 @@ struct RootView: View {
                 ToolbarItem { Button { Task { await model.wrappedValue.sync() } } label: { Image(systemName: "arrow.clockwise") } }
             }
         }
+        .onChange(of: model.wrappedValue.playerFullscreen) { _, full in columns = full ? .detailOnly : .automatic }
     }
 }
