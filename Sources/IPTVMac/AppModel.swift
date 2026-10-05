@@ -62,8 +62,12 @@ final class AppModel {
         if tb.isVisible == hide { tb.isVisible = !hide }
     }
 
-    private func setFullscreen(_ on: Bool) {
+    private func setFullscreen(_ on: Bool, tries: Int = 10) {
         guard let w = mainWindow else { return }
+        if w.attachedSheet != nil, tries > 0 {   // a window ignores full-screen requests while a sheet (e.g. the episode list) is closing
+            Task { try? await Task.sleep(for: .milliseconds(200)); if on == (self.playing != nil && self.openFullscreen) { self.setFullscreen(on, tries: tries - 1) } }
+            return
+        }
         let isFull = w.styleMask.contains(.fullScreen)
         if on == isFull { return }
         if on { enteredFullscreen = true; w.toggleFullScreen(nil) }

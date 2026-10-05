@@ -96,6 +96,10 @@ struct PlayerScreen: View {
                 }
             }
         }
+        .task {   // SwiftUI re-applies the toolbar whenever its content changes, so keep the full-screen state enforced
+            while !Task.isCancelled { model.updateToolbar(); try? await Task.sleep(for: .milliseconds(300)) }
+        }
+        .onDisappear { model.updateToolbar() }
         .task(id: request.id) { if let item = request.item, request.isLive { await model.watchSchedule(of: item) } else { model.schedule = [] } }
         .onChange(of: subScale) { pm.applySubtitleStyle() }
         .onChange(of: subDelay) { pm.applySubtitleStyle() }
