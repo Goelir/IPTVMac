@@ -14,7 +14,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 ## Task board
 | # | Task | Status |
 |---|------|--------|
-| 1 | Scaffold (core-only first, see rulings) | todo |
+| 1 | Scaffold (core-only first, see rulings) | done |
 | 2 | Models + database | todo |
 | 3 | M3U parser | todo |
 | 4 | Xtream URLs | todo |
@@ -42,7 +42,8 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Task 1 done (core-only SwiftPM scaffold, GRDB 7.11.1 resolved, Swift Testing works with Command Line Tools, LICENSE GPL-3.0).
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 1: core-only scaffold, then Task 2.
+Task 2: models + AppDatabase (TDD).
