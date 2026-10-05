@@ -23,7 +23,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 7 | M3U sync | done |
 | 8 | Favorites, history, Keychain | done |
 | 9 | libmpv player kit (needs Homebrew mpv) | todo |
-| 10 | App shell, browse, search UI | todo |
+| 10 | App shell, browse, search UI | done |
 | 11 | Player screen, subtitles, series, catch-up | todo |
 | 12 | Onboarding, accounts, settings | todo |
 | 13 | Localization he/en/ar | todo |
@@ -40,12 +40,15 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 
 - Execution order changed: UI tasks 10, 12, 13 run before 9 (they compile without mpv: IPTVMac target depends on IPTVCore only until Task 9/11 add IPTVPlayer). Tasks 9, 11, 15, 16 wait for Homebrew+mpv. Cost if wrong: none.
 
+- ALWAYS build/test with `scripts/swift.sh` (not bare `swift`): the macOS 27 SDK needs Xcode's SwiftUIMacros plugin; wrapper uses the 26.5 SDK. Cost if wrong: none.
+
 ## Blockers / needs the user
 - Homebrew + `mpv pkgconf dylibbundler` must be installed before Task 9 (Homebrew install runs a remote script with sudo). Will ask when Task 9 starts.
 - Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Task 10 done (UI shell builds and launches (SwiftUI, search, tabs, sidebar); build via scripts/swift.sh (SDK 26.5))
 - 2026-10-05: Task 8 done (favorites, history, Keychain store; core complete: 34 tests pass)
 - 2026-10-05: Task 7 done (M3U sync tests; network tests share one serial suite; 30 tests pass x3)
 - 2026-10-05: Task 6 done (Xtream client + sync + EPG + episodes, 27 tests pass)
@@ -57,4 +60,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 10 (UI shell, no mpv needed yet), then 12, 13; then ask user to install Homebrew+mpv for 9, 11, 15, 16.
+Task 12: onboarding, accounts, settings.

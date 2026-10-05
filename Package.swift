@@ -11,6 +11,11 @@ let package = Package(
     ],
     targets: [
         .target(name: "IPTVCore", dependencies: [.product(name: "GRDB", package: "GRDB.swift")]),
+        .executableTarget(
+            name: "IPTVMac",
+            dependencies: ["IPTVCore"],   // IPTVPlayer is added with Task 9/11
+            resources: [.process("Resources")]
+        ),
         // ponytail: Command Line Tools only: the swift-testing macro plugin is not found on rebuilds without this flag.
         .testTarget(name: "IPTVCoreTests", dependencies: ["IPTVCore"],
                     swiftSettings: [.unsafeFlags(["-plugin-path", "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing"])]),
