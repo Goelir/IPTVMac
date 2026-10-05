@@ -27,6 +27,14 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 </dict></plist>
 PLIST
 dylibbundler -od -b -x "$APP/Contents/MacOS/IPTVMac" -d "$APP/Contents/Frameworks" -p @executable_path/../Frameworks -s /opt/homebrew/lib
+# dylibbundler adds one identical LC_RPATH per bundled dependency, to the binary and to every dylib; dyld refuses
+# duplicates and the app crashes at launch. Everything is already referenced as @executable_path/../Frameworks/...,
+# so the rpath entries are not needed: remove them all.
+for f in "$APP/Contents/MacOS/IPTVMac" "$APP"/Contents/Frameworks/*.dylib; do
+  while otool -l "$f" | grep -q "path @executable_path/../Frameworks/ "; do
+    install_name_tool -delete_rpath "@executable_path/../Frameworks/" "$f" 2>/dev/null || break
+  done
+done
 find "$APP/Contents/Frameworks" -name '*.dylib' -exec codesign --force --sign - {} \;
 codesign --force --deep --sign - "$APP"
 echo "Built $APP"

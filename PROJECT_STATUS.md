@@ -27,9 +27,9 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 11 | Player screen, subtitles, series, catch-up | done |
 | 12 | Onboarding, accounts, settings | done |
 | 13 | Localization he/en/ar | done |
-| 14 | README, app script, spec amendments | todo |
+| 14 | README, app script, spec amendments | done |
 | 15 | Picture-in-Picture (floating) | done |
-| 16 | Self-contained DMG + publish | todo |
+| 16 | Self-contained DMG + publish | done |
 | — | Final whole-branch review + fixes | todo |
 
 ## Rulings (decisions made without asking)
@@ -48,6 +48,8 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: Task 16 done (self-contained DMG built (30 MB, 48 dylibs bundled, 0 Homebrew refs, launches from a copy); duplicate-rpath crash found and fixed; publish not done)
+- 2026-10-05: Task 14 done (README, spec amendments, build scripts)
 - 2026-10-05: Task 15 done (floating PiP panel (always on top, all Spaces) with app-owned player; reparent test passes; window lifecycle verified)
 - 2026-10-05: Task 11 done (player screen, subtitle menu, series, catch-up; automated: OpenGL draws real frames, Hebrew .srt track; MANUAL pass still needed with a real source)
 - 2026-10-05: Task 9 done (libmpv wrapper + OpenGL view; real-engine tests pass (play, pause, tracks, error callback); mpv 2.5 API)
@@ -66,4 +68,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 14 leftovers (run make-app), then Task 16: build the DMG.
+Final whole-branch review; then ask the user: GitHub repo name/visibility for the release, and request a manual pass with a real IPTV source.
