@@ -5,4 +5,7 @@
 # Usage: scripts/swift.sh build | test | run IPTVMac ...
 SDK=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk
 [ -d "$SDK" ] && export SDKROOT="$SDK"
+# Homebrew tools (pkg-config, mpv) for the libmpv system library target.
+export PATH="/opt/homebrew/bin:$PATH"
+export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
 exec swift "$@"

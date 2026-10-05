@@ -22,7 +22,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 6 | Xtream client + sync | done |
 | 7 | M3U sync | done |
 | 8 | Favorites, history, Keychain | done |
-| 9 | libmpv player kit (needs Homebrew mpv) | todo |
+| 9 | libmpv player kit (needs Homebrew mpv) | done |
 | 10 | App shell, browse, search UI | done |
 | 11 | Player screen, subtitles, series, catch-up | todo |
 | 12 | Onboarding, accounts, settings | done |
@@ -48,6 +48,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Task 9 done (libmpv wrapper + OpenGL view; real-engine tests pass (play, pause, tracks, error callback); mpv 2.5 API)
 - 2026-10-05: Homebrew installed by user (first attempt collided with my own `brew list` check; never run brew concurrently with an install). `brew install mpv pkgconf dylibbundler` running in background (log /tmp/brew-install.log). Meanwhile: spec amendments applied, README, scripts/make-app.sh + make-dmg.sh written (not yet run; Task 14/16 verification waits for the player).
 - 2026-10-05: Task 13 done (he/en/ar strings (60 keys, parity + plutil OK), app launches in he and ar)
 - 2026-10-05: Task 12 done (onboarding guide, accounts, settings; 100k-item search perf test <250ms; 35 tests pass)
@@ -63,4 +64,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-BLOCKED on user: install Homebrew + mpv pkgconf dylibbundler (needed by Tasks 9, 11, 15, 16). After that: Task 9.
+Task 11: player screen, subtitles, series, catch-up.
