@@ -36,6 +36,8 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Work on branch `build/v0.1` in the repo itself, no separate worktree: brand-new repo with only docs, nothing to isolate. Cost if wrong: none.
 - Tasks 2–8 (core, no mpv) run first with a core-only `Package.swift`; `CLibMPV`/`IPTVPlayer`/`IPTVMac` targets are added at Task 9, after Homebrew+mpv exist. Reason: the machine has no Homebrew/mpv and installing Homebrew needs sudo, which needs the user's OK. Cost if wrong: one Package.swift edit.
 
+- Task 1: test target has an `unsafeFlags -plugin-path` in Package.swift: with Command Line Tools only, rebuilds fail to find the swift-testing macro plugin (XCTest is not installed either). Remove once Xcode is installed.
+
 ## Blockers / needs the user
 - Homebrew + `mpv pkgconf dylibbundler` must be installed before Task 9 (Homebrew install runs a remote script with sudo). Will ask when Task 9 starts.
 - Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
