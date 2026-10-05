@@ -49,10 +49,11 @@ Deferred minors: browse limit 5000; Hebrew prefix letters/niqqud in search; live
 ## Blockers / needs the user
 - Homebrew installed; mpv/pkgconf/dylibbundler install in progress (background). Task 9 starts when it finishes.
 - **Ask the user:** which macOS version their Mac runs (the app needs 14+; the bundled player now supports 11+). If older than 14 the app itself cannot run (SwiftUI @Observable etc.).
-- Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
+- Published. Still open: user's macOS version; manual pass with a real IPTV source.
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: PUBLISHED https://github.com/Goelir/IPTVMac (public, main = build/v0.1). Release v0.1.0 with IPTVMac.dmg attached.
 - 2026-10-05: Task 16 done (final review fixes applied (47 tests), DMG rebuilt 13 MB sha256 f8e9fd54..., selftest ok)
 - 2026-10-05: Task 16 done (bundled libmpv switched to media-kit build (minos 11, 18 dylibs, DMG 13 MB) after user's 'not compatible with this macOS' error; selftest flag)
 - 2026-10-05: Task 16 done (self-contained DMG built (30 MB, 48 dylibs bundled, 0 Homebrew refs, launches from a copy); duplicate-rpath crash found and fixed; publish not done)
@@ -75,4 +76,4 @@ Deferred minors: browse limit 5000; Hebrew prefix letters/niqqud in search; live
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Waiting for the user: macOS version, GitHub repo/visibility for the release, manual pass with a real IPTV source. Then: merge build/v0.1 into main (finishing-a-development-branch).
+Wait for the user: macOS version, results of a manual pass with a real IPTV source, decisions on deferred minors (Hebrew search, browse limit).
