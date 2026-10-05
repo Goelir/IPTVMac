@@ -4,9 +4,15 @@ A native macOS IPTV player for Xtream Codes and M3U sources. Fast search, built-
 
 ## Install
 
-Download `IPTVMac.dmg` from the Releases page, open it and drag the **IPTVMac** icon onto the **Applications** icon in the window (not the .dmg file itself). Nothing else to install: the video player (libmpv) is inside the app.
+**Easiest (no warning from macOS).** Paste this line in Terminal:
 
-The app is not notarized (no Apple Developer ID), so macOS blocks the first launch. To open it:
+```
+curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash
+```
+
+It downloads the latest release, checks the SHA-256 published in the release notes, copies IPTVMac to `/Applications` and opens it. Why it works: IPTVMac is not notarized (that needs a paid Apple Developer ID), and macOS blocks apps that a browser marked as "downloaded from the internet". A file fetched with `curl` is not marked, so there is nothing to bypass. Read [install.sh](install.sh) first if you like; it is short. After this, the app updates itself.
+
+**Or by hand.** Download `IPTVMac.dmg` from the Releases page, open it and drag the **IPTVMac** icon onto the **Applications** icon in the window (not the .dmg file itself). Nothing else to install: the video player (libmpv) is inside the app. The first launch is blocked by macOS, so:
 
 - macOS 15 and later: try to open the app once, then go to **System Settings > Privacy & Security**, scroll down and click **Open Anyway** next to IPTVMac.
 - Or in Terminal: `xattr -dr com.apple.quarantine /Applications/IPTVMac.app`
