@@ -12,9 +12,13 @@ The app is not notarized. On first launch macOS may block it: right-click the ap
 
 The app opens a 3-step guide. Xtream Codes: server address (`http://host:8080`), username, password. M3U: a name and the playlist link.
 
+## Third-party components
+
+The release bundles prebuilt [libmpv](https://mpv.io) (mpv 0.36, ffmpeg 6, GPL build) from [media-kit/libmpv-darwin-build](https://github.com/media-kit/libmpv-darwin-build) v0.7.3 (sha256 `9bb168ec908b4801f4231f411e3278a0aea644a2b03ce375c880d2813ab7f949`). `scripts/make-app.sh` downloads and verifies it; source for those components is available from the projects linked above. Search and storage use [GRDB.swift](https://github.com/groue/GRDB.swift) (MIT).
+
 ## Build from source
 
-    brew install mpv pkgconf dylibbundler
+    brew install mpv pkgconf     # mpv only supplies the C headers to compile against
     scripts/swift.sh test        # core tests
     scripts/swift.sh run IPTVMac # run
     scripts/make-dmg.sh          # builds build/IPTVMac.dmg
