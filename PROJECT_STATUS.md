@@ -48,6 +48,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: Task 16 done (bundled libmpv switched to media-kit build (minos 11, 18 dylibs, DMG 13 MB) after user's 'not compatible with this macOS' error; selftest flag)
 - 2026-10-05: Task 16 done (self-contained DMG built (30 MB, 48 dylibs bundled, 0 Homebrew refs, launches from a copy); duplicate-rpath crash found and fixed; publish not done)
 - 2026-10-05: Task 14 done (README, spec amendments, build scripts)
 - 2026-10-05: Task 15 done (floating PiP panel (always on top, all Spaces) with app-owned player; reparent test passes; window lifecycle verified)
@@ -68,4 +69,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Final whole-branch review; then ask the user: GitHub repo name/visibility for the release, and request a manual pass with a real IPTV source.
+Final-review fix pass (TDD): auth/password edit, URLCache password leak, EOF retry, timeshift timezone, M3U catch-up button, post-close crash, empty-sync guard; then ask user: macOS version + GitHub publish.

@@ -3,12 +3,15 @@ import Testing
 import Foundation
 @testable import IPTVPlayer
 
+/// Synthetic lavfi source by default; set IPTV_TEST_VIDEO to a real file to run the same tests with engines that lack lavfi.
+let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://lavfi:testsrc=size=320x240:rate=25"
+
 /// Real libmpv, synthetic lavfi source (no network, no display): proves the engine links, loads and plays.
 @Test func enginePlaysSyntheticSource() async throws {
     let p = MPVPlayer(subLang: nil, audioLang: nil)
     defer { p.shutdown() }
     p.setProperty("vo", "null")
-    p.load("av://lavfi:testsrc=size=320x240:rate=25", start: 0)
+    p.load(testVideo, start: 0)
     var pos = 0.0
     for _ in 0..<40 {
         try await Task.sleep(for: .milliseconds(100))
@@ -46,7 +49,7 @@ import Foundation
     var brightest = 0
     var frames = 0
     v.onFrame = { r, g, b in frames += 1; brightest = max(brightest, Int(r) + Int(g) + Int(b)) }
-    p.load("av://lavfi:testsrc=size=320x240:rate=25", start: 0)
+    p.load(testVideo, start: 0)
     for _ in 0..<50 where brightest <= 30 { try await Task.sleep(for: .milliseconds(100)) }
     #expect(frames > 0, "no frame was drawn")
     #expect(brightest > 30, "frames were drawn but all black (max rgb sum \(brightest))")
@@ -60,7 +63,7 @@ import Foundation
     let p = MPVPlayer(subLang: "he", audioLang: nil)
     defer { p.shutdown() }
     p.setProperty("vo", "null")
-    p.load("av://lavfi:testsrc=size=320x240:rate=25", start: 0)
+    p.load(testVideo, start: 0)
     try await Task.sleep(for: .milliseconds(500))
     p.addSubtitle(srt)
     var sub: Track?
@@ -94,7 +97,7 @@ import Foundation
     var brightest = 0
     var frames = 0
     v.onFrame = { r, g, b in frames += 1; brightest = max(brightest, Int(r) + Int(g) + Int(b)) }
-    p.load("av://lavfi:testsrc=size=320x240:rate=25", start: 0)
+    p.load(testVideo, start: 0)
     for _ in 0..<50 where brightest <= 30 { try await Task.sleep(for: .milliseconds(100)) }
     #expect(brightest > 30, "no non-black frame before the move")
 

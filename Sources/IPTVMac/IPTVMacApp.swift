@@ -6,6 +6,7 @@ struct IPTVMacApp: App {
     @State private var model = AppModel()
 
     init() {
+        if CommandLine.arguments.contains("--selftest") { SelfTest.run() }
         NSApplication.shared.setActivationPolicy(.regular)
         NSApplication.shared.activate(ignoringOtherApps: true)
         URLCache.shared = URLCache(memoryCapacity: 64 << 20, diskCapacity: 512 << 20)
