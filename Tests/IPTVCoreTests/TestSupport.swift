@@ -19,3 +19,27 @@ func addItem(_ db: AppDatabase, _ aid: Int64, _ name: String, type: ItemType = .
         try i.insert(d)
     }
 }
+
+final class MockURLProtocol: URLProtocol {
+    nonisolated(unsafe) static var handler: ((URLRequest) -> (Int, Data))?
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        let (code, data) = Self.handler!(request)
+        let resp = HTTPURLResponse(url: request.url!, statusCode: code, httpVersion: nil, headerFields: nil)!
+        client?.urlProtocol(self, didReceive: resp, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: data)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() {}
+}
+
+func mockSession() -> URLSession {
+    let c = URLSessionConfiguration.ephemeral
+    c.protocolClasses = [MockURLProtocol.self]
+    return URLSession(configuration: c)
+}
+
+func actionOf(_ r: URLRequest) -> String {
+    URLComponents(url: r.url!, resolvingAgainstBaseURL: false)?.queryItems?.first { $0.name == "action" }?.value ?? ""
+}

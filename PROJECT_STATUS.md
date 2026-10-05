@@ -19,7 +19,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 3 | M3U parser | done |
 | 4 | Xtream URLs | done |
 | 5 | Search | done |
-| 6 | Xtream client + sync | todo |
+| 6 | Xtream client + sync | done |
 | 7 | M3U sync | todo |
 | 8 | Favorites, history, Keychain | todo |
 | 9 | libmpv player kit (needs Homebrew mpv) | todo |
@@ -44,6 +44,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Task 6 done (Xtream client + sync + EPG + episodes, 27 tests pass)
 - 2026-10-05: Task 5 done (FTS search with scopes, 21 tests pass)
 - 2026-10-05: Task 4 done (Xtream URL builders, 15 tests total pass)
 - 2026-10-05: Task 3 done (M3U parser + classifier, 10 tests pass)
@@ -52,4 +53,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 6: Xtream client + sync (TDD).
+Task 7: M3U sync tests (impl already in SyncService).
