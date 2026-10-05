@@ -161,3 +161,30 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     let advanced = (p.double("time-pos") ?? 0) - t0
     #expect(advanced > 1.5, "advanced \(advanced)s in 1s at 2x")
 }
+
+/// The 2x button must not break subtitles: through the real OpenGL path the subtitle is drawn into the frames at 1x and at 2x.
+@MainActor @Test(arguments: [1.0, 2.0])
+func subtitleIsDrawnIntoFramesAtSpeed(_ speed: Double) async throws {
+    _ = NSApplication.shared
+    let srt = FileManager.default.temporaryDirectory.appendingPathComponent("iptvmac-draw-\(UUID().uuidString).srt")
+    try "1\n00:00:02,000 --> 00:00:08,000\n{\\an5}\u{2588}\u{2588}\u{2588}\u{2588}\u{2588}\u{2588}\n".write(to: srt, atomically: true, encoding: .utf8)
+    defer { try? FileManager.default.removeItem(at: srt) }
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    let v = MPVVideoView(player: p)
+    defer { p.shutdown() }
+    p.setProperty("ao", "null"); p.setProperty("sub-scale", "4"); p.setProperty("speed", String(speed))
+    let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 320, height: 240), styleMask: [.borderless], backing: .buffered, defer: false)
+    w.contentView = v; w.alphaValue = 0.01; w.orderFrontRegardless()
+    var inCue = 0, litInCue = 0
+    v.onFrame = { r, g, b in
+        let t = p.double("time-pos") ?? 0
+        if t > 3 && t < 7 { inCue += 1; if Int(r) + Int(g) + Int(b) > 300 { litInCue += 1 } }
+    }
+    p.load("av://lavfi:color=c=black:size=320x240:rate=25", start: 0)
+    for _ in 0..<60 where (p.double("time-pos") ?? 0) < 0.2 { try await Task.sleep(for: .milliseconds(100)) }
+    p.addSubtitle(srt)
+    for _ in 0..<80 where (p.double("time-pos") ?? 0) < 7.2 { try await Task.sleep(for: .milliseconds(100)) }
+    #expect(inCue > 0, "speed \(speed): no frames drawn while the cue was active")
+    #expect(litInCue > 0, "speed \(speed): \(inCue) frames drawn during the cue but the subtitle never appeared")
+    w.orderOut(nil)
+}
