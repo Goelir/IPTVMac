@@ -80,3 +80,4 @@
 "player.errorHint" = "If this keeps happening, check the source's password in Settings.";
 "password.title" = "Password needed";
 "password.body" = "Enter the password for “%@”. It is stored privately on this Mac.";
+"password.none" = "Continue without password";

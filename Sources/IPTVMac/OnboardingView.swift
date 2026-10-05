@@ -68,7 +68,7 @@ struct OnboardingView: View {
 
     private var formValid: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty &&
-        (kind == .xtream ? !server.isEmpty && !username.isEmpty && !password.isEmpty : !url.isEmpty)
+        (kind == .xtream ? !server.isEmpty && !username.isEmpty : !url.isEmpty)
     }
 
     private func test() async {

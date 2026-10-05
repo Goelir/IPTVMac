@@ -16,14 +16,13 @@ struct PasswordPrompt: View {
             HStack {
                 Spacer()
                 Button(L("player.close")) { dismiss() }
-                Button(L("onb.save")) { save() }.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction).disabled(password.isEmpty)
+                Button(L(password.isEmpty ? "password.none" : "onb.save")) { save() }.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction)
             }
         }
         .padding(24).frame(width: 420)
     }
 
     private func save() {
-        guard !password.isEmpty else { return }
         Task { await model.savePassword(password, for: account) }
     }
 }

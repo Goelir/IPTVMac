@@ -103,7 +103,7 @@ final class AppModel {
 
     func hasPassword(_ a: Account) -> Bool {
         guard a.kind == .xtream, let id = a.id else { return true }
-        return !(secrets.password(for: id) ?? "").isEmpty
+        return secrets.password(for: id) != nil  // "" = deliberately no password
     }
 
     func sync() async {
@@ -117,7 +117,7 @@ final class AppModel {
     }
 
     func savePassword(_ password: String, for a: Account) async {
-        guard let id = a.id, !password.isEmpty else { return }
+        guard let id = a.id else { return }
         do { try secrets.setPassword(password, for: id) } catch { syncMessage = error.localizedDescription; return }
         passwordPrompt = nil
         if account?.id != id { account = accounts.first { $0.id == id } }
