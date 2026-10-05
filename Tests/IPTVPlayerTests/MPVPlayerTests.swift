@@ -74,3 +74,37 @@ import Foundation
     try await Task.sleep(for: .milliseconds(200))
     #expect(p.tracks().first { $0.type == "sub" }?.selected == false)
 }
+
+/// Picture-in-Picture moves the single video view into another window; frames must keep being drawn there.
+@MainActor @Test func videoKeepsDrawingAfterMovingToAnotherWindow() async throws {
+    _ = NSApplication.shared
+    func makeWindow() -> NSWindow {
+        let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 320, height: 240), styleMask: [.borderless], backing: .buffered, defer: false)
+        w.alphaValue = 0.01
+        w.contentView = NSView()
+        w.orderFrontRegardless()
+        return w
+    }
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    let v = MPVVideoView(player: p)
+    defer { p.shutdown() }
+    let a = makeWindow(), b = makeWindow()
+    v.frame = a.contentView!.bounds; v.autoresizingMask = [.width, .height]
+    a.contentView!.addSubview(v)
+    var brightest = 0
+    var frames = 0
+    v.onFrame = { r, g, b in frames += 1; brightest = max(brightest, Int(r) + Int(g) + Int(b)) }
+    p.load("av://lavfi:testsrc=size=320x240:rate=25", start: 0)
+    for _ in 0..<50 where brightest <= 30 { try await Task.sleep(for: .milliseconds(100)) }
+    #expect(brightest > 30, "no non-black frame before the move")
+
+    v.removeFromSuperview()
+    v.frame = b.contentView!.bounds
+    b.contentView!.addSubview(v)
+    a.orderOut(nil)
+    brightest = 0; frames = 0
+    for _ in 0..<50 where brightest <= 30 { try await Task.sleep(for: .milliseconds(100)) }
+    #expect(frames > 0, "no frames drawn after the move")
+    #expect(brightest > 30, "frames after the move were black (max rgb sum \(brightest))")
+    b.orderOut(nil)
+}

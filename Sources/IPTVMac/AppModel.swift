@@ -37,6 +37,7 @@ final class AppModel {
     var favoriteKeys: Set<String> = []
     var epgNow: [String: String] = [:]
     private var searchTask: Task<Void, Never>?
+    private var pipController: PiPController?
 
     init() {
         do { db = try AppDatabase(path: try AppDatabase.defaultPath()) }
@@ -144,6 +145,7 @@ final class AppModel {
     }
 
     func startPlayback(_ r: PlayRequest) {
+        if pip { exitPiP() }
         playing = r
         if let p = player { p.replace(with: r); return }
         let p = PlayerModel(request: r)
@@ -155,9 +157,25 @@ final class AppModel {
     }
 
     func stopPlayback() {
+        pipController?.dismiss(); pipController = nil
         player?.close(); player = nil
         pip = false
         playing = nil
+    }
+
+    func enterPiP() {
+        guard let p = player, !pip else { return }
+        pip = true
+        let c = PiPController(model: p, title: playing?.title ?? "",
+                              onReturn: { [weak self] in self?.exitPiP() },
+                              onClose: { [weak self] in self?.stopPlayback() })
+        pipController = c
+        c.show()
+    }
+
+    func exitPiP() {
+        pipController?.dismiss(); pipController = nil
+        pip = false
     }
 
     func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {

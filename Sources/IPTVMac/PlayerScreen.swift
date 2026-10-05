@@ -97,6 +97,7 @@ struct PlayerScreen: View {
             if request.item?.tvArchive == true && request.isLive {
                 Button { showCatchup = true } label: { Image(systemName: "clock.arrow.circlepath") }.help(L("player.catchup"))
             }
+            Button { model.enterPiP() } label: { Image(systemName: "pip.enter") }.help(L("player.pip"))
             Button { NSApp.keyWindow?.toggleFullScreen(nil) } label: { Image(systemName: "arrow.up.left.and.arrow.down.right") }.help(L("player.fullscreen"))
         }
         .buttonStyle(.plain).font(.title3).padding().background(.black.opacity(0.5))

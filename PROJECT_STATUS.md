@@ -28,7 +28,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 12 | Onboarding, accounts, settings | done |
 | 13 | Localization he/en/ar | done |
 | 14 | README, app script, spec amendments | todo |
-| 15 | Picture-in-Picture (floating) | todo |
+| 15 | Picture-in-Picture (floating) | done |
 | 16 | Self-contained DMG + publish | todo |
 | — | Final whole-branch review + fixes | todo |
 
@@ -48,6 +48,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: Task 15 done (floating PiP panel (always on top, all Spaces) with app-owned player; reparent test passes; window lifecycle verified)
 - 2026-10-05: Task 11 done (player screen, subtitle menu, series, catch-up; automated: OpenGL draws real frames, Hebrew .srt track; MANUAL pass still needed with a real source)
 - 2026-10-05: Task 9 done (libmpv wrapper + OpenGL view; real-engine tests pass (play, pause, tracks, error callback); mpv 2.5 API)
 - 2026-10-05: Homebrew installed by user (first attempt collided with my own `brew list` check; never run brew concurrently with an install). `brew install mpv pkgconf dylibbundler` running in background (log /tmp/brew-install.log). Meanwhile: spec amendments applied, README, scripts/make-app.sh + make-dmg.sh written (not yet run; Task 14/16 verification waits for the player).
@@ -65,4 +66,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 15: floating PiP (reparent test first).
+Task 14 leftovers (run make-app), then Task 16: build the DMG.
