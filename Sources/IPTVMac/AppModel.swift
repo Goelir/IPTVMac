@@ -53,8 +53,17 @@ final class AppModel {
     var playerFullscreen: Bool { playing != nil && !pip && openFullscreen }
 
     /// Full screen only for the main window (never the floating PiP panel). `enteredFullscreen` makes us leave only what we entered.
+    private var mainWindow: NSWindow? { NSApp.windows.first { $0.isVisible && !($0 is NSPanel) && $0.canBecomeMain } }
+
+    /// While the video is full screen the window toolbar (tabs, search) is hidden too; it is back as soon as either ends.
+    func updateToolbar() {
+        guard let w = mainWindow, let tb = w.toolbar else { return }
+        let hide = playerFullscreen && w.styleMask.contains(.fullScreen)
+        if tb.isVisible == hide { tb.isVisible = !hide }
+    }
+
     private func setFullscreen(_ on: Bool) {
-        guard let w = NSApp.windows.first(where: { $0.isVisible && !($0 is NSPanel) && $0.canBecomeMain }) else { return }
+        guard let w = mainWindow else { return }
         let isFull = w.styleMask.contains(.fullScreen)
         if on == isFull { return }
         if on { enteredFullscreen = true; w.toggleFullScreen(nil) }
@@ -72,6 +81,11 @@ final class AppModel {
         do { db = try AppDatabase(path: try AppDatabase.defaultPath()) }
         catch { fatalError("Cannot open database: \(error)") }
         secrets = DatabaseSecretStore(db: db)
+        for n in [NSWindow.didEnterFullScreenNotification, NSWindow.didExitFullScreenNotification] {
+            NotificationCenter.default.addObserver(forName: n, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.updateToolbar() }
+            }
+        }
     }
 
     func start() async {
@@ -207,6 +221,7 @@ final class AppModel {
     }
 
     func startPlayback(_ r: PlayRequest) {
+        defer { updateToolbar() }
         if pip { exitPiP() }
         if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
@@ -226,6 +241,7 @@ final class AppModel {
         pip = false
         playing = nil
         setFullscreen(false)
+        updateToolbar()
     }
 
     /// Choosing a tab/category or searching while watching shows the list; the video keeps playing in the floating window.
@@ -235,6 +251,7 @@ final class AppModel {
         guard let p = player, !pip else { return }
         pip = true
         setFullscreen(false)
+        updateToolbar()
         let c = PiPController(model: p, title: playing?.title ?? "",
                               onReturn: { [weak self] in self?.exitPiP() },
                               onClose: { [weak self] in self?.stopPlayback() })
@@ -246,6 +263,7 @@ final class AppModel {
         pipController?.dismiss(); pipController = nil
         pip = false
         if playing != nil && openFullscreen { setFullscreen(true) }
+        updateToolbar()
     }
 
     func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {
