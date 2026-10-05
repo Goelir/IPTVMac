@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 import GRDB
 @testable import IPTVCore
@@ -51,4 +52,17 @@ private func run(_ db: AppDatabase, _ r: SearchRequest) throws -> [String] {
     let (db, a) = try makeDB()
     try addItem(db, a, "Mine")
     #expect(try run(db, .init(accountId: a + 1, text: "mine")).isEmpty)
+}
+
+@Test func searchStaysFastOn100kItems() throws {
+    let (db, a) = try makeDB()
+    try db.dbQueue.write { d in
+        let st = try d.makeStatement(sql: "INSERT INTO item (accountId,type,name,categoryId,streamId) VALUES (?,?,?,?,?)")
+        for i in 0..<100_000 { try st.execute(arguments: [a, "live", "Channel \(i) \(i % 7 == 0 ? "Sport" : "News")", "\(i % 50)", "\(i)"]) }
+    }
+    let t0 = Date()
+    let hits = try db.dbQueue.read { try Search.run($0, .init(accountId: a, text: "spor 99")) }
+    let ms = Date().timeIntervalSince(t0) * 1000
+    #expect(!hits.isEmpty)
+    #expect(ms < 250, "search took \(ms) ms")
 }

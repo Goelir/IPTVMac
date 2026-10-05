@@ -25,7 +25,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 | 9 | libmpv player kit (needs Homebrew mpv) | todo |
 | 10 | App shell, browse, search UI | done |
 | 11 | Player screen, subtitles, series, catch-up | todo |
-| 12 | Onboarding, accounts, settings | todo |
+| 12 | Onboarding, accounts, settings | done |
 | 13 | Localization he/en/ar | todo |
 | 14 | README, app script, spec amendments | todo |
 | 15 | Picture-in-Picture (floating) | todo |
@@ -48,6 +48,7 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Task 12 done (onboarding guide, accounts, settings; 100k-item search perf test <250ms; 35 tests pass)
 - 2026-10-05: Task 10 done (UI shell builds and launches (SwiftUI, search, tabs, sidebar); build via scripts/swift.sh (SDK 26.5))
 - 2026-10-05: Task 8 done (favorites, history, Keychain store; core complete: 34 tests pass)
 - 2026-10-05: Task 7 done (M3U sync tests; network tests share one serial suite; 30 tests pass x3)
@@ -60,4 +61,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Task 12: onboarding, accounts, settings.
+Task 13: localization he/en/ar.

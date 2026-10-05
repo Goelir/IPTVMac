@@ -93,13 +93,13 @@ final class AppModel {
     }
 
     func addAccount(_ a: Account, password: String?) async {
-        var a = a
+        let saved: Account
         do {
-            try await db.dbQueue.write { try a.insert($0) }
-            if let p = password, let id = a.id { try secrets.setPassword(p, for: id) }
+            saved = try await db.dbQueue.write { d in var x = a; try x.insert(d); return x }
+            if let p = password, let id = saved.id { try secrets.setPassword(p, for: id) }
         } catch { syncMessage = error.localizedDescription; return }
         loadAccounts()
-        account = accounts.first { $0.id == a.id }
+        account = accounts.first { $0.id == saved.id }
         await sync()
     }
 
