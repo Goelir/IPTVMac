@@ -25,7 +25,7 @@ struct SeriesView: View {
                             ForEach(episodes.filter { $0.season == s }) { e in
                                 HStack {
                                     Text("\(e.number). \(e.title)").frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
-                                        .onTapGesture { dismiss(); model.playEpisode(e, of: series) }
+                                        .onTapGesture { dismiss(); model.playEpisode(e, of: series, in: episodes) }
                                     Button { model.download([e], of: series) } label: { Image(systemName: "arrow.down.circle") }
                                         .buttonStyle(.plain).help(L("downloads.add"))
                                 }

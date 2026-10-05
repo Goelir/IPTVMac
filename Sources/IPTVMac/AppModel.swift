@@ -38,6 +38,12 @@ final class AppModel {
     var openSeries: Item?
     var showGuide = false
     var showDownloads = false
+    /// Episodes of the series being watched (set when an episode starts from the series screen) and the next-episode countdown.
+    var episodeQueue: [Episode] = []
+    var upNext: Episode?
+    var upNextSeconds = 0
+    private var upNextTask: Task<Void, Never>?
+    var autoNextEpisode: Bool { UserDefaults.standard.object(forKey: "autoNextEpisode") as? Bool ?? true }
     let downloads = DownloadManager()
     /// Set when an Xtream account has no stored password (e.g. after upgrading from the Keychain version).
     var passwordPrompt: Account?
@@ -218,11 +224,37 @@ final class AppModel {
         }
     }
 
-    func playEpisode(_ e: Episode, of series: Item) {
+    func playEpisode(_ e: Episode, of series: Item, in all: [Episode]? = nil) {
         guard let url = xtreamURLs()?.series(id: e.streamId, ext: e.containerExt) else { return }
+        cancelUpNext()
+        if let all { episodeQueue = all }
         startPlayback(PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
                                   episodeKey: "ep:\(e.streamId)", start: progress(type: .series, streamId: "ep:\(e.streamId)")))
     }
+
+    /// The episode ended: count down 5 s, then play the next one (cancelled by Cancel, by seeking back, or by leaving the player).
+    func episodeEndChanged(_ ended: Bool) {
+        guard ended else { cancelUpNext(); return }
+        guard autoNextEpisode, upNext == nil, let r = playing, let key = r.episodeKey, let series = r.item,
+              let next = EpisodeQueue.next(after: String(key.dropFirst(3)), in: episodeQueue) else { return }
+        upNext = next
+        upNextTask = Task { [weak self] in
+            for s in stride(from: 5, through: 1, by: -1) {
+                self?.upNextSeconds = s
+                try? await Task.sleep(for: .seconds(1))
+                if Task.isCancelled { return }
+            }
+            guard let self else { return }
+            self.playEpisode(next, of: series, in: self.episodeQueue)
+        }
+    }
+
+    func playUpNextNow() {
+        guard let next = upNext, let series = playing?.item else { return }
+        playEpisode(next, of: series, in: episodeQueue)
+    }
+
+    func cancelUpNext() { upNextTask?.cancel(); upNextTask = nil; upNext = nil }
 
     func startPlayback(_ r: PlayRequest) {
         defer { updateToolbar() }
@@ -236,10 +268,12 @@ final class AppModel {
             guard let self, let cur = self.playing else { return }
             self.saveProgress(cur, position: pos, duration: dur)
         }
+        p.onEndChanged = { [weak self] ended in self?.episodeEndChanged(ended) }
         player = p
     }
 
     func stopPlayback() {
+        cancelUpNext()
         pipController?.dismiss(); pipController = nil
         player?.close(); player = nil
         pip = false

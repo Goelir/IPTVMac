@@ -43,7 +43,7 @@
 | **EPG** | Current and next program in the channel list and in the player (Xtream). |
 | **Downloads** | Save movies and episodes (on Xtream series, a whole season at once) to a folder you choose; play them from the Downloads screen. |
 | **Sources** | Xtream Codes (server, username, password) and M3U (name and link). Several accounts. |
-| **Resume** | Movies and episodes continue where you stopped. |
+| **Resume and next episode** | Movies and episodes continue where you stopped; when an episode ends, the next one starts after a 5-second countdown (you can cancel it or turn it off). |
 | **Languages** | Hebrew, English and Arabic UI, with right-to-left layout. More languages are easy to add ([translations](#contributing-translations)). |
 | **Updates** | The app checks GitHub Releases, verifies a SHA-256 and updates itself. |
 

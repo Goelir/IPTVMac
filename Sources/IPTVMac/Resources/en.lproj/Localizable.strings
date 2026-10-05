@@ -102,3 +102,8 @@
 "epg.now" = "Now";
 "epg.next" = "Next";
 "settings.fullscreen" = "Open playback in full screen (controls hide until you move the mouse)";
+"next.title" = "Up next";
+"next.in" = "Playing in %d s";
+"next.now" = "Play now";
+"next.cancel" = "Cancel";
+"settings.autoNext" = "Play the next episode automatically";

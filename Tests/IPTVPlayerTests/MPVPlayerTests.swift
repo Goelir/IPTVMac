@@ -188,3 +188,18 @@ func subtitleIsDrawnIntoFramesAtSpeed(_ speed: Double) async throws {
     #expect(litInCue > 0, "speed \(speed): \(inCue) frames drawn during the cue but the subtitle never appeared")
     w.orderOut(nil)
 }
+
+/// keep-open pauses the player at the end of a file; the next file (next episode, another channel) must start playing.
+@Test func nextFileStartsPlayingAfterTheEndOfTheFirst() async throws {
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    p.setProperty("vo", "null"); p.setProperty("ao", "null")
+    p.load("av://lavfi:testsrc=size=320x240:rate=25:d=1", start: 0)
+    for _ in 0..<60 where !p.isAtEnd { try await Task.sleep(for: .milliseconds(100)) }
+    #expect(p.isAtEnd, "the first file never reached its end")
+    p.load(testVideo, start: 0)
+    var pos = 0.0
+    for _ in 0..<40 where pos < 0.5 { try await Task.sleep(for: .milliseconds(100)); pos = p.double("time-pos") ?? 0 }
+    #expect(pos > 0.5, "the second file did not start playing (time-pos \(pos), paused \(p.flag("pause")))")
+    #expect(!p.flag("pause"))
+}

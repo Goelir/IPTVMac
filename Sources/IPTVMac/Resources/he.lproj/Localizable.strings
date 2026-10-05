@@ -102,3 +102,8 @@
 "epg.now" = "עכשיו";
 "epg.next" = "אחר כך";
 "settings.fullscreen" = "פתח צפייה במסך מלא (הבקרים נעלמים עד שמזיזים את העכבר)";
+"next.title" = "הפרק הבא";
+"next.in" = "מתחיל בעוד %d שניות";
+"next.now" = "נגן עכשיו";
+"next.cancel" = "בטל";
+"settings.autoNext" = "מעבר אוטומטי לפרק הבא";

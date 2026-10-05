@@ -49,6 +49,9 @@ public final class MPVPlayer {
                         if d.reason == MPV_END_FILE_REASON_ERROR { self.lastError = String(cString: mpv_error_string(d.error)) }
                         self.onEndFile?(d.reason == MPV_END_FILE_REASON_ERROR)
                     }
+                case MPV_EVENT_FILE_LOADED:
+                    // keep-open leaves the player paused at the end of a file; the next file (episode, channel) must not inherit that.
+                    mpv_set_property_string(self.handle, "pause", "no")
                 case MPV_EVENT_SHUTDOWN: self.quitting = true
                 default: break
                 }

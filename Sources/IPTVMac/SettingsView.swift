@@ -8,6 +8,7 @@ struct SettingsView: View {
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
     @AppStorage("openFullscreen") private var openFullscreen = true
+    @AppStorage("autoNextEpisode") private var autoNext = true
     @AppStorage("autoCheckUpdates") private var autoCheck = true
     @AppStorage("autoInstallUpdates") private var autoInstall = true
     @State private var editing: Account?
@@ -34,6 +35,7 @@ struct SettingsView: View {
             }
             Section {
                 Toggle(L("settings.fullscreen"), isOn: $openFullscreen)
+                Toggle(L("settings.autoNext"), isOn: $autoNext)
             }
             Section(L("downloads.title")) {
                 HStack {

@@ -46,6 +46,21 @@ struct PlayerScreen: View {
                     Button(L("player.retry")) { pm.retry() }
                 }
             }
+            if let next = model.upNext {
+                VStack {
+                    Spacer()
+                    HStack(spacing: 14) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(L("next.title")): \(String(format: "S%02dE%02d", next.season, next.number)) \(next.title)").lineLimit(1)
+                            Text(String(format: L("next.in"), model.upNextSeconds)).font(.caption).foregroundStyle(.white.opacity(0.7))
+                        }
+                        Button(L("next.now")) { model.playUpNextNow() }.buttonStyle(.borderedProminent)
+                        Button(L("next.cancel")) { model.cancelUpNext() }
+                    }
+                    .padding(14).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(.white)
+                    .padding(.bottom, 90)
+                }
+            }
             VStack {
                 HStack {
                     Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }.buttonStyle(.plain)

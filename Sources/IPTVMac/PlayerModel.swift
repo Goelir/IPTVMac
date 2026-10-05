@@ -20,6 +20,9 @@ final class PlayerModel {
     private var retryPending = false
     private var lastPos = 0.0
     var onSaveProgress: ((Double, Double) -> Void)?
+    /// Called when a movie/episode reaches its end (true) and when it leaves the end again, e.g. after a seek back (false).
+    var onEndChanged: ((Bool) -> Void)?
+    private var wasAtEnd = false
 
     init(request: PlayRequest) {
         let d = UserDefaults.standard
@@ -48,6 +51,7 @@ final class PlayerModel {
 
     func replace(with new: PlayRequest) {
         if !request.isLive { onSaveProgress?(position, duration) }
+        wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
         mpv.setProperty("speed", "1")
         mpv.load(new.url, start: new.start)
@@ -77,6 +81,10 @@ final class PlayerModel {
             if mpv.isAtEnd && error == nil { handleFailure() }
         }
         duration = mpv.double("duration") ?? 0
+        if !request.isLive {
+            let atEnd = mpv.isAtEnd && duration > 0
+            if atEnd != wasAtEnd { wasAtEnd = atEnd; onEndChanged?(atEnd) }
+        }
         paused = mpv.flag("pause")
         speed = mpv.double("speed") ?? 1
         ticks += 1
