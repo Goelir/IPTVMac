@@ -30,6 +30,8 @@ final class AppModel {
     var syncing = false
     var syncMessage: String?
     var playing: PlayRequest?
+    var player: PlayerModel?
+    var pip = false
     var openSeries: Item?
     var showGuide = false
     var favoriteKeys: Set<String> = []
@@ -131,14 +133,31 @@ final class AppModel {
     func play(_ item: Item) {
         if item.type == .series && item.directURL == nil { openSeries = item; return }
         guard let url = streamURL(item) else { syncMessage = IPTVError.badConfig.localizedDescription; return }
-        playing = PlayRequest(title: item.name, url: url, isLive: item.type == .live, item: item,
-                              start: item.type == .live ? 0 : progress(type: item.type, streamId: item.streamId))
+        startPlayback(PlayRequest(title: item.name, url: url, isLive: item.type == .live, item: item,
+                                  start: item.type == .live ? 0 : progress(type: item.type, streamId: item.streamId)))
     }
 
     func playEpisode(_ e: Episode, of series: Item) {
         guard let url = xtreamURLs()?.series(id: e.streamId, ext: e.containerExt) else { return }
-        playing = PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
-                              episodeKey: "ep:\(e.streamId)", start: progress(type: .series, streamId: "ep:\(e.streamId)"))
+        startPlayback(PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
+                                  episodeKey: "ep:\(e.streamId)", start: progress(type: .series, streamId: "ep:\(e.streamId)")))
+    }
+
+    func startPlayback(_ r: PlayRequest) {
+        playing = r
+        if let p = player { p.replace(with: r); return }
+        let p = PlayerModel(request: r)
+        p.onSaveProgress = { [weak self] pos, dur in
+            guard let self, let cur = self.playing else { return }
+            self.saveProgress(cur, position: pos, duration: dur)
+        }
+        player = p
+    }
+
+    func stopPlayback() {
+        player?.close(); player = nil
+        pip = false
+        playing = nil
     }
 
     func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {

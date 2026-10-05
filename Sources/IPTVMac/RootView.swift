@@ -12,7 +12,7 @@ struct RootView: View {
         }
         .sheet(isPresented: $model.showGuide) { OnboardingView(isFirstRun: false) }
         .sheet(item: $model.openSeries) { SeriesView(series: $0) }
-        .overlay { if let r = model.playing { PlayerScreen(request: r).id(r.id) } }
+        .overlay { if let r = model.playing, !model.pip, let pm = model.player { PlayerScreen(request: r, pm: pm) } }
     }
 
     @ViewBuilder
