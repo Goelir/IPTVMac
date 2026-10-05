@@ -90,6 +90,10 @@ struct OnboardingView: View {
             ? Account(name: name, kind: .xtream, server: server, username: username)
             : Account(name: name, kind: .m3u, url: url)
         await model.addAccount(a, password: kind == .xtream ? password : nil)
-        dismiss()
+        finish()
     }
+
+    /// On first run this view IS the window's root content: dismiss() there closes the whole window (looks like a crash).
+    /// RootView swaps to the main UI by itself once an account exists, so only the sheet variant is dismissed.
+    private func finish() { if !isFirstRun { dismiss() } }
 }

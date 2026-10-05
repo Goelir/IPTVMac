@@ -53,6 +53,7 @@ Deferred minors: browse limit 5000; Hebrew prefix letters/niqqud in search; live
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: BUG (user: "crashes right after I enter the links"): not a crash, no crash report. Root cause found by experiment: OnboardingView called dismiss() after saving; on first run it is the window's root content and dismiss() closes the whole window (process stays alive; sync still finished: user's DB had 94,304 items). Fix: finish() only dismisses the sheet variant (isFirstRun == false). Verified with the same window-list experiment before/after; packaged app on a copy of the user's data renders the main UI fine. Released v0.1.1. No automated test (app target UI); regression check is the manual/experiment above.
 - 2026-10-05: PUBLISHED https://github.com/Goelir/IPTVMac (public, main = build/v0.1). Release v0.1.0 with IPTVMac.dmg attached.
 - 2026-10-05: Task 16 done (final review fixes applied (47 tests), DMG rebuilt 13 MB sha256 f8e9fd54..., selftest ok)
 - 2026-10-05: Task 16 done (bundled libmpv switched to media-kit build (minos 11, 18 dylibs, DMG 13 MB) after user's 'not compatible with this macOS' error; selftest flag)
