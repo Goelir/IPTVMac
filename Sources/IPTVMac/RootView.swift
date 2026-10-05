@@ -34,6 +34,7 @@ struct RootView: View {
             .navigationSplitViewColumnWidth(min: 200, ideal: 240)
         } detail: {
             VStack(spacing: 0) {
+                UpdateBanner()
                 if model.wrappedValue.syncing { ProgressView(L("sync.running")).padding(6) }
                 if let m = model.wrappedValue.syncMessage {
                     Text("\(L("sync.failed")): \(m). \(L("sync.notUpdated"))").font(.caption).foregroundStyle(.red).padding(6)

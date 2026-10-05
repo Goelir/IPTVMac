@@ -7,6 +7,8 @@ struct SettingsView: View {
     @AppStorage("prefAudioLang") private var audioLang = ""
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
+    @AppStorage("autoCheckUpdates") private var autoCheck = true
+    @AppStorage("autoInstallUpdates") private var autoInstall = true
     @State private var editing: Account?
     @State private var newPassword = ""
 
@@ -28,6 +30,23 @@ struct SettingsView: View {
                 TextField(L("settings.language.audio"), text: $audioLang, prompt: Text("he,en"))
                 Slider(value: $subScale, in: 0.5...3) { Text("\(L("settings.subscale")): \(subScale, specifier: "%.1f")") }
                 Stepper("\(L("settings.subdelay")): \(subDelay, specifier: "%.1f")", value: $subDelay, in: -30...30, step: 0.5)
+            }
+            Section {
+                Text(String(format: L("update.current"), model.currentVersion)).foregroundStyle(.secondary)
+                Toggle(L("update.auto"), isOn: $autoCheck)
+                Toggle(L("update.autoInstall"), isOn: $autoInstall).disabled(!autoCheck)
+                HStack {
+                    Button(L("update.checkNow")) { Task { await model.checkForUpdates(manual: true) } }
+                    switch model.updateStatus {
+                    case .upToDate: Text(L("update.upToDate")).foregroundStyle(.secondary)
+                    case .devBuild: Text(L("update.devBuild")).foregroundStyle(.secondary)
+                    case .downloading: ProgressView().controlSize(.small)
+                    case .ready: Text(String(format: L("update.ready"), model.update?.version ?? "")).foregroundStyle(.green)
+                    case .available: Text(String(format: L("update.available"), model.update?.version ?? ""))
+                    case .failed(let m): Text(m).foregroundStyle(.red).lineLimit(2)
+                    case .none: EmptyView()
+                    }
+                }
             }
             Button(L("settings.guide")) { model.showGuide = true }
         }

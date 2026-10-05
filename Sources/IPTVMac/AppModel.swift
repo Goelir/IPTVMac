@@ -1,7 +1,10 @@
 import Foundation
+import AppKit
 import Observation
 import GRDB
 import IPTVCore
+
+enum UpdateStatus: Equatable { case none, available, downloading, ready, failed(String), upToDate, devBuild }
 
 enum SearchScopeChoice: String, CaseIterable { case category, type, everywhere }
 
@@ -39,6 +42,13 @@ final class AppModel {
     private var searchTask: Task<Void, Never>?
     private var pipController: PiPController?
 
+    // MARK: Updates
+    var update: AppUpdate?
+    var updateStatus: UpdateStatus = .none
+    var updateBannerDismissed = false
+    private var stagedApp: URL?
+    private var swapScheduled = false
+
     init() {
         do { db = try AppDatabase(path: try AppDatabase.defaultPath()) }
         catch { fatalError("Cannot open database: \(error)") }
@@ -46,6 +56,8 @@ final class AppModel {
     }
 
     func start() async {
+        clearStaleUpdate()
+        Task { await updateLoop() }
         loadAccounts()
         if account != nil { await sync() }
     }
@@ -200,5 +212,74 @@ final class AppModel {
     func loadEPGNow(_ item: Item) async {
         guard item.type == .live, epgNow[item.streamId] == nil, let urls = xtreamURLs() else { return }
         if let t = try? await XtreamClient(urls: urls).epgNow(streamId: item.streamId) { epgNow[item.streamId] = t }
+    }
+}
+
+// MARK: - Updates
+extension AppModel {
+    private static func flag(_ key: String) -> Bool { UserDefaults.standard.object(forKey: key) as? Bool ?? true }
+    var autoCheckUpdates: Bool { Self.flag("autoCheckUpdates") }
+    var autoInstallUpdates: Bool { Self.flag("autoInstallUpdates") }
+    var currentVersion: String { Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0.0" }
+    /// `swift run` builds have no app bundle to replace, so updates are only for the installed app.
+    var isInstalledApp: Bool { Bundle.main.bundleURL.pathExtension == "app" }
+
+    private var updateDir: URL {
+        (try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true))?
+            .appendingPathComponent("IPTVMac/update") ?? FileManager.default.temporaryDirectory.appendingPathComponent("IPTVMac-update")
+    }
+
+    /// A staged copy left by a run that never applied it is dropped; it is downloaded again if still needed.
+    func clearStaleUpdate() { try? FileManager.default.removeItem(at: updateDir) }
+
+    func updateLoop() async {
+        while !Task.isCancelled {
+            if autoCheckUpdates { await checkForUpdates(manual: false) }
+            try? await Task.sleep(for: .seconds(6 * 3600))
+        }
+    }
+
+    func checkForUpdates(manual: Bool) async {
+        guard isInstalledApp else { if manual { updateStatus = .devBuild }; return }
+        if updateStatus == .downloading || updateStatus == .ready { return }
+        do {
+            if let u = try await UpdateChecker.check(current: currentVersion) {
+                update = u; updateBannerDismissed = false; updateStatus = .available
+                if autoInstallUpdates || manual { await installUpdate() }
+            } else if manual { updateStatus = .upToDate }
+        } catch { if manual { updateStatus = .failed(error.localizedDescription) } }
+    }
+
+    /// Downloads, verifies and stages the new app next to the data folder. Nothing is replaced until restart/quit.
+    func installUpdate() async {
+        guard let u = update else { return }
+        let appFolder = Bundle.main.bundleURL.deletingLastPathComponent()
+        guard FileManager.default.isWritableFile(atPath: appFolder.path) else {
+            updateStatus = .failed("\(appFolder.path) is not writable"); return
+        }
+        updateStatus = .downloading
+        do {
+            let dmg = try await UpdateChecker.downloadDMG(u)
+            defer { try? FileManager.default.removeItem(at: dmg) }
+            let dir = updateDir
+            stagedApp = try await Task.detached { try UpdateInstaller.stage(dmg: dmg, expectedVersion: u.version, into: dir) }.value
+            updateStatus = .ready
+        } catch { updateStatus = .failed(error.localizedDescription) }
+    }
+
+    func restartToUpdate() {
+        guard let staged = stagedApp, !swapScheduled else { return }
+        do {
+            swapScheduled = true
+            try UpdateInstaller.scheduleSwap(pid: getpid(), target: Bundle.main.bundleURL, staged: staged, relaunch: true)
+            NSApp.terminate(nil)
+        } catch { swapScheduled = false; updateStatus = .failed(error.localizedDescription) }
+    }
+
+    /// Called when the app quits: a staged update is installed right after exit (no relaunch).
+    func applyStagedUpdateOnQuit() {
+        guard let staged = stagedApp, !swapScheduled else { return }
+        swapScheduled = true
+        _ = try? UpdateInstaller.scheduleSwap(pid: getpid(), target: Bundle.main.bundleURL, staged: staged, relaunch: false)
     }
 }

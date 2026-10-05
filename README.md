@@ -13,6 +13,10 @@ The app is not notarized (no Apple Developer ID), so macOS blocks the first laun
 
 Apple Silicon (M1 or later) and macOS 14 or later only. You can check that the bundled player works with `/Applications/IPTVMac.app/Contents/MacOS/IPTVMac --selftest` (prints the mpv version and exits 0).
 
+## Updates
+
+The installed app checks GitHub Releases at launch and every 6 hours. When a newer version exists it downloads it, verifies the SHA-256 published in the release notes, and shows a banner: **Restart to update** (or it installs on the next quit). Both automatic checking and automatic download can be turned off in Settings. To publish a new version: bump `VERSION`, commit, and run `scripts/release.sh notes.md`.
+
 ## Privacy
 
 Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by your user only). Account passwords are kept in that database in plain text; they are not in the Keychain. The app only contacts the servers you add.

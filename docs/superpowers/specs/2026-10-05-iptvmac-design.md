@@ -105,3 +105,7 @@ A self-contained `IPTVMac.dmg` (Apple Silicon, arm64): libmpv and all of its dyl
 ## Build notes
 
 With Command Line Tools only, build and test through `scripts/swift.sh`: the macOS 27 SDK declares SwiftUI's `@State` and friends as macros whose plugin ships only with Xcode, so the wrapper selects the macOS 26.5 SDK.
+
+## Updates
+
+In-app updates without Sparkle. `UpdateChecker` reads the latest GitHub release (published, version tag, `IPTVMac.dmg` asset, and a `SHA-256 of IPTVMac.dmg: `<hash>`` line in the notes; anything else is ignored), compares versions numerically, downloads the DMG over HTTPS and verifies the hash. `UpdateInstaller` mounts it, copies the app, checks its version and code signature, and a detached shell script swaps the bundle after the app exits (old app kept on any failure), clears quarantine, and optionally relaunches. The staged update is applied on "Restart to update" or on the next quit. Checking at launch and every 6 h, and automatic download, are on by default and switchable in Settings. Not applied for `swift run` builds. Trade-off: the checksum comes from the same GitHub release, so it detects corruption, not a compromised GitHub account; real protection would need a signing key (Sparkle/EdDSA) or Apple notarization.

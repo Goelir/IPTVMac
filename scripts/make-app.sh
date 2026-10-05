@@ -9,6 +9,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="/opt/homebrew/bin:$PATH"
 
+# Single source of the app version: the VERSION file (IPTVMAC_VERSION overrides it for update tests).
+VERSION="${IPTVMAC_VERSION:-$(cat VERSION)}"
 MK_VERSION=v0.7.3
 MK_NAME="libmpv-libs_${MK_VERSION}_macos-arm64-video-full"
 MK_SHA256=9bb168ec908b4801f4231f411e3278a0aea644a2b03ce375c880d2813ab7f949
@@ -47,13 +49,15 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleIdentifier</key><string>com.example.IPTVMac</string>
 <key>CFBundleExecutable</key><string>IPTVMac</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.1</string>
+<key>CFBundleShortVersionString</key><string>__VERSION__</string>
+<key>CFBundleVersion</key><string>__VERSION__</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>CFBundleLocalizations</key><array><string>en</string><string>he</string><string>ar</string></array>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSAppTransportSecurity</key><dict><key>NSAllowsArbitraryLoads</key><true/></dict>
 </dict></plist>
 PLIST
+sed -i '' "s/__VERSION__/$VERSION/g" "$APP/Contents/Info.plist"
 find "$APP/Contents/Frameworks" -name '*.dylib' -exec codesign --force --sign - {} \;
 codesign --force --deep --sign - "$APP"
 echo "Built $APP"
