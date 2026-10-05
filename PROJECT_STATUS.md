@@ -43,11 +43,12 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - ALWAYS build/test with `scripts/swift.sh` (not bare `swift`): the macOS 27 SDK needs Xcode's SwiftUIMacros plugin; wrapper uses the 26.5 SDK. Cost if wrong: none.
 
 ## Blockers / needs the user
-- **ACTIVE:** Homebrew + `mpv pkgconf dylibbundler` must be installed before Task 9 (Homebrew install runs a remote script and needs sudo). Waiting for the user's OK/action. Tasks 1-8, 10, 12, 13 are done and need nothing.
+- Homebrew installed; mpv/pkgconf/dylibbundler install in progress (background). Task 9 starts when it finishes.
 - Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
 - Manual checks (real stream playback, subtitles, catch-up, PiP) need a real IPTV source from the user.
 
 ## Log (newest first)
+- 2026-10-05: Homebrew installed by user (first attempt collided with my own `brew list` check; never run brew concurrently with an install). `brew install mpv pkgconf dylibbundler` running in background (log /tmp/brew-install.log). Meanwhile: spec amendments applied, README, scripts/make-app.sh + make-dmg.sh written (not yet run; Task 14/16 verification waits for the player).
 - 2026-10-05: Task 13 done (he/en/ar strings (60 keys, parity + plutil OK), app launches in he and ar)
 - 2026-10-05: Task 12 done (onboarding guide, accounts, settings; 100k-item search perf test <250ms; 35 tests pass)
 - 2026-10-05: Task 10 done (UI shell builds and launches (SwiftUI, search, tabs, sidebar); build via scripts/swift.sh (SDK 26.5))
