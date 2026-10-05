@@ -59,7 +59,7 @@ final class PlayerModel {
                 self.retryPending = false
                 self.mpv.load(self.request.url, start: 0)
             }
-        } else { error = L("player.error") }
+        } else { error = [L("player.error"), mpv.lastError].compactMap { $0 }.joined(separator: ": ") }
     }
 
     func retry() { guard !closed else { return }; retries = 0; retryPending = false; error = nil; mpv.load(request.url, start: request.isLive ? 0 : position) }

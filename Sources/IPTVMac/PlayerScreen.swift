@@ -36,6 +36,7 @@ struct PlayerScreen: View {
             if let err = pm.error {
                 VStack(spacing: 12) {
                     Text(err).foregroundStyle(.white)
+                    Text(L("player.errorHint")).font(.caption).foregroundStyle(.white.opacity(0.7))
                     Button(L("player.retry")) { pm.retry() }
                 }
             }

@@ -76,3 +76,7 @@
 "update.upToDate" = "You have the latest version";
 "update.devBuild" = "Updates are only available in the installed app";
 "update.current" = "Current version: %@";
+"player.back" = "Back";
+"player.errorHint" = "If this keeps happening, check the source's password in Settings.";
+"password.title" = "Password needed";
+"password.body" = "Enter the password for “%@”. It is stored privately on this Mac.";

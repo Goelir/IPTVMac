@@ -37,6 +37,8 @@ final class AppModel {
     var pip = false
     var openSeries: Item?
     var showGuide = false
+    /// Set when an Xtream account has no stored password (e.g. after upgrading from the Keychain version).
+    var passwordPrompt: Account?
     var favoriteKeys: Set<String> = []
     var epgNow: [String: String] = [:]
     private var searchTask: Task<Void, Never>?
@@ -99,13 +101,27 @@ final class AppModel {
         }
     }
 
+    func hasPassword(_ a: Account) -> Bool {
+        guard a.kind == .xtream, let id = a.id else { return true }
+        return !(secrets.password(for: id) ?? "").isEmpty
+    }
+
     func sync() async {
         guard let a = account, let aid = a.id else { return }
+        if !hasPassword(a) { passwordPrompt = a; return }
         syncing = true; syncMessage = nil
         defer { syncing = false }
         do { try await SyncService(db: db).sync(account: a, password: secrets.password(for: aid)) }
         catch { syncMessage = error.localizedDescription }
         loadCategories(); scheduleSearch()
+    }
+
+    func savePassword(_ password: String, for a: Account) async {
+        guard let id = a.id, !password.isEmpty else { return }
+        do { try secrets.setPassword(password, for: id) } catch { syncMessage = error.localizedDescription; return }
+        passwordPrompt = nil
+        if account?.id != id { account = accounts.first { $0.id == id } }
+        await sync()
     }
 
     func addAccount(_ a: Account, password: String?) async {
@@ -145,6 +161,7 @@ final class AppModel {
     }
 
     func play(_ item: Item) {
+        if let a = account, !hasPassword(a) { passwordPrompt = a; return }
         if item.type == .series && item.directURL == nil { openSeries = item; return }
         guard let url = streamURL(item) else { syncMessage = IPTVError.badConfig.localizedDescription; return }
         startPlayback(PlayRequest(title: item.name, url: url, isLive: item.type == .live, item: item,

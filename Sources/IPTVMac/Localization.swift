@@ -1,6 +1,6 @@
 import Foundation
 
-private let l10nBundle: Bundle = {
+let l10nBundle: Bundle = {
     if let u = Bundle.main.resourceURL?.appendingPathComponent("IPTVMac_IPTVMac.bundle"), let b = Bundle(url: u) { return b }
     return Bundle.module
 }()

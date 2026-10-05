@@ -15,3 +15,4 @@ show_tab_view = False
 show_toolbar = False
 show_pathbar = False
 show_sidebar = False
+icon = defines.get("icon")   # volume icon shown for the mounted disk

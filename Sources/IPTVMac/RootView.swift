@@ -12,6 +12,7 @@ struct RootView: View {
         }
         .sheet(isPresented: $model.showGuide) { OnboardingView(isFirstRun: false) }
         .sheet(item: $model.openSeries) { SeriesView(series: $0) }
+        .sheet(item: $model.passwordPrompt) { PasswordPrompt(account: $0) }
         .overlay { if let r = model.playing, !model.pip, let pm = model.player { PlayerScreen(request: r, pm: pm) } }
     }
 
@@ -48,6 +49,13 @@ struct RootView: View {
                 Text(L("scope.everywhere")).tag(SearchScopeChoice.everywhere)
             }
             .toolbar {
+                // Lives in the window toolbar, so it works whatever the video view covers.
+                ToolbarItem(placement: .navigation) {
+                    if model.wrappedValue.playing != nil {
+                        Button { model.wrappedValue.stopPlayback() } label: { Label(L("player.back"), systemImage: "chevron.backward") }
+                            .keyboardShortcut(.cancelAction).help(L("player.back"))
+                    }
+                }
                 ToolbarItem(placement: .principal) {
                     Picker("", selection: model.tab) {
                         Text(L("tab.live")).tag(ItemType.live)

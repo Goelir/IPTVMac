@@ -13,6 +13,8 @@ public final class MPVPlayer {
     public let handle: OpaquePointer
     public var onEndFile: ((Bool) -> Void)?
     public var onTeardown: (() -> Void)?
+    /// mpv's reason for the last failed load (e.g. "loading failed"), for showing to the user.
+    public private(set) var lastError: String?
     private var quitting = false
     private let loopDone = DispatchSemaphore(value: 0)
     /// Set once `shutdown()` ran; every call after that is a no-op (UI timers and retry tasks can still fire).
@@ -44,6 +46,7 @@ public final class MPVPlayer {
                 case MPV_EVENT_END_FILE:
                     let d = ev.pointee.data.assumingMemoryBound(to: mpv_event_end_file.self).pointee
                     if d.reason != MPV_END_FILE_REASON_STOP && d.reason != MPV_END_FILE_REASON_REDIRECT {
+                        if d.reason == MPV_END_FILE_REASON_ERROR { self.lastError = String(cString: mpv_error_string(d.error)) }
                         self.onEndFile?(d.reason == MPV_END_FILE_REASON_ERROR)
                     }
                 case MPV_EVENT_SHUTDOWN: self.quitting = true

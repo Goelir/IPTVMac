@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import IPTVCore
 
 struct OnboardingView: View {
@@ -20,6 +21,9 @@ struct OnboardingView: View {
         VStack(alignment: .leading, spacing: 16) {
             switch step {
             case 0:
+                if let url = l10nBundle.url(forResource: "logo", withExtension: "png"), let img = NSImage(contentsOf: url) {
+                    Image(nsImage: img).resizable().scaledToFit().frame(width: 120, height: 120)
+                }
                 Text(L("onb.welcome.title")).font(.largeTitle)
                 Text(L("onb.welcome.body"))
             case 1:

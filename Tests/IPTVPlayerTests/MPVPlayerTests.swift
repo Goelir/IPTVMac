@@ -34,6 +34,7 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     p.load(URL(string: "file:///nonexistent/definitely-not-here.mkv")!, start: 0)
     for _ in 0..<40 where !sawError { try await Task.sleep(for: .milliseconds(100)) }
     #expect(sawError)
+    #expect(p.lastError?.isEmpty == false, "the failure reason must be available to show in the UI")
 }
 
 /// Real OpenGL rendering: the video view must actually draw decoded frames (not just play audio/clock).
