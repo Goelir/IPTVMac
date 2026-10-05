@@ -7,12 +7,14 @@ public final class AppDatabase {
     public init(path: String? = nil) throws {
         dbQueue = try path.map { try DatabaseQueue(path: $0) } ?? DatabaseQueue()
         try Self.migrator.migrate(dbQueue)
+        if let path { try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: path) }
     }
 
     public static func defaultPath() throws -> String {
         let dir = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                               appropriateFor: nil, create: true).appendingPathComponent("IPTVMac")
-        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+        try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: dir.path)
         return dir.appendingPathComponent("iptv.sqlite").path
     }
 
@@ -79,6 +81,13 @@ public final class AppDatabase {
                 t.column("duration", .double).notNull()
                 t.column("updated", .datetime).notNull()
                 t.primaryKey(["accountId", "type", "streamId"])
+            }
+        }
+        // Account passwords live in the same private database file (no Keychain: it prompts for access on every new build).
+        m.registerMigration("v2-secret") { db in
+            try db.create(table: "secret") { t in
+                t.column("accountId", .integer).primaryKey().references("account", onDelete: .cascade)
+                t.column("password", .text).notNull()
             }
         }
         return m

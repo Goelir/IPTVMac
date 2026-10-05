@@ -26,7 +26,7 @@ Out of v1: recording, multi-window, cross-device sync, iOS.
 
 ## Accounts
 
-`account(id, name, kind xtream|m3u, server, username, url)`. Password is stored in Keychain, never in the database.
+`account(id, name, kind xtream|m3u, server, username, url)`. Passwords are stored in the app's own database file (`secret` table, plain text, owner-only permissions 0600 in a 0700 folder), not in the Keychain: the Keychain asks the user for access again on every new ad-hoc-signed build. Trade-off: the password is not encrypted at rest.
 
 - **Xtream**: name, server URL (`http://host:port`), username, password.
 - **M3U**: name and URL only. Local file import can be added later.

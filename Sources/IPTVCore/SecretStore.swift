@@ -1,5 +1,5 @@
 import Foundation
-import Security
+import GRDB
 
 public protocol SecretStore {
     func password(for accountId: Int64) -> String?
@@ -15,23 +15,23 @@ public final class MemorySecretStore: SecretStore {
     public func deletePassword(for id: Int64) { store[id] = nil }
 }
 
-public struct KeychainSecretStore: SecretStore {
-    public init() {}
-    private func query(_ id: Int64) -> [String: Any] {
-        [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "IPTVMac",
-         kSecAttrAccount as String: "account-\(id)"]
-    }
+/// Stores account passwords in the app database (plain text, owner-only file permissions).
+/// ponytail: not encrypted at rest; the Keychain was dropped on purpose (access prompts on every new build).
+/// Upgrade path if needed: encrypt with a key derived from a per-install secret.
+public final class DatabaseSecretStore: SecretStore {
+    private let db: AppDatabase
+    public init(db: AppDatabase) { self.db = db }
+
     public func password(for id: Int64) -> String? {
-        var q = query(id); q[kSecReturnData as String] = true; q[kSecMatchLimit as String] = kSecMatchLimitOne
-        var out: CFTypeRef?
-        guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess, let d = out as? Data else { return nil }
-        return String(data: d, encoding: .utf8)
+        try? db.dbQueue.read { try String.fetchOne($0, sql: "SELECT password FROM secret WHERE accountId = ?", arguments: [id]) }
     }
     public func setPassword(_ p: String, for id: Int64) throws {
-        deletePassword(for: id)
-        var q = query(id); q[kSecValueData as String] = Data(p.utf8)
-        let s = SecItemAdd(q as CFDictionary, nil)
-        if s != errSecSuccess { throw NSError(domain: NSOSStatusErrorDomain, code: Int(s)) }
+        try db.dbQueue.write {
+            try $0.execute(sql: "INSERT INTO secret (accountId, password) VALUES (?, ?) ON CONFLICT(accountId) DO UPDATE SET password = excluded.password",
+                           arguments: [id, p])
+        }
     }
-    public func deletePassword(for id: Int64) { SecItemDelete(query(id) as CFDictionary) }
+    public func deletePassword(for id: Int64) {
+        _ = try? db.dbQueue.write { try $0.execute(sql: "DELETE FROM secret WHERE accountId = ?", arguments: [id]) }
+    }
 }

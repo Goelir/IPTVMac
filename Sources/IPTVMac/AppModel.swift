@@ -18,7 +18,7 @@ struct PlayRequest: Identifiable {
 @MainActor @Observable
 final class AppModel {
     let db: AppDatabase
-    let secrets: SecretStore = KeychainSecretStore()
+    let secrets: SecretStore
     var accounts: [Account] = []
     var account: Account? { didSet { favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch() } }
     var tab: ItemType = .live { didSet { selectedCategory = "__all"; loadCategories(); scheduleSearch() } }
@@ -42,6 +42,7 @@ final class AppModel {
     init() {
         do { db = try AppDatabase(path: try AppDatabase.defaultPath()) }
         catch { fatalError("Cannot open database: \(error)") }
+        secrets = DatabaseSecretStore(db: db)
     }
 
     func start() async {
