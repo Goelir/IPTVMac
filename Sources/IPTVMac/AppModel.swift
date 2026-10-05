@@ -146,8 +146,9 @@ final class AppModel {
 
     func startPlayback(_ r: PlayRequest) {
         if pip { exitPiP() }
+        // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
+        if let p = player { p.replace(with: r); playing = r; return }
         playing = r
-        if let p = player { p.replace(with: r); return }
         let p = PlayerModel(request: r)
         p.onSaveProgress = { [weak self] pos, dur in
             guard let self, let cur = self.playing else { return }

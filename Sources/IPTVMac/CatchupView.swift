@@ -9,6 +9,7 @@ struct CatchupView: View {
     @State private var loading = true
     @State private var manualStart = Date().addingTimeInterval(-3600)
     @State private var minutes = 60
+    @State private var serverTZ: TimeZone?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -32,6 +33,7 @@ struct CatchupView: View {
         .padding().frame(minWidth: 480, minHeight: 360)
         .task {
             if let urls = model.xtreamURLs() {
+                serverTZ = await XtreamClient(urls: urls).serverTimeZone()
                 let cutoff = Date().addingTimeInterval(-Double(max(item.archiveDays, 1)) * 86400)
                 let all = (try? await XtreamClient(urls: urls).epgArchive(streamId: item.streamId)) ?? []
                 entries = all.filter { $0.end < Date() && $0.start > cutoff }.sorted { $0.start > $1.start }
@@ -42,6 +44,6 @@ struct CatchupView: View {
 
     private func play(_ start: Date, _ mins: Int) {
         guard let urls = model.xtreamURLs() else { return }
-        onPlay(urls.timeshift(id: item.streamId, start: start, minutes: mins), "\(item.name) — \(start.formatted(date: .abbreviated, time: .shortened))")
+        onPlay(urls.timeshift(id: item.streamId, start: start, minutes: mins, timeZone: serverTZ ?? .current), "\(item.name) — \(start.formatted(date: .abbreviated, time: .shortened))")
     }
 }

@@ -15,6 +15,9 @@ final class PlayerModel {
     private var retries = 0
     private var timer: Timer?
     private var ticks = 0
+    private var closed = false
+    private var retryPending = false
+    private var lastPos = 0.0
     var onSaveProgress: ((Double, Double) -> Void)?
 
     init(request: PlayRequest) {
@@ -42,24 +45,33 @@ final class PlayerModel {
 
     func replace(with new: PlayRequest) {
         if !request.isLive { onSaveProgress?(position, duration) }
-        request = new; retries = 0; error = nil; position = 0; duration = 0
+        request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
         mpv.load(new.url, start: new.start)
     }
 
     private func handleFailure() {
+        guard !closed, !retryPending else { return }
         if request.isLive && retries < 3 {
             retries += 1
+            retryPending = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-                guard let self else { return }
+                guard let self, !self.closed else { return }
+                self.retryPending = false
                 self.mpv.load(self.request.url, start: 0)
             }
         } else { error = L("player.error") }
     }
 
-    func retry() { retries = 0; error = nil; mpv.load(request.url, start: request.isLive ? 0 : position) }
+    func retry() { guard !closed else { return }; retries = 0; retryPending = false; error = nil; mpv.load(request.url, start: request.isLive ? 0 : position) }
 
     private func tick() {
+        guard !closed else { return }
         position = mpv.double("time-pos") ?? position
+        if request.isLive {
+            if position > lastPos + 0.5 { retries = 0; lastPos = position }   // playing again: the next drop gets fresh retries
+            // With keep-open a dropped live stream just stops at EOF (no end-file event): treat it as a failure.
+            if mpv.isAtEnd && error == nil { handleFailure() }
+        }
         duration = mpv.double("duration") ?? 0
         paused = mpv.flag("pause")
         ticks += 1
@@ -68,6 +80,8 @@ final class PlayerModel {
     }
 
     func close() {
+        guard !closed else { return }
+        closed = true
         if !request.isLive { onSaveProgress?(position, duration) }
         timer?.invalidate(); timer = nil
         mpv.shutdown()

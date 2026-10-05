@@ -99,4 +99,50 @@ import GRDB
         let cached = try await svc.episodes(account: a, password: "p", seriesId: "20")
         #expect(cached.count == 3)
     }
+
+    // MARK: Final-review fixes
+
+    @Test func syncReportsBadCredentialsWhenAuthIsZero() async throws {
+        let db = try AppDatabase(); let a = try account(db)
+        MockURLProtocol.handler = { r in
+            actionOf(r).isEmpty ? (200, Data(#"{"user_info":{"auth":0}}"#.utf8)) : (200, Data(self.body(actionOf(r)).utf8))
+        }
+        await #expect(throws: IPTVError.badCredentials) {
+            try await SyncService(db: db, session: mockSession()).sync(account: a, password: "wrong")
+        }
+    }
+
+    @Test func emptyServerResponseDoesNotWipeExistingCache() async throws {
+        let db = try AppDatabase(); let a = try account(db)
+        let svc = SyncService(db: db, session: mockSession())
+        MockURLProtocol.handler = { r in (200, Data(self.body(actionOf(r)).utf8)) }
+        try await svc.sync(account: a, password: "p")
+        MockURLProtocol.handler = { r in
+            actionOf(r).isEmpty ? (200, Data(#"{"user_info":{"auth":1}}"#.utf8)) : (200, Data("[]".utf8))
+        }
+        await #expect(throws: IPTVError.emptyResponse) { try await svc.sync(account: a, password: "p") }
+        #expect(try await db.dbQueue.read { try Item.fetchCount($0) } == 5)
+    }
+
+    @Test func m3uCatchupAttributeDoesNotShowACatchupButton() async throws {
+        let db = try AppDatabase()
+        var a = Account(name: "m", kind: .m3u, url: "http://h/list.m3u")
+        a = try await db.dbQueue.write { d in var x = a; try x.insert(d); return x }
+        let pl = "#EXTM3U\n#EXTINF:-1 catchup-days=\"3\" group-title=\"News\",One\nhttp://h/live/1.ts\n"
+        MockURLProtocol.handler = { _ in (200, Data(pl.utf8)) }
+        try await SyncService(db: db, session: mockSession()).sync(account: a, password: nil)
+        let item = try await db.dbQueue.read { try Item.fetchOne($0) }
+        #expect(item?.tvArchive == false)   // catch-up URLs can only be built for Xtream accounts
+    }
+
+    @Test func serverTimeZoneIsReadFromServerInfo() async throws {
+        let urls = XtreamURLs(server: "h", username: "u", password: "p")!
+        MockURLProtocol.handler = { _ in (200, Data(#"{"user_info":{"auth":1},"server_info":{"timezone":"Europe/Paris"}}"#.utf8)) }
+        let c = XtreamClient(urls: urls, session: mockSession())
+        #expect(await c.serverTimeZone() == TimeZone(identifier: "Europe/Paris"))
+        MockURLProtocol.handler = { _ in (200, Data(#"{"user_info":{"auth":1},"server_info":{"timezone":"Not/AZone"}}"#.utf8)) }
+        #expect(await c.serverTimeZone() == nil)
+        MockURLProtocol.handler = { _ in (500, Data()) }
+        #expect(await c.serverTimeZone() == nil)
+    }
 }

@@ -42,12 +42,18 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 
 - ALWAYS build/test with `scripts/swift.sh` (not bare `swift`): the macOS 27 SDK needs Xcode's SwiftUIMacros plugin; wrapper uses the 26.5 SDK. Cost if wrong: none.
 
+## Final review (independent reviewer, opus) — result
+Fixed with tests (47 tests green: 40 core + 7 libmpv engine): incompatible dylibs (app did not open on older macOS), password in on-disk URL cache, live stream freeze at EOF, timeshift timezone, useless M3U catch-up button, bad-credentials message + password change in Settings, use-after-close crash, empty-sync wiping cache, wrong resume position.
+Deferred minors: browse limit 5000; Hebrew prefix letters/niqqud in search; live not in Continue watching; subtitle colour/position; M3U odd formats; main-window close keeps audio; quit doesn't save latest progress.
+
 ## Blockers / needs the user
 - Homebrew installed; mpv/pkgconf/dylibbundler install in progress (background). Task 9 starts when it finishes.
+- **Ask the user:** which macOS version their Mac runs (the app needs 14+; the bundled player now supports 11+). If older than 14 the app itself cannot run (SwiftUI @Observable etc.).
 - Task 16 publish step (GitHub repo + release) needs explicit user OK and `gh` auth.
 - Manual checks (live stream, network drop/retry, Hebrew subtitle look, resume, catch-up, PiP interaction) are NOT done: macOS blocks screenshot/AppleScript automation for me and I have no real IPTV source. Automated stand-ins exist (real libmpv tests). The user needs to do one manual pass with a real source before release.
 
 ## Log (newest first)
+- 2026-10-05: Task 16 done (final review fixes applied (47 tests), DMG rebuilt 13 MB sha256 f8e9fd54..., selftest ok)
 - 2026-10-05: Task 16 done (bundled libmpv switched to media-kit build (minos 11, 18 dylibs, DMG 13 MB) after user's 'not compatible with this macOS' error; selftest flag)
 - 2026-10-05: Task 16 done (self-contained DMG built (30 MB, 48 dylibs bundled, 0 Homebrew refs, launches from a copy); duplicate-rpath crash found and fixed; publish not done)
 - 2026-10-05: Task 14 done (README, spec amendments, build scripts)
@@ -69,4 +75,4 @@ Native macOS IPTV app (Xtream Codes + M3U), Televizo-style: fast FTS search, bui
 - 2026-10-05: spec approved, plan written (+PiP, DMG tasks), branch `build/v0.1` created, tracking file created.
 
 ## Next action
-Final-review fix pass (TDD): auth/password edit, URLCache password leak, EOF retry, timeshift timezone, M3U catch-up button, post-close crash, empty-sync guard; then ask user: macOS version + GitHub publish.
+Waiting for the user: macOS version, GitHub repo/visibility for the release, manual pass with a real IPTV source. Then: merge build/v0.1 into main (finishing-a-development-branch).

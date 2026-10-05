@@ -111,3 +111,38 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     #expect(brightest > 30, "frames after the move were black (max rgb sum \(brightest))")
     b.orderOut(nil)
 }
+
+/// The UI keeps timers and retry tasks that can fire after the player was closed.
+@Test func callsAfterShutdownAreSafeNoOps() {
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    p.shutdown()
+    #expect(p.double("time-pos") == nil)
+    #expect(p.string("mpv-version") == nil)
+    #expect(p.flag("pause") == false)
+    #expect(p.isAtEnd == false)
+    #expect(p.tracks().isEmpty)
+    p.setProperty("pause", "yes")
+    p.load("/nonexistent.mkv", start: 0)
+    p.togglePause(); p.seek(by: 1); p.seek(to: 1)
+    p.shutdown()
+}
+
+/// With keep-open the player stops at the end without an end-file event; live retry depends on seeing it.
+@Test func isAtEndTurnsTrueWhenTheFileEnds() async throws {
+    let wav = FileManager.default.temporaryDirectory.appendingPathComponent("iptvmac-end-\(UUID().uuidString).wav")
+    func le32(_ v: Int) -> Data { withUnsafeBytes(of: UInt32(v).littleEndian) { Data($0) } }
+    func le16(_ v: Int) -> Data { withUnsafeBytes(of: UInt16(v).littleEndian) { Data($0) } }
+    let bytes = 8000 * 2
+    var d = Data("RIFF".utf8); d += le32(36 + bytes); d += Data("WAVEfmt ".utf8)
+    d += le32(16); d += le16(1); d += le16(1); d += le32(8000); d += le32(16000); d += le16(2); d += le16(16)
+    d += Data("data".utf8); d += le32(bytes); d += Data(count: bytes)
+    try d.write(to: wav)
+    defer { try? FileManager.default.removeItem(at: wav) }
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    p.setProperty("vo", "null")
+    p.load(wav.path, start: 0)
+    #expect(p.isAtEnd == false)
+    for _ in 0..<60 where !p.isAtEnd { try await Task.sleep(for: .milliseconds(100)) }
+    #expect(p.isAtEnd, "eof-reached never became true")
+}

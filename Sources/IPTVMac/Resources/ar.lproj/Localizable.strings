@@ -59,3 +59,5 @@
 "settings.guide" = "عرض دليل البدء السريع";
 "settings.delete" = "حذف";
 "account.add" = "إضافة مصدر…";
+"settings.changePassword" = "تغيير كلمة المرور…";
+"settings.newPassword" = "كلمة المرور الجديدة";

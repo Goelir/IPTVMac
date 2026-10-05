@@ -4,7 +4,7 @@ import GRDB
 public final class SyncService {
     let db: AppDatabase
     let session: URLSession
-    public init(db: AppDatabase, session: URLSession = .shared) { self.db = db; self.session = session }
+    public init(db: AppDatabase, session: URLSession = apiSession) { self.db = db; self.session = session }
 
     public func sync(account: Account, password: String?) async throws {
         guard let aid = account.id else { throw IPTVError.badConfig }
@@ -12,6 +12,9 @@ public final class SyncService {
         switch account.kind {
         case .xtream: (cats, items) = try await fetchXtream(account, aid, password ?? "")
         case .m3u: (cats, items) = try await fetchM3U(account, aid)
+        }
+        if items.isEmpty, try await db.dbQueue.read({ try Item.filter(Column("accountId") == aid).fetchCount($0) }) > 0 {
+            throw IPTVError.emptyResponse   // expired subscription / overloaded panel: keep what we have
         }
         try await db.dbQueue.write { d in
             try d.execute(sql: "UPDATE item SET stale = 1 WHERE accountId = ?", arguments: [aid])
@@ -39,6 +42,7 @@ public final class SyncService {
         guard let urls = XtreamURLs(server: account.server ?? "", username: account.username ?? "", password: password)
         else { throw IPTVError.badConfig }
         let client = XtreamClient(urls: urls, session: session)
+        try await client.authenticate()
         async let l = fetchType(client, .live)
         async let m = fetchType(client, .movie)
         async let s = fetchType(client, .series)
@@ -90,13 +94,13 @@ public final class SyncService {
         var items: [Item] = [], seenCats = Set<String>(), cats: [Category] = []
         for line in text.split(whereSeparator: \.isNewline) {
             guard let e = parser.feed(String(line)) else { continue }
+            // ponytail: no catch-up for M3U (timeshift URLs are Xtream-only); the attribute is ignored on purpose.
             let type = M3UClassifier.type(url: e.url, group: e.group)
             if let g = e.group, seenCats.insert("\(type.rawValue)|\(g)").inserted {
                 cats.append(Category(accountId: aid, type: type, remoteId: g, name: g))
             }
             items.append(Item(accountId: aid, type: type, name: e.name, streamId: e.url, categoryId: e.group,
-                              icon: e.logo, directURL: e.url, tvArchive: e.catchupDays != nil,
-                              archiveDays: e.catchupDays ?? 0, epgChannelId: e.tvgId))
+                              icon: e.logo, directURL: e.url, tvArchive: false, archiveDays: 0, epgChannelId: e.tvgId))
         }
         return (cats, items)
     }

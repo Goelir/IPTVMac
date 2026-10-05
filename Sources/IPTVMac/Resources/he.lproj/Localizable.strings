@@ -59,3 +59,5 @@
 "settings.guide" = "הצג מדריך התחלה מהירה";
 "settings.delete" = "מחק";
 "account.add" = "הוסף מקור…";
+"settings.changePassword" = "שנה סיסמה…";
+"settings.newPassword" = "סיסמה חדשה";

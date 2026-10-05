@@ -1,16 +1,25 @@
 import Foundation
 
 public enum IPTVError: Error, LocalizedError, Equatable {
-    case http(Int), badResponse, badConfig, badCredentials
+    case http(Int), badResponse, badConfig, badCredentials, emptyResponse
     public var errorDescription: String? {
         switch self {
         case .http(let c): return "HTTP \(c)"
         case .badResponse: return "Unexpected response from server"
         case .badConfig: return "Invalid server address"
         case .badCredentials: return "Wrong username or password"
+        case .emptyResponse: return "The server returned an empty list; keeping your saved data"
         }
     }
 }
+
+/// Session for Xtream/M3U requests. Their URLs contain the account password, so nothing may reach the on-disk URL cache.
+public let apiSession: URLSession = {
+    let c = URLSessionConfiguration.ephemeral
+    c.urlCache = nil
+    c.requestCachePolicy = .reloadIgnoringLocalCacheData
+    return URLSession(configuration: c)
+}()
 
 public struct EPGEntry: Equatable {
     public var title: String, start: Date, end: Date
@@ -30,7 +39,7 @@ func int(_ v: Any?) -> Int? { str(v).flatMap { Int($0) } }
 public struct XtreamClient {
     let urls: XtreamURLs
     let session: URLSession
-    public init(urls: XtreamURLs, session: URLSession = .shared) { self.urls = urls; self.session = session }
+    public init(urls: XtreamURLs, session: URLSession = apiSession) { self.urls = urls; self.session = session }
 
     func json(_ url: URL) async throws -> Any {
         let (data, resp) = try await session.data(from: url)
@@ -48,6 +57,13 @@ public struct XtreamClient {
         guard let o = try await json(urls.api(nil)) as? [String: Any], let u = o["user_info"] as? [String: Any]
         else { throw IPTVError.badResponse }
         if int(u["auth"]) != 1 { throw IPTVError.badCredentials }
+    }
+
+    /// Timezone the panel uses for timeshift URLs (`server_info.timezone`), or nil if unknown.
+    public func serverTimeZone() async -> TimeZone? {
+        guard let o = try? await json(urls.api(nil)) as? [String: Any],
+              let info = o["server_info"] as? [String: Any], let id = str(info["timezone"]) else { return nil }
+        return TimeZone(identifier: id)
     }
 
     private func listings(_ action: String, _ id: String, _ extra: [String: String] = [:]) async throws -> [[String: Any]] {

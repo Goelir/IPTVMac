@@ -77,7 +77,7 @@ struct OnboardingView: View {
             } else {
                 guard let u = URL(string: url.trimmingCharacters(in: .whitespaces)), u.scheme != nil, u.host != nil else { throw IPTVError.badConfig }
                 var r = URLRequest(url: u); r.setValue("bytes=0-1023", forHTTPHeaderField: "Range")
-                let (d, _) = try await URLSession.shared.data(for: r)
+                let (d, _) = try await apiSession.data(for: r)
                 guard String(decoding: d, as: UTF8.self).drop(while: { $0.isWhitespace || $0 == "\u{FEFF}" }).hasPrefix("#EXTM3U")
                 else { throw IPTVError.badResponse }
             }

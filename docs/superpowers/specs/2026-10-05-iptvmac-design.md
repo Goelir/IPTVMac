@@ -37,7 +37,7 @@ Out of v1: recording, multi-window, cross-device sync, iOS.
 - `item(id, account_id, type, name, category_id, icon, rating, added, stream_id, container_ext, tv_archive, archive_days, epg_channel_id)`
 - `item_fts`: FTS5 on `name`, tokenizer `unicode61 remove_diacritics`, prefix search for type-as-you-go. Works for Hebrew, Arabic, Latin.
 - `episode`: loaded lazily when a series is opened (`get_series_info`).
-- `history(accountId, type, streamId, position, duration, updated)` and `favorite(accountId, type, streamId)`. Columns are camelCase to match the Swift records. "Continue watching" lists movies and live history; episode resume works inside the series screen.
+- `history(accountId, type, streamId, position, duration, updated)` and `favorite(accountId, type, streamId)`. Columns are camelCase to match the Swift records. "Continue watching" lists movies only (live channels are not recorded); episode resume works inside the series screen. M3U accounts have no catch-up (timeshift URLs are Xtream-only).
 
 ## Sync
 

@@ -59,3 +59,5 @@
 "settings.guide" = "Show quick start guide";
 "settings.delete" = "Delete";
 "account.add" = "Add source…";
+"settings.changePassword" = "Change password…";
+"settings.newPassword" = "New password";

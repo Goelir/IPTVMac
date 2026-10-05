@@ -15,6 +15,7 @@ public final class MPVPlayer {
     public var onTeardown: (() -> Void)?
     private var quitting = false
     private let loopDone = DispatchSemaphore(value: 0)
+    /// Set once `shutdown()` ran; every call after that is a no-op (UI timers and retry tasks can still fire).
     private var shutDown = false
 
     public init(subLang: String?, audioLang: String?) {
@@ -56,6 +57,7 @@ public final class MPVPlayer {
     }
 
     private func command(_ args: [String]) {
+        guard !shutDown else { return }
         let c = args.map { strdup($0) }
         defer { c.forEach { free($0) } }
         var ptrs: [UnsafePointer<CChar>?] = c.map { UnsafePointer($0) } + [nil]
@@ -66,6 +68,7 @@ public final class MPVPlayer {
 
     /// Any mpv source string (URL, path, or `av://lavfi:...`).
     public func load(_ source: String, start: Double) {
+        guard !shutDown else { return }
         setProperty("start", start > 1 ? String(Int(start)) : "none")
         command(["loadfile", source, "replace"])
     }
@@ -74,18 +77,26 @@ public final class MPVPlayer {
     public func seek(to s: Double) { command(["seek", String(s), "absolute"]) }
     public func addSubtitle(_ url: URL) { command(["sub-add", url.path, "select"]) }
 
-    public func setProperty(_ name: String, _ value: String) { mpv_set_property_string(handle, name, value) }
+    public func setProperty(_ name: String, _ value: String) {
+        guard !shutDown else { return }
+        mpv_set_property_string(handle, name, value)
+    }
 
     public func string(_ name: String) -> String? {
+        guard !shutDown else { return nil }
         guard let p = mpv_get_property_string(handle, name) else { return nil }
         defer { mpv_free(p) }
         return String(cString: p)
     }
     public func double(_ name: String) -> Double? {
+        guard !shutDown else { return nil }
         var v = 0.0
         return mpv_get_property(handle, name, MPV_FORMAT_DOUBLE, &v) >= 0 ? v : nil
     }
     public func flag(_ name: String) -> Bool { string(name) == "yes" }
+
+    /// True once playback reached the end of the file (with `keep-open` mpv stops there and sends no end-file event).
+    public var isAtEnd: Bool { flag("eof-reached") }
 
     public func tracks() -> [Track] {
         let n = Int(string("track-list/count") ?? "0") ?? 0
