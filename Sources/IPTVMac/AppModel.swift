@@ -23,7 +23,15 @@ final class AppModel {
     let db: AppDatabase
     let secrets: SecretStore
     var accounts: [Account] = []
-    var account: Account? { didSet { favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch() } }
+    var account: Account? {
+        didSet {
+            guard account?.id != oldValue?.id else { return }
+            if playing != nil { stopPlayback() }               // progress/favorites/credentials belong to the account that started it
+            epgNow = [:]; epgStamp = [:]; epgInFlight = []
+            selectedCategory = "__all"; searchText = ""        // a category id of account A means nothing in B
+            favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch()
+        }
+    }
     var tab: ItemType = .live { didSet { leavePlayerForBrowsing(); selectedCategory = "__all"; loadCategories(); scheduleSearch() } }
     var categories: [IPTVCore.Category] = []
     var selectedCategory = "__all" { didSet { leavePlayerForBrowsing(); scheduleSearch() } }
@@ -49,6 +57,8 @@ final class AppModel {
     var passwordPrompt: Account?
     var favoriteKeys: Set<String> = []
     var epgNow: [String: String] = [:]
+    private var epgStamp: [String: Date] = [:]
+    private var epgInFlight: Set<String> = []
     var schedule: [EPGEntry] = []      // current + upcoming programs of the channel being watched
     private var searchTask: Task<Void, Never>?
     private var pipController: PiPController?
@@ -88,8 +98,14 @@ final class AppModel {
     private var swapScheduled = false
 
     init() {
-        do { db = try AppDatabase(path: try AppDatabase.defaultPath()) }
-        catch { fatalError("Cannot open database: \(error)") }
+        do {
+            let r = try AppDatabase.openRecovering(path: try AppDatabase.defaultPath())
+            db = r.db; dbMovedAside = r.movedAside
+        } catch {
+            let a = NSAlert()
+            a.messageText = L("db.error.title"); a.informativeText = "\(error.localizedDescription)\n\n\(L("db.error.body"))"
+            a.runModal(); exit(1)
+        }
         secrets = DatabaseSecretStore(db: db)
         for n in [NSWindow.didEnterFullScreenNotification, NSWindow.didExitFullScreenNotification] {
             NotificationCenter.default.addObserver(forName: n, object: nil, queue: .main) { [weak self] _ in
@@ -98,7 +114,15 @@ final class AppModel {
         }
     }
 
+    private var started = false
+    private var dbMovedAside: String?
+
     func start() async {
+        guard !started else { return }                          // every new window runs .task again: sync/update loop/staged update must not
+        started = true
+        if let aside = dbMovedAside {
+            let a = NSAlert(); a.messageText = L("db.recovered.title"); a.informativeText = String(format: L("db.recovered.body"), aside); a.runModal()
+        }
         clearStaleUpdate()
         Task { await updateLoop() }
         loadAccounts()
@@ -147,13 +171,19 @@ final class AppModel {
         return secrets.password(for: id) != nil  // "" = deliberately no password
     }
 
+    private var syncGen = 0
+
     func sync() async {
         guard let a = account, let aid = a.id else { return }
         if !hasPassword(a) { passwordPrompt = a; return }
+        syncGen += 1; let gen = syncGen
         syncing = true; syncMessage = nil
-        defer { syncing = false }
+        defer { if gen == syncGen { syncing = false } }
+        var failure: String?
         do { try await SyncService(db: db).sync(account: a, password: secrets.password(for: aid)) }
-        catch { syncMessage = error.localizedDescription }
+        catch { failure = error.localizedDescription }
+        guard gen == syncGen else { return }                    // a newer sync owns the UI state now
+        syncMessage = failure
         loadCategories(); scheduleSearch()
     }
 
@@ -178,21 +208,36 @@ final class AppModel {
 
     func deleteAccount(_ a: Account) {
         guard let id = a.id else { return }
-        _ = try? db.dbQueue.write { try Account.deleteOne($0, key: id) }
+        if playing?.item?.accountId == id { stopPlayback() }
+        _ = try? db.dbQueue.write { d in
+            try d.execute(sql: "DELETE FROM favorite WHERE accountId = ?", arguments: [id])   // M3U ids are full URLs with credentials
+            try d.execute(sql: "DELETE FROM history WHERE accountId = ?", arguments: [id])
+            _ = try Account.deleteOne(d, key: id)
+        }
         secrets.deletePassword(for: id)
         loadAccounts()
     }
 
     // MARK: Playback
 
-    func xtreamURLs() -> XtreamURLs? {
-        guard let a = account, a.kind == .xtream, let id = a.id else { return nil }
+    /// URLs for an Xtream account: the one that owns the item/series, else the current account.
+    func xtreamURLs(for accountId: Int64? = nil) -> XtreamURLs? {
+        let owner = accountId.flatMap { id in accounts.first { $0.id == id } } ?? account
+        guard let a = owner, a.kind == .xtream, let id = a.id else { return nil }
         return XtreamURLs(server: a.server ?? "", username: a.username ?? "", password: secrets.password(for: id) ?? "")
     }
 
     func streamURL(_ item: Item) -> URL? {
-        if let d = item.directURL { return URL(string: d) }
-        return xtreamURLs()?.stream(type: item.type, id: item.streamId, ext: item.containerExt)
+        if let d = item.directURL { return Self.safeStreamURL(d) }
+        return xtreamURLs(for: item.accountId)?.stream(type: item.type, id: item.streamId, ext: item.containerExt)
+    }
+
+    /// An M3U entry is untrusted: mpv would also open fd://, file://, edl://, memory:// ... so only network schemes pass.
+    static func safeStreamURL(_ s: String) -> URL? {
+        guard let u = URL(string: s.trimmingCharacters(in: .whitespacesAndNewlines)),
+              ["http", "https", "rtmp", "rtmps", "rtsp", "udp", "rtp", "mms", "mmsh"].contains(u.scheme?.lowercased() ?? ""),
+              u.host?.isEmpty == false else { return nil }
+        return u
     }
 
     func progress(type: ItemType, streamId: String) -> Double {
@@ -217,7 +262,7 @@ final class AppModel {
     }
 
     func download(_ episodes: [Episode], of series: Item) {
-        guard let urls = xtreamURLs(), downloads.ensureFolder() else { return }
+        guard let urls = xtreamURLs(for: series.accountId), downloads.ensureFolder() else { return }
         for e in episodes.sorted(by: { ($0.season, $0.number) < ($1.season, $1.number) }) {
             let url = urls.series(id: e.streamId, ext: e.containerExt)
             downloads.add(title: String(format: "%@ S%02dE%02d %@", series.name, e.season, e.number, e.title), url: url, ext: e.containerExt)
@@ -225,7 +270,7 @@ final class AppModel {
     }
 
     func playEpisode(_ e: Episode, of series: Item, in all: [Episode]? = nil) {
-        guard let url = xtreamURLs()?.series(id: e.streamId, ext: e.containerExt) else { return }
+        guard let url = xtreamURLs(for: series.accountId)?.series(id: e.streamId, ext: e.containerExt) else { return }
         cancelUpNext()
         if let all { episodeQueue = all }
         startPlayback(PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
@@ -258,6 +303,7 @@ final class AppModel {
 
     func startPlayback(_ r: PlayRequest) {
         defer { updateToolbar() }
+        cancelUpNext()                                           // a pending "up next" must not replace what the user picked now
         if pip { exitPiP() }
         if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
@@ -287,11 +333,12 @@ final class AppModel {
 
     func enterPiP() {
         guard let p = player, !pip else { return }
+        cancelUpNext()
         pip = true
         setFullscreen(false)
         updateToolbar()
         let c = PiPController(model: p, title: playing?.title ?? "",
-                              onReturn: { [weak self] in self?.exitPiP() },
+                              onReturn: { [weak self] in guard let s = self else { return }; if s.mainWindow == nil { s.stopPlayback() } else { s.exitPiP() } },
                               onClose: { [weak self] in self?.stopPlayback() })
         pipController = c
         c.show()
@@ -305,7 +352,8 @@ final class AppModel {
     }
 
     func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {
-        guard !r.isLive, let aid = account?.id, let item = r.item else { return }
+        guard !r.isLive, let item = r.item else { return }
+        let aid = item.accountId
         let sid = r.episodeKey ?? item.streamId
         _ = try? db.dbQueue.write { try UserData.saveProgress($0, accountId: aid, type: item.type, streamId: sid, position: position, duration: duration) }
     }
@@ -315,7 +363,7 @@ final class AppModel {
     func isFavorite(_ i: Item) -> Bool { favoriteKeys.contains("\(i.type.rawValue):\(i.streamId)") }
 
     func toggleFavorite(_ i: Item) {
-        guard let aid = account?.id else { return }
+        let aid = i.accountId
         _ = try? db.dbQueue.write { try UserData.toggleFavorite($0, accountId: aid, type: i.type, streamId: i.streamId) }
         loadFavorites()
         if selectedCategory == "__fav" { scheduleSearch() }
@@ -324,16 +372,24 @@ final class AppModel {
     /// Keeps `schedule` fresh for the live channel being watched; ends when the calling task is cancelled.
     func watchSchedule(of item: Item) async {
         schedule = []
-        guard item.type == .live, let urls = xtreamURLs() else { return }
+        guard item.type == .live, let urls = xtreamURLs(for: item.accountId) else { return }
         while !Task.isCancelled {
             if let l = try? await XtreamClient(urls: urls).epgShort(streamId: item.streamId, limit: 3) { schedule = l }
             try? await Task.sleep(for: .seconds(60))
         }
     }
 
+    /// "Now" per channel: refreshed after 5 minutes, fetched once at a time per channel, cleared on account change.
     func loadEPGNow(_ item: Item) async {
-        guard item.type == .live, epgNow[item.streamId] == nil, let urls = xtreamURLs() else { return }
-        if let t = try? await XtreamClient(urls: urls).epgNow(streamId: item.streamId) { epgNow[item.streamId] = t }
+        let key = item.streamId
+        guard item.type == .live, !epgInFlight.contains(key), let urls = xtreamURLs(for: item.accountId) else { return }
+        if let t = epgStamp[key], Date().timeIntervalSince(t) < 300 { return }
+        epgInFlight.insert(key); defer { epgInFlight.remove(key) }
+        let aid = account?.id
+        let title = try? await XtreamClient(urls: urls).epgNow(streamId: key)
+        guard !Task.isCancelled, account?.id == aid else { return }
+        epgStamp[key] = Date()
+        epgNow[key] = title ?? nil
     }
 }
 
@@ -366,6 +422,7 @@ extension AppModel {
         if updateStatus == .downloading || updateStatus == .ready { return }
         do {
             if let u = try await UpdateChecker.check(current: currentVersion) {
+                if updateStatus == .downloading || updateStatus == .ready { return }   // another check finished while this one was waiting
                 update = u; updateBannerDismissed = false; updateStatus = .available
                 if autoInstallUpdates || manual { await installUpdate() }
             } else if manual { updateStatus = .upToDate }
@@ -374,7 +431,7 @@ extension AppModel {
 
     /// Downloads, verifies and stages the new app next to the data folder. Nothing is replaced until restart/quit.
     func installUpdate() async {
-        guard let u = update else { return }
+        guard let u = update, updateStatus != .downloading else { return }
         let appFolder = Bundle.main.bundleURL.deletingLastPathComponent()
         guard FileManager.default.isWritableFile(atPath: appFolder.path) else {
             updateStatus = .failed("\(appFolder.path) is not writable"); return
@@ -391,6 +448,9 @@ extension AppModel {
 
     func restartToUpdate() {
         guard let staged = stagedApp, !swapScheduled else { return }
+        guard FileManager.default.fileExists(atPath: staged.path) else {
+            stagedApp = nil; updateStatus = .failed("The downloaded update is gone; check for updates again"); return
+        }
         do {
             swapScheduled = true
             try UpdateInstaller.scheduleSwap(pid: getpid(), target: Bundle.main.bundleURL, staged: staged, relaunch: true)

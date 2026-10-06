@@ -27,6 +27,7 @@ final class DownloadManager: NSObject, URLSessionDownloadDelegate {
     @ObservationIgnored private lazy var session: URLSession = {
         let c = URLSessionConfiguration.ephemeral          // the URL holds the account password: nothing on the URL cache
         c.timeoutIntervalForRequest = 60
+        c.waitsForConnectivity = true                      // Wi-Fi back after sleep: wait instead of failing the download
         return URLSession(configuration: c, delegate: self, delegateQueue: nil)
     }()
 
@@ -72,14 +73,19 @@ final class DownloadManager: NSObject, URLSessionDownloadDelegate {
     /// Queues a download. Returns false when no folder was chosen.
     @discardableResult
     func add(title: String, url: URL, ext: String?) -> Bool {
+        guard ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return false }   // an M3U entry may carry file:// or worse
         guard ensureFolder(), let dir = folderPath, !contains(url) else { return folderPath != nil }
         let name = DownloadNaming.fileName(title: title, ext: ext) { n in
-            FileManager.default.fileExists(atPath: "\(dir)/\(n)") || self.entries.contains { $0.file.lastPathComponent == n && $0.file.deletingLastPathComponent().path == dir }
+            FileManager.default.fileExists(atPath: "\(dir)/\(n)")
+                || self.entries.contains { $0.file.lastPathComponent.lowercased() == n.lowercased() && $0.file.deletingLastPathComponent().path == dir }   // APFS is case-insensitive
         }
         entries.append(DownloadEntry(title: title, url: url, file: URL(fileURLWithPath: dir).appendingPathComponent(name)))
         pump()
         return true
     }
+
+    /// Starts the next download after a short pause: a provider with max_connections=1 frees the slot a moment after the old one ends.
+    private func pumpSoon() async { try? await Task.sleep(for: .seconds(1)); pump() }
 
     private func pump() {
         guard !entries.contains(where: { $0.state == .active }),
@@ -106,7 +112,7 @@ final class DownloadManager: NSObject, URLSessionDownloadDelegate {
         entries[i].state = .paused
         t.cancel { [weak self] data in Task { @MainActor in
             if let self, let j = self.entries.firstIndex(where: { $0.id == id }) { self.entries[j].resumeData = data }
-            self?.pump()
+            await self?.pumpSoon()
         } }
     }
 
@@ -129,11 +135,29 @@ final class DownloadManager: NSObject, URLSessionDownloadDelegate {
         UserDefaults.standard.set(try? JSONEncoder().encode(rows), forKey: "downloadsDone")
     }
 
-    private func finish(_ id: UUID, error: String?) {
+    private func finish(_ id: UUID, error: String?, file: URL? = nil) {
         tasks[id] = nil
         guard let i = entries.firstIndex(where: { $0.id == id }) else { return }
-        if let error { entries[i].state = .failed(error) } else { entries[i].state = .done; entries[i].received = max(entries[i].received, entries[i].total) }
-        saveDone(); pump()
+        if let error { entries[i].state = .failed(error) }
+        else { entries[i].state = .done; entries[i].received = max(entries[i].received, entries[i].total); if let file { entries[i].file = file } }
+        saveDone()
+        Task { await pumpSoon() }
+    }
+
+    /// A dropped connection / server hiccup: retry with growing waits, keeping the bytes already received.
+    private func retryLater(_ id: UUID, data: Data?, error: String) async {
+        guard let i = entries.firstIndex(where: { $0.id == id }) else { return }
+        tasks[id] = nil
+        guard entries[i].retries < 6 else { entries[i].resumeData = data; finish(id, error: error); return }
+        let wait: [Double] = [2, 10, 30, 60, 120, 300]
+        let n = entries[i].retries
+        entries[i].retries += 1; entries[i].resumeData = data; entries[i].state = .queued
+        try? await Task.sleep(for: .seconds(wait[min(n, wait.count - 1)]))
+        pump()
+    }
+
+    private nonisolated static func freeSpace(at url: URL) -> Int64 {
+        (try? url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage) ?? Int64.max
     }
 
     // MARK: URLSessionDownloadDelegate (background queue)
@@ -145,36 +169,71 @@ final class DownloadManager: NSObject, URLSessionDownloadDelegate {
 
     nonisolated func urlSession(_ s: URLSession, downloadTask t: URLSessionDownloadTask, didWriteData written: Int64,
                                 totalBytesWritten done: Int64, totalBytesExpectedToWrite total: Int64) {
-        guard done / 262_144 != (done - written) / 262_144, let (id, _) = Self.parse(t) else { return }   // ~every 256 KB
+        guard let (id, path) = Self.parse(t) else { return }
+        let tid = t.taskIdentifier
+        // Out of disk space is permanent: stop at the start and every ~64 MB instead of filling the system volume (keep 1 GiB free).
+        if done / 67_108_864 != (done - written) / 67_108_864 || done == written {
+            let dest = URL(fileURLWithPath: path).deletingLastPathComponent()
+            let room = min(Self.freeSpace(at: dest), Self.freeSpace(at: FileManager.default.temporaryDirectory))
+            if room - 1_073_741_824 < max(total - done, 0) {
+                t.cancel()
+                Task { @MainActor in
+                    guard self.tasks[id]?.taskIdentifier == tid else { return }
+                    self.finish(id, error: L("downloads.noSpace"))
+                }
+                return
+            }
+        }
+        guard done / 262_144 != (done - written) / 262_144 else { return }   // ~every 256 KB
         Task { @MainActor in
-            guard let i = self.entries.firstIndex(where: { $0.id == id }) else { return }
+            guard self.tasks[id]?.taskIdentifier == tid, let i = self.entries.firstIndex(where: { $0.id == id }) else { return }
+            if done > self.entries[i].received { self.entries[i].retries = 0 }   // progress: the next drop gets a fresh retry budget
             self.entries[i].received = done; self.entries[i].total = max(total, 0)
         }
     }
 
     nonisolated func urlSession(_ s: URLSession, downloadTask t: URLSessionDownloadTask, didFinishDownloadingTo tmp: URL) {
         guard let (id, path) = Self.parse(t) else { return }
+        let tid = t.taskIdentifier
         let code = (t.response as? HTTPURLResponse)?.statusCode ?? 200
-        var failure: String?
-        if !(200..<300).contains(code) { failure = "HTTP \(code)" }
-        else {
-            do { try FileManager.default.moveItem(at: tmp, to: URL(fileURLWithPath: path)) }   // the temp file is deleted when this returns
-            catch { failure = error.localizedDescription }
+        if !(200..<300).contains(code) {
+            let transient = [408, 429, 502, 503, 504].contains(code)
+            Task { @MainActor in
+                guard self.tasks[id]?.taskIdentifier == tid else { return }
+                if transient { await self.retryLater(id, data: nil, error: "HTTP \(code)") } else { self.finish(id, error: "HTTP \(code)") }
+            }
+            return
         }
-        Task { @MainActor in self.finish(id, error: failure) }
+        // The name was chosen when the download was queued: pick it again now, a file may have appeared meanwhile
+        // (same title in another case, another app), and the temp file is deleted when this method returns.
+        let planned = URL(fileURLWithPath: path)
+        let dir = planned.deletingLastPathComponent()
+        let name = DownloadNaming.fileName(title: planned.deletingPathExtension().lastPathComponent, ext: planned.pathExtension) {
+            FileManager.default.fileExists(atPath: dir.appendingPathComponent($0).path)
+        }
+        let final = dir.appendingPathComponent(name)
+        var failure: String?
+        do { try FileManager.default.moveItem(at: tmp, to: final) } catch { failure = error.localizedDescription }
+        Task { @MainActor in
+            guard self.tasks[id]?.taskIdentifier == tid else { return }
+            self.finish(id, error: failure, file: failure == nil ? final : nil)
+        }
     }
 
     nonisolated func urlSession(_ s: URLSession, task t: URLSessionTask, didCompleteWithError error: Error?) {
         guard let error, let (id, _) = Self.parse(t) else { return }
+        let tid = t.taskIdentifier
         let ns = error as NSError
         let data = ns.userInfo[NSURLSessionDownloadTaskResumeData] as? Data
+        let permanent = ns.code == NSURLErrorCancelled || [NSURLErrorBadURL, NSURLErrorUnsupportedURL, NSURLErrorUserAuthenticationRequired,
+                                                           NSURLErrorFileDoesNotExist, NSURLErrorCannotCreateFile, NSURLErrorCannotWriteToFile,
+                                                           NSURLErrorDataLengthExceedsMaximum].contains(ns.code)
         Task { @MainActor in
-            guard let i = self.entries.firstIndex(where: { $0.id == id }), self.entries[i].state == .active else { return }  // paused/removed: ignore
-            self.tasks[id] = nil
-            if ns.code != NSURLErrorCancelled, self.entries[i].retries < 3 {       // dropped connection: resume where it stopped
-                self.entries[i].retries += 1; self.entries[i].resumeData = data; self.entries[i].state = .queued
-                try? await Task.sleep(for: .seconds(2)); self.pump()
-            } else { self.finish(id, error: error.localizedDescription) }
+            // A late callback of a paused/removed/replaced task (older taskIdentifier) must not touch the entry that now has a new task.
+            guard let i = self.entries.firstIndex(where: { $0.id == id }), self.entries[i].state == .active,
+                  self.tasks[id]?.taskIdentifier == tid else { return }
+            if permanent { self.finish(id, error: error.localizedDescription) }
+            else { await self.retryLater(id, data: data, error: error.localizedDescription) }
         }
     }
 }

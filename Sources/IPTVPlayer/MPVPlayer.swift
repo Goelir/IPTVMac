@@ -32,6 +32,14 @@ public final class MPVPlayer {
         opt("stream-lavf-o", "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5")
         opt("sub-auto", "fuzzy")
         opt("keep-open", "yes")
+        // Streams, playlists and subtitles come from a third party: verify HTTPS certificates (the Xtream password is in the URL),
+        // and switch off everything that can run code or read the disk (the bundled mpv has no scripts/ytdl, a dev build would).
+        opt("tls-verify", "yes")
+        opt("tls-ca-file", "/etc/ssl/cert.pem")
+        opt("embeddedfonts", "no")
+        opt("ytdl", "no")
+        opt("load-scripts", "no")
+        opt("config", "no")
         if let s = subLang, !s.isEmpty { opt("slang", s) }
         if let a = audioLang, !a.isEmpty { opt("alang", a) }
         mpv_initialize(handle)

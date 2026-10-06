@@ -14,7 +14,8 @@ public struct SearchRequest {
 
 public enum Search {
     public static func run(_ db: Database, _ r: SearchRequest) throws -> [Item] {
-        let trimmed = r.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Every word is a prefix term; 180 of them take seconds on 100k rows and a cancelled Task cannot interrupt the SQL.
+        let trimmed = r.text.split(whereSeparator: \.isWhitespace).prefix(8).joined(separator: " ")
         var sql = "SELECT item.* FROM item"
         var args: [DatabaseValueConvertible] = []
         if !trimmed.isEmpty {

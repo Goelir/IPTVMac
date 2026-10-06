@@ -24,6 +24,8 @@ public enum UserData {
 
     public static func saveProgress(_ db: Database, accountId: Int64, type: ItemType, streamId: String,
                                     position: Double, duration: Double) throws {
+        // 0 / 0 means "nothing played yet" (still loading, load failed): saving it would erase the real resume point.
+        guard duration > 0, position.isFinite, duration.isFinite, position >= 0 else { return }
         try db.execute(sql: """
             INSERT INTO history (accountId,type,streamId,position,duration,updated) VALUES (?,?,?,?,?,datetime('now'))
             ON CONFLICT(accountId,type,streamId) DO UPDATE SET position=excluded.position, duration=excluded.duration, updated=excluded.updated
@@ -38,10 +40,24 @@ public enum UserData {
     }
 
     public static func continueWatching(_ db: Database, accountId: Int64, type: ItemType) throws -> [Item] {
-        try Item.fetchAll(db, sql: """
+        var items = try Item.fetchAll(db, sql: """
             SELECT item.* FROM item JOIN history h ON h.accountId=item.accountId AND h.type=item.type AND h.streamId=item.streamId
             WHERE item.accountId=? AND item.type=? AND (h.duration <= 0 OR h.position / h.duration <= 0.95)
             ORDER BY h.updated DESC
             """, arguments: [accountId, type.rawValue])
+        if type == .series {
+            // Xtream episodes are saved as "ep:<episodeId>": map them to their series through the cached episode list.
+            let viaEpisodes = try Item.fetchAll(db, sql: """
+                SELECT item.* FROM item JOIN (
+                    SELECT e.seriesId AS sid, MAX(h.updated) AS u FROM history h
+                    JOIN episode e ON e.accountId = h.accountId AND h.streamId = 'ep:' || e.streamId
+                    WHERE h.accountId = ? AND h.type = 'series' AND (h.duration <= 0 OR h.position / h.duration <= 0.95)
+                    GROUP BY e.seriesId) x ON x.sid = item.streamId
+                WHERE item.accountId = ? AND item.type = 'series' ORDER BY x.u DESC
+                """, arguments: [accountId, accountId])
+            let have = Set(items.compactMap(\.id))
+            items = viaEpisodes.filter { !have.contains($0.id ?? -1) } + items
+        }
+        return items
     }
 }

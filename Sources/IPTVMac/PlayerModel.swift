@@ -23,6 +23,8 @@ final class PlayerModel {
     /// Called when a movie/episode reaches its end (true) and when it leaves the end again, e.g. after a seek back (false).
     var onEndChanged: ((Bool) -> Void)?
     private var wasAtEnd = false
+    private var loadGen = 0                      // bumped on every explicit load, so a stale retry timer cannot reload an old item
+    private var activity: NSObjectProtocol?       // keeps the display awake while a video plays (vo=libmpv has no window of its own)
 
     init(request: PlayRequest) {
         let d = UserDefaults.standard
@@ -36,6 +38,7 @@ final class PlayerModel {
             Task { @MainActor in self?.handleFailure() }
         }
         mpv.load(request.url, start: request.start)
+        activity = ProcessInfo.processInfo.beginActivity(options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled], reason: "Playing video")
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.tick() }
         }
@@ -49,8 +52,12 @@ final class PlayerModel {
         mpv.setProperty("sub-delay", String(d.object(forKey: "subDelay") as? Double ?? 0))
     }
 
+    /// A position of 0 means "nothing played yet" (file still loading or load failed): saving it would erase the resume point.
+    private func saveIfLoaded() { if !request.isLive, position > 0 { onSaveProgress?(position, duration) } }
+
     func replace(with new: PlayRequest) {
-        if !request.isLive { onSaveProgress?(position, duration) }
+        saveIfLoaded()
+        loadGen += 1
         wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
         mpv.setProperty("speed", "1")
@@ -62,15 +69,23 @@ final class PlayerModel {
         if request.isLive && retries < 3 {
             retries += 1
             retryPending = true
+            let gen = loadGen
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-                guard let self, !self.closed else { return }
+                guard let self, !self.closed, self.loadGen == gen else { return }
                 self.retryPending = false
+                self.position = 0; self.lastPos = 0          // time-pos restarts at 0 after a reload: the retry budget must refresh again
                 self.mpv.load(self.request.url, start: 0)
             }
         } else { error = [L("player.error"), mpv.lastError].compactMap { $0 }.joined(separator: ": ") }
     }
 
-    func retry() { guard !closed else { return }; retries = 0; retryPending = false; error = nil; mpv.load(request.url, start: request.isLive ? 0 : position) }
+    func retry() {
+        guard !closed else { return }
+        loadGen += 1; retries = 0; retryPending = false; error = nil
+        let start = request.isLive ? 0 : (position > 0 ? position : request.start)
+        position = 0; lastPos = 0
+        mpv.load(request.url, start: start)
+    }
 
     private func tick() {
         guard !closed else { return }
@@ -82,20 +97,22 @@ final class PlayerModel {
         }
         duration = mpv.double("duration") ?? 0
         if !request.isLive {
-            let atEnd = mpv.isAtEnd && duration > 0
+            // A connection cut early also sets eof-reached: only the real end of the file starts the next episode.
+            let atEnd = mpv.isAtEnd && duration > 0 && position >= duration - 15
             if atEnd != wasAtEnd { wasAtEnd = atEnd; onEndChanged?(atEnd) }
         }
         paused = mpv.flag("pause")
         speed = mpv.double("speed") ?? 1
         ticks += 1
         if ticks % 4 == 0 { tracks = mpv.tracks() }
-        if ticks % 20 == 0, !request.isLive { onSaveProgress?(position, duration) }
+        if ticks % 20 == 0 { saveIfLoaded() }
     }
 
     func close() {
         guard !closed else { return }
         closed = true
-        if !request.isLive { onSaveProgress?(position, duration) }
+        saveIfLoaded()
+        if let a = activity { ProcessInfo.processInfo.endActivity(a); activity = nil }
         timer?.invalidate(); timer = nil
         mpv.shutdown()
     }

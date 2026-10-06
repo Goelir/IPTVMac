@@ -52,7 +52,7 @@ import GRDB
     try s.setPassword("pw1", for: a); #expect(s.password(for: a) == "pw1")
     try s.setPassword("pw2", for: a); #expect(s.password(for: a) == "pw2")      // overwrite
     try db.dbQueue.write { try $0.execute(sql: "DELETE FROM account WHERE id = ?", arguments: [a]) }
-    #expect(s.password(for: a) == nil)                                          // removed with the account
+    #expect(DatabaseSecretStore(db: db).password(for: a) == nil)                // removed with the account (a fresh store has no cache)
     let (db2, b) = try makeDB()
     let s2 = DatabaseSecretStore(db: db2)
     try s2.setPassword("x", for: b); s2.deletePassword(for: b); #expect(s2.password(for: b) == nil)

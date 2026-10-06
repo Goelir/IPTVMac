@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @State private var status: String?
     @State private var ok = false
     @State private var busy = false
+    @State private var saving = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -55,11 +56,11 @@ struct OnboardingView: View {
             HStack {
                 if !isFirstRun { Button(L("player.close")) { dismiss() } }
                 Spacer()
-                if step > 0 { Button(L("onb.back")) { step -= 1; ok = false; status = nil } }
+                if step > 0 { Button(L("onb.back")) { step -= 1; ok = false; status = nil }.disabled(saving) }
                 if step < 2 {
                     Button(L("onb.next")) { step += 1 }.disabled(step == 1 && !formValid)
                 } else {
-                    Button(L("onb.save")) { Task { await save() } }.buttonStyle(.borderedProminent).disabled(!ok)
+                    Button(L("onb.save")) { Task { saving = true; await save(); saving = false } }.buttonStyle(.borderedProminent).disabled(!ok || saving)
                 }
             }
         }

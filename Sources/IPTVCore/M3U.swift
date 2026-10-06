@@ -19,14 +19,24 @@ public struct M3UParser {
         if line.hasPrefix("#EXTINF") { pending = Self.parseInf(line); return nil }
         if line.hasPrefix("#") { return nil }
         defer { pending = nil }
-        let info = pending ?? (name: String(line.split(separator: "/").last ?? Substring(line)), attrs: [:])
-        let name = info.name.isEmpty ? line : info.name
+        // Never use the URL itself as the title: it carries the account's username and password.
+        let fallback = Self.fallbackName(line)
+        let info = pending ?? (name: fallback, attrs: [:])
+        let name = info.name.isEmpty ? fallback : info.name
         func attr(_ k: String) -> String? { info.attrs[k].flatMap { $0.isEmpty ? nil : $0 } }
         return M3UEntry(name: name, url: line, group: attr("group-title"), logo: attr("tvg-logo"),
                         tvgId: attr("tvg-id"), catchupDays: attr("catchup-days").flatMap { Int($0) })
     }
 
+    /// Last path component without query/userinfo, or a neutral label.
+    static func fallbackName(_ url: String) -> String {
+        let last = URL(string: url)?.lastPathComponent ?? ""
+        return last.isEmpty || last == "/" ? "Channel" : last
+    }
+
     private static func parseInf(_ line: String) -> (name: String, attrs: [String: String]) {
+        // A crafted multi-hundred-KB "attribute" line makes the regex scan quadratic: real lines are far shorter.
+        if line.utf8.count > 8192 { return ("", [:]) }
         var inQuote = false
         var commaIndex: String.Index?
         for i in line.indices {

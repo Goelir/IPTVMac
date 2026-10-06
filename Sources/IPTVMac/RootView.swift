@@ -84,7 +84,7 @@ struct RootView: View {
                         }
                     }.help(L("downloads.title"))
                 }
-                ToolbarItem { Button { Task { await model.wrappedValue.sync() } } label: { Image(systemName: "arrow.clockwise") } }
+                ToolbarItem { Button { Task { await model.wrappedValue.sync() } } label: { Image(systemName: "arrow.clockwise") }.disabled(model.wrappedValue.syncing) }
             }
         }
         .onChange(of: model.wrappedValue.playerFullscreen) { _, full in columns = full ? .detailOnly : .automatic }

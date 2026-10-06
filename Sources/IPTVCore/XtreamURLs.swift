@@ -7,9 +7,21 @@ public struct XtreamURLs {
         var s = server.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !s.isEmpty else { return nil }
         if !s.lowercased().hasPrefix("http://") && !s.lowercased().hasPrefix("https://") { s = "http://" + s }
-        while s.hasSuffix("/") { s.removeLast() }
-        guard URL(string: s)?.host != nil else { return nil }
-        base = s; user = Self.enc(username); pass = Self.enc(password)
+        guard var c = URLComponents(string: s), c.host?.isEmpty == false else { return nil }
+        // Users paste whatever the provider showed: ".../get.php?username=..&password=.." or ".../player_api.php?..": keep the server only.
+        c.query = nil; c.fragment = nil; c.user = nil; c.password = nil
+        var path = c.path
+        while path.hasSuffix("/") { path.removeLast() }
+        for tail in ["/player_api.php", "/get.php", "/xmltv.php", "/panel_api.php", "/c"] where path.lowercased().hasSuffix(tail) {
+            path = String(path.dropLast(tail.count)); break
+        }
+        c.path = path
+        guard var b = c.string else { return nil }
+        while b.hasSuffix("/") { b.removeLast() }
+        base = b
+        // A trailing space or newline pasted with the credentials would make a correct login look wrong.
+        user = Self.enc(username.trimmingCharacters(in: .whitespacesAndNewlines))
+        pass = Self.enc(password.trimmingCharacters(in: .whitespacesAndNewlines))
     }
 
     private static let unreserved = CharacterSet(charactersIn:

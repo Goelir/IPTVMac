@@ -107,3 +107,8 @@
 "next.now" = "נגן עכשיו";
 "next.cancel" = "בטל";
 "settings.autoNext" = "מעבר אוטומטי לפרק הבא";
+"downloads.noSpace" = "אין מספיק מקום פנוי בדיסק";
+"db.error.title" = "IPTVMac לא מצליחה לפתוח את מסד הנתונים";
+"db.error.body" = "אם עותק אחר של IPTVMac פתוח, סגור אותו ונסה שוב.";
+"db.recovered.title" = "מסד הנתונים ניזוק";
+"db.recovered.body" = "IPTVMac התחילה עם מסד נתונים חדש (הוסף את המקור מחדש). הקובץ הפגום נשמר כאן:\n%@";

@@ -58,6 +58,20 @@ public struct Item: Codable, Identifiable, Hashable, FetchableRecord, MutablePer
         self.archiveDays = archiveDays; self.epgChannelId = epgChannelId
     }
     public mutating func didInsert(_ inserted: InsertionSuccess) { id = inserted.rowID }
+
+    /// The logo/poster URL is provider-controlled and fetched without a click: http(s) only, and never a device on the user's own
+    /// network (a `tvg-logo="http://192.168.1.1/reboot"` would be a browse-to-trigger request).
+    public var iconURL: URL? {
+        guard let s = icon, let u = URL(string: s), ["http", "https"].contains(u.scheme?.lowercased() ?? ""),
+              let h = u.host?.lowercased(), !h.isEmpty else { return nil }
+        if h == "localhost" || h.hasSuffix(".local") || h.hasSuffix(".internal") || h.hasSuffix(".lan") || !h.contains(".") && !h.contains(":") { return nil }
+        let p = h.split(separator: ".").compactMap { Int($0) }
+        if p.count == 4 {
+            if p[0] == 10 || p[0] == 127 || p[0] == 0 || (p[0] == 169 && p[1] == 254) || (p[0] == 192 && p[1] == 168) || (p[0] == 172 && (16...31).contains(p[1])) { return nil }
+        }
+        if h.contains(":") && (h == "::1" || h.hasPrefix("fe80") || h.hasPrefix("fc") || h.hasPrefix("fd")) { return nil }
+        return u
+    }
 }
 
 public struct Episode: Codable, Identifiable, Hashable, FetchableRecord, MutablePersistableRecord {

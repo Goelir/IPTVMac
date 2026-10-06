@@ -1,7 +1,7 @@
 import Foundation
 
 public enum IPTVError: Error, LocalizedError, Equatable {
-    case http(Int), badResponse, badConfig, badCredentials, emptyResponse
+    case http(Int), badResponse, badConfig, badCredentials, emptyResponse, accountInactive
     public var errorDescription: String? {
         switch self {
         case .http(let c): return "HTTP \(c)"
@@ -9,6 +9,7 @@ public enum IPTVError: Error, LocalizedError, Equatable {
         case .badConfig: return "Invalid server address"
         case .badCredentials: return "Wrong username or password"
         case .emptyResponse: return "The server returned an empty list; keeping your saved data"
+        case .accountInactive: return "The subscription is not active (expired or disabled)"
         }
     }
 }
@@ -18,6 +19,8 @@ public let apiSession: URLSession = {
     let c = URLSessionConfiguration.ephemeral
     c.urlCache = nil
     c.requestCachePolicy = .reloadIgnoringLocalCacheData
+    c.timeoutIntervalForResource = 600                       // a drip-fed endless body must not keep a sync running for days
+    c.httpAdditionalHeaders = ["Accept-Encoding": "identity"]   // no gzip: a tiny response cannot expand into gigabytes
     return URLSession(configuration: c)
 }()
 
@@ -44,12 +47,18 @@ public struct XtreamClient {
     func json(_ url: URL) async throws -> Any {
         let (data, resp) = try await session.data(from: url)
         if let code = (resp as? HTTPURLResponse)?.statusCode, !(200..<300).contains(code) { throw IPTVError.http(code) }
-        guard let obj = try? JSONSerialization.jsonObject(with: data) else { throw IPTVError.badResponse }
+        guard data.count <= SyncService.maxResponseBytes else { throw IPTVError.badResponse }
+        if data.isEmpty { return NSNull() }
+        guard let obj = try? JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed]) else { throw IPTVError.badResponse }
         return obj
     }
 
+    /// A list endpoint. Panels answer `null`, `false` or an empty body for a section they do not have (e.g. no series).
     func array(_ action: String, _ params: [String: String] = [:]) async throws -> [[String: Any]] {
-        guard let a = try await json(urls.api(action, params)) as? [[String: Any]] else { throw IPTVError.badResponse }
+        let o = try await json(urls.api(action, params))
+        if o is NSNull { return [] }
+        if let n = o as? NSNumber, CFGetTypeID(n) == CFBooleanGetTypeID() { return [] }
+        guard let a = o as? [[String: Any]] else { throw IPTVError.badResponse }
         return a
     }
 
@@ -57,6 +66,7 @@ public struct XtreamClient {
         guard let o = try await json(urls.api(nil)) as? [String: Any], let u = o["user_info"] as? [String: Any]
         else { throw IPTVError.badResponse }
         if int(u["auth"]) != 1 { throw IPTVError.badCredentials }
+        if let status = str(u["status"])?.lowercased(), ["expired", "disabled", "banned"].contains(status) { throw IPTVError.accountInactive }
     }
 
     /// Timezone the panel uses for timeshift URLs (`server_info.timezone`), or nil if unknown.

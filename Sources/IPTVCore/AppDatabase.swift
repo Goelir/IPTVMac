@@ -2,12 +2,42 @@ import Foundation
 import GRDB
 
 public final class AppDatabase {
-    public let dbQueue: DatabaseQueue
+    /// A WAL `DatabasePool` for the real file (readers never wait for the long sync write); an in-memory queue for tests.
+    public let dbQueue: any DatabaseWriter
 
     public init(path: String? = nil) throws {
-        dbQueue = try path.map { try DatabaseQueue(path: $0) } ?? DatabaseQueue()
-        try Self.migrator.migrate(dbQueue)
-        if let path { try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: path) }
+        if let path {
+            var cfg = Configuration()
+            cfg.busyMode = .timeout(5)              // a second process (selftest, `open -n`) waits instead of failing at once
+            let pool = try DatabasePool(path: path, configuration: cfg)
+            if try pool.read({ try !Self.migrator.hasCompletedMigrations($0) && $0.tableExists("account") }) {
+                // Existing data and a pending migration: keep a copy first (it also holds the account passwords: same 0600 rules).
+                let bak = path + ".bak"
+                try? FileManager.default.removeItem(atPath: bak)
+                try? pool.backup(to: DatabaseQueue(path: bak))
+                try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: bak)
+            }
+            dbQueue = pool
+            try Self.migrator.migrate(dbQueue)
+            for suffix in ["", "-wal", "-shm"] {
+                try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: path + suffix)
+            }
+        } else {
+            dbQueue = try DatabaseQueue()
+            try Self.migrator.migrate(dbQueue)
+        }
+    }
+
+    /// Opens the database; a corrupt/non-SQLite file is moved aside (not deleted) and a fresh one is created.
+    /// Returns the moved-aside path when that happened. Busy/IO errors are rethrown.
+    public static func openRecovering(path: String) throws -> (db: AppDatabase, movedAside: String?) {
+        do { return (try AppDatabase(path: path), nil) }
+        catch let e as DatabaseError where [.SQLITE_NOTADB, .SQLITE_CORRUPT].contains(e.resultCode) {
+            let aside = path + ".corrupt-\(Int(Date().timeIntervalSince1970))"
+            try FileManager.default.moveItem(atPath: path, toPath: aside)
+            for suffix in ["-wal", "-shm"] { try? FileManager.default.removeItem(atPath: path + suffix) }
+            return (try AppDatabase(path: path), aside)
+        }
     }
 
     public static func defaultPath() throws -> String {
@@ -89,6 +119,16 @@ public final class AppDatabase {
                 t.column("accountId", .integer).primaryKey().references("account", onDelete: .cascade)
                 t.column("password", .text).notNull()
             }
+        }
+        // Search index maintenance only when the name changes: re-syncs rewrite every row but almost never change a name.
+        m.registerMigration("v3-fts-trigger") { db in
+            try db.execute(sql: """
+                DROP TRIGGER IF EXISTS "__item_fts_au";
+                CREATE TRIGGER "__item_fts_au" AFTER UPDATE OF name ON item WHEN old.name IS NOT new.name BEGIN
+                  INSERT INTO item_fts(item_fts, rowid, name) VALUES('delete', old.id, old.name);
+                  INSERT INTO item_fts(rowid, name) VALUES (new.id, new.name);
+                END;
+                """)
         }
         return m
     }

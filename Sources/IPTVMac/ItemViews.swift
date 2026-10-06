@@ -6,7 +6,7 @@ struct ChannelRow: View {
     let item: Item
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: item.icon.flatMap(URL.init)) { $0.resizable().scaledToFit() } placeholder: {
+            AsyncImage(url: item.iconURL) { $0.resizable().scaledToFit() } placeholder: {
                 Image(systemName: "tv").foregroundStyle(.secondary)
             }
             .frame(width: 44, height: 44)
@@ -33,7 +33,7 @@ struct PosterCell: View {
     let item: Item
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            AsyncImage(url: item.icon.flatMap(URL.init)) { $0.resizable().scaledToFill() } placeholder: {
+            AsyncImage(url: item.iconURL) { $0.resizable().scaledToFill() } placeholder: {
                 Rectangle().fill(.quaternary).overlay(Image(systemName: "film").foregroundStyle(.secondary))
             }
             .aspectRatio(2.0 / 3.0, contentMode: .fit).clipShape(RoundedRectangle(cornerRadius: 8))

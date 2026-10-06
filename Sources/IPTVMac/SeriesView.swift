@@ -20,9 +20,10 @@ struct SeriesView: View {
             else if let error { Text(error).foregroundStyle(.red) }
             else {
                 List {
-                    ForEach(Dictionary(grouping: episodes, by: \.season).keys.sorted(), id: \.self) { s in
+                    let bySeason = Dictionary(grouping: episodes, by: \.season)
+                    ForEach(bySeason.keys.sorted(), id: \.self) { s in
                         Section {
-                            ForEach(episodes.filter { $0.season == s }) { e in
+                            ForEach(bySeason[s] ?? []) { e in
                                 HStack {
                                     Text("\(e.number). \(e.title)").frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
                                         .onTapGesture { dismiss(); model.playEpisode(e, of: series, in: episodes) }
@@ -34,7 +35,7 @@ struct SeriesView: View {
                             HStack {
                                 Text("\(L("series.season")) \(s)")
                                 Spacer()
-                                Button(L("downloads.season")) { model.download(episodes.filter { $0.season == s }, of: series) }
+                                Button(L("downloads.season")) { model.download(bySeason[s] ?? [], of: series) }
                             }
                         }
                     }

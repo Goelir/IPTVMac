@@ -203,3 +203,34 @@ func subtitleIsDrawnIntoFramesAtSpeed(_ speed: Double) async throws {
     #expect(pos > 0.5, "the second file did not start playing (time-pos \(pos), paused \(p.flag("pause")))")
     #expect(!p.flag("pause"))
 }
+
+/// Untrusted provider: HTTPS certificates must be verified and scripting switched off.
+@Test func engineIsHardenedForUntrustedStreams() {
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    #expect(p.string("tls-verify") == "yes")
+    #expect(p.string("tls-ca-file") == "/etc/ssl/cert.pem")
+    #expect(FileManager.default.fileExists(atPath: "/etc/ssl/cert.pem"))
+    #expect(p.string("ytdl") == "no")
+    #expect(p.string("load-scripts") == "no")
+    #expect(p.string("embeddedfonts") == "no")
+}
+
+@Test func httpsWithAValidCertificateStillPlaysAndABadOneIsRefused() async throws {
+    guard ProcessInfo.processInfo.environment["IPTV_NETWORK_TESTS"] != nil else { return }   // needs the internet
+    func tryLoad(_ url: String) async throws -> (played: Bool, failed: Bool) {
+        let p = MPVPlayer(subLang: nil, audioLang: nil)
+        defer { p.shutdown() }
+        p.setProperty("vo", "null"); p.setProperty("ao", "null")
+        nonisolated(unsafe) var failed = false
+        p.onEndFile = { if $0 { failed = true } }
+        p.load(url, start: 0)
+        var played = false
+        for _ in 0..<150 where !played && !failed { try await Task.sleep(for: .milliseconds(100)); played = (p.double("time-pos") ?? 0) > 0.3 }
+        return (played, failed)
+    }
+    let good = try await tryLoad("https://github.com/Goelir/IPTVMac/releases/download/v0.3.4/IPTVMac-demo-en.mp4")
+    #expect(good.played, "a valid certificate must still play")
+    let bad = try await tryLoad("https://self-signed.badssl.com/")
+    #expect(bad.failed && !bad.played, "a self-signed certificate must be refused")
+}

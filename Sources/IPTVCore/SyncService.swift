@@ -13,12 +13,14 @@ public final class SyncService {
         case .xtream: (cats, items) = try await fetchXtream(account, aid, password ?? "")
         case .m3u: (cats, items) = try await fetchM3U(account, aid)
         }
-        if items.isEmpty, try await db.dbQueue.read({ try Item.filter(Column("accountId") == aid).fetchCount($0) }) > 0 {
-            throw IPTVError.emptyResponse   // expired subscription / overloaded panel: keep what we have
-        }
+        if items.isEmpty { throw IPTVError.emptyResponse }   // expired subscription / overloaded panel / nothing there: keep what we have
+        // Only the types that came back with items are replaced: a panel that answers [] for one section while it rebuilds its
+        // cache must not wipe that section (and the favorites that point into it).
+        let types = Set(items.map(\.type)).map(\.rawValue)
+        let typeList = types.map { "'\($0)'" }.joined(separator: ",")      // raw values of our own enum, not user input
         try await db.dbQueue.write { d in
-            try d.execute(sql: "UPDATE item SET stale = 1 WHERE accountId = ?", arguments: [aid])
-            try d.execute(sql: "DELETE FROM category WHERE accountId = ?", arguments: [aid])
+            try d.execute(sql: "UPDATE item SET stale = 1 WHERE accountId = ? AND type IN (\(typeList))", arguments: [aid])
+            try d.execute(sql: "DELETE FROM category WHERE accountId = ? AND type IN (\(typeList))", arguments: [aid])
             for var c in cats { try c.insert(d, onConflict: .ignore) }
             let st = try d.cachedStatement(sql: """
                 INSERT INTO item (accountId,type,name,categoryId,icon,rating,streamId,containerExt,directURL,tvArchive,archiveDays,epgChannelId,stale)
@@ -35,6 +37,9 @@ public final class SyncService {
             try d.execute(sql: "DELETE FROM item WHERE accountId = ? AND stale = 1", arguments: [aid])
         }
     }
+
+    /// Provider-controlled size limit: a list this large is a broken or hostile response, not a catalog.
+    static let maxResponseBytes = 300_000_000
 
     // MARK: Xtream
 
@@ -86,16 +91,18 @@ public final class SyncService {
               url.scheme != nil, url.host != nil else { throw IPTVError.badConfig }
         let (data, resp) = try await session.data(from: url)
         if let code = (resp as? HTTPURLResponse)?.statusCode, !(200..<300).contains(code) { throw IPTVError.http(code) }
+        guard data.count <= Self.maxResponseBytes else { throw IPTVError.badResponse }
         let text = String(decoding: data, as: UTF8.self)
         let first = text.drop { $0.isWhitespace || $0 == "\u{FEFF}" }
         guard first.hasPrefix("#EXTM3U") else { throw IPTVError.badResponse }
 
         var parser = M3UParser()
-        var items: [Item] = [], seenCats = Set<String>(), cats: [Category] = []
+        var items: [Item] = [], seenCats = Set<String>(), cats: [Category] = [], seenItems = Set<String>()
         for line in text.split(whereSeparator: \.isNewline) {
             guard let e = parser.feed(String(line)) else { continue }
             // ponytail: no catch-up for M3U (timeshift URLs are Xtream-only); the attribute is ignored on purpose.
             let type = M3UClassifier.type(url: e.url, group: e.group)
+            guard seenItems.insert("\(type.rawValue)|\(e.url)").inserted else { continue }   // same URL in two groups: the first group keeps it
             if let g = e.group, seenCats.insert("\(type.rawValue)|\(g)").inserted {
                 cats.append(Category(accountId: aid, type: type, remoteId: g, name: g))
             }
@@ -132,6 +139,11 @@ public final class SyncService {
                                streamId: id, containerExt: str(d["container_extension"]))
             }
             try await db.dbQueue.write { d in
+                if !eps.isEmpty {   // episodes the provider no longer lists must not be served from the cache
+                    let ids = String(decoding: try JSONEncoder().encode(eps.map(\.streamId)), as: UTF8.self)
+                    try d.execute(sql: "DELETE FROM episode WHERE accountId = ? AND seriesId = ? AND streamId NOT IN (SELECT value FROM json_each(?))",
+                                  arguments: [aid, seriesId, ids])
+                }
                 for e in eps {
                     try d.execute(sql: """
                         INSERT INTO episode (accountId,seriesId,season,number,title,streamId,containerExt) VALUES (?,?,?,?,?,?,?)
