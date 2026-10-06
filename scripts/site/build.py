@@ -9,6 +9,7 @@ VERSION = (ROOT / "VERSION").read_text().strip()
 BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
+YT_INSTALL = "https://youtu.be/TgaoFEEMg48"
 INSTALL_CMD = "curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash"
 UPDATED = "2026-10-06"
 e = html.escape
@@ -77,7 +78,7 @@ def faq_ld(items):
             "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
 
 def video_ld(name, desc):
-    return {"@context": "https://schema.org", "@type": "VideoObject", "name": name, "description": desc,
+    return {"@context": "https://schema.org", "@type": "VideoObject", "name": name, "description": desc, "embedUrl": "https://www.youtube.com/embed/TgaoFEEMg48", "url": YT_INSTALL,
             "thumbnailUrl": BASE + "assets/demo-poster.jpg", "uploadDate": UPDATED, "contentUrl": BASE + "assets/demo.mp4"}
 
 # ---------- home pages ----------
@@ -108,7 +109,7 @@ HOME = {
          ("Hebrew, English, Arabic", "A full interface in three languages, with right-to-left layout."),
          ("Updates itself", "Checks GitHub Releases, verifies a SHA-256 checksum and installs the new version.")],
   install_h="Install in one line", install_p="Paste this in Terminal. It downloads the latest release, checks its SHA-256, copies IPTVMac to Applications and opens it.",
-  copy="Copy", copied="Copied",
+  copy="Copy", copied="Copied", video="Watch the 95-second install video on YouTube",
   why="Why a command? IPTVMac is not notarized by Apple, which needs a paid developer account, and macOS blocks apps that a browser marked as downloaded from the internet. A file fetched with curl is not marked, so there is nothing to bypass. The script is short and public: install.sh.",
   dmg_h="Or download the DMG", dmg_steps=["Open IPTVMac.dmg and drag the app onto the Applications icon.", "The first launch is blocked: open System Settings, Privacy &amp; Security, and choose Open Anyway next to IPTVMac.", "Or run xattr -dr com.apple.quarantine /Applications/IPTVMac.app in Terminal."],
   faq_h="Questions",
@@ -158,7 +159,7 @@ HOME = {
          ("עברית, אנגלית, ערבית", "ממשק מלא בשלוש שפות, עם פריסה מימין לשמאל."),
          ("מתעדכן לבד", "בודק את GitHub Releases, מאמת SHA-256 ומתקין את הגרסה החדשה.")],
   install_h="התקנה בשורה אחת", install_p="מדביקים בטרמינל. השורה מורידה את הגרסה האחרונה, בודקת SHA-256, מעתיקה את IPTVMac ל-Applications ופותחת אותה.",
-  copy="העתק", copied="הועתק",
+  copy="העתק", copied="הועתק", video="צפו בסרטון ההתקנה של 95 שניות ביוטיוב (באנגלית)",
   why="למה פקודה? IPTVMac לא עברה אימות (notarization) של Apple, שדורש חשבון מפתחים בתשלום, ו-macOS חוסמת אפליקציות שהדפדפן סימן כ״הורדו מהאינטרנט״. קובץ שמורידים עם curl לא מסומן, ולכן אין מה לעקוף. הסקריפט קצר וגלוי: install.sh.",
   dmg_h="או הורדת ה-DMG", dmg_steps=["פותחים את IPTVMac.dmg וגוררים את האפליקציה על אייקון Applications.", "ההפעלה הראשונה נחסמת: בהגדרות המערכת, פרטיות ואבטחה, לוחצים Open Anyway ליד IPTVMac.", "או מריצים בטרמינל xattr -dr com.apple.quarantine /Applications/IPTVMac.app"],
   faq_h="שאלות נפוצות",
@@ -213,7 +214,7 @@ def home(code):
     for i, (img, h, p, alt) in enumerate(c["feats"]):
         out += f'<div class="row{" flip" if i % 2 else ""}"><div class="text"><h3>{e(h)}</h3><p>{e(p)}</p></div><img class="shot" src="{up}screenshots/{img}.jpg" width="1800" height="1130" alt="{e(alt)}" loading="lazy"></div>\n'
     out += '<div class="small-feats">' + "".join(f'<div><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in c["small"]) + '</div>\n</div></section>\n'
-    out += f'''<section id="install" class="tint"><div class="wrap install"><div><h2>{e(c["install_h"])}</h2><p style="color:var(--muted);max-width:56ch">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}<p class="why">{e(c["why"])}</p></div>
+    out += f'''<section id="install" class="tint"><div class="wrap install"><div><h2>{e(c["install_h"])}</h2><p style="color:var(--muted);max-width:56ch">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}<p class="why">{e(c["why"])}</p><p class="why"><a href="{YT_INSTALL}">{e(c["video"])}</a></p></div>
 <div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:20px"><a class="btn primary" href="{DOWNLOAD}">{e(c["dl"])}</a></p></div></div></section>
 <section id="faq"><div class="wrap"><h2>{e(c["faq_h"])}</h2><div class="faq">{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</div></div></section>
 <section id="guides" class="tint"><div class="wrap"><h2>{e(c["guides_h"])}</h2><div class="guides">{"".join(f'<a href="{u}"><strong>{e(t)}</strong><span>{e(s)}</span></a>' for u, t, s in c["guides"])}</div></div></section>
@@ -348,6 +349,7 @@ Sitemap: {BASE}sitemap.xml
 
 Latest version: {VERSION}. Download: {DOWNLOAD}
 Install in Terminal: `{INSTALL_CMD}`
+Install video (95 seconds, English): {YT_INSTALL}
 Source code: {REPO}
 
 ## Guides

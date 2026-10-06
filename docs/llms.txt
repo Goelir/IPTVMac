@@ -4,6 +4,7 @@
 
 Latest version: 0.3.5. Download: https://github.com/Goelir/IPTVMac/releases/latest
 Install in Terminal: `curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash`
+Install video (95 seconds, English): https://youtu.be/TgaoFEEMg48
 Source code: https://github.com/Goelir/IPTVMac
 
 ## Guides

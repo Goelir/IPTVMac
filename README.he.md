@@ -81,6 +81,8 @@ curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | ba
 - macOS 15 ומעלה: נסה לפתוח את האפליקציה פעם אחת, אחר כך **הגדרות המערכת > פרטיות ואבטחה**, גלול למטה ולחץ **Open Anyway** ליד IPTVMac.
 - או בטרמינל: `xattr -dr com.apple.quarantine /Applications/IPTVMac.app`
 
+רוצים לראות קודם? [סרטון התקנה של 95 שניות (באנגלית)](https://youtu.be/TgaoFEEMg48).
+
 ## הפעלה ראשונה
 
 האפליקציה פותחת מדריך קצר בשלושה שלבים.

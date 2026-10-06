@@ -80,6 +80,8 @@ It downloads the latest release, checks the SHA-256 published in the release not
 - macOS 15 and later: try to open the app once, then go to **System Settings > Privacy & Security**, scroll down and click **Open Anyway** next to IPTVMac.
 - Or in Terminal: `xattr -dr com.apple.quarantine /Applications/IPTVMac.app`
 
+Prefer to see it first? [Watch the install guide (95 seconds)](https://youtu.be/TgaoFEEMg48).
+
 You can check that the bundled player works with `/Applications/IPTVMac.app/Contents/MacOS/IPTVMac --selftest` (prints the mpv version and exits 0).
 
 ## First run
