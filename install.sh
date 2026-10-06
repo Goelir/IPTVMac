@@ -69,7 +69,8 @@ main() {
   hdiutil attach "$WORK/IPTVMac.dmg" -nobrowse -readonly -quiet -mountpoint "$MNT" || die "cannot open the disk image."
   [ -d "$MNT/IPTVMac.app" ] || die "IPTVMac.app is missing from the disk image."
 
-  if pgrep -x IPTVMac >/dev/null 2>&1; then
+  # Only the copy that is about to be replaced is closed (a test install into another folder must not touch the one you are using).
+  if pgrep -f "$DEST/IPTVMac.app/Contents/MacOS/IPTVMac" >/dev/null 2>&1; then
     say "Closing the running IPTVMac..."; osascript -e 'tell application "IPTVMac" to quit' >/dev/null 2>&1 || true; sleep 2
   fi
   # Copy next to the destination first, then swap with renames: a failed copy (disk full, Ctrl-C) leaves the old app untouched.

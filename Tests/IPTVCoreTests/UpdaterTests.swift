@@ -189,3 +189,17 @@ private func makeFakeAppDMG(version: String, in dir: URL) throws -> URL {
 }
 
 private func await_(_ s: Double) throws { Thread.sleep(forTimeInterval: s) }
+
+/// The whole chain against the real, published latest release (needs the internet: IPTV_NETWORK_TESTS=1).
+@Test func theRealLatestReleaseVerifiesDownloadsAndStages() async throws {
+    guard ProcessInfo.processInfo.environment["IPTV_NETWORK_TESTS"] != nil else { return }
+    let u = try #require(try await UpdateChecker.check(current: "0.0.1"), "latest release must be signed and parseable by the pinned key")
+    #expect(SemVer(u.version)! >= SemVer("0.4.0")!)
+    #expect(try await UpdateChecker.check(current: u.version) == nil)                       // up to date: nothing offered
+    let dmg = try await UpdateChecker.downloadDMG(u)
+    defer { try? FileManager.default.removeItem(at: dmg) }
+    let dir = FileManager.default.temporaryDirectory.appendingPathComponent("iptvmac-real-\(UUID().uuidString)")
+    defer { try? FileManager.default.removeItem(at: dir) }
+    let app = try UpdateInstaller.stage(dmg: dmg, expectedVersion: u.version, into: dir, expectedBundleID: "io.github.goelir.IPTVMac", currentVersion: "0.3.5")
+    #expect(FileManager.default.fileExists(atPath: app.appendingPathComponent("Contents/MacOS/IPTVMac").path))
+}

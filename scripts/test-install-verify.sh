@@ -17,4 +17,13 @@ check bad verify_signature v9.9.8 "$SHA" "$SIG"                      # signature
 check bad verify_signature "$TAG" "${SHA/a/b}" "$SIG"                # signature replayed on another checksum
 check bad verify_signature "$TAG" "$SHA" "AAAA$SIG"                  # garbage in front
 check bad verify_signature "$TAG" "$SHA" ""                          # no signature
+if [ "${1:-}" = live ]; then   # the same checks against the latest published release
+  J="$(curl -fsSL https://api.github.com/repos/Goelir/IPTVMac/releases/latest)"
+  LTAG="$(printf '%s' "$J" | grep -Eo '"tag_name": *"[^"]*"' | head -1 | sed -E 's/.*"([^"]*)"$/\1/')"
+  LSHA="$(printf '%s' "$J" | grep -Eo 'SHA-256 of IPTVMac\.dmg: `[0-9a-f]{64}`' | grep -Eo '[0-9a-f]{64}')"
+  LSIG="$(printf '%s' "$J" | grep -Eo 'Signature: `[A-Za-z0-9+/=]{100,}`' | grep -Eo '[A-Za-z0-9+/=]{100,}')"
+  check ok  verify_signature "$LTAG" "$LSHA" "$LSIG"
+  check bad verify_signature "$LTAG" "${LSHA/[0-9a-f]/0}" "$LSIG"          # an edited checksum
+  check bad verify_signature "v0.0.1" "$LSHA" "$LSIG"                      # an old tag with the new checksum
+fi
 exit $fail
