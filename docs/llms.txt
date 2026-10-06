@@ -1,0 +1,38 @@
+# IPTVMac
+
+> IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and a Hebrew, English and Arabic interface. Apple Silicon, macOS 14 or later. GPL-3.0. It is a player only and includes no channels or content.
+
+Latest version: 0.3.5. Download: https://github.com/Goelir/IPTVMac/releases/latest
+Install in Terminal: `curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash`
+Source code: https://github.com/Goelir/IPTVMac
+
+## Guides
+- [How to watch Xtream Codes IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/xtream-codes-on-mac.html): Install IPTVMac, choose Xtream Codes, and enter the server address, username and password your provider gave you. IPTVMac downloads the channel list once and then searches it instantly.
+- [How to play an M3U playlist on a Mac](https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html): Install IPTVMac, choose M3U, and enter a name and the playlist link. IPTVMac reads the playlist and sorts it into Live, Movies and Series.
+- [Picture in Picture for IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/picture-in-picture-iptv-mac.html): Start any channel or movie in IPTVMac and click the Picture in Picture button in the player. The video moves to a small floating window that stays on top of other apps and across Spaces.
+
+## Facts
+- Requirements: Apple Silicon Mac (M1 or later), macOS 14 or later. Intel Macs are not supported.
+- Sources: Xtream Codes (server address, username, password) and M3U (playlist link). A local .m3u file is not supported yet.
+- Player: mpv (libmpv, bundled). Hardware decoding, automatic reconnect, embedded and external subtitles, 2x speed for movies and episodes.
+- Search: local SQLite full-text search, inside a category, inside a section or everywhere.
+- Picture in Picture: IPTVMac's own always-on-top floating window, across Spaces.
+- Catch-up and program guide on channels whose provider supports them (Xtream).
+- Downloads of movies and episodes (whole seasons on Xtream series) to a folder the user chooses.
+- Next episode starts automatically after a 5 second countdown (can be turned off).
+- Free, no ads, no tracking. Passwords are stored in the app's local database, readable only by the user.
+- Not notarized by Apple (no paid developer account): install with the Terminal command above, or choose Open Anyway in System Settings, Privacy and Security.
+
+## FAQ
+- What is IPTVMac? IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in Hebrew, English and Arabic.
+- Does IPTVMac include channels or a subscription? No. IPTVMac is only a player. It does not include, host or link to any channels, movies or series. You add a source from a provider you are authorized to use.
+- Does it work with Xtream Codes and M3U? Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link.
+- Which Macs are supported? Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported.
+- Is IPTVMac free? Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking.
+- Why does macOS block the app, and how do I open it? IPTVMac is not notarized by Apple, which requires a paid developer account. Install with the one-line command above, which avoids the warning, or open System Settings, Privacy and Security, and choose Open Anyway.
+- Does IPTVMac have Picture in Picture? Yes. A floating window stays on top of other apps and across Spaces while you browse for something else.
+- Can I watch past programs (catch-up)? Yes, on channels where your provider supports catch-up. Pick a program from the guide.
+- Is it safe to use? The source code is public. Updates come from GitHub Releases and are checked against a SHA-256 checksum. Account passwords are stored in the app's local database, readable only by your user.
+
+## Not to be confused with
+IPTVMac is not an IPTV provider and does not sell subscriptions or channels.

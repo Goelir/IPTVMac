@@ -1,0 +1,6 @@
+# Everyone is welcome, including search and AI crawlers: the goal is to be found.
+User-agent: *
+Allow: /
+Disallow: /superpowers/
+
+Sitemap: https://goelir.github.io/IPTVMac/sitemap.xml

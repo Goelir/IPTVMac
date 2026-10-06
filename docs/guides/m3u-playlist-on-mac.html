@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to play an M3U playlist on a Mac | IPTVMac</title>
+<meta name="description" content="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.">
+<link rel="canonical" href="https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html">
+
+<meta name="theme-color" content="#4553df">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="IPTVMac">
+<meta property="og:title" content="How to play an M3U playlist on a Mac | IPTVMac">
+<meta property="og:description" content="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.">
+<meta property="og:url" content="https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html">
+<meta property="og:image" content="https://goelir.github.io/IPTVMac/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to play an M3U playlist on a Mac", "description": "How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.", "datePublished": "2026-10-06", "dateModified": "2026-10-06", "inLanguage": "en", "mainEntityOfPage": "https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html", "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"}, "publisher": {"@type": "Person", "name": "Goelir"}, "image": "https://goelir.github.io/IPTVMac/social-preview.png"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can IPTVMac open a local .m3u file?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. IPTVMac takes the playlist link (URL)."}}, {"@type": "Question", "name": "How does IPTVMac decide what is a movie or a series?", "acceptedAnswer": {"@type": "Answer", "text": "By the URL path (/movie/ or /series/), then by the group name, then by the file ending. Everything else is treated as live."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": "https://goelir.github.io/IPTVMac/"}, {"@type": "ListItem", "position": 2, "name": "How to play an M3U playlist on a Mac", "item": "https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html"}]}</script>
+</head>
+<body>
+<div class="bars" aria-hidden="true"></div>
+<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../assets/favicon.png" width="36" height="36" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a href="../#install">Install</a><a href="../#faq">FAQ</a><a href="https://github.com/Goelir/IPTVMac">GitHub</a></nav></header></div>
+<main><div class="wrap"><article class="guide">
+<p class="crumbs"><a href="../">IPTVMac</a> / Guides</p>
+<h1>How to play an M3U playlist on a Mac</h1>
+<p class="answer">Install IPTVMac, choose M3U, and enter a name and the playlist link. IPTVMac reads the playlist and sorts it into Live, Movies and Series.</p>
+
+<h2>What you need</h2>
+<p>The link (URL) of an M3U or M3U8 playlist from a source you are authorized to use. IPTVMac takes the link; opening a local .m3u file is not supported yet.</p>
+<h2>Add it in IPTVMac</h2>
+<ol>
+<li><a href="https://github.com/Goelir/IPTVMac/releases/latest">Install IPTVMac</a> (Apple Silicon Mac, macOS 14 or later).</li>
+<li>In the first-run guide, or in Settings, choose <strong>M3U</strong>. Enter a name and paste the playlist link.</li>
+<li>Save. IPTVMac downloads the playlist and builds the lists. The <code>group-title</code> of each entry becomes its category and <code>tvg-logo</code> becomes its icon.</li>
+</ol>
+<h2>How entries are sorted</h2>
+<p>An M3U file does not say whether an entry is a channel, a movie or a series, so IPTVMac decides: a URL containing <code>/movie/</code> or <code>/series/</code> is a movie or series, then the group name is checked, and files ending in .mp4, .mkv or .avi are treated as movies. Everything else is live. Catch-up and the program guide work only when the playlist carries that information.</p>
+<h2>Tips</h2>
+<ul>
+<li>Search works inside a category, inside a section or everywhere, and finds titles as you type.</li>
+<li>Star channels to keep them under Favorites.</li>
+<li>VLC can also open an M3U playlist; IPTVMac adds the browsing, search, favorites, Picture in Picture and downloads on top.</li>
+</ul>
+
+<p style="margin-top:36px"><a class="btn primary" href="https://github.com/Goelir/IPTVMac/releases/latest">Download IPTVMac for Mac</a></p>
+<p class="why" style="margin-top:28px">Updated 2026-10-06. IPTVMac is a media player; it does not include, host or link to any content.</p>
+</article></div></main>
+<footer><div class="wrap"><p>Open source under GPL-3.0. <a href="https://github.com/Goelir/IPTVMac">GitHub</a> · <a href="../">Home</a></p></div></footer>
+</body></html>
