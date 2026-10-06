@@ -133,11 +133,11 @@ In `~/Library/Application Support/IPTVMac/` (the folder and database are readabl
 
 ## Updates
 
-The installed app checks GitHub Releases at launch and every 6 hours. When a newer version exists it downloads it, verifies the SHA-256 published in the release notes, and shows a banner: **Restart to update** (or it installs on the next quit). Both automatic checking and automatic download can be turned off in Settings. To publish a new version: bump `VERSION`, commit, and run `scripts/release.sh notes.md`.
+The installed app checks GitHub Releases at launch and every 6 hours. When a newer version exists it downloads it, verifies the release **signature** (an Ed25519 key that is not stored on GitHub, pinned in the app) and the SHA-256 published in the release notes, and shows a banner: **Restart to update** (or it installs on the next quit). Both automatic checking and automatic download can be turned off in Settings. To publish a new version: bump `VERSION`, commit, and run `scripts/release.sh notes.md`.
 
 ## Privacy
 
-Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by your user only). Account passwords are kept in that database in plain text; they are not in the Keychain (the Keychain asked for permission again with every new build). The app only contacts the servers you add, and GitHub for update checks. No analytics, no telemetry.
+Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by your user only). Account passwords are kept in that database in plain text; they are not in the Keychain (the Keychain asked for permission again with every new build). The app only contacts the servers you add, and GitHub for update checks. No analytics, no telemetry. See [SECURITY.md](SECURITY.md) for how updates are protected and the known limits.
 
 ## Build from source
 

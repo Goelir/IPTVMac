@@ -441,7 +441,8 @@ extension AppModel {
             let dmg = try await UpdateChecker.downloadDMG(u)
             defer { try? FileManager.default.removeItem(at: dmg) }
             let dir = updateDir
-            stagedApp = try await Task.detached { try UpdateInstaller.stage(dmg: dmg, expectedVersion: u.version, into: dir) }.value
+            let id = Bundle.main.bundleIdentifier, cur = currentVersion
+            stagedApp = try await Task.detached { try UpdateInstaller.stage(dmg: dmg, expectedVersion: u.version, into: dir, expectedBundleID: id, currentVersion: cur) }.value
             updateStatus = .ready
         } catch { updateStatus = .failed(error.localizedDescription) }
     }
