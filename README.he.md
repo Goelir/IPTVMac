@@ -14,7 +14,7 @@
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)
 ![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey)
 
-[**הורדה**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;·&nbsp; [התקנה](#התקנה) &nbsp;·&nbsp; [יכולות](#יכולות) &nbsp;·&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;·&nbsp; [English](README.md)
+[**הורדה**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;·&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;·&nbsp; [התקנה](#התקנה) &nbsp;·&nbsp; [יכולות](#יכולות) &nbsp;·&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;·&nbsp; [English](README.md)
 
 <br>
 

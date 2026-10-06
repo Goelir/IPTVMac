@@ -13,7 +13,7 @@
 ![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey)
 ![Swift](https://img.shields.io/badge/Swift-SwiftUI-orange?logo=swift)
 
-[**Download**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;·&nbsp; [Install](#install) &nbsp;·&nbsp; [Features](#features) &nbsp;·&nbsp; [FAQ](#faq) &nbsp;·&nbsp; [עברית](README.he.md)
+[**Download**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;·&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;·&nbsp; [Install](#install) &nbsp;·&nbsp; [Features](#features) &nbsp;·&nbsp; [FAQ](#faq) &nbsp;·&nbsp; [עברית](README.he.md)
 
 <br>
 
@@ -145,6 +145,12 @@ Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by
     scripts/make-dmg.sh          # builds build/IPTVMac.dmg
 
 Use `scripts/swift.sh` instead of bare `swift` when only Command Line Tools are installed (it selects an SDK whose SwiftUI does not need Xcode's macro plugin). Design notes are in [docs/superpowers/specs](docs/superpowers/specs/2026-10-05-iptvmac-design.md).
+
+## Guides
+
+- [How to watch Xtream Codes IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/xtream-codes-on-mac.html)
+- [How to play an M3U playlist on a Mac](https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html)
+- [Picture in Picture for IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/picture-in-picture-iptv-mac.html)
 
 ## Contributing
 
