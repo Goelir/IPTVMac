@@ -44,7 +44,7 @@ struct SeriesView: View {
         }
         .padding().frame(minWidth: 520, minHeight: 480)
         .task {
-            guard let a = model.account else { return }
+            guard let a = model.playlist(id: series.accountId) else { return }
             do {
                 episodes = try await SyncService(db: model.db).episodes(account: a, password: a.id.flatMap { model.secrets.password(for: $0) }, seriesId: series.streamId)
             } catch { self.error = error.localizedDescription }

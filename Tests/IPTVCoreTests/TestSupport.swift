@@ -12,6 +12,14 @@ func makeDB() throws -> (AppDatabase, Int64) {
     return (db, id)
 }
 
+func addAccount(_ db: AppDatabase, _ name: String) throws -> Int64 {
+    try db.dbQueue.write { d in
+        var a = Account(name: name, kind: .m3u, url: "http://h/\(name).m3u")
+        try a.insert(d)
+        return a.id!
+    }
+}
+
 func addItem(_ db: AppDatabase, _ aid: Int64, _ name: String, type: ItemType = .live,
              cat: String? = "1", sid: String? = nil) throws {
     try db.dbQueue.write { d in

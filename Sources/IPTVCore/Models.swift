@@ -18,6 +18,12 @@ public struct Account: Codable, Identifiable, Hashable, FetchableRecord, Mutable
         self.server = server; self.username = username; self.url = url
     }
     public mutating func didInsert(_ inserted: InsertionSuccess) { id = inserted.rowID }
+
+    /// The playlist choice to open with, from the saved value ("all" or an account id). A deleted playlist falls back to the first,
+    /// and All needs more than one playlist.
+    public static func restore(_ saved: String?, from accounts: [Account]) -> (all: Bool, account: Account?) {
+        (saved == "all" && accounts.count > 1, accounts.first { String($0.id ?? 0) == saved } ?? accounts.first)
+    }
 }
 
 public struct Category: Codable, Identifiable, Hashable, FetchableRecord, MutablePersistableRecord {

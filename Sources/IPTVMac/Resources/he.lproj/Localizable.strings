@@ -6,6 +6,8 @@
 "cat.favorites" = "מועדפים";
 "cat.continue" = "המשך צפייה";
 "cat.filter" = "סינון קטגוריות";
+"playlist.all" = "כל הרשימות";
+"playlist.label" = "רשימה";
 "scope.category" = "בקטגוריה";
 "scope.type" = "בחלק הנוכחי";
 "scope.everywhere" = "בכל מקום";
