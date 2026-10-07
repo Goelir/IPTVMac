@@ -4,7 +4,7 @@ import IPTVCore
 struct RootView: View {
     @Environment(AppModel.self) var model
     @State private var catFilter = ""
-    @State private var columns = NavigationSplitViewVisibility.automatic
+    @State private var columns = NavigationSplitViewVisibility.all
 
     var body: some View {
         @Bindable var model = model
@@ -77,7 +77,7 @@ struct RootView: View {
                         Text(L("tab.live")).tag(ItemType.live)
                         Text(L("tab.movies")).tag(ItemType.movie)
                         Text(L("tab.series")).tag(ItemType.series)
-                    }.pickerStyle(.segmented).frame(width: 300)
+                    }.pickerStyle(.segmented).frame(width: 240)
                 }
                 ToolbarItem {
                     if model.wrappedValue.accounts.count > 1 {
