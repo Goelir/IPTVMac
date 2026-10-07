@@ -2,7 +2,7 @@
 
 > IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Apple Silicon, macOS 14 or later. GPL-3.0. It is a player only and includes no channels or content.
 
-Latest version: 0.7.2. Download: https://github.com/Goelir/IPTVMac/releases/latest
+Latest version: 0.8.0. Download: https://github.com/Goelir/IPTVMac/releases/latest
 Install in Terminal: `curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash`
 Install video (95 seconds, English): https://youtu.be/TgaoFEEMg48
 Source code: https://github.com/Goelir/IPTVMac
