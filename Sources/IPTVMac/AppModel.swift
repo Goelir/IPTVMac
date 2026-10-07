@@ -62,32 +62,71 @@ final class AppModel {
     var schedule: [EPGEntry] = []      // current + upcoming programs of the channel being watched
     private var searchTask: Task<Void, Never>?
     private var pipController: PiPController?
-    private var enteredFullscreen = false
+    private var fullscreen = FullscreenSync()
+    @ObservationIgnored private weak var window: NSWindow?     // the main window, reported by WindowReader (not guessed from NSApp.windows)
+    @ObservationIgnored var openMainWindow: (() -> Void)?      // creates the window again after it was closed
+    private var reopening = false
 
     var openFullscreen: Bool { UserDefaults.standard.object(forKey: "openFullscreen") as? Bool ?? true }
     /// True while the video fills the window (sidebar hidden too).
     var playerFullscreen: Bool { playing != nil && !pip && openFullscreen }
 
-    /// Full screen only for the main window (never the floating PiP panel). `enteredFullscreen` makes us leave only what we entered.
-    private var mainWindow: NSWindow? { NSApp.windows.first { $0.isVisible && !($0 is NSPanel) && $0.canBecomeMain } }
+    /// The main window reports itself here: Settings and the PiP panel are never mistaken for it, and a window created
+    /// again after a close joins the playback that is still running.
+    func attach(_ w: NSWindow) {
+        guard window !== w else { return }
+        window = w; reopening = false
+        applyFullscreen(); updateToolbar()
+    }
+
+    /// Dock click, File > Show Window, PiP return: the window comes back (created again if it was closed).
+    func showMainWindow() {
+        NSApp.unhide(nil); NSApp.activate(ignoringOtherApps: true)
+        if let w = window { if w.isMiniaturized { w.deminiaturize(nil) }; w.makeKeyAndOrderFront(nil) }
+        else if !reopening {
+            reopening = true; openMainWindow?()
+            Task { try? await Task.sleep(for: .seconds(2)); reopening = false }   // never stay blocked if no window came
+        }
+    }
 
     /// While the video is full screen the window toolbar (tabs, search) is hidden too; it is back as soon as either ends.
     func updateToolbar() {
-        guard let w = mainWindow, let tb = w.toolbar else { return }
+        guard let w = window, let tb = w.toolbar else { return }
         let hide = playerFullscreen && w.styleMask.contains(.fullScreen)
         if tb.isVisible == hide { tb.isVisible = !hide }
     }
 
-    private func setFullscreen(_ on: Bool, tries: Int = 10) {
-        guard let w = mainWindow else { return }
-        if w.attachedSheet != nil, tries > 0 {   // a window ignores full-screen requests while a sheet (e.g. the episode list) is closing
-            Task { try? await Task.sleep(for: .milliseconds(200)); if on == (self.playing != nil && self.openFullscreen) { self.setFullscreen(on, tries: tries - 1) } }
-            return
+    /// Full screen only for the main window. AppKit drops a toggle issued mid-transition, with a sheet closing or while
+    /// the window is minimized/hidden, so FullscreenSync keeps the request until a window event says it can be applied.
+    private func setFullscreen(_ on: Bool) { fullscreen.want(on); applyFullscreen() }
+
+    private func applyFullscreen() {
+        guard let w = window, fullscreen.next(isFull: w.styleMask.contains(.fullScreen), ready: w.isVisible && w.attachedSheet == nil) else { return }
+        w.toggleFullScreen(nil)
+        Task { try? await Task.sleep(for: .seconds(4)); if fullscreen.busy { fullscreenEnded() } }   // a transition AppKit never reports must not block the next one
+    }
+
+    private func fullscreenEnded() {
+        fullscreen.transitionEnded(isFull: window?.styleMask.contains(.fullScreen) ?? false)
+        updateToolbar()
+        Task { applyFullscreen() }          // AppKit still drops a toggle issued from inside the did-notification: next turn
+    }
+
+    private func windowEvent(_ n: Notification) {
+        if let o = n.object as? NSWindow, o !== window { return }       // Settings, the PiP panel, sheets
+        switch n.name {
+        case NSWindow.willEnterFullScreenNotification, NSWindow.willExitFullScreenNotification: fullscreen.transitionStarted()
+        case NSWindow.didEnterFullScreenNotification, NSWindow.didExitFullScreenNotification: fullscreenEnded()
+        case NSWindow.willCloseNotification:
+            guard let w = window else { return }
+            Task {   // a close during a full-screen transition posts this and is then refused: only a window that is really gone counts
+                try? await Task.sleep(for: .milliseconds(200))
+                guard window === w, !w.isVisible, !NSApp.isHidden else { return }
+                window = nil; fullscreen.reset()
+                if playing != nil && !pip { stopPlayback() }             // nobody sees or controls it any more; a floating PiP keeps going
+            }
+        default: updateToolbar(); applyFullscreen()                      // sheet closed, window shown/restored, app unhidden
         }
-        let isFull = w.styleMask.contains(.fullScreen)
-        if on == isFull { return }
-        if on { enteredFullscreen = true; w.toggleFullScreen(nil) }
-        else if enteredFullscreen { enteredFullscreen = false; w.toggleFullScreen(nil) }
     }
 
     // MARK: Updates
@@ -107,9 +146,11 @@ final class AppModel {
             a.runModal(); exit(1)
         }
         secrets = DatabaseSecretStore(db: db)
-        for n in [NSWindow.didEnterFullScreenNotification, NSWindow.didExitFullScreenNotification] {
-            NotificationCenter.default.addObserver(forName: n, object: nil, queue: .main) { [weak self] _ in
-                MainActor.assumeIsolated { self?.updateToolbar() }
+        for n in [NSWindow.willEnterFullScreenNotification, NSWindow.willExitFullScreenNotification, NSWindow.didEnterFullScreenNotification,
+                  NSWindow.didExitFullScreenNotification, NSWindow.didEndSheetNotification, NSWindow.didDeminiaturizeNotification,
+                  NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification, NSApplication.didUnhideNotification] {
+            NotificationCenter.default.addObserver(forName: n, object: nil, queue: .main) { [weak self] n in
+                MainActor.assumeIsolated { self?.windowEvent(n) }
             }
         }
     }
@@ -338,7 +379,7 @@ final class AppModel {
         setFullscreen(false)
         updateToolbar()
         let c = PiPController(model: p, title: playing?.title ?? "",
-                              onReturn: { [weak self] in guard let s = self else { return }; if s.mainWindow == nil { s.stopPlayback() } else { s.exitPiP() } },
+                              onReturn: { [weak self] in self?.exitPiP(); self?.showMainWindow() },
                               onClose: { [weak self] in self?.stopPlayback() })
         pipController = c
         c.show()
