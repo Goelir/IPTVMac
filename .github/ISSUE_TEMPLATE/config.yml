@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem privately
+    url: https://github.com/Goelir/IPTVMac/security/advisories/new
+    about: For vulnerabilities, please use a private advisory and not a public issue.
+  - name: Install and setup guides
+    url: https://goelir.github.io/IPTVMac/
+    about: Install steps, Xtream Codes and M3U guides, and answers to common questions.
+  - name: FAQ in the README
+    url: https://github.com/Goelir/IPTVMac#faq
+    about: macOS blocks the app, HTTP 403 or 413, updates that fail. Check here first.

@@ -2,7 +2,9 @@
 
 ## Reporting a problem
 
-Open a [private security advisory](https://github.com/Goelir/IPTVMac/security/advisories/new) on GitHub (or an issue without details if you prefer, and I will move the conversation to a private channel). Please do not post server addresses, usernames or passwords anywhere.
+Open a [private security advisory](https://github.com/Goelir/IPTVMac/security/advisories/new) on GitHub. If you prefer, open an issue that says only that you found a problem, with no details, and I will move the conversation to a private channel. Please do not post server addresses, usernames or passwords anywhere.
+
+Supported version: the latest release. The app updates itself, so please reproduce a problem on the current version first.
 
 ## How updates are protected
 
