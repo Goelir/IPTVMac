@@ -50,7 +50,7 @@ struct RootView: View {
             VStack(spacing: 0) {
                 if let r = model.wrappedValue.playing, !model.wrappedValue.pip, let pm = model.wrappedValue.player {
                     // Inside the detail column: the tabs, search and Back stay in the toolbar while watching.
-                    PlayerScreen(request: r, pm: pm).transition(.opacity)
+                    PlayerScreen(request: r, pm: pm)    // no transition here: the video view is re-parented between hosts
                 } else {
                     VStack(spacing: 0) {
                         UpdateBanner()
@@ -66,10 +66,8 @@ struct RootView: View {
                     }
                     .motion(value: model.wrappedValue.syncing)
                     .motion(value: model.wrappedValue.syncMessage)
-                    .transition(.opacity)
                 }
             }
-            .motion(.easeInOut(duration: 0.2), value: showsPlayer(model.wrappedValue))
             .searchable(text: model.searchText, prompt: L("search.prompt"))
             .searchScopes(model.scope) {
                 Text(L("scope.category")).tag(SearchScopeChoice.category)
