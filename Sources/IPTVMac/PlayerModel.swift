@@ -22,6 +22,10 @@ final class PlayerModel {
     var onSaveProgress: ((Double, Double) -> Void)?
     /// Called when a movie/episode reaches its end (true) and when it leaves the end again, e.g. after a seek back (false).
     var onEndChanged: ((Bool) -> Void)?
+    /// Called once when the sleep timer runs out.
+    var onSleep: (() -> Void)?
+    private var sleepTimer = SleepTimer()        // lives and dies with the player, so it carries over channel/episode changes
+    private(set) var sleepMinutesLeft: Int?      // for the moon button; nil = off
     private var wasAtEnd = false
     private var loadGen = 0                      // bumped on every explicit load, so a stale retry timer cannot reload an old item
     private var activity: NSObjectProtocol?       // keeps the display awake while a video plays (vo=libmpv has no window of its own)
@@ -33,6 +37,8 @@ final class PlayerModel {
         self.videoView = MPVVideoView(player: mpv)
         self.request = request
         applySubtitleStyle()
+        applyVideoScale()
+        applyBuffer()
         mpv.onEndFile = { [weak self] isError in
             guard isError else { return }
             Task { @MainActor in self?.handleFailure() }
@@ -57,6 +63,15 @@ final class PlayerModel {
         let d = UserDefaults.standard
         mpv.setProperty("sub-scale", String(d.object(forKey: "subScale") as? Double ?? 1.0))
         mpv.setProperty("sub-delay", String(d.object(forKey: "subDelay") as? Double ?? 0))
+    }
+
+    func applyVideoScale() { mpv.apply(VideoScale(rawValue: UserDefaults.standard.string(forKey: "videoScale") ?? "") ?? .fit) }
+    func applyBuffer() { mpv.apply(BufferSize(rawValue: UserDefaults.standard.string(forKey: "bufferSize") ?? "") ?? .normal) }
+
+    /// 0 turns the timer off.
+    func setSleep(minutes: Int, now: Date = Date()) {
+        sleepTimer.set(minutes: minutes, now: now)
+        sleepMinutesLeft = sleepTimer.remainingMinutes(now: now)
     }
 
     /// A position of 0 means "nothing played yet" (file still loading or load failed): saving it would erase the resume point.
@@ -94,8 +109,15 @@ final class PlayerModel {
         mpv.load(request.url, start: start)
     }
 
-    private func tick() {
+    func tick(now: Date = Date()) {
         guard !closed else { return }
+        if sleepTimer.expired(now: now) {
+            sleepTimer.cancel(); sleepMinutesLeft = nil
+            onSleep?()
+            return
+        }
+        let left = sleepTimer.remainingMinutes(now: now)
+        if left != sleepMinutesLeft { sleepMinutesLeft = left }
         position = mpv.double("time-pos") ?? position
         if request.isLive {
             if position > lastPos + 0.5 { retries = 0; lastPos = position }   // playing again: the next drop gets fresh retries

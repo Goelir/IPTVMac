@@ -408,6 +408,7 @@ final class AppModel {
             self.saveProgress(cur, position: pos, duration: dur)
         }
         p.onEndChanged = { [weak self] ended in self?.episodeEndChanged(ended) }
+        p.onSleep = { [weak self] in self?.stopPlayback() }
         player = p
     }
 
