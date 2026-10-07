@@ -70,7 +70,8 @@ def software_ld(desc, lang):
         "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"},
         "sameAs": [REPO],
         "featureList": ["Xtream Codes and M3U sources", "Instant full-text search", "Built-in mpv player with subtitles",
-                        "Picture in Picture", "Catch-up TV", "Downloads", "Hebrew, English and Arabic interface"],
+                        "Picture in Picture", "Catch-up TV", "Downloads", "Several playlists", "Playback speed 0.25x to 4x", "Sleep timer",
+                        "Backup and restore", "Hebrew, English and Arabic interface"],
     }
 
 def faq_ld(items):
@@ -106,6 +107,9 @@ HOME = {
          ("Catch-up and guide", "Watch past programs on channels that support it, and see what is on now and next."),
          ("Next episode", "When an episode ends, the next one starts after a 5 second countdown. You can cancel it."),
          ("Favorites and resume", "Star channels and movies. Movies and episodes continue where you stopped."),
+         ("Several playlists", "Switch between playlists from the toolbar, or show all of them together with the playlist name on each item."),
+         ("Speed, skip and sleep timer", "Play from 0.25x to 4x, choose the skip step, and set a sleep timer."),
+         ("Backup and settings", "Export playlists (without passwords), favorites and history; light or dark appearance; hide categories by words."),
          ("Hebrew, English, Arabic", "A full interface in three languages, with right-to-left layout."),
          ("Updates itself", "Checks GitHub Releases, verifies a SHA-256 checksum and installs the new version.")],
   install_h="Install in one line", install_p="Paste this in Terminal. It downloads the latest release, checks its SHA-256, copies IPTVMac to Applications and opens it.",
@@ -156,6 +160,9 @@ HOME = {
          ("צפייה בהיסטוריה ולוח שידורים", "צפייה בתוכניות מהעבר בערוצים שתומכים, ומה משודר עכשיו ואחר כך."),
          ("הפרק הבא", "כשפרק נגמר, הפרק הבא מתחיל אחרי ספירה של 5 שניות. אפשר לבטל."),
          ("מועדפים והמשך צפייה", "מסמנים ערוצים וסרטים בכוכב. סרטים ופרקים ממשיכים מהמקום שעצרתם."),
+         ("כמה רשימות", "עוברים בין רשימות מסרגל הכלים, או מציגים את כולן יחד עם שם הרשימה על כל פריט."),
+         ("מהירות, דילוג וטיימר שינה", "ניגון מ-0.25× עד 4×, בחירת צעד הדילוג, וטיימר שינה."),
+         ("גיבוי והגדרות", "ייצוא של הרשימות (בלי סיסמאות), המועדפים וההיסטוריה; מראה בהיר או כהה; הסתרת קטגוריות לפי מילים."),
          ("עברית, אנגלית, ערבית", "ממשק מלא בשלוש שפות, עם פריסה מימין לשמאל."),
          ("מתעדכן לבד", "בודק את GitHub Releases, מאמת SHA-256 ומתקין את הגרסה החדשה.")],
   install_h="התקנה בשורה אחת", install_p="מדביקים בטרמינל. השורה מורידה את הגרסה האחרונה, בודקת SHA-256, מעתיקה את IPTVMac ל-Applications ופותחת אותה.",
@@ -357,7 +364,9 @@ Source code: {REPO}
 ## Facts
 - Requirements: Apple Silicon Mac (M1 or later), macOS 14 or later. Intel Macs are not supported.
 - Sources: Xtream Codes (server address, username, password) and M3U (playlist link). A local .m3u file is not supported yet.
-- Player: mpv (libmpv, bundled). Hardware decoding, automatic reconnect, embedded and external subtitles, 2x speed for movies and episodes.
+- Player: mpv (libmpv, bundled). Hardware decoding, automatic reconnect, embedded and external subtitles, playback speed from 0.25x to 4x for movies and episodes, configurable skip step, fit/fill/stretch, sleep timer.
+- Several playlists: switch between them or show all playlists together (search, favorites and continue watching across all).
+- Settings: light/dark appearance, interface language, automatic playlist refresh, hiding categories by words, backup and restore (playlists without passwords, favorites, history).
 - Search: local SQLite full-text search, inside a category, inside a section or everywhere.
 - Picture in Picture: IPTVMac's own always-on-top floating window, across Spaces.
 - Catch-up and program guide on channels whose provider supports them (Xtream).
