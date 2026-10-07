@@ -21,6 +21,7 @@ struct ChannelRow: View {
             }.buttonStyle(.plain).foregroundStyle(model.isFavorite(item) ? .yellow : .secondary)
         }
         .padding(.horizontal, 12).padding(.vertical, 6)
+        .background(model.lastPlayedID == item.id ? Color.accentColor.opacity(0.14) : .clear, in: RoundedRectangle(cornerRadius: 6))
         .contentShape(Rectangle())
         .onTapGesture { model.play(item) }
         .contextMenu { Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) } }
@@ -37,6 +38,7 @@ struct PosterCell: View {
                 Rectangle().fill(.quaternary).overlay(Image(systemName: "film").foregroundStyle(.secondary))
             }
             .aspectRatio(2.0 / 3.0, contentMode: .fit).clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay { if model.lastPlayedID == item.id { RoundedRectangle(cornerRadius: 8).stroke(Color.accentColor, lineWidth: 3) } }
             Text(item.name).font(.callout).lineLimit(2)
         }
         .contentShape(Rectangle())
@@ -61,6 +63,7 @@ struct ResultsView: View {
         if model.results.isEmpty && !model.syncing {
             ContentUnavailableView(L("empty.results"), systemImage: "magnifyingglass")
         } else {
+            ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 8, pinnedViews: .sectionHeaders) {
                     ForEach(ItemType.allCases, id: \.self) { t in
@@ -82,6 +85,13 @@ struct ResultsView: View {
                         }
                     }
                 }
+            }
+            .onAppear {   // back from the player: show the row that was playing instead of the top of the list
+                guard let id = model.scrollTarget else { return }
+                model.scrollTarget = nil
+                let key: Int64? = id   // rows are identified by Item.id, an Optional: scrollTo must get the same type
+                if model.results.contains(where: { $0.id == key }) { DispatchQueue.main.async { proxy.scrollTo(key, anchor: .center) } }
+            }
             }
         }
     }

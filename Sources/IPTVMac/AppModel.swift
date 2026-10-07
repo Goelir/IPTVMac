@@ -38,6 +38,9 @@ final class AppModel {
     var searchText = "" { didSet { leavePlayerForBrowsing(); scheduleSearch() } }
     var scope: SearchScopeChoice = .category { didSet { scheduleSearch() } }
     var results: [Item] = []
+    /// The last item played, and (set only when the player closes onto the list) the row the list scrolls back to.
+    var lastPlayedID: Int64?
+    var scrollTarget: Int64?
     var syncing = false
     var syncMessage: String?
     var playing: PlayRequest?
@@ -304,6 +307,7 @@ final class AppModel {
     func startPlayback(_ r: PlayRequest) {
         defer { updateToolbar() }
         cancelUpNext()                                           // a pending "up next" must not replace what the user picked now
+        if let id = r.item?.id { lastPlayedID = id }
         if pip { exitPiP() }
         if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
@@ -320,6 +324,7 @@ final class AppModel {
 
     func stopPlayback() {
         cancelUpNext()
+        if playing != nil && !pip { scrollTarget = lastPlayedID }   // the list comes back: land on the channel/title that was playing
         pipController?.dismiss(); pipController = nil
         player?.close(); player = nil
         pip = false
