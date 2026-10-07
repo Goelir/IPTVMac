@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generates the static website in docs/ (home EN + HE, three guides, robots.txt, sitemap.xml, llms.txt).
 Run: python3 scripts/site/build.py   (no dependencies). Edit the content below, not the generated HTML."""
-import json, html, pathlib, re
+import json, html, pathlib, re, hashlib, shutil
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
@@ -14,11 +14,24 @@ INSTALL_CMD = "curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/
 UPDATED = "2026-10-06"
 e = html.escape
 
+# CSS and JS live next to this script and are copied into docs/assets with a content hash for cache busting.
+SRC = pathlib.Path(__file__).resolve().parent
+ASSET_V = ""
+def publish_assets():
+    global ASSET_V
+    h = hashlib.sha1()
+    for n in ("site.css", "site.js"):
+        shutil.copyfile(SRC / n, DOCS / "assets" / n)
+        h.update((SRC / n).read_bytes())
+    ASSET_V = h.hexdigest()[:8]
+
 # ---------- shared pieces ----------
 def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", extra_ld=()):
     up = "../" * depth
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in alternates)
     ld = "".join(f'<script type="application/ld+json">{json.dumps(o, ensure_ascii=False)}</script>' for o in extra_ld)
+    fonts = "".join(f'<link rel="preload" href="{up}assets/fonts/plex-{f}.woff2" as="font" type="font/woff2" crossorigin>'
+                    for f in (["latin-400", "latin-600"] + (["hebrew-400", "hebrew-600"] if lang == "he" else [])))
     return f'''<!doctype html>
 <html lang="{lang}" dir="{'rtl' if lang == 'he' else 'ltr'}">
 <head>
@@ -28,40 +41,46 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{canonical}">
 {alts}
-<meta name="theme-color" content="#4553df">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f5f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e16" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="IPTVMac">
+<meta property="og:locale" content="{'he_IL' if lang == 'he' else 'en_US'}">
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{BASE}social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(title)}">
+<meta name="twitter:description" content="{e(desc)}">
+<meta name="twitter:image" content="{BASE}social-preview.png">
 <link rel="icon" type="image/png" href="{up}assets/favicon.png">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
-<link rel="stylesheet" href="{up}assets/site.css">
+{fonts}
+<link rel="stylesheet" href="{up}assets/site.css?v={ASSET_V}">
+<script>document.documentElement.classList.add("js")</script>
 {ld}
 </head>
 <body>
-<div class="bars" aria-hidden="true"></div>
 '''
-
-COPY_JS = '''<script>
-document.querySelectorAll("button.copy").forEach(function (b) {
-  b.addEventListener("click", function () {
-    var t = b.parentElement.querySelector("code").textContent;
-    var done = function () { var o = b.textContent; b.textContent = b.dataset.done; setTimeout(function () { b.textContent = o; }, 1800); };
-    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done); else { var r = document.createRange(); r.selectNodeContents(b.parentElement.querySelector("code")); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-  });
-});
-</script>'''
 
 def pic(up, name, alt, attrs="", cls="shot"):
     # WebP (1200 px wide) first, JPEG fallback; regenerate with: cwebp -q 78 -resize 1200 0 NN-x.jpg -o NN-x.webp
     return (f'<picture><source type="image/webp" srcset="{up}screenshots/{name}.webp">'
             f'<img class="{cls}" src="{up}screenshots/{name}.jpg" width="1800" height="1130" alt="{e(alt)}" {attrs}></picture>')
 
+ICON_COPY = '<svg class="cp" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.8"/><path d="M10.5 5.5V4a1.8 1.8 0 0 0-1.8-1.8H4A1.8 1.8 0 0 0 2.2 4v4.7A1.8 1.8 0 0 0 4 10.5h1.5"/></svg>'
+ICON_OK = '<svg class="ok" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>'
+ICON_CHEV = '<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>'
+ICON_DL = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2.5v9m0 0L5.5 8M9 11.5L12.5 8M3 14.5h12"/></svg>'
+ICON_GH = '<svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M9 1.2a7.8 7.8 0 0 0-2.47 15.2c.39.07.53-.17.53-.37v-1.4c-2.17.47-2.63-1.04-2.63-1.04-.35-.9-.87-1.14-.87-1.14-.71-.49.05-.48.05-.48.78.06 1.2.81 1.2.81.7 1.2 1.83.85 2.28.65.07-.51.27-.85.5-1.05-1.73-.2-3.55-.87-3.55-3.86 0-.85.3-1.55.8-2.1-.08-.2-.35-1 .08-2.07 0 0 .65-.21 2.14.8a7.4 7.4 0 0 1 3.9 0c1.49-1.01 2.14-.8 2.14-.8.43 1.07.16 1.87.08 2.07.5.55.8 1.25.8 2.1 0 3-1.82 3.66-3.56 3.85.28.24.53.72.53 1.45v2.15c0 .2.14.45.54.37A7.8 7.8 0 0 0 9 1.2z"/></svg>'
+ICON_PLAY = '<svg viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="6" fill="currentColor"/><path d="M8.6 6.8v8.4l7-4.2z" fill="var(--bg)"/></svg>'
+
 def cmd_block(copy, done):
-    return f'<pre class="cmd"><code>{e(INSTALL_CMD)}</code><button class="copy" type="button" data-done="{e(done)}">{e(copy)}</button></pre>'
+    return (f'<div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>{e(INSTALL_CMD)}</code>'
+            f'<button class="copy" type="button" data-done="{e(done)}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(copy)}</span></button>'
+            f'<span class="sr" role="status" aria-live="polite"></span></div>')
 
 def software_ld(desc, lang):
     return {
@@ -197,46 +216,131 @@ HOME = {
   lic="קוד פתוח ברישיון GPL-3.0.", other_lang=("../", "English")),
 }
 
+# Interface languages, each written in its own language (lang code, name, RTL flag). Same 31 as the app's picker.
+LANGS = [("he", "עברית", 1), ("en", "English", 0), ("ar", "العربية", 1), ("es", "Español", 0), ("fr", "Français", 0), ("de", "Deutsch", 0),
+         ("pt", "Português", 0), ("it", "Italiano", 0), ("ru", "Русский", 0), ("uk", "Українська", 0), ("pl", "Polski", 0), ("ro", "Română", 0),
+         ("bg", "Български", 0), ("nl", "Nederlands", 0), ("sv", "Svenska", 0), ("cs", "Čeština", 0), ("hu", "Magyar", 0), ("el", "Ελληνικά", 0),
+         ("sq", "Shqip", 0), ("tr", "Türkçe", 0), ("fa", "فارسی", 1), ("ur", "اردو", 1), ("hi", "हिन्दी", 0), ("bn", "বাংলা", 0),
+         ("id", "Bahasa Indonesia", 0), ("vi", "Tiếng Việt", 0), ("th", "ไทย", 0), ("zh-Hans", "简体中文", 0), ("zh-Hant", "繁體中文", 0),
+         ("ja", "日本語", 0), ("ko", "한국어", 0)]
+assert len(LANGS) == 31
+
+# Strings added or reworded in the redesign (merged over HOME below).
+HOME_NEW = {
+ "en": dict(
+  skip="Skip to content", nav_aria="Main",
+  h1="A native IPTV player for Mac.",
+  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and downloads. Free and open source, with no account.",
+  dl="Download the DMG",
+  cmd_label_b="Install in one line.", cmd_label="Paste it in Terminal. macOS shows no warning, and the app updates itself afterwards.",
+  stage_alt="IPTVMac movies screen with a poster grid and category sidebar", pip_alt="The Picture in Picture window floating over the movie list",
+  why_h="Why IPTVMac",
+  facts=[("Fast", "Your library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second."),
+       ("Stable", "Playback runs on mpv, bundled in the app. It plays the broken TS and HLS streams that trip up system players, and reconnects when a stream drops."),
+       ("Native", "SwiftUI, with no Electron and no web view. There is nothing else to install: the player is inside the app."),
+       ("Open", "GPL-3.0, no accounts, no analytics. The app talks only to the servers you add, and to GitHub for updates.")],
+  small=[("Subtitles and audio", "Embedded tracks, .srt and .ass files by menu or drag and drop, size and delay, preferred languages."),
+         ("Catch-up and guide", "Watch past programs on channels that support it, and see what is on now and next."),
+         ("Next episode", "When an episode ends, the next one starts after a 5 second countdown. You can cancel it."),
+         ("Favorites and resume", "Star channels and movies. Movies and episodes continue where you stopped."),
+         ("Several playlists", "Switch between playlists from the toolbar, or choose All playlists to search and browse them together, with the playlist name on each item."),
+         ("Speed, skip and sleep timer", "Play from 0.25x to 4x, choose the skip step, and set a sleep timer."),
+         ("Backup and settings", "Export playlists (without passwords), favorites and history; light or dark appearance; hide categories by words."),
+         ("Updates itself", "Checks GitHub Releases, verifies the release signature and SHA-256 checksum, and installs the new version.")],
+  langs_h="31 interface languages",
+  langs_p="The app follows your Mac's language, or you pick one in Settings. Hebrew, Arabic, Persian and Urdu get a right-to-left layout.",
+  langs_note="Apart from Hebrew, English and Arabic, the translations were written with AI help and no native speaker has reviewed them yet. Corrections are welcome.",
+  langs_link="How to contribute a translation", langs_href=REPO + "#contributing-translations",
+  guide_go="Read the guide",
+  ),
+ "he": dict(
+  skip="דלג לתוכן", nav_aria="ראשי",
+  h1="נגן IPTV מקורי ל-Mac.",
+  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה והורדות. חינם ובקוד פתוח, בלי חשבון.",
+  dl="הורדת ה-DMG",
+  cmd_label_b="התקנה בשורה אחת.", cmd_label="מדביקים בטרמינל. macOS לא מציגה אזהרה, ואחר כך האפליקציה מתעדכנת לבד.",
+  stage_alt="מסך הסרטים ב-IPTVMac עם רשת כרזות וסרגל קטגוריות", pip_alt="חלון תמונה בתוך תמונה צף מעל רשימת הסרטים",
+  why_h="למה IPTVMac",
+  facts=[("מהיר", "הספרייה שלכם נשמרת במסד SQLite מקומי עם חיפוש טקסט מלא. הקלדה מוצאת ערוץ מתוך 100,000 פריטים בפחות משנייה."),
+       ("יציב", "הניגון רץ על mpv שמובנה באפליקציה. הוא מנגן סטרימים פגומים שנגני מערכת נתקעים בהם, ומתחבר מחדש כשהסטרים נופל."),
+       ("מקורי", "SwiftUI, בלי Electron ובלי web view. אין מה להתקין בנוסף: הנגן נמצא בתוך האפליקציה."),
+       ("פתוח", "GPL-3.0, בלי חשבונות ובלי אנליטיקס. האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub לעדכונים.")],
+  small=[("כתוביות ואודיו", "רצועות מובנות, קבצי srt ו-ass בתפריט או בגרירה, גודל והזזה, שפות מועדפות."),
+         ("צפייה בהיסטוריה ולוח שידורים", "צפייה בתוכניות מהעבר בערוצים שתומכים, ומה משודר עכשיו ואחר כך."),
+         ("הפרק הבא", "כשפרק נגמר, הפרק הבא מתחיל אחרי ספירה של 5 שניות. אפשר לבטל."),
+         ("מועדפים והמשך צפייה", "מסמנים ערוצים וסרטים בכוכב. סרטים ופרקים ממשיכים מהמקום שעצרתם."),
+         ("כמה רשימות", "עוברים בין רשימות מסרגל הכלים, או בוחרים All playlists כדי לחפש ולעיין בכולן יחד, עם שם הרשימה על כל פריט."),
+         ("מהירות, דילוג וטיימר שינה", "ניגון מ-0.25× עד 4×, בחירת צעד הדילוג, וטיימר שינה."),
+         ("גיבוי והגדרות", "ייצוא של הרשימות (בלי סיסמאות), המועדפים וההיסטוריה; מראה בהיר או כהה; הסתרת קטגוריות לפי מילים."),
+         ("מתעדכן לבד", "בודק את GitHub Releases, מאמת את חתימת הגרסה ואת ה-SHA-256, ומתקין את הגרסה החדשה.")],
+  langs_h="31 שפות ממשק",
+  langs_p="האפליקציה פועלת בשפת ה-Mac שלכם, או שבוחרים שפה בהגדרות. עברית, ערבית, פרסית ואורדו מקבלות פריסה מימין לשמאל.",
+  langs_note="מלבד עברית, אנגלית וערבית, התרגומים נכתבו בעזרת AI ועדיין לא נבדקו על ידי דובר שפת אם. תיקונים יתקבלו בברכה.",
+  langs_link="איך לתרום תרגום (באנגלית)", langs_href=REPO + "#contributing-translations",
+  guide_go="לקריאת המדריך",
+  ),
+}
+for _k, _v in HOME_NEW.items():
+    HOME[_k].update(_v)
+
+
+def lang_wall():
+    return '<ul class="wall">' + "".join(
+        f'<li><span lang="{l}"{" dir=\"rtl\" class=\"rtl\"" if r else ""}>{e(n)}</span></li>' for l, n, r in LANGS) + '</ul>'
+
 def home(code):
-    c = HOME[code]; up = c["up"]
+    c = HOME[code]; up = c["up"]; he = code == "he"
     canon = BASE + c["prefix"]
     alts = [("en", BASE), ("he", BASE + "he/"), ("x-default", BASE)]
     faq = c["faq"]
     ld = [software_ld(c["desc"], c["lang"]), faq_ld(faq), video_ld("IPTVMac demo", c["demo_p"])]
-    out = head(c["title"], c["desc"], canon, c["lang"], 1 if code == "he" else 0, alts, extra_ld=ld)
-    nav = "".join(f'<a href="{(u if u.startswith(("http", "#")) else u)}">{e(t)}</a>' for u, t in c["nav"])
-    out += f'''<div class="wrap"><header class="top"><a class="brand" href="{'./' if code == 'en' else './'}"><img src="{up}assets/favicon.png" width="36" height="36" alt="">IPTVMac</a><nav aria-label="{'Main' if code == 'en' else 'ראשי'}">{nav}</nav></header></div>
-<main>
-<div class="wrap hero">
- <div>
+    out = head(c["title"], c["desc"], canon, c["lang"], 1 if he else 0, alts, extra_ld=ld)
+    nav = "".join(
+        (f'<a class="lang" href="{u}" hreflang="{"en" if he else "he"}" lang="{"en" if he else "he"}">{e(t)}</a>' if u == c["other_lang"][0] else
+         f'<a{" class=keep" if u == "#install" else ""} href="{u}">{e(t)}</a>') for u, t in c["nav"])
+    shot = (f'<picture><source type="image/webp" srcset="{up}screenshots/03-movies.webp 1200w, {up}screenshots/03-movies-1800.webp 1800w" sizes="(min-width: 1280px) 1240px, 100vw">'
+            f'<img src="{up}screenshots/03-movies.jpg" width="1800" height="1130" alt="{e(c["stage_alt"])}" fetchpriority="high"></picture>')
+    pip = (f'<picture class="pipwin"><source type="image/webp" srcset="{up}assets/pip-window.webp">'
+           f'<img src="{up}assets/pip-window.jpg" width="588" height="330" alt="{e(c["pip_alt"])}" decoding="async"></picture>')
+    out += f'''<a class="skip" href="#main">{e(c["skip"])}</a>
+<div class="wrap"><header class="top"><a class="brand" href="./"><img src="{up}logo.png" width="34" height="34" alt="">IPTVMac</a><nav aria-label="{e(c["nav_aria"])}">{nav}</nav></header></div>
+<main id="main">
+<div class="hero"><div class="wrap">
+ <div class="hero-grid">
   <h1>{e(c["h1"])}</h1>
-  <p class="lede">{e(c["lede"])}</p>
-  <div class="actions"><a class="btn primary" href="{DOWNLOAD}">{e(c["dl"])}</a><a class="btn" href="{REPO}">{e(c["src"])}</a></div>
-  <p class="meta">{e(c["meta"])}</p>
+  <div class="hero-side">
+   <p class="lede">{e(c["lede"])}</p>
+   <div class="actions"><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="btn" href="{REPO}">{ICON_GH}{e(c["src"])}</a></div>
+   <p class="meta">{e(c["meta"])}</p>
+  </div>
  </div>
- <div class="hero-shot">
-  {pic(up, "03-movies", c["alt_movies"], 'fetchpriority="high" decoding="async"')}
-  {pic(up, "05-player", c["alt_player"], 'decoding="async"', "shot pip")}
- </div>
+ <div class="cmd-wrap"><p class="cmd-label"><strong>{e(c["cmd_label_b"])}</strong> {e(c["cmd_label"])}</p>{cmd_block(c["copy"], c["copied"])}</div>
 </div>
-<section class="tint demo"><div class="wrap"><h2>{e(c["demo_h"])}</h2><p style="max-width:62ch;color:var(--muted)">{e(c["demo_p"])}</p>
-<video controls preload="none" poster="{up}assets/demo-poster.webp" width="1280" height="720"><source src="{up}assets/demo.mp4" type="video/mp4"></video></div></section>
-<section id="features"><div class="wrap"><h2>{e(c["feats_h"])}</h2>
+<div class="stage-top"><div class="window"><div class="frame">{shot}</div>{pip}</div></div></div>
+<section class="stage" id="demo"><div class="wrap stage-body"><div class="stage-grid"><div><h2>{e(c["demo_h"])}</h2><p>{e(c["demo_p"])}</p></div>
+<video controls preload="none" poster="{up}assets/demo-poster.webp" width="1280" height="720"><source src="{up}assets/demo.mp4" type="video/mp4"></video></div></div></section>
+<section id="why"><div class="wrap"><h2>{e(c["why_h"])}</h2><div class="why-grid">{"".join(f"<div><h3>{e(h)}</h3><p>{e(p)}</p></div>" for h, p in c["facts"])}</div></div></section>
+<section id="features" style="padding-top:0"><div class="wrap"><h2>{e(c["feats_h"])}</h2>
+<div class="feats">
 '''
     for i, (img, h, p, alt) in enumerate(c["feats"]):
-        out += f'<div class="row{" flip" if i % 2 else ""}"><div class="text"><h3>{e(h)}</h3><p>{e(p)}</p></div>{pic(up, img, alt, 'loading="lazy"')}</div>\n'
-    out += '<div class="small-feats">' + "".join(f'<div><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in c["small"]) + '</div>\n</div></section>\n'
-    out += f'''<section id="install" class="tint"><div class="wrap install"><div><h2>{e(c["install_h"])}</h2><p style="color:var(--muted);max-width:56ch">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}<p class="why">{e(c["why"])}</p><p class="why"><a href="{YT_INSTALL}">{e(c["video"])}</a></p></div>
-<div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:20px"><a class="btn primary" href="{DOWNLOAD}">{e(c["dl"])}</a></p></div></div></section>
-<section id="faq"><div class="wrap"><h2>{e(c["faq_h"])}</h2><div class="faq">{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</div></div></section>
-<section id="guides" class="tint"><div class="wrap"><h2>{e(c["guides_h"])}</h2><div class="guides">{"".join(f'<a href="{u}"><strong>{e(t)}</strong><span>{e(s)}</span></a>' for u, t, s in c["guides"])}</div></div></section>
+        out += (f'<div class="feat"{" data-on" if i == 0 else ""}><div class="feat-text"><h3>{e(h)}</h3><p>{e(p)}</p></div>'
+                f'<figure><div class="frame">{pic(up, img, alt, "loading=\"lazy\" decoding=\"async\"", "")}</div></figure></div>\n')
+    out += '</div>\n<div class="small-feats">' + "".join(f'<div><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in c["small"]) + '</div>\n</div></section>\n'
+    out += f'''<section class="langs" id="languages"><div class="wrap langs-grid"><div><h2>{e(c["langs_h"])}</h2><p>{e(c["langs_p"])}</p><p class="note">{e(c["langs_note"])} <a href="{c["langs_href"]}">{e(c["langs_link"])}</a></p></div>{lang_wall()}</div></section>
+<section id="install"><div class="wrap install"><div class="install-main"><h2>{e(c["install_h"])}</h2><p class="lead">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}</div>
+<div class="install-why"><p class="why">{e(c["why"])}</p><p class="why"><a class="yt" href="{YT_INSTALL}">{ICON_PLAY}{e(c["video"])}</a></p></div>
+<div class="dmg"><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:24px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></p></div></div></section>
+<section id="faq" style="padding-top:0"><div class="wrap qa-grid"><h2>{e(c["faq_h"])}</h2><div class="faq">{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</div></div></section>
+<section id="guides" class="guides"><div class="wrap"><h2>{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong>{e(t)}</strong><span>{e(s)}</span><span class="go">{e(c["guide_go"])}{ICON_CHEV}</span></a>' for u, t, s in c["guides"])}</div></div></section>
 <section class="alt"><div class="wrap"><h2>{e(c["alt_h"])}</h2><p>{e(c["alt_p"])}</p><ul>{"".join(f"<li>{e(x)}</li>" for x in c["alt"])}</ul></div></section>
 </main>
 <footer><div class="wrap"><p>{e(c["foot"])}</p><p>{e(c["lic"])} <a href="{REPO}">GitHub</a> · <a href="{c["other_lang"][0]}">{e(c["other_lang"][1])}</a></p></div></footer>
-{COPY_JS}
+<script src="{up}assets/site.js?v={ASSET_V}" defer></script>
 </body></html>
 '''
     path = DOCS / (c["prefix"] + "index.html"); path.parent.mkdir(parents=True, exist_ok=True); path.write_text(out)
+
 
 # ---------- guides ----------
 GUIDES = [
@@ -322,14 +426,17 @@ def guide(g):
               {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE},
               {"@type": "ListItem", "position": 2, "name": g["h1"], "item": canon}]}]
     out = head(g["title"], g["desc"], canon, "en", 1, og_type="article", extra_ld=ld)
-    out += f'''<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../assets/favicon.png" width="36" height="36" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a href="../#install">Install</a><a href="../#faq">FAQ</a><a href="{REPO}">GitHub</a></nav></header></div>
-<main><div class="wrap"><article class="guide">
+    related = "".join(f'<li><a href="{o["slug"]}.html">{e(o["h1"])}</a></li>' for o in GUIDES if o is not g)
+    out += f'''<a class="skip" href="#main">Skip to content</a>
+<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../logo.png" width="34" height="34" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a class="keep" href="../#install">Install</a><a href="../#faq">FAQ</a><a href="{REPO}">GitHub</a></nav></header></div>
+<main id="main"><div class="wrap"><article class="guide">
 <p class="crumbs"><a href="../">IPTVMac</a> / Guides</p>
 <h1>{e(g["h1"])}</h1>
 <p class="answer">{e(g["answer"])}</p>
 {g["body"]}
-<p style="margin-top:36px"><a class="btn primary" href="{DOWNLOAD}">Download IPTVMac for Mac</a></p>
-<p class="why" style="margin-top:28px">Updated {UPDATED}. IPTVMac is a media player; it does not include, host or link to any content.</p>
+<p style="margin-top:36px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}Download IPTVMac for Mac</a></p>
+<div class="related"><h2>More guides</h2><ul>{related}</ul></div>
+<p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include, host or link to any content.</p>
 </article></div></main>
 <footer><div class="wrap"><p>Open source under GPL-3.0. <a href="{REPO}">GitHub</a> · <a href="../">Home</a></p></div></footer>
 </body></html>
@@ -391,6 +498,7 @@ IPTVMac is not an IPTV provider and does not sell subscriptions or channels.
     assert sp.exists(), "docs/social-preview.png is missing"
 
 if __name__ == "__main__":
+    publish_assets()
     home("en"); home("he")
     for g in GUIDES: guide(g)
     crawler_files()

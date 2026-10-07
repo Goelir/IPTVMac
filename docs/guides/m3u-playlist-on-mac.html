@@ -7,23 +7,31 @@
 <meta name="description" content="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.">
 <link rel="canonical" href="https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html">
 
-<meta name="theme-color" content="#4553df">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f5f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e16" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="IPTVMac">
+<meta property="og:locale" content="en_US">
 <meta property="og:title" content="How to play an M3U playlist on a Mac | IPTVMac">
 <meta property="og:description" content="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.">
 <meta property="og:url" content="https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html">
 <meta property="og:image" content="https://goelir.github.io/IPTVMac/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to play an M3U playlist on a Mac | IPTVMac">
+<meta name="twitter:description" content="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.">
+<meta name="twitter:image" content="https://goelir.github.io/IPTVMac/social-preview.png">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="preload" href="../assets/fonts/plex-latin-400.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="../assets/fonts/plex-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css?v=0799a733">
+<script>document.documentElement.classList.add("js")</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to play an M3U playlist on a Mac", "description": "How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.", "datePublished": "2026-10-06", "dateModified": "2026-10-06", "inLanguage": "en", "mainEntityOfPage": "https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html", "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"}, "publisher": {"@type": "Person", "name": "Goelir"}, "image": "https://goelir.github.io/IPTVMac/social-preview.png"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can IPTVMac open a local .m3u file?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. IPTVMac takes the playlist link (URL)."}}, {"@type": "Question", "name": "How does IPTVMac decide what is a movie or a series?", "acceptedAnswer": {"@type": "Answer", "text": "By the URL path (/movie/ or /series/), then by the group name, then by the file ending. Everything else is treated as live."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": "https://goelir.github.io/IPTVMac/"}, {"@type": "ListItem", "position": 2, "name": "How to play an M3U playlist on a Mac", "item": "https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html"}]}</script>
 </head>
 <body>
-<div class="bars" aria-hidden="true"></div>
-<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../assets/favicon.png" width="36" height="36" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a href="../#install">Install</a><a href="../#faq">FAQ</a><a href="https://github.com/Goelir/IPTVMac">GitHub</a></nav></header></div>
-<main><div class="wrap"><article class="guide">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../logo.png" width="34" height="34" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a class="keep" href="../#install">Install</a><a href="../#faq">FAQ</a><a href="https://github.com/Goelir/IPTVMac">GitHub</a></nav></header></div>
+<main id="main"><div class="wrap"><article class="guide">
 <p class="crumbs"><a href="../">IPTVMac</a> / Guides</p>
 <h1>How to play an M3U playlist on a Mac</h1>
 <p class="answer">Install IPTVMac, choose M3U, and enter a name and the playlist link. IPTVMac reads the playlist and sorts it into Live, Movies and Series.</p>
@@ -45,8 +53,9 @@
 <li>VLC can also open an M3U playlist; IPTVMac adds the browsing, search, favorites, Picture in Picture and downloads on top.</li>
 </ul>
 
-<p style="margin-top:36px"><a class="btn primary" href="https://github.com/Goelir/IPTVMac/releases/latest">Download IPTVMac for Mac</a></p>
-<p class="why" style="margin-top:28px">Updated 2026-10-06. IPTVMac is a media player; it does not include, host or link to any content.</p>
+<p style="margin-top:36px"><a class="btn primary" href="https://github.com/Goelir/IPTVMac/releases/latest"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2.5v9m0 0L5.5 8M9 11.5L12.5 8M3 14.5h12"/></svg>Download IPTVMac for Mac</a></p>
+<div class="related"><h2>More guides</h2><ul><li><a href="xtream-codes-on-mac.html">How to watch Xtream Codes IPTV on a Mac</a></li><li><a href="picture-in-picture-iptv-mac.html">Picture in Picture for IPTV on a Mac</a></li></ul></div>
+<p class="fine">Updated 2026-10-06. IPTVMac is a media player; it does not include, host or link to any content.</p>
 </article></div></main>
 <footer><div class="wrap"><p>Open source under GPL-3.0. <a href="https://github.com/Goelir/IPTVMac">GitHub</a> · <a href="../">Home</a></p></div></footer>
 </body></html>
