@@ -32,6 +32,7 @@ struct PlayerScreen: View {
     @FocusState private var focused: Bool
     @State private var showBars = true
     @State private var hideTask: Task<Void, Never>?
+    @State private var showSpeed = false
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
 
@@ -92,7 +93,9 @@ struct PlayerScreen: View {
         .onKeyPress(.space) { revealBars(); pm.mpv.togglePause(); return .handled }
         .onKeyPress(.leftArrow) { revealBars(); pm.mpv.seek(by: -10); return .handled }
         .onKeyPress(.rightArrow) { revealBars(); pm.mpv.seek(by: 10); return .handled }
-        .onKeyPress("2") { if !request.isLive { pm.toggleDoubleSpeed() }; return .handled }
+        .onKeyPress("2") { if !request.isLive { revealBars(); pm.toggleDoubleSpeed() }; return .handled }
+        .onKeyPress("[") { if !request.isLive { revealBars(); pm.stepSpeed(up: false) }; return .handled }
+        .onKeyPress("]") { if !request.isLive { revealBars(); pm.stepSpeed(up: true) }; return .handled }
         .onKeyPress("f") { NSApp.keyWindow?.toggleFullScreen(nil); return .handled }
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             providers.first?.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { data, _ in
@@ -122,6 +125,7 @@ struct PlayerScreen: View {
         .task(id: request.id) { if let item = request.item, request.isLive { await model.watchSchedule(of: item) } else { model.schedule = [] } }
         .onChange(of: subScale) { pm.applySubtitleStyle() }
         .onChange(of: subDelay) { pm.applySubtitleStyle() }
+        .onChange(of: showSpeed) { if !showSpeed { focused = true; revealBars() } }   // the popover had the keyboard focus and the bar's 3 s timer
     }
 
     /// Now / next from the channel's EPG (live channels only; empty when the provider has no guide).
@@ -138,7 +142,7 @@ struct PlayerScreen: View {
         }
     }
 
-    private var barsVisible: Bool { showBars || pm.paused || pm.error != nil }
+    private var barsVisible: Bool { showBars || showSpeed || pm.paused || pm.error != nil }
 
     /// Title bar and controls fade out after 3 s without mouse movement, so a full-screen video shows nothing on top.
     private func revealBars() {
@@ -146,7 +150,7 @@ struct PlayerScreen: View {
         hideTask?.cancel()
         hideTask = Task {
             try? await Task.sleep(for: .seconds(3))
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, !showSpeed else { return }
             showBars = false
             NSCursor.setHiddenUntilMouseMoves(true)
         }
@@ -160,9 +164,7 @@ struct PlayerScreen: View {
                 Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption)
             } else { Spacer() }
             if !request.isLive {   // a live stream cannot run faster than real time
-                Button { pm.toggleDoubleSpeed() } label: {
-                    Text("2×").fontWeight(.bold).foregroundStyle(pm.speed == 2 ? .yellow : .white)
-                }.help(L("player.speed"))
+                SpeedButton(speed: pm.speed, set: pm.setSpeed, open: $showSpeed)
             }
             trackMenu(type: "sub", title: L("player.subtitles"), prop: "sid", icon: "captions.bubble")
             trackMenu(type: "audio", title: L("player.audio"), prop: "aid", icon: "speaker.wave.2")

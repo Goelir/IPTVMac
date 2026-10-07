@@ -81,7 +81,9 @@
 "password.title" = "Password needed";
 "password.body" = "Enter the password for “%@”. It is stored privately on this Mac.";
 "password.none" = "Continue without password";
-"player.speed" = "Double speed (2)";
+"player.speed" = "Playback speed";
+"player.speedNormal" = "Normal";
+"player.speedReset" = "Normal speed";
 "downloads.title" = "Downloads";
 "downloads.add" = "Download";
 "downloads.season" = "Download season";

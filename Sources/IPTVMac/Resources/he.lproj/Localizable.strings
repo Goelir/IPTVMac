@@ -81,7 +81,9 @@
 "password.title" = "נדרשת סיסמה";
 "password.body" = "הקלד את הסיסמה של “%@”. היא נשמרת באופן פרטי במחשב הזה.";
 "password.none" = "המשך בלי סיסמה";
-"player.speed" = "מהירות כפולה (2)";
+"player.speed" = "מהירות ניגון";
+"player.speedNormal" = "רגילה";
+"player.speedReset" = "מהירות רגילה";
 "downloads.title" = "הורדות";
 "downloads.add" = "הורד";
 "downloads.season" = "הורד עונה";

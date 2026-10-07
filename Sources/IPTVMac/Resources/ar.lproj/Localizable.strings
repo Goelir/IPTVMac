@@ -81,7 +81,9 @@
 "password.title" = "كلمة المرور مطلوبة";
 "password.body" = "أدخل كلمة المرور لـ “%@”. يتم حفظها بشكل خاص على هذا الجهاز.";
 "password.none" = "المتابعة بدون كلمة مرور";
-"player.speed" = "سرعة مضاعفة (2)";
+"player.speed" = "سرعة التشغيل";
+"player.speedNormal" = "عادية";
+"player.speedReset" = "السرعة العادية";
 "downloads.title" = "التنزيلات";
 "downloads.add" = "تنزيل";
 "downloads.season" = "تنزيل الموسم";

@@ -44,7 +44,14 @@ final class PlayerModel {
         }
     }
 
-    func toggleDoubleSpeed() { mpv.setProperty("speed", speed == 2 ? "1" : "2") }
+    /// Clamped to 0.25...4 and rounded to 0.05. `speed` is set at once (the 0.5 s tick would make a dragged slider jump back).
+    func setSpeed(_ s: Double) {
+        let v = PlaybackSpeed.normalized(s)
+        speed = v
+        mpv.setProperty("speed", String(v))
+    }
+    func stepSpeed(up: Bool) { setSpeed(PlaybackSpeed.step(from: speed, up: up)) }
+    func toggleDoubleSpeed() { setSpeed(speed == 2 ? 1 : 2) }
 
     func applySubtitleStyle() {
         let d = UserDefaults.standard
@@ -60,7 +67,7 @@ final class PlayerModel {
         loadGen += 1
         wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
-        mpv.setProperty("speed", "1")
+        setSpeed(1)
         mpv.load(new.url, start: new.start)
     }
 

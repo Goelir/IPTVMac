@@ -162,6 +162,29 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     #expect(advanced > 1.5, "advanced \(advanced)s in 1s at 2x")
 }
 
+/// The speed picker: the value PlayerModel.setSpeed hands to mpv really becomes the engine's `speed`, and playback runs at that rate.
+@Test(arguments: [0.5, 1.5, 4.0])
+func speedPropertyBecomesThePickedSpeedAndPlaybackFollowsIt(_ speed: Double) async throws {
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    p.setProperty("vo", "null"); p.setProperty("ao", "null")
+    #expect(p.string("audio-pitch-correction") == "yes", "the voice must keep its natural pitch at any speed")
+    #expect(p.double("speed") == 1)
+    p.load(testVideo, start: 0)
+    for _ in 0..<40 where (p.double("time-pos") ?? 0) < 0.3 { try await Task.sleep(for: .milliseconds(100)) }
+    p.setProperty("speed", String(PlaybackSpeed.normalized(speed)))
+    #expect(p.double("speed") == speed)
+    let clock = ContinuousClock()
+    let t0 = p.double("time-pos") ?? 0, w0 = clock.now
+    try await Task.sleep(for: .seconds(1))
+    let advanced = (p.double("time-pos") ?? 0) - t0
+    let d = (clock.now - w0).components
+    let wall = Double(d.seconds) + Double(d.attoseconds) / 1e18
+    #expect(abs(advanced / wall - speed) < speed * 0.25, "advanced \(advanced)s in \(wall)s at \(speed)x")
+    p.setProperty("speed", "1")
+    #expect(p.double("speed") == 1)
+}
+
 /// The 2x button must not break subtitles: through the real OpenGL path the subtitle is drawn into the frames at 1x and at 2x.
 @MainActor @Test(arguments: [1.0, 2.0])
 func subtitleIsDrawnIntoFramesAtSpeed(_ speed: Double) async throws {
