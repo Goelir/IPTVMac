@@ -4,7 +4,7 @@
 # The release notes get two final lines that installed apps and install.sh require:
 #   SHA-256 of IPTVMac.dmg: `<hash>`        (detects a corrupted download)
 #   Signature: `<base64>`                   (ssh-keygen -Y sign over "iptvmac-release\n<tag>\n<hash>\n", made with a key that is NOT on GitHub)
-# so a stolen GitHub token alone cannot publish an installable update.
+# so a stolen GitHub token alone cannot publish an installable update. The same values are attached as release.txt (tag=, sha256=, signature=).
 # The private key: ~/.ssh/iptvmac_release (override with IPTVMAC_RELEASE_KEY). See SECURITY.md.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -30,7 +30,10 @@ ssh-keygen -Y sign -q -f "$KEY" -n iptvmac-release "$MSG"
 echo "iptvmac-release $(cut -d' ' -f1,2 scripts/release-key.pub)" > "$MSG.allowed"
 ssh-keygen -Y verify -f "$MSG.allowed" -I iptvmac-release -n iptvmac-release -s "$MSG.sig" < "$MSG" > /dev/null   # never publish what we cannot verify
 SIG="$(grep -v -- '-----' "$MSG.sig" | tr -d '\n')"
-gh release create "$TAG" build/IPTVMac.dmg --target "$COMMIT" --title "IPTVMac $VERSION" \
+# release.txt lets the app and install.sh read the signed checksum from github.com, which has no API rate limit (the API allows 60 requests an hour per IP).
+MANIFEST_DIR="$(mktemp -d)"; trap 'rm -f "$MSG" "$MSG.sig" "$MSG.allowed"; rm -rf "$MANIFEST_DIR"' EXIT
+printf 'tag=%s\nsha256=%s\nsignature=%s\n' "$TAG" "$SHA" "$SIG" > "$MANIFEST_DIR/release.txt"
+gh release create "$TAG" build/IPTVMac.dmg "$MANIFEST_DIR/release.txt" --target "$COMMIT" --title "IPTVMac $VERSION" \
   --notes "$(cat "$NOTES_FILE")
 
 SHA-256 of IPTVMac.dmg: \`$SHA\`

@@ -4,13 +4,14 @@ import CryptoKit
 public func sha256Hex(_ data: Data) -> String { SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined() }
 
 public enum UpdateError: Error, LocalizedError, Equatable {
-    case checksumMismatch, badApp(String), installFailed(String), tooLarge
+    case checksumMismatch, badApp(String), installFailed(String), tooLarge, rateLimited
     public var errorDescription: String? {
         switch self {
         case .checksumMismatch: return "The downloaded update is corrupted (checksum mismatch)"
         case .badApp(let m): return "The downloaded update is not valid: \(m)"
         case .installFailed(let m): return "Could not install the update: \(m)"
         case .tooLarge: return "The update is larger than expected"
+        case .rateLimited: return "GitHub is limiting requests from this network. Try again in an hour, or download the update from the releases page."
         }
     }
 }
@@ -71,15 +72,49 @@ public enum UpdateChecker {
         return AppUpdate(version: version, notes: notes, dmgURL: url, sha256: sha, pageURL: page)
     }
 
+    /// scripts/release.sh attaches `release.txt` to every release: `tag=`, `sha256=` and `signature=` lines (the same signed
+    /// message as the release notes). It is read from github.com, which has no API rate limit (60 requests an hour per IP).
+    public static let manifestName = "release.txt"
+
+    /// An update from `release.txt`; the DMG address is built from the signed tag, never taken from the file.
+    public static func parse(manifest: Data, trustedKeyBlob: String = ReleaseSignature.publicKeyBlob, repo: String = repo) -> AppUpdate? {
+        guard manifest.count < 4096, let text = String(data: manifest, encoding: .utf8) else { return nil }
+        var f: [String: String] = [:]
+        for line in text.split(whereSeparator: \.isNewline) {
+            guard let eq = line.firstIndex(of: "=") else { continue }
+            f[String(line[..<eq])] = String(line[line.index(after: eq)...]).trimmingCharacters(in: .whitespaces)
+        }
+        guard let tag = f["tag"], tag.range(of: "^v?[0-9]+(\\.[0-9]+){0,3}$", options: .regularExpression) != nil, SemVer(tag) != nil,
+              let sha = f["sha256"]?.lowercased(), sha.range(of: "^[0-9a-f]{64}$", options: .regularExpression) != nil,
+              let sig = f["signature"],
+              ReleaseSignature.verify(signatureBase64: sig, message: ReleaseSignature.message(tag: tag, sha256: sha), trustedBlobBase64: trustedKeyBlob),
+              let dmg = URL(string: "https://github.com/\(repo)/releases/download/\(tag)/\(assetName)"),
+              let page = URL(string: "https://github.com/\(repo)/releases/tag/\(tag)")
+        else { return nil }
+        let version = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
+        return AppUpdate(version: version, notes: "", dmgURL: dmg, sha256: sha, pageURL: page)
+    }
+
     /// The latest release if it is newer than `current`; nil when up to date or when `current` is not a version.
+    /// Looks at `release.txt` first (no rate limit); releases without it, and any failure there, fall back to the GitHub API.
     public static func check(current: String, session: URLSession = apiSession, repo: String = repo,
                              trustedKeyBlob: String = ReleaseSignature.publicKeyBlob) async throws -> AppUpdate? {
-        guard let cur = SemVer(current), let url = URL(string: "https://api.github.com/repos/\(repo)/releases/latest") else { return nil }
+        guard let cur = SemVer(current), let url = URL(string: "https://api.github.com/repos/\(repo)/releases/latest"),
+              let manifestURL = URL(string: "https://github.com/\(repo)/releases/latest/download/\(manifestName)") else { return nil }
+        var mreq = URLRequest(url: manifestURL)
+        mreq.setValue("IPTVMac", forHTTPHeaderField: "User-Agent")
+        if let (data, resp) = try? await session.data(for: mreq), (resp as? HTTPURLResponse).map({ (200..<300).contains($0.statusCode) }) ?? true,
+           let u = parse(manifest: data, trustedKeyBlob: trustedKeyBlob, repo: repo) {
+            if let v = SemVer(u.version), v > cur { return u }
+            return nil
+        }
         var req = URLRequest(url: url)
         req.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         req.setValue("IPTVMac", forHTTPHeaderField: "User-Agent")
         let (data, resp) = try await session.data(for: req)
-        if let code = (resp as? HTTPURLResponse)?.statusCode, !(200..<300).contains(code) { throw IPTVError.http(code) }
+        if let code = (resp as? HTTPURLResponse)?.statusCode, !(200..<300).contains(code) {
+            throw code == 403 || code == 429 ? UpdateError.rateLimited : IPTVError.http(code)
+        }
         guard let u = parse(releaseJSON: data, trustedKeyBlob: trustedKeyBlob, repo: repo), let v = SemVer(u.version), v > cur else { return nil }
         return u
     }

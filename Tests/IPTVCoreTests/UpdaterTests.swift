@@ -82,9 +82,47 @@ private func parse(_ d: Data, key: String? = nil) -> AppUpdate? { UpdateChecker.
     #expect(ReleaseSignature.rawKey(fromBlob: Data(base64Encoded: ReleaseSignature.publicKeyBlob)!)?.count == 32)
 }
 
+private func manifest(tag: String = "v0.2.0", sha: String = String(repeating: "a", count: 64), signTag: String? = nil, signWith: TestSigner = signer) -> Data {
+    let sig = (try? signWith.sign(ReleaseSignature.message(tag: signTag ?? tag, sha256: sha))) ?? ""
+    return Data("tag=\(tag)\nsha256=\(sha)\nsignature=\(sig)\n".utf8)
+}
+
+@Test func parsesTheReleaseManifestAndBuildsTheDownloadAddressFromTheSignedTag() {
+    let u = UpdateChecker.parse(manifest: manifest(), trustedKeyBlob: signer.blob, repo: "o/r")
+    #expect(u?.version == "0.2.0")
+    #expect(u?.dmgURL.absoluteString == "https://github.com/o/r/releases/download/v0.2.0/IPTVMac.dmg")
+    #expect(u?.sha256 == String(repeating: "a", count: 64))
+}
+
+@Test func rejectsManifestsThatAreNotSignedByTheOwner() throws {
+    func p(_ d: Data) -> AppUpdate? { UpdateChecker.parse(manifest: d, trustedKeyBlob: signer.blob, repo: "o/r") }
+    #expect(p(manifest(signWith: try TestSigner())) == nil)                    // another key
+    #expect(p(manifest(tag: "v0.2.0", signTag: "v0.1.0")) == nil)              // an old signature replayed on a new tag
+    #expect(p(manifest(sha: String(repeating: "b", count: 64), signTag: "v0.2.0")) != nil)   // control: own sha is signed
+    let good = String(decoding: manifest(), as: UTF8.self)
+    #expect(p(Data(good.replacingOccurrences(of: String(repeating: "a", count: 64), with: String(repeating: "c", count: 64)).utf8)) == nil)   // edited checksum
+    #expect(p(manifest(tag: "v0.2.0/../../evil", signTag: "v0.2.0/../../evil")) == nil)   // the tag becomes part of a URL: only versions pass
+    #expect(p(Data("<html>".utf8)) == nil)
+    #expect(p(Data(repeating: 0x61, count: 5000)) == nil)
+}
+
 // MARK: network (shares MockURLProtocol, so it must live in the serialized SyncTests suite)
 
 extension SyncTests {
+    @Test func checkUsesTheManifestWithoutTouchingTheApiAndFallsBackToItWhenThereIsNone() async throws {
+        let s = mockSession(), k = signer.blob
+        nonisolated(unsafe) var apiCalls = 0
+        MockURLProtocol.handler = { r in
+            if r.url?.host == "api.github.com" { apiCalls += 1; return (403, Data("rate limited".utf8)) }
+            return (200, manifest(tag: "v0.3.0"))
+        }
+        #expect(try await UpdateChecker.check(current: "0.2.0", session: s, repo: "o/r", trustedKeyBlob: k)?.version == "0.3.0")
+        #expect(try await UpdateChecker.check(current: "0.3.0", session: s, repo: "o/r", trustedKeyBlob: k) == nil)
+        #expect(apiCalls == 0)                                                   // rate-limited API never needed
+        MockURLProtocol.handler = { r in r.url?.host == "api.github.com" ? (200, releaseJSON(tag: "v0.4.0")) : (404, Data()) }   // an old release without release.txt
+        #expect(try await UpdateChecker.check(current: "0.2.0", session: s, repo: "o/r", trustedKeyBlob: k)?.version == "0.4.0")
+    }
+
     @Test func checkReturnsOnlyNewerVersions() async throws {
         MockURLProtocol.handler = { _ in (200, releaseJSON(tag: "v0.2.0")) }
         let s = mockSession(), k = signer.blob
@@ -95,7 +133,9 @@ extension SyncTests {
         MockURLProtocol.handler = { _ in (200, releaseJSON(tag: "v0.2.0", signed: false)) }
         #expect(try await UpdateChecker.check(current: "0.1.2", session: s, repo: "o/r", trustedKeyBlob: k) == nil)      // unsigned: ignored
         MockURLProtocol.handler = { _ in (403, Data("rate limited".utf8)) }
-        await #expect(throws: IPTVError.http(403)) { try await UpdateChecker.check(current: "0.1.0", session: s, repo: "o/r", trustedKeyBlob: k) }
+        await #expect(throws: UpdateError.rateLimited) { try await UpdateChecker.check(current: "0.1.0", session: s, repo: "o/r", trustedKeyBlob: k) }
+        MockURLProtocol.handler = { _ in (500, Data()) }
+        await #expect(throws: IPTVError.http(500)) { try await UpdateChecker.check(current: "0.1.0", session: s, repo: "o/r", trustedKeyBlob: k) }
     }
 
     @Test func downloadVerifiesTheChecksum() async throws {

@@ -51,12 +51,25 @@ main() {
 
   say "Looking up the latest release..."
   local JSON URL SHA SIG TAG
-  JSON="$(curl -fsSL -m 30 "https://api.github.com/repos/$REPO/releases/latest")" || die "cannot reach GitHub."
-  # '|| true': with pipefail a missing match would end the script silently before the message below.
-  URL="$(printf '%s' "$JSON" | grep -Eo '"browser_download_url": *"[^"]*/IPTVMac\.dmg"' | head -1 | sed -E 's/.*"(https[^"]*)"$/\1/')" || true
-  SHA="$(printf '%s' "$JSON" | grep -Eo 'SHA-256 of IPTVMac\.dmg: `[0-9a-f]{64}`' | head -1 | grep -Eo '[0-9a-f]{64}')" || true
-  SIG="$(printf '%s' "$JSON" | grep -Eo 'Signature: `[A-Za-z0-9+/=]{100,}`' | head -1 | grep -Eo '[A-Za-z0-9+/=]{100,}')" || true
-  TAG="$(printf '%s' "$JSON" | grep -Eo '"tag_name": *"[^"]*"' | head -1 | sed -E 's/.*"([^"]*)"$/\1/')" || true
+  # release.txt (tag=, sha256=, signature=) comes from github.com, which has no API rate limit; releases without it use the API.
+  local MAN
+  MAN="$(curl -fsSL -m 30 "https://github.com/$REPO/releases/latest/download/release.txt" 2>/dev/null)" || MAN=""
+  TAG="$(printf '%s\n' "$MAN" | sed -n 's/^tag=//p' | head -1)"
+  SHA="$(printf '%s\n' "$MAN" | sed -n 's/^sha256=//p' | head -1)"
+  SIG="$(printf '%s\n' "$MAN" | sed -n 's/^signature=//p' | head -1)"
+  if printf '%s' "$TAG" | grep -Eq '^v[0-9]+(\.[0-9]+){1,3}$' && printf '%s' "$SHA" | grep -Eq '^[0-9a-f]{64}$' && [ -n "$SIG" ]; then
+    URL="https://github.com/$REPO/releases/download/$TAG/IPTVMac.dmg"
+  else
+    local CODE
+    JSON="$(curl -sSL -m 30 -w '\n%{http_code}' "https://api.github.com/repos/$REPO/releases/latest")" || die "cannot reach GitHub."
+    CODE="${JSON##*$'\n'}"; JSON="${JSON%$'\n'*}"
+    case "$CODE" in 403|429) die "GitHub is limiting requests from this network. Try again in an hour, or download IPTVMac.dmg from https://github.com/$REPO/releases/latest" ;; 2??) ;; *) die "GitHub answered HTTP $CODE." ;; esac
+    # '|| true': with pipefail a missing match would end the script silently before the message below.
+    URL="$(printf '%s' "$JSON" | grep -Eo '"browser_download_url": *"[^"]*/IPTVMac\.dmg"' | head -1 | sed -E 's/.*"(https[^"]*)"$/\1/')" || true
+    SHA="$(printf '%s' "$JSON" | grep -Eo 'SHA-256 of IPTVMac\.dmg: `[0-9a-f]{64}`' | head -1 | grep -Eo '[0-9a-f]{64}')" || true
+    SIG="$(printf '%s' "$JSON" | grep -Eo 'Signature: `[A-Za-z0-9+/=]{100,}`' | head -1 | grep -Eo '[A-Za-z0-9+/=]{100,}')" || true
+    TAG="$(printf '%s' "$JSON" | grep -Eo '"tag_name": *"[^"]*"' | head -1 | sed -E 's/.*"([^"]*)"$/\1/')" || true
+  fi
   [ -n "$URL" ] && [ -n "$SHA" ] && [ -n "$SIG" ] && [ -n "$TAG" ] || die "the latest release has no IPTVMac.dmg, checksum or signature. Nothing was installed."
   case "$URL" in "https://github.com/$REPO/releases/download/"*) ;; *) die "unexpected download address. Nothing was installed." ;; esac
   verify_signature "$TAG" "$SHA" "$SIG" || die "the release signature is NOT valid. Nothing was installed."
