@@ -23,7 +23,8 @@ if [ "${1:-}" = live ]; then   # the same checks against the latest published re
   LSHA="$(printf '%s' "$J" | grep -Eo 'SHA-256 of IPTVMac\.dmg: `[0-9a-f]{64}`' | grep -Eo '[0-9a-f]{64}')"
   LSIG="$(printf '%s' "$J" | grep -Eo 'Signature: `[A-Za-z0-9+/=]{100,}`' | grep -Eo '[A-Za-z0-9+/=]{100,}')"
   check ok  verify_signature "$LTAG" "$LSHA" "$LSIG"
-  check bad verify_signature "$LTAG" "${LSHA/[0-9a-f]/0}" "$LSIG"          # an edited checksum
+  FIRST=0; [ "${LSHA:0:1}" = 0 ] && FIRST=1   # the checksum may itself start with 0: the edit must really change it
+  check bad verify_signature "$LTAG" "${LSHA/[0-9a-f]/$FIRST}" "$LSIG"     # an edited checksum
   check bad verify_signature "v0.0.1" "$LSHA" "$LSIG"                      # an old tag with the new checksum
 fi
 exit $fail
