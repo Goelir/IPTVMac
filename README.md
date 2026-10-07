@@ -36,14 +36,15 @@
 |---|---|
 | **Live, Movies, Series** | Three sections with categories, posters, channel logos, a "Continue watching" list and favorites. |
 | **Search** | Type to search inside the current category, inside the section, or everywhere (results are grouped by section). Hebrew, Arabic and Latin text. |
-| **Player** | Opens full screen, controls fade out until you move the mouse. Space, arrows (seek 10 s), `F` full screen, `2` double speed, `[` / `]` slower / faster, the speed button picks 0.25× to 4× (movies and episodes), `Esc` back. |
+| **Player** | Opens full screen, controls fade out until you move the mouse (the delay is a setting). Space, arrows (skip, 10 s by default, 5 to 60 s in Settings), `F` full screen, `2` double speed, `[` / `]` slower / faster, the speed button picks 0.25× to 4× (movies and episodes), `A` fit / fill / stretch, a **sleep timer** (moon icon), an optional clock, `Esc` back. |
 | **Subtitles and audio** | Embedded tracks, external `.srt`/`.ass` files (menu or drag and drop), size and delay settings, preferred languages. |
 | **Picture in Picture** | A floating always-on-top mini player that follows you across Spaces; go back to browsing while the video keeps playing. |
 | **Catch-up** | Watch past programs on channels whose provider supports it (Xtream `tv_archive`), picked from the EPG. |
 | **EPG** | Current and next program in the channel list and in the player (Xtream). |
 | **Downloads** | Save movies and episodes (on Xtream series, a whole season at once) to a folder you choose; play them from the Downloads screen. |
-| **Sources** | Xtream Codes (server, username, password) and M3U (name and link). Several accounts. |
+| **Playlists** | Xtream Codes (server, username, password) and M3U (name and link). With several playlists, switch between them from the toolbar or choose **All playlists** to see everything together: search, favorites and continue watching across all of them, with the playlist name on every item. |
 | **Resume and next episode** | Movies and episodes continue where you stopped; when an episode ends, the next one starts after a 5-second countdown (you can cancel it or turn it off). |
+| **Settings** | Appearance (system, light, dark), interface language, automatic playlist refresh, hide categories by words, network buffer size, **backup and restore** of your playlists (without passwords), favorites and watch history, and clearing history, favorites or the image cache. |
 | **Languages** | Hebrew, English and Arabic UI, with right-to-left layout. More languages are easy to add ([translations](#contributing-translations)). |
 | **Updates** | The app checks GitHub Releases, verifies a SHA-256 and updates itself. |
 
