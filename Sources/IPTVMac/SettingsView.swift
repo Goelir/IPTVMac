@@ -59,18 +59,19 @@ struct GeneralSettings: View {
                 HStack {
                     Button(L("update.checkNow")) { Task { await model.checkForUpdates(manual: true) } }
                     switch model.updateStatus {
-                    case .upToDate: Text(L("update.upToDate")).foregroundStyle(.secondary)
+                    case .upToDate: Label(L("update.upToDate"), systemImage: "checkmark.circle").foregroundStyle(.secondary)
                     case .devBuild: Text(L("update.devBuild")).foregroundStyle(.secondary)
                     case .downloading: ProgressView().controlSize(.small)
-                    case .ready: Text(String(format: L("update.ready"), model.update?.version ?? "")).foregroundStyle(.green)
+                    case .ready: Label(String(format: L("update.ready"), model.update?.version ?? ""), systemImage: "checkmark.circle.fill").foregroundStyle(.green)
                     case .available: Text(String(format: L("update.available"), model.update?.version ?? ""))
-                    case .failed(let m): Text(m).foregroundStyle(.red).lineLimit(2)
+                    case .failed(let m): Label(m, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red).lineLimit(2)
                     case .none: EmptyView()
                     }
                 }
             }
         }
         .formStyle(.grouped)
+        .motion(value: model.updateStatus)
     }
 }
 
@@ -138,7 +139,7 @@ struct PlaylistSettings: View {
             Section(L("settings.accounts")) {
                 ForEach(model.accounts) { a in
                     HStack {
-                        Text(a.name)
+                        Label(a.name, systemImage: a.kind == .xtream ? "server.rack" : "list.bullet.rectangle")
                         Spacer()
                         if a.kind == .xtream { Button(L("settings.changePassword")) { newPassword = ""; editing = a } }
                         Button(L("settings.delete"), role: .destructive) { model.deleteAccount(a) }

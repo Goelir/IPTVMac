@@ -33,6 +33,7 @@ struct PlayerScreen: View {
     @State private var showBars = true
     @State private var hideTask: Task<Void, Never>?
     @State private var showSpeed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
     @AppStorage("seekStep") private var seekStep = 10
@@ -47,6 +48,7 @@ struct PlayerScreen: View {
             PlayerSurface(model: pm, active: { [model] in !model.pip })
             if let err = pm.error {
                 VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle.fill").font(.largeTitle).foregroundStyle(.orange)
                     Text(err).foregroundStyle(.white)
                     Text(L("player.errorHint")).font(.caption).foregroundStyle(.white.opacity(0.7))
                     Button(L("player.retry")) { pm.retry() }
@@ -58,20 +60,26 @@ struct PlayerScreen: View {
                     HStack(spacing: 14) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("\(L("next.title")): \(String(format: "S%02dE%02d", next.season, next.number)) \(next.title)").lineLimit(1)
-                            Text(String(format: L("next.in"), model.upNextSeconds)).font(.caption).foregroundStyle(.white.opacity(0.7))
+                            Text(String(format: L("next.in"), model.upNextSeconds)).font(.caption).monospacedDigit().foregroundStyle(.white.opacity(0.7))
+                                .contentTransition(.numericText(countsDown: true))
+                                .motion(.easeOut(duration: 0.25), value: model.upNextSeconds)
                         }
                         Button(L("next.now")) { model.playUpNextNow() }.buttonStyle(.borderedProminent)
                         Button(L("next.cancel")) { model.cancelUpNext() }
                     }
-                    .padding(14).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(.white)
-                    .padding(.bottom, 90)
+                    .padding(14).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay { RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.12)) }
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 96)
                 }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
             VStack {
                 HStack {
-                    Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }.buttonStyle(.plain)
+                    Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }
+                        .buttonStyle(IconButtonStyle(tint: .white, size: 32)).accessibilityLabel(L("player.back"))
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(request.title).lineLimit(1)
+                        Text(request.title).font(.headline).lineLimit(1)
                         epgLines
                     }
                     Spacer()
@@ -82,16 +90,21 @@ struct PlayerScreen: View {
                         Button { model.toggleFavorite(item) } label: {
                             Image(systemName: model.isFavorite(item) ? "star.fill" : "star").font(.title2)
                                 .foregroundStyle(model.isFavorite(item) ? .yellow : .white)
-                        }.buttonStyle(.plain).help(L(model.isFavorite(item) ? "fav.remove" : "fav.add"))
+                        }.buttonStyle(IconButtonStyle(tint: .white, size: 32)).help(L(model.isFavorite(item) ? "fav.remove" : "fav.add"))
+                            .accessibilityLabel(L(model.isFavorite(item) ? "fav.remove" : "fav.add"))
                     }
-                }.padding().background(.black.opacity(0.5))
+                }
+                .padding().padding(.bottom, 20)   // the extra height only lengthens the fade
+                .background(LinearGradient(colors: [.black.opacity(0.7), .black.opacity(0.35), .clear], startPoint: .top, endPoint: .bottom))
+                .offset(y: barsVisible || reduceMotion ? 0 : -10)
                 Spacer()
-                controls
+                controls.offset(y: barsVisible || reduceMotion ? 0 : 10)
             }
             .foregroundStyle(.white)
             .opacity(barsVisible ? 1 : 0).allowsHitTesting(barsVisible)
-            .animation(.easeInOut(duration: 0.2), value: barsVisible)
+            .animation(.easeInOut(duration: 0.25), value: barsVisible)
         }
+        .animation(reduceMotion ? nil : .smooth(duration: 0.3), value: model.upNext != nil)
         .onContinuousHover { if case .active = $0 { revealBars() } }
         .focusable()
         .focused($focused)
@@ -175,14 +188,19 @@ struct PlayerScreen: View {
 
     private var controls: some View {
         HStack(spacing: 16) {
-            Button { pm.mpv.togglePause() } label: { Image(systemName: pm.paused ? "play.fill" : "pause.fill") }
+            Button { pm.mpv.togglePause() } label: {
+                Image(systemName: pm.paused ? "play.fill" : "pause.fill").contentTransition(.symbolEffect(.replace))
+            }
+            .help(L(pm.paused ? "downloads.play" : "downloads.pause"))
+            .accessibilityLabel(L(pm.paused ? "downloads.play" : "downloads.pause"))
+            .motion(.smooth(duration: 0.2), value: pm.paused)
             if !request.isLive {
                 Button { skip(-1) } label: { Image(systemName: "gobackward.\(seekStep)") }
                     .help(String(format: L("player.skipBack"), String(format: L("unit.seconds"), seekStep)))
                 Button { skip(1) } label: { Image(systemName: "goforward.\(seekStep)") }
                     .help(String(format: L("player.skipForward"), String(format: L("unit.seconds"), seekStep)))
                 Slider(value: Binding(get: { pm.position }, set: { pm.mpv.seek(to: $0) }), in: 0...max(pm.duration, 1))
-                Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption)
+                Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption).foregroundStyle(.white.opacity(0.85))
             } else { Spacer() }
             if !request.isLive {   // a live stream cannot run faster than real time
                 SpeedButton(speed: pm.speed, set: pm.setSpeed, open: $showSpeed)
@@ -196,7 +214,11 @@ struct PlayerScreen: View {
             Button { model.enterPiP() } label: { Image(systemName: "pip.enter") }.help(L("player.pip"))
             Button { NSApp.keyWindow?.toggleFullScreen(nil) } label: { Image(systemName: "arrow.up.left.and.arrow.down.right") }.help(L("player.fullscreen"))
         }
-        .buttonStyle(.plain).font(.title3).padding().background(.black.opacity(0.5))
+        .buttonStyle(IconButtonStyle(tint: .white)).font(.title3)
+        .padding(.horizontal, 14).padding(.vertical, 8)
+        .background(.black.opacity(0.62), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.12)) }
+        .padding(.horizontal, 16).padding(.bottom, 14)
     }
 
     private var sleepMenu: some View {
@@ -207,7 +229,7 @@ struct PlayerScreen: View {
                     Button(String(format: L("unit.minutes"), m)) { pm.setSleep(minutes: m) }
                 }
             } label: { Image(systemName: pm.sleepMinutesLeft == nil ? "moon.zzz" : "moon.zzz.fill") }
-            .menuStyle(.borderlessButton).fixedSize().help(L("player.sleep"))
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize().frame(width: 28, height: 28).help(L("player.sleep"))
             if let m = pm.sleepMinutesLeft { Text(String(format: L("unit.minutesShort"), m)).font(.caption).monospacedDigit() }
         }
     }
@@ -225,7 +247,7 @@ struct PlayerScreen: View {
             }
             if type == "sub" { Divider(); Button(L("player.addSubtitle")) { importing = true } }
         } label: { Image(systemName: icon) }
-        .menuStyle(.borderlessButton).fixedSize().help(title)
+        .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize().frame(width: 28, height: 28).help(title)
     }
 
     private func fmt(_ s: Double) -> String {

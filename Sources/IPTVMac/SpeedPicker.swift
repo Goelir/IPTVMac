@@ -16,6 +16,7 @@ struct SpeedButton: View {
                 .overlay { Capsule().strokeBorder(tint.opacity(0.45)) }
                 .contentShape(Capsule())
         }
+        .buttonStyle(.plain)
         .help(L("player.speed"))
         .accessibilityLabel(L("player.speed")).accessibilityValue(PlaybackSpeed.label(speed))
         .popover(isPresented: $open, arrowEdge: .top) { SpeedPicker(speed: speed, set: set, close: { open = false }) }

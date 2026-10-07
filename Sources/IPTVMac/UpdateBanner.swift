@@ -5,7 +5,14 @@ struct UpdateBanner: View {
     @Environment(AppModel.self) var model
 
     var body: some View {
-        if !model.updateBannerDismissed, let line = content {
+        let visible = !model.updateBannerDismissed && content != nil
+        Group {
+            if visible, let line = content { banner(line) }
+        }
+        .motion(value: visible)
+    }
+
+    private func banner(_ line: AnyView) -> some View {
             HStack(spacing: 12) {
                 Image(systemName: "arrow.down.circle.fill").foregroundStyle(.tint)
                 line
@@ -16,8 +23,9 @@ struct UpdateBanner: View {
                 Button(L("update.later")) { model.updateBannerDismissed = true }.buttonStyle(.plain).foregroundStyle(.secondary)
             }
             .padding(.horizontal, 14).padding(.vertical, 8)
-            .background(.bar)
-        }
+            .background { ZStack { Rectangle().fill(.bar); Color.accentColor.opacity(0.08) } }
+            .overlay(alignment: .bottom) { Divider() }
+            .transition(.move(edge: .top).combined(with: .opacity))
     }
 
     private var version: String { model.update?.version ?? "" }

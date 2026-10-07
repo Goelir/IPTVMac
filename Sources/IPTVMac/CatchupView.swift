@@ -13,8 +13,8 @@ struct CatchupView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("\(L("catchup.title")): \(item.name)").font(.headline)
-            if loading { ProgressView() }
+            Label("\(L("catchup.title")): \(item.name)", systemImage: "clock.arrow.circlepath").font(.headline)
+            if loading { ProgressView().frame(maxWidth: .infinity, minHeight: 120) }
             else if entries.isEmpty {
                 Text(L("catchup.noEpg")).foregroundStyle(.secondary)
                 DatePicker(L("catchup.pick"), selection: $manualStart,
@@ -26,7 +26,7 @@ struct CatchupView: View {
                     HStack {
                         Text(e.start.formatted(date: .abbreviated, time: .shortened)).monospacedDigit().foregroundStyle(.secondary)
                         Text(e.title)
-                    }.contentShape(Rectangle()).onTapGesture { play(e.start, max(Int(e.end.timeIntervalSince(e.start) / 60), 1)) }
+                    }.padding(.vertical, 2).hoverHighlight(radius: 6).contentShape(Rectangle()).onTapGesture { play(e.start, max(Int(e.end.timeIntervalSince(e.start) / 60), 1)) }
                 }
             }
         }

@@ -10,7 +10,7 @@ struct PasswordPrompt: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(L("password.title")).font(.title2)
+            Label(L("password.title"), systemImage: "lock.fill").font(.title2.weight(.semibold))
             Text(String(format: L("password.body"), account.name)).foregroundStyle(.secondary)
             SecureField(L("field.password"), text: $password).onSubmit(save)
             HStack {
