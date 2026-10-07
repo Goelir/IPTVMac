@@ -150,6 +150,8 @@ struct PlayerScreen: View {
         hideTask?.cancel()
         hideTask = Task {
             try? await Task.sleep(for: .seconds(3))
+            // Hover events stop while a button is held, so dragging the seek slider for 3 s would hide the bar under the pointer.
+            while NSEvent.pressedMouseButtons != 0 && !Task.isCancelled { try? await Task.sleep(for: .milliseconds(500)) }
             guard !Task.isCancelled, !showSpeed else { return }
             showBars = false
             NSCursor.setHiddenUntilMouseMoves(true)
