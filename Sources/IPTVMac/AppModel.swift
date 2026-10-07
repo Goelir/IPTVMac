@@ -284,8 +284,7 @@ final class AppModel {
         guard let id = a.id else { return }
         do { try secrets.setPassword(password, for: id) } catch { syncMessage = error.localizedDescription; return }
         passwordPrompt = nil
-        if !allPlaylists && account?.id != id { account = accounts.first { $0.id == id } }
-        await sync([a])
+        await sync([a])   // saving a password must not switch the selected playlist (that stops the playback)
     }
 
     func addAccount(_ a: Account, password: String?) async {
@@ -410,9 +409,9 @@ final class AppModel {
         if let p = player { p.replace(with: r); playing = r; return }
         playing = r
         let p = PlayerModel(request: r)
-        p.onSaveProgress = { [weak self] pos, dur in
+        p.onSaveProgress = { [weak self] pos, dur, background in
             guard let self, let cur = self.playing else { return }
-            self.saveProgress(cur, position: pos, duration: dur)
+            self.saveProgress(cur, position: pos, duration: dur, background: background)
         }
         p.onEndChanged = { [weak self] ended in self?.episodeEndChanged(ended) }
         p.onSleep = { [weak self] in self?.stopPlayback() }
@@ -453,11 +452,14 @@ final class AppModel {
         updateToolbar()
     }
 
-    func saveProgress(_ r: PlayRequest, position: Double, duration: Double) {
+    /// `background`: periodic saves go through asyncWrite so the main thread never waits behind a catalog sync holding the writer;
+    /// saves on stop/close/quit stay synchronous so they are on disk before the app exits.
+    func saveProgress(_ r: PlayRequest, position: Double, duration: Double, background: Bool = false) {
         guard !r.isLive, let item = r.item else { return }
         let aid = item.accountId
         let sid = r.episodeKey ?? item.streamId
-        _ = try? db.dbQueue.write { try UserData.saveProgress($0, accountId: aid, type: item.type, streamId: sid, position: position, duration: duration) }
+        let write: @Sendable (Database) throws -> Void = { try UserData.saveProgress($0, accountId: aid, type: item.type, streamId: sid, position: position, duration: duration) }
+        if background { db.dbQueue.asyncWrite(write, completion: { _, _ in }) } else { _ = try? db.dbQueue.write(write) }
     }
 
     // MARK: Favorites and EPG
@@ -466,9 +468,11 @@ final class AppModel {
 
     func toggleFavorite(_ i: Item) {
         let aid = i.accountId
-        _ = try? db.dbQueue.write { try UserData.toggleFavorite($0, accountId: aid, type: i.type, streamId: i.streamId) }
-        loadFavorites()
-        if selectedCategory == "__fav" { scheduleSearch() }
+        Task {   // async: the writer may be busy with a catalog sync
+            _ = try? await db.dbQueue.write { try UserData.toggleFavorite($0, accountId: aid, type: i.type, streamId: i.streamId) }
+            loadFavorites()
+            if selectedCategory == "__fav" { scheduleSearch() }
+        }
     }
 
     /// Keeps `schedule` fresh for the live channel being watched; ends when the calling task is cancelled.

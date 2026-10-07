@@ -177,10 +177,8 @@ struct PlaylistSettings: View {
                     Spacer()
                     Button(L("player.close")) { editing = nil }
                     Button(L("onb.save")) {
-                        if let id = a.id, !newPassword.isEmpty {
-                            try? model.secrets.setPassword(newPassword, for: id)
-                            model.account = a
-                            Task { await model.sync() }
+                        if a.id != nil, !newPassword.isEmpty {
+                            Task { await model.savePassword(newPassword, for: a) }
                         }
                         editing = nil
                     }.buttonStyle(.borderedProminent).disabled(newPassword.isEmpty)

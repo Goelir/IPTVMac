@@ -19,7 +19,7 @@ final class PlayerModel {
     private var closed = false
     private var retryPending = false
     private var lastPos = 0.0
-    var onSaveProgress: ((Double, Double) -> Void)?
+    var onSaveProgress: ((Double, Double, _ background: Bool) -> Void)?
     /// Called when a movie/episode reaches its end (true) and when it leaves the end again, e.g. after a seek back (false).
     var onEndChanged: ((Bool) -> Void)?
     /// Called once when the sleep timer runs out.
@@ -75,7 +75,7 @@ final class PlayerModel {
     }
 
     /// A position of 0 means "nothing played yet" (file still loading or load failed): saving it would erase the resume point.
-    private func saveIfLoaded() { if !request.isLive, position > 0 { onSaveProgress?(position, duration) } }
+    private func saveIfLoaded(background: Bool = false) { if !request.isLive, position > 0 { onSaveProgress?(position, duration, background) } }
 
     func replace(with new: PlayRequest) {
         saveIfLoaded()
@@ -134,7 +134,7 @@ final class PlayerModel {
         speed = mpv.double("speed") ?? 1
         ticks += 1
         if ticks % 4 == 0 { tracks = mpv.tracks() }
-        if ticks % 20 == 0 { saveIfLoaded() }
+        if ticks % 20 == 0 { saveIfLoaded(background: true) }   // periodic: must not wait behind a running sync write
     }
 
     func close() {
