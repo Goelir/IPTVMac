@@ -1,6 +1,18 @@
 import SwiftUI
 import IPTVCore
 
+/// Which playlist an item comes from; only shown while All playlists is on.
+struct PlaylistBadge: View {
+    @Environment(AppModel.self) var model
+    let item: Item
+    var body: some View {
+        if model.allPlaylists, let name = model.playlist(id: item.accountId)?.name {
+            Text(name).font(.caption2).lineLimit(1).padding(.horizontal, 6).padding(.vertical, 2)
+                .background(.regularMaterial, in: Capsule())
+        }
+    }
+}
+
 struct ChannelRow: View {
     @Environment(AppModel.self) var model
     let item: Item
@@ -12,9 +24,10 @@ struct ChannelRow: View {
             .frame(width: 44, height: 44)
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.name).lineLimit(1)
-                if let now = model.epgNow[item.streamId] { Text(now).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
+                if let now = model.epgTitle(item) { Text(now).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
             }
             Spacer()
+            PlaylistBadge(item: item)
             if item.tvArchive { Image(systemName: "clock.arrow.circlepath").foregroundStyle(.secondary) }
             Button { model.toggleFavorite(item) } label: {
                 Image(systemName: model.isFavorite(item) ? "star.fill" : "star")
@@ -39,6 +52,7 @@ struct PosterCell: View {
             }
             .aspectRatio(2.0 / 3.0, contentMode: .fit).clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay { if model.lastPlayedID == item.id { RoundedRectangle(cornerRadius: 8).stroke(Color.accentColor, lineWidth: 3) } }
+            .overlay(alignment: .topLeading) { PlaylistBadge(item: item).padding(4) }
             Text(item.name).font(.callout).lineLimit(2)
         }
         .contentShape(Rectangle())

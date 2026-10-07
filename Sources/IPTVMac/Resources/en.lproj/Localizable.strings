@@ -6,6 +6,8 @@
 "cat.favorites" = "Favorites";
 "cat.continue" = "Continue watching";
 "cat.filter" = "Filter categories";
+"playlist.all" = "All playlists";
+"playlist.label" = "Playlist";
 "scope.category" = "In category";
 "scope.type" = "In section";
 "scope.everywhere" = "Everywhere";

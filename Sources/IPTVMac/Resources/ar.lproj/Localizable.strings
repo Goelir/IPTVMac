@@ -6,6 +6,8 @@
 "cat.favorites" = "المفضلة";
 "cat.continue" = "متابعة المشاهدة";
 "cat.filter" = "تصفية الفئات";
+"playlist.all" = "كل قوائم التشغيل";
+"playlist.label" = "قائمة التشغيل";
 "scope.category" = "في الفئة";
 "scope.type" = "في القسم";
 "scope.everywhere" = "في كل مكان";

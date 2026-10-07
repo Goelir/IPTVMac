@@ -26,12 +26,33 @@ final class AppModel {
     var account: Account? {
         didSet {
             guard account?.id != oldValue?.id else { return }
-            if playing != nil { stopPlayback() }               // progress/favorites/credentials belong to the account that started it
-            epgNow = [:]; epgStamp = [:]; epgInFlight = []
-            selectedCategory = "__all"; searchText = ""        // a category id of account A means nothing in B
-            favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch()
+            rememberPlaylist()
+            if !allPlaylists { playlistChanged() }              // in All mode `account` is only the playlist to return to
         }
     }
+    /// All playlists at once (results, search, favorites, continue watching and the category list span every account).
+    var allPlaylists = false {
+        didSet { guard allPlaylists != oldValue else { return }; rememberPlaylist(); playlistChanged() }
+    }
+    /// The toolbar switcher: nil = all playlists.
+    var playlist: Account? {
+        get { allPlaylists ? nil : account }
+        set { if let a = newValue { account = a; allPlaylists = false } else { allPlaylists = true } }
+    }
+    private var scopeAccountId: Int64? { allPlaylists ? nil : account?.id }
+    private var hasPlaylist: Bool { allPlaylists || account != nil }
+    private static let playlistKey = "playlist"      // "all" or an account id
+
+    private func rememberPlaylist() {
+        UserDefaults.standard.set(allPlaylists ? "all" : account?.id.map(String.init), forKey: Self.playlistKey)
+    }
+
+    private func playlistChanged() {
+        if playing != nil { stopPlayback() }                    // progress/favorites/credentials belong to the account that started it
+        selectedCategory = "__all"; searchText = ""            // a category id of account A means nothing in B
+        favoriteKeys = []; loadCategories(); loadFavorites(); scheduleSearch()
+    }
+
     var tab: ItemType = .live { didSet { leavePlayerForBrowsing(); selectedCategory = "__all"; loadCategories(); scheduleSearch() } }
     var categories: [IPTVCore.Category] = []
     var selectedCategory = "__all" { didSet { leavePlayerForBrowsing(); scheduleSearch() } }
@@ -59,7 +80,7 @@ final class AppModel {
     /// Set when an Xtream account has no stored password (e.g. after upgrading from the Keychain version).
     var passwordPrompt: Account?
     var favoriteKeys: Set<String> = []
-    var epgNow: [String: String] = [:]
+    private var epgNow: [String: String] = [:]      // "accountId:streamId" -> program title
     private var epgStamp: [String: Date] = [:]
     private var epgInFlight: Set<String> = []
     var schedule: [EPGEntry] = []      // current + upcoming programs of the channel being watched
@@ -134,36 +155,50 @@ final class AppModel {
 
     func loadAccounts() {
         accounts = (try? db.dbQueue.read { try Account.order(Column("id")).fetchAll($0) }) ?? []
-        if account == nil || !accounts.contains(where: { $0.id == account?.id }) { account = accounts.first }
+        if account == nil {                                     // launch: reopen the last choice (read before `account` rewrites it)
+            let r = Account.restore(UserDefaults.standard.string(forKey: Self.playlistKey), from: accounts)
+            if r.all { allPlaylists = true }
+            account = r.account
+        } else if !accounts.contains(where: { $0.id == account?.id }) { account = accounts.first }
+        if accounts.count < 2 { allPlaylists = false }
     }
 
     func loadCategories() {
-        guard let aid = account?.id else { categories = []; return }
-        let t = tab
+        guard hasPlaylist else { categories = []; return }
+        let t = tab, aid = scopeAccountId
         categories = (try? db.dbQueue.read {
-            try IPTVCore.Category.filter(Column("accountId") == aid && Column("type") == t.rawValue).order(Column("id")).fetchAll($0)
+            var q = IPTVCore.Category.filter(Column("type") == t.rawValue)
+            if let aid { q = q.filter(Column("accountId") == aid) }
+            return try q.order(Column("accountId"), Column("id")).fetchAll($0)
         }) ?? []
     }
 
     func loadFavorites() {
-        guard let aid = account?.id else { return }
+        guard hasPlaylist else { return }
+        let aid = scopeAccountId
         favoriteKeys = (try? db.dbQueue.read { try UserData.favoriteKeys($0, accountId: aid) }) ?? []
     }
 
+    /// In All mode a category is tagged "<accountId>|<remoteId>" (remote ids repeat across playlists); otherwise by remote id alone.
+    func categoryTag(_ c: IPTVCore.Category) -> String { allPlaylists ? "\(c.accountId)|\(c.remoteId)" : c.remoteId }
+
     func scheduleSearch() {
         searchTask?.cancel()
-        guard let aid = account?.id else { results = []; return }
-        let text = searchText, tab = tab, cat = selectedCategory, scope = scope
+        guard hasPlaylist else { results = []; return }
+        let text = searchText, tab = tab, cat = selectedCategory, scope = scope, all = allPlaylists, aid = scopeAccountId
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(text.isEmpty ? 0 : 100))
             if Task.isCancelled { return }
             let rows: [Item] = (try? await db.dbQueue.read { d in
                 if text.isEmpty && cat == "__fav" { return try UserData.favorites(d, accountId: aid, type: tab) }
                 if text.isEmpty && cat == "__hist" { return try UserData.continueWatching(d, accountId: aid, type: tab) }
-                let special = cat.hasPrefix("__")
+                var owner = aid, catId: String? = nil
+                if scope == .category && !cat.hasPrefix("__") {
+                    if !all { catId = cat }
+                    else if let bar = cat.firstIndex(of: "|") { owner = Int64(cat[..<bar]); catId = String(cat[cat.index(after: bar)...]) }
+                }
                 let type: ItemType? = (scope == .everywhere && !text.isEmpty) ? nil : tab
-                let catId: String? = (scope == .category && !special) ? cat : nil
-                return try Search.run(d, SearchRequest(accountId: aid, text: text, type: type, categoryId: catId))
+                return try Search.run(d, SearchRequest(accountId: owner, text: text, type: type, categoryId: catId))
             }) ?? []
             if !Task.isCancelled { results = rows }
         }
@@ -176,17 +211,24 @@ final class AppModel {
 
     private var syncGen = 0
 
-    func sync() async {
-        guard let a = account, let aid = a.id else { return }
-        if !hasPassword(a) { passwordPrompt = a; return }
+    /// Syncs the shown playlist, or every playlist one after the other in All mode.
+    func sync() async { await sync(allPlaylists ? accounts : account.map { [$0] } ?? []) }
+
+    func sync(_ targets: [Account]) async {
+        if let a = targets.first(where: { !hasPassword($0) }) { passwordPrompt = a }
+        let ready = targets.filter(hasPassword)
+        guard !ready.isEmpty else { return }
         syncGen += 1; let gen = syncGen
         syncing = true; syncMessage = nil
         defer { if gen == syncGen { syncing = false } }
-        var failure: String?
-        do { try await SyncService(db: db).sync(account: a, password: secrets.password(for: aid)) }
-        catch { failure = error.localizedDescription }
-        guard gen == syncGen else { return }                    // a newer sync owns the UI state now
-        syncMessage = failure
+        var failures: [String] = []
+        for a in ready {
+            guard let aid = a.id else { continue }
+            do { try await SyncService(db: db).sync(account: a, password: secrets.password(for: aid)) }
+            catch { failures.append(ready.count > 1 ? "\(a.name): \(error.localizedDescription)" : error.localizedDescription) }
+            guard gen == syncGen else { return }                // a newer sync owns the UI state now
+        }
+        syncMessage = failures.isEmpty ? nil : failures.joined(separator: "; ")
         loadCategories(); scheduleSearch()
     }
 
@@ -194,8 +236,8 @@ final class AppModel {
         guard let id = a.id else { return }
         do { try secrets.setPassword(password, for: id) } catch { syncMessage = error.localizedDescription; return }
         passwordPrompt = nil
-        if account?.id != id { account = accounts.first { $0.id == id } }
-        await sync()
+        if !allPlaylists && account?.id != id { account = accounts.first { $0.id == id } }
+        await sync([a])
     }
 
     func addAccount(_ a: Account, password: String?) async {
@@ -205,8 +247,9 @@ final class AppModel {
             if let p = password, let id = saved.id { try secrets.setPassword(p, for: id) }
         } catch { syncMessage = error.localizedDescription; return }
         loadAccounts()
-        account = accounts.first { $0.id == saved.id }
-        await sync()
+        let added = accounts.first { $0.id == saved.id }
+        if !allPlaylists { account = added }
+        await sync(added.map { [$0] } ?? [])
     }
 
     func deleteAccount(_ a: Account) {
@@ -219,13 +262,19 @@ final class AppModel {
         }
         secrets.deletePassword(for: id)
         loadAccounts()
+        if allPlaylists {                                       // still All: the deleted playlist's rows are gone
+            if selectedCategory.hasPrefix("\(id)|") { selectedCategory = "__all" }
+            loadCategories(); loadFavorites(); scheduleSearch()
+        }
     }
 
     // MARK: Playback
 
+    func playlist(id: Int64) -> Account? { accounts.first { $0.id == id } }
+
     /// URLs for an Xtream account: the one that owns the item/series, else the current account.
     func xtreamURLs(for accountId: Int64? = nil) -> XtreamURLs? {
-        let owner = accountId.flatMap { id in accounts.first { $0.id == id } } ?? account
+        let owner = accountId.flatMap(playlist(id:)) ?? account
         guard let a = owner, a.kind == .xtream, let id = a.id else { return nil }
         return XtreamURLs(server: a.server ?? "", username: a.username ?? "", password: secrets.password(for: id) ?? "")
     }
@@ -243,23 +292,22 @@ final class AppModel {
         return u
     }
 
-    func progress(type: ItemType, streamId: String) -> Double {
-        guard let aid = account?.id else { return 0 }
-        let p: Double?? = try? db.dbQueue.read { try UserData.progress($0, accountId: aid, type: type, streamId: streamId) }
+    func progress(accountId: Int64, type: ItemType, streamId: String) -> Double {
+        let p: Double?? = try? db.dbQueue.read { try UserData.progress($0, accountId: accountId, type: type, streamId: streamId) }
         return (p ?? nil) ?? 0
     }
 
     func play(_ item: Item) {
-        if let a = account, !hasPassword(a) { passwordPrompt = a; return }
+        if let a = playlist(id: item.accountId), !hasPassword(a) { passwordPrompt = a; return }
         if item.type == .series && item.directURL == nil { openSeries = item; return }
         guard let url = streamURL(item) else { syncMessage = IPTVError.badConfig.localizedDescription; return }
         startPlayback(PlayRequest(title: item.name, url: url, isLive: item.type == .live, item: item,
-                                  start: item.type == .live ? 0 : progress(type: item.type, streamId: item.streamId)))
+                                  start: item.type == .live ? 0 : progress(accountId: item.accountId, type: item.type, streamId: item.streamId)))
     }
 
     /// Movies only: live streams never end, and a series is downloaded per episode.
     func download(_ item: Item) {
-        if let a = account, !hasPassword(a) { passwordPrompt = a; return }
+        if let a = playlist(id: item.accountId), !hasPassword(a) { passwordPrompt = a; return }
         guard item.type == .movie, let url = streamURL(item) else { return }
         downloads.add(title: item.name, url: url, ext: item.containerExt ?? url.pathExtension)
     }
@@ -277,7 +325,7 @@ final class AppModel {
         cancelUpNext()
         if let all { episodeQueue = all }
         startPlayback(PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
-                                  episodeKey: "ep:\(e.streamId)", start: progress(type: .series, streamId: "ep:\(e.streamId)")))
+                                  episodeKey: "ep:\(e.streamId)", start: progress(accountId: series.accountId, type: .series, streamId: "ep:\(e.streamId)")))
     }
 
     /// The episode ended: count down 5 s, then play the next one (cancelled by Cancel, by seeking back, or by leaving the player).
@@ -365,7 +413,7 @@ final class AppModel {
 
     // MARK: Favorites and EPG
 
-    func isFavorite(_ i: Item) -> Bool { favoriteKeys.contains("\(i.type.rawValue):\(i.streamId)") }
+    func isFavorite(_ i: Item) -> Bool { favoriteKeys.contains(UserData.favoriteKey(accountId: i.accountId, type: i.type, streamId: i.streamId)) }
 
     func toggleFavorite(_ i: Item) {
         let aid = i.accountId
@@ -384,15 +432,16 @@ final class AppModel {
         }
     }
 
-    /// "Now" per channel: refreshed after 5 minutes, fetched once at a time per channel, cleared on account change.
+    func epgTitle(_ i: Item) -> String? { epgNow["\(i.accountId):\(i.streamId)"] }
+
+    /// "Now" per channel (keyed by playlist and stream id): refreshed after 5 minutes, fetched once at a time per channel.
     func loadEPGNow(_ item: Item) async {
-        let key = item.streamId
+        let key = "\(item.accountId):\(item.streamId)"
         guard item.type == .live, !epgInFlight.contains(key), let urls = xtreamURLs(for: item.accountId) else { return }
         if let t = epgStamp[key], Date().timeIntervalSince(t) < 300 { return }
         epgInFlight.insert(key); defer { epgInFlight.remove(key) }
-        let aid = account?.id
-        let title = try? await XtreamClient(urls: urls).epgNow(streamId: key)
-        guard !Task.isCancelled, account?.id == aid else { return }
+        let title = try? await XtreamClient(urls: urls).epgNow(streamId: item.streamId)
+        guard !Task.isCancelled else { return }
         epgStamp[key] = Date()
         epgNow[key] = title ?? nil
     }

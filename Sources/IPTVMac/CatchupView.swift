@@ -32,7 +32,7 @@ struct CatchupView: View {
         }
         .padding().frame(minWidth: 480, minHeight: 360)
         .task {
-            if let urls = model.xtreamURLs() {
+            if let urls = model.xtreamURLs(for: item.accountId) {
                 serverTZ = await XtreamClient(urls: urls).serverTimeZone()
                 let cutoff = Date().addingTimeInterval(-Double(max(item.archiveDays, 1)) * 86400)
                 let all = (try? await XtreamClient(urls: urls).epgArchive(streamId: item.streamId)) ?? []
@@ -43,7 +43,7 @@ struct CatchupView: View {
     }
 
     private func play(_ start: Date, _ mins: Int) {
-        guard let urls = model.xtreamURLs() else { return }
+        guard let urls = model.xtreamURLs(for: item.accountId) else { return }
         onPlay(urls.timeshift(id: item.streamId, start: start, minutes: mins, timeZone: serverTZ ?? .current), "\(item.name) — \(start.formatted(date: .abbreviated, time: .shortened))")
     }
 }

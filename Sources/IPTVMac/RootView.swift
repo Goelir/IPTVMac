@@ -26,10 +26,20 @@ struct RootView: View {
                     Label(L("cat.all"), systemImage: "square.grid.2x2").tag("__all")
                     Label(L("cat.favorites"), systemImage: "star").tag("__fav")
                     Label(L("cat.continue"), systemImage: "clock").tag("__hist")
-                    Section {
-                        ForEach(model.wrappedValue.categories.filter {
-                            catFilter.isEmpty || $0.name.localizedCaseInsensitiveContains(catFilter)
-                        }) { c in Text(c.name).lineLimit(1).tag(c.remoteId) }
+                    let cats = model.wrappedValue.categories.filter { catFilter.isEmpty || $0.name.localizedCaseInsensitiveContains(catFilter) }
+                    if model.wrappedValue.allPlaylists {
+                        ForEach(model.wrappedValue.accounts) { a in       // one header per playlist
+                            let mine = cats.filter { $0.accountId == a.id }
+                            if !mine.isEmpty {
+                                Section(a.name) {
+                                    ForEach(mine) { c in Text(c.name).lineLimit(1).tag(model.wrappedValue.categoryTag(c)) }
+                                }
+                            }
+                        }
+                    } else {
+                        Section {
+                            ForEach(cats) { c in Text(c.name).lineLimit(1).tag(model.wrappedValue.categoryTag(c)) }
+                        }
                     }
                 }
             }
@@ -71,9 +81,14 @@ struct RootView: View {
                 }
                 ToolbarItem {
                     if model.wrappedValue.accounts.count > 1 {
-                        Picker("", selection: model.account) {
-                            ForEach(model.wrappedValue.accounts) { Text($0.name).tag(Optional($0)) }
-                        }
+                        Menu {
+                            Picker(L("playlist.label"), selection: model.playlist) {
+                                Label(L("playlist.all"), systemImage: "square.stack.3d.up").tag(Account?.none)
+                                ForEach(model.wrappedValue.accounts) { Text($0.name).tag(Optional($0)) }
+                            }.pickerStyle(.inline)
+                        } label: {
+                            Label(model.wrappedValue.playlist?.name ?? L("playlist.all"), systemImage: "square.stack.3d.up").labelStyle(.titleAndIcon)
+                        }.help(L("playlist.label"))
                     }
                 }
                 ToolbarItem {
