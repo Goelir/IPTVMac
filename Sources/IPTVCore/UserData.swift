@@ -43,6 +43,10 @@ public enum UserData {
         return (d > 0 && p / d > 0.95) || p < 5 ? nil : p
     }
 
+    /// Settings > Clear data: every playlist's resume points / favorites.
+    public static func clearHistory(_ db: Database) throws { try db.execute(sql: "DELETE FROM history") }
+    public static func clearFavorites(_ db: Database) throws { try db.execute(sql: "DELETE FROM favorite") }
+
     public static func continueWatching(_ db: Database, accountId: Int64?, type: ItemType) throws -> [Item] {
         var items = try Item.fetchAll(db, sql: """
             SELECT item.* FROM item JOIN history h ON h.accountId=item.accountId AND h.type=item.type AND h.streamId=item.streamId

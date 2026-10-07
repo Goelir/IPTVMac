@@ -130,3 +130,30 @@ import GRDB
     let attrs = try FileManager.default.attributesOfItem(atPath: path)
     #expect((attrs[.posixPermissions] as? Int ?? 0) & 0o077 == 0, "database file must be readable by the owner only")
 }
+
+@Test func clearingHistoryRemovesEveryPlaylistsProgressButKeepsFavorites() throws {
+    let (db, a) = try makeDB()
+    let b = try addAccount(db, "second")
+    try addItem(db, a, "Film", type: .movie, sid: "1")
+    try db.dbQueue.write { d in
+        for aid in [a, b] { try UserData.saveProgress(d, accountId: aid, type: .movie, streamId: "1", position: 10, duration: 100) }
+        try UserData.saveProgress(d, accountId: a, type: .series, streamId: "ep:5", position: 10, duration: 100)
+        _ = try UserData.toggleFavorite(d, accountId: a, type: .movie, streamId: "1")
+        try UserData.clearHistory(d)
+    }
+    #expect(try db.dbQueue.read { try Int.fetchOne($0, sql: "SELECT COUNT(*) FROM history") } == 0)
+    #expect(try db.dbQueue.read { try UserData.continueWatching($0, accountId: nil, type: .movie) }.isEmpty)
+    #expect(try db.dbQueue.read { try UserData.favoriteKeys($0, accountId: nil) } == ["\(a):movie:1"])
+}
+
+@Test func clearingFavoritesRemovesEveryPlaylistsFavoritesButKeepsHistory() throws {
+    let (db, a) = try makeDB()
+    let b = try addAccount(db, "second")
+    try db.dbQueue.write { d in
+        for aid in [a, b] { _ = try UserData.toggleFavorite(d, accountId: aid, type: .live, streamId: "1") }
+        try UserData.saveProgress(d, accountId: a, type: .movie, streamId: "1", position: 10, duration: 100)
+        try UserData.clearFavorites(d)
+    }
+    #expect(try db.dbQueue.read { try UserData.favoriteKeys($0, accountId: nil) }.isEmpty)
+    #expect(try db.dbQueue.read { try Int.fetchOne($0, sql: "SELECT COUNT(*) FROM history") } == 1)
+}

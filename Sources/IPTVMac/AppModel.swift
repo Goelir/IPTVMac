@@ -190,6 +190,7 @@ final class AppModel {
         }
         clearStaleUpdate()
         Task { await updateLoop() }
+        Task { await refreshLoop() }
         loadAccounts()
         if account != nil { await sync() }
     }
@@ -207,11 +208,11 @@ final class AppModel {
     func loadCategories() {
         guard hasPlaylist else { categories = []; return }
         let t = tab, aid = scopeAccountId
-        categories = (try? db.dbQueue.read {
+        categories = categoryFilter.visible((try? db.dbQueue.read {
             var q = IPTVCore.Category.filter(Column("type") == t.rawValue)
             if let aid { q = q.filter(Column("accountId") == aid) }
             return try q.order(Column("accountId"), Column("id")).fetchAll($0)
-        }) ?? []
+        }) ?? [])
     }
 
     func loadFavorites() {
@@ -226,20 +227,24 @@ final class AppModel {
     func scheduleSearch() {
         searchTask?.cancel()
         guard hasPlaylist else { results = []; return }
-        let text = searchText, tab = tab, cat = selectedCategory, scope = scope, all = allPlaylists, aid = scopeAccountId
+        let text = searchText, tab = tab, cat = selectedCategory, scope = scope, all = allPlaylists, aid = scopeAccountId, hide = categoryFilter
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(text.isEmpty ? 0 : 100))
             if Task.isCancelled { return }
             let rows: [Item] = (try? await db.dbQueue.read { d in
-                if text.isEmpty && cat == "__fav" { return try UserData.favorites(d, accountId: aid, type: tab) }
-                if text.isEmpty && cat == "__hist" { return try UserData.continueWatching(d, accountId: aid, type: tab) }
-                var owner = aid, catId: String? = nil
-                if scope == .category && !cat.hasPrefix("__") {
-                    if !all { catId = cat }
-                    else if let bar = cat.firstIndex(of: "|") { owner = Int64(cat[..<bar]); catId = String(cat[cat.index(after: bar)...]) }
+                let found: [Item]
+                if text.isEmpty && cat == "__fav" { found = try UserData.favorites(d, accountId: aid, type: tab) }
+                else if text.isEmpty && cat == "__hist" { found = try UserData.continueWatching(d, accountId: aid, type: tab) }
+                else {
+                    var owner = aid, catId: String? = nil
+                    if scope == .category && !cat.hasPrefix("__") {
+                        if !all { catId = cat }
+                        else if let bar = cat.firstIndex(of: "|") { owner = Int64(cat[..<bar]); catId = String(cat[cat.index(after: bar)...]) }
+                    }
+                    let type: ItemType? = (scope == .everywhere && !text.isEmpty) ? nil : tab
+                    found = try Search.run(d, SearchRequest(accountId: owner, text: text, type: type, categoryId: catId))
                 }
-                let type: ItemType? = (scope == .everywhere && !text.isEmpty) ? nil : tab
-                return try Search.run(d, SearchRequest(accountId: owner, text: text, type: type, categoryId: catId))
+                return try hide.visible(found, in: d)
             }) ?? []
             if !Task.isCancelled { results = rows }
         }
@@ -251,11 +256,13 @@ final class AppModel {
     }
 
     private var syncGen = 0
+    @ObservationIgnored var lastSync: Date?                     // read by the auto-refresh loop (AppModel+Data.swift)
 
     /// Syncs the shown playlist, or every playlist one after the other in All mode.
     func sync() async { await sync(allPlaylists ? accounts : account.map { [$0] } ?? []) }
 
     func sync(_ targets: [Account]) async {
+        lastSync = Date()                                       // an attempt counts: a failing provider is not retried every minute
         if let a = targets.first(where: { !hasPassword($0) }) { passwordPrompt = a }
         let ready = targets.filter(hasPassword)
         guard !ready.isEmpty else { return }
