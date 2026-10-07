@@ -55,6 +55,11 @@ document.querySelectorAll("button.copy").forEach(function (b) {
 });
 </script>'''
 
+def pic(up, name, alt, attrs="", cls="shot"):
+    # WebP (1200 px wide) first, JPEG fallback; regenerate with: cwebp -q 78 -resize 1200 0 NN-x.jpg -o NN-x.webp
+    return (f'<picture><source type="image/webp" srcset="{up}screenshots/{name}.webp">'
+            f'<img class="{cls}" src="{up}screenshots/{name}.jpg" width="1800" height="1130" alt="{e(alt)}" {attrs}></picture>')
+
 def cmd_block(copy, done):
     return f'<pre class="cmd"><code>{e(INSTALL_CMD)}</code><button class="copy" type="button" data-done="{e(done)}">{e(copy)}</button></pre>'
 
@@ -210,16 +215,16 @@ def home(code):
   <p class="meta">{e(c["meta"])}</p>
  </div>
  <div class="hero-shot">
-  <img class="shot" src="{up}screenshots/03-movies.jpg" width="1800" height="1130" alt="{e(c["alt_movies"])}">
-  <img class="shot pip" src="{up}screenshots/05-player.jpg" width="1800" height="1130" alt="{e(c["alt_player"])}" loading="lazy">
+  {pic(up, "03-movies", c["alt_movies"], 'fetchpriority="high" decoding="async"')}
+  {pic(up, "05-player", c["alt_player"], 'decoding="async"', "shot pip")}
  </div>
 </div>
 <section class="tint demo"><div class="wrap"><h2>{e(c["demo_h"])}</h2><p style="max-width:62ch;color:var(--muted)">{e(c["demo_p"])}</p>
-<video controls preload="none" poster="{up}assets/demo-poster.jpg" width="1280" height="720"><source src="{up}assets/demo.mp4" type="video/mp4"></video></div></section>
+<video controls preload="none" poster="{up}assets/demo-poster.webp" width="1280" height="720"><source src="{up}assets/demo.mp4" type="video/mp4"></video></div></section>
 <section id="features"><div class="wrap"><h2>{e(c["feats_h"])}</h2>
 '''
     for i, (img, h, p, alt) in enumerate(c["feats"]):
-        out += f'<div class="row{" flip" if i % 2 else ""}"><div class="text"><h3>{e(h)}</h3><p>{e(p)}</p></div><img class="shot" src="{up}screenshots/{img}.jpg" width="1800" height="1130" alt="{e(alt)}" loading="lazy"></div>\n'
+        out += f'<div class="row{" flip" if i % 2 else ""}"><div class="text"><h3>{e(h)}</h3><p>{e(p)}</p></div>{pic(up, img, alt, 'loading="lazy"')}</div>\n'
     out += '<div class="small-feats">' + "".join(f'<div><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in c["small"]) + '</div>\n</div></section>\n'
     out += f'''<section id="install" class="tint"><div class="wrap install"><div><h2>{e(c["install_h"])}</h2><p style="color:var(--muted);max-width:56ch">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}<p class="why">{e(c["why"])}</p><p class="why"><a href="{YT_INSTALL}">{e(c["video"])}</a></p></div>
 <div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:20px"><a class="btn primary" href="{DOWNLOAD}">{e(c["dl"])}</a></p></div></div></section>

@@ -8,6 +8,7 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 18px/1.6 var(--sans); }
 img, video { max-width: 100%; height: auto; display: block; }
+picture { display: block; min-width: 0; }
 a { color: var(--accent-dark); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 .bars { height: 7px; background: linear-gradient(90deg, #cfcfcf 0 14.28%, #cfc928 0 28.56%, #28c9c9 0 42.84%, #32c85a 0 57.12%, #c43fc4 0 71.4%, #d23b3b 0 85.68%, #3a46d2 0); }
