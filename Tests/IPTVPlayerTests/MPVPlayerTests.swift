@@ -57,6 +57,21 @@ let testVideo = ProcessInfo.processInfo.environment["IPTV_TEST_VIDEO"] ?? "av://
     w.orderOut(nil)
 }
 
+/// The floating PiP panel is `isMovableByWindowBackground`, and the video covers all of it: an opaque NSOpenGLView refuses
+/// `mouseDownCanMoveWindow` by default, so pressing and dragging the video did nothing. It must hand the press to the window.
+@MainActor @Test func videoViewLetsAPressMoveTheWindow() {
+    _ = NSApplication.shared
+    let p = MPVPlayer(subLang: nil, audioLang: nil)
+    defer { p.shutdown() }
+    let v = MPVVideoView(player: p)
+    let w = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 320, height: 180), styleMask: [.titled, .fullSizeContentView], backing: .buffered, defer: false)
+    w.isMovableByWindowBackground = true
+    w.contentView = v
+    let hit = w.contentView?.superview?.hitTest(NSPoint(x: 160, y: 90))
+    #expect(hit === v, "the video view is what a press in the middle of the window reaches")
+    #expect(v.mouseDownCanMoveWindow, "an opaque GL view must not block dragging the window by its background")
+}
+
 @Test func externalHebrewSubtitleFileBecomesSelectableTrack() async throws {
     let srt = FileManager.default.temporaryDirectory.appendingPathComponent("iptvmac-test-\(UUID().uuidString).srt")
     try "1\n00:00:00,000 --> 00:00:05,000\nשלום עולם\n".write(to: srt, atomically: true, encoding: .utf8)

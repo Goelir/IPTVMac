@@ -4,7 +4,7 @@ import AppKit
 /// Always-on-top mini window that hosts the player's video view (Picture-in-Picture).
 @MainActor
 final class PiPController: NSObject, NSWindowDelegate {
-    private let panel: NSPanel
+    let panel: NSPanel
     private let onClose: () -> Void
     private var closing = false
 
@@ -25,9 +25,16 @@ final class PiPController: NSObject, NSWindowDelegate {
         panel.contentAspectRatio = NSSize(width: 16, height: 9)
         panel.minSize = NSSize(width: 240, height: 135)
         panel.delegate = self
-        panel.contentView = NSHostingView(rootView: PiPView(model: model, onReturn: onReturn, onClose: { [weak self] in
+        // The SwiftUI hosting view must not be the window's content view: there it keeps overwriting the window's min/max size with its
+        // content's (0 x 28, or 55 x 97 with the controls showing), so dragging a corner shrank the video window to a sliver.
+        let host = NSHostingView(rootView: PiPView(model: model, onReturn: onReturn, onClose: { [weak self] in
             self?.dismiss(); onClose()
         }))
+        let content = NSView(frame: NSRect(x: 0, y: 0, width: 480, height: 270))
+        host.frame = content.bounds
+        host.autoresizingMask = [.width, .height]
+        content.addSubview(host)
+        panel.contentView = content
     }
 
     func show() {
@@ -55,7 +62,7 @@ struct PiPView: View {
 
     var body: some View {
         ZStack {
-            Color.black
+            Color.black.allowsHitTesting(false)   // SwiftUI content that takes presses stops the panel's background drag
             PlayerSurface(model: model)
             if hover {
                 VStack {
@@ -68,7 +75,8 @@ struct PiPView: View {
                     Button { model.mpv.togglePause() } label: { Image(systemName: model.paused ? "play.fill" : "pause.fill").font(.title) }
                     Spacer()
                 }
-                .buttonStyle(.plain).foregroundStyle(.white).background(.black.opacity(0.35))
+                // The dimming must not take presses: only the buttons do, so a press anywhere else reaches the video and moves the window.
+                .buttonStyle(.plain).foregroundStyle(.white).background { Color.black.opacity(0.35).allowsHitTesting(false) }
             }
         }
         .onHover { hover = $0 }

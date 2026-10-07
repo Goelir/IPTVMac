@@ -46,6 +46,10 @@ public final class MPVVideoView: NSOpenGLView {
 
     required init?(coder: NSCoder) { fatalError() }
 
+    /// The PiP panel is movable by its background and the video covers all of it: an opaque view refuses by default,
+    /// which made pressing and dragging the video do nothing. (No effect in windows that are not movable by background.)
+    public override var mouseDownCanMoveWindow: Bool { true }
+
     public override func draw(_ dirtyRect: NSRect) {
         guard let render else { return }
         openGLContext?.makeCurrentContext()
