@@ -22,6 +22,8 @@ let package = Package(
                     swiftSettings: [.unsafeFlags(["-plugin-path", "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing"])]),
         .testTarget(name: "IPTVPlayerTests", dependencies: ["IPTVPlayer"],
                     swiftSettings: [.unsafeFlags(["-plugin-path", "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing"])]),
+        .testTarget(name: "IPTVMacTests", dependencies: ["IPTVMac"],
+                    swiftSettings: [.unsafeFlags(["-plugin-path", "/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing"])]),
     ],
     swiftLanguageModes: [.v5]
 )
