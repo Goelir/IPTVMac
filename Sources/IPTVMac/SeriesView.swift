@@ -10,30 +10,35 @@ struct SeriesView: View {
     @State private var error: String?
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(series.name).font(.title2)
+                Text(series.name).font(.title2.weight(.semibold)).lineLimit(2)
                 Spacer()
                 Button(L("player.close")) { dismiss() }
             }
-            if loading { ProgressView() }
-            else if let error { Text(error).foregroundStyle(.red) }
+            if loading { ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity).transition(.opacity) }
+            else if let error {
+                Label(error, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
             else {
                 List {
                     let bySeason = Dictionary(grouping: episodes, by: \.season)
                     ForEach(bySeason.keys.sorted(), id: \.self) { s in
                         Section {
                             ForEach(bySeason[s] ?? []) { e in
-                                HStack {
-                                    Text("\(e.number). \(e.title)").frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+                                HStack(spacing: 10) {
+                                    Text("\(e.number)").monospacedDigit().foregroundStyle(.secondary).frame(minWidth: 28, alignment: .trailing)
+                                    Text(e.title).lineLimit(2).frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
                                         .onTapGesture { dismiss(); model.playEpisode(e, of: series, in: episodes) }
                                     Button { model.download([e], of: series) } label: { Image(systemName: "arrow.down.circle") }
-                                        .buttonStyle(.plain).help(L("downloads.add"))
+                                        .buttonStyle(IconButtonStyle()).help(L("downloads.add")).accessibilityLabel(L("downloads.add"))
                                 }
+                                .padding(.vertical, 2).hoverHighlight(radius: 6)
                             }
                         } header: {
                             HStack {
-                                Text("\(L("series.season")) \(s)")
+                                Text("\(L("series.season")) \(s)").font(.headline)
                                 Spacer()
                                 Button(L("downloads.season")) { model.download(bySeason[s] ?? [], of: series) }
                             }
@@ -43,6 +48,7 @@ struct SeriesView: View {
             }
         }
         .padding().frame(minWidth: 520, minHeight: 480)
+        .motion(value: loading)
         .task {
             guard let a = model.playlist(id: series.accountId) else { return }
             do {

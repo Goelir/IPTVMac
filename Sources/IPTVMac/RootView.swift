@@ -17,6 +17,8 @@ struct RootView: View {
         .sheet(item: $model.passwordPrompt) { PasswordPrompt(account: $0) }
     }
 
+    private func showsPlayer(_ m: AppModel) -> Bool { m.playing != nil && !m.pip && m.player != nil }
+
     @ViewBuilder
     private func main(model: Bindable<AppModel>) -> some View {
         NavigationSplitView(columnVisibility: $columns) {
@@ -48,16 +50,26 @@ struct RootView: View {
             VStack(spacing: 0) {
                 if let r = model.wrappedValue.playing, !model.wrappedValue.pip, let pm = model.wrappedValue.player {
                     // Inside the detail column: the tabs, search and Back stay in the toolbar while watching.
-                    PlayerScreen(request: r, pm: pm)
+                    PlayerScreen(request: r, pm: pm).transition(.opacity)
                 } else {
-                    UpdateBanner()
-                    if model.wrappedValue.syncing { ProgressView(L("sync.running")).padding(6) }
-                    if let m = model.wrappedValue.syncMessage {
-                        Text("\(L("sync.failed")): \(m). \(L("sync.notUpdated"))").font(.caption).foregroundStyle(.red).padding(6)
+                    VStack(spacing: 0) {
+                        UpdateBanner()
+                        if model.wrappedValue.syncing {
+                            StatusStrip(kind: .busy, text: L("sync.running"))
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
+                        if let m = model.wrappedValue.syncMessage {
+                            StatusStrip(kind: .warning, text: "\(L("sync.failed")): \(m). \(L("sync.notUpdated"))")
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
+                        ResultsView()
                     }
-                    ResultsView()
+                    .motion(value: model.wrappedValue.syncing)
+                    .motion(value: model.wrappedValue.syncMessage)
+                    .transition(.opacity)
                 }
             }
+            .motion(.easeInOut(duration: 0.2), value: showsPlayer(model.wrappedValue))
             .searchable(text: model.searchText, prompt: L("search.prompt"))
             .searchScopes(model.scope) {
                 Text(L("scope.category")).tag(SearchScopeChoice.category)

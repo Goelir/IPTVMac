@@ -18,53 +18,102 @@ struct OnboardingView: View {
     @State private var busy = false
     @State private var saving = false
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var forward = true
+    @State private var logoShown = false
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            switch step {
-            case 0:
-                if let url = l10nBundle.url(forResource: "logo", withExtension: "png"), let img = NSImage(contentsOf: url) {
-                    Image(nsImage: img).resizable().scaledToFit().frame(width: 120, height: 120)
+        VStack(spacing: 16) {
+            VStack(alignment: step == 0 ? .center : .leading, spacing: 16) {
+                switch step {
+                case 0: welcome
+                case 1: source
+                default: testStep
                 }
-                Text(L("onb.welcome.title")).font(.largeTitle)
-                Text(L("onb.welcome.body"))
-            case 1:
-                Text(L("onb.where.title")).font(.title)
-                Picker(L("field.kind"), selection: $kind) {
-                    Text(L("kind.xtream")).tag(AccountKind.xtream)
-                    Text(L("kind.m3u")).tag(AccountKind.m3u)
-                }.pickerStyle(.segmented)
-                Text(kind == .xtream ? L("onb.where.xtream") : L("onb.where.m3u")).foregroundStyle(.secondary)
-                Form {
-                    TextField(L("field.name"), text: $name)
-                    if kind == .xtream {
-                        TextField(L("field.server"), text: $server, prompt: Text("http://host:8080"))
-                        TextField(L("field.username"), text: $username)
-                        SecureField(L("field.password"), text: $password)
-                    } else {
-                        TextField(L("field.url"), text: $url, prompt: Text("http://example.com/list.m3u"))
-                    }
-                }
-            default:
-                Text(L("onb.test")).font(.title)
-                HStack {
-                    Button(L("onb.test")) { Task { await test() } }.disabled(busy)
-                    if busy { ProgressView().controlSize(.small) }
-                }
-                if let status { Text(status).foregroundStyle(ok ? .green : .red) }
             }
-            Spacer()
-            HStack {
-                if !isFirstRun { Button(L("player.close")) { dismiss() } }
-                Spacer()
-                if step > 0 { Button(L("onb.back")) { step -= 1; ok = false; status = nil }.disabled(saving) }
-                if step < 2 {
-                    Button(L("onb.next")) { step += 1 }.disabled(step == 1 && !formValid)
-                } else {
-                    Button(L("onb.save")) { Task { saving = true; await save(); saving = false } }.buttonStyle(.borderedProminent).disabled(!ok || saving)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: step == 0 ? .center : .topLeading)
+            .id(step)
+            .transition(stepTransition)
+            ZStack {
+                HStack(spacing: 6) {
+                    ForEach(0..<3, id: \.self) { i in
+                        Capsule().fill(i == step ? Color.accentColor : Color.primary.opacity(0.18))
+                            .frame(width: i == step ? 18 : 6, height: 6)
+                    }
+                }.accessibilityHidden(true)
+                HStack {
+                    if !isFirstRun { Button(L("player.close")) { dismiss() } }
+                    Spacer()
+                    if step > 0 { Button(L("onb.back")) { go(-1); ok = false; status = nil }.disabled(saving) }
+                    if step < 2 {
+                        Button(L("onb.next")) { go(1) }.disabled(step == 1 && !formValid)
+                            
+                            .buttonStyle(.borderedProminent)
+                    } else {
+                        Button(L("onb.save")) { Task { saving = true; await save(); saving = false } }.buttonStyle(.borderedProminent).disabled(!ok || saving)
+                    }
                 }
             }
         }
         .padding(28).frame(minWidth: 520, minHeight: 420)
+        .clipped()
+        .onAppear { withAnimation(reduceMotion ? nil : .smooth(duration: 0.5)) { logoShown = true } }
+    }
+
+    private var stepTransition: AnyTransition {
+        if reduceMotion { return .opacity }
+        let edge: Edge = forward ? .trailing : .leading
+        return .asymmetric(insertion: .move(edge: edge).combined(with: .opacity),
+                           removal: .move(edge: edge == .trailing ? .leading : .trailing).combined(with: .opacity))
+    }
+
+    private func go(_ delta: Int) {
+        forward = delta > 0
+        withAnimation(.smooth(duration: 0.3)) { step += delta }
+    }
+
+    @ViewBuilder private var welcome: some View {
+        if let url = l10nBundle.url(forResource: "logo", withExtension: "png"), let img = NSImage(contentsOf: url) {
+            Image(nsImage: img).resizable().scaledToFit().frame(width: 112, height: 112)
+                .shadow(color: .black.opacity(0.25), radius: 14, y: 6)
+                .scaleEffect(logoShown || reduceMotion ? 1 : 0.88).opacity(logoShown || reduceMotion ? 1 : 0)
+                .accessibilityHidden(true)
+        }
+        Text(L("onb.welcome.title")).font(.largeTitle.weight(.semibold)).multilineTextAlignment(.center)
+        Text(L("onb.welcome.body")).font(.title3).foregroundStyle(.secondary).multilineTextAlignment(.center).frame(maxWidth: 400)
+    }
+
+    @ViewBuilder private var source: some View {
+        Text(L("onb.where.title")).font(.title.weight(.semibold))
+        Picker(L("field.kind"), selection: $kind) {
+            Text(L("kind.xtream")).tag(AccountKind.xtream)
+            Text(L("kind.m3u")).tag(AccountKind.m3u)
+        }.pickerStyle(.segmented)
+        Text(kind == .xtream ? L("onb.where.xtream") : L("onb.where.m3u")).foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        Form {
+            TextField(L("field.name"), text: $name)
+            if kind == .xtream {
+                TextField(L("field.server"), text: $server, prompt: Text("http://host:8080"))
+                TextField(L("field.username"), text: $username)
+                SecureField(L("field.password"), text: $password)
+            } else {
+                TextField(L("field.url"), text: $url, prompt: Text("http://example.com/list.m3u"))
+            }
+        }
+        .motion(value: kind)
+    }
+
+    @ViewBuilder private var testStep: some View {
+        Text(L("onb.test")).font(.title.weight(.semibold))
+        HStack {
+            Button(L("onb.test")) { Task { await test() } }.disabled(busy)
+            if busy { ProgressView().controlSize(.small) }
+        }
+        if let status {
+            Label(status, systemImage: ok ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                .foregroundStyle(ok ? .green : .red).transition(.opacity)
+        }
     }
 
     private var formValid: Bool {
@@ -86,8 +135,8 @@ struct OnboardingView: View {
                 guard String(decoding: d, as: UTF8.self).drop(while: { $0.isWhitespace || $0 == "\u{FEFF}" }).hasPrefix("#EXTM3U")
                 else { throw IPTVError.badResponse }
             }
-            ok = true; status = L("onb.test.ok")
-        } catch { status = "\(L("onb.test.fail")): \(error.localizedDescription)" }
+            withAnimation(reduceMotion ? nil : .smooth(duration: 0.2)) { ok = true; status = L("onb.test.ok") }
+        } catch { withAnimation(reduceMotion ? nil : .smooth(duration: 0.2)) { status = "\(L("onb.test.fail")): \(error.localizedDescription)" } }
     }
 
     private func save() async {

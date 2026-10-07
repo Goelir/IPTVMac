@@ -10,7 +10,7 @@ struct DownloadsView: View {
         let d = model.downloads
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(L("downloads.title")).font(.title2)
+                Text(L("downloads.title")).font(.title2.weight(.semibold))
                 Spacer()
                 Button(L("player.close")) { dismiss() }
             }
@@ -31,11 +31,11 @@ struct DownloadsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(e.title).lineLimit(1)
                 switch e.state {
-                case .done: Text(L("downloads.done")).font(.caption).foregroundStyle(.green)
-                case .failed(let m): Text(m).font(.caption).foregroundStyle(.red).lineLimit(2)
+                case .done: Label(L("downloads.done"), systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(.green)
+                case .failed(let m): Label(m, systemImage: "exclamationmark.triangle.fill").font(.caption).foregroundStyle(.red).lineLimit(2)
                 case .queued: Text(L("downloads.queued")).font(.caption).foregroundStyle(.secondary)
                 case .active, .paused:
-                    ProgressView(value: e.progress)
+                    DownloadBar(progress: e.progress, paused: { if case .paused = e.state { true } else { false } }())
                     Text("\(ByteCountFormatter.string(fromByteCount: e.received, countStyle: .file)) / \(ByteCountFormatter.string(fromByteCount: e.total, countStyle: .file))")
                         .font(.caption).foregroundStyle(.secondary).monospacedDigit()
                 }
@@ -53,6 +53,6 @@ struct DownloadsView: View {
                 Button { d.resume(e.id) } label: { Image(systemName: "arrow.clockwise") }.help(L("downloads.resume"))
                 Button { d.remove(e.id) } label: { Image(systemName: "xmark") }.help(L("downloads.cancel"))
             }
-        }.buttonStyle(.plain)
+        }.buttonStyle(IconButtonStyle()).padding(.vertical, 3)
     }
 }
