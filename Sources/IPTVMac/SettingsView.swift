@@ -1,5 +1,6 @@
 import SwiftUI
 import IPTVCore
+import IPTVPlayer
 
 /// One tab per topic; each tab is its own file-level view so the settings can grow without one giant form.
 struct SettingsView: View {
@@ -50,18 +51,44 @@ struct GeneralSettings: View {
 }
 
 struct PlayerSettings: View {
+    static let seekSteps = [5, 10, 15, 30, 60]
     @AppStorage("prefSubLang") private var subLang = ""
     @AppStorage("prefAudioLang") private var audioLang = ""
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
     @AppStorage("openFullscreen") private var openFullscreen = true
     @AppStorage("autoNextEpisode") private var autoNext = true
+    @AppStorage("seekStep") private var seekStep = 10
+    @AppStorage("barsHideSeconds") private var barsHide = 3
+    @AppStorage("showClock") private var showClock = false
+    @AppStorage("videoScale") private var videoScale = VideoScale.fit
+    @AppStorage("bufferSize") private var bufferSize = BufferSize.normal
 
     var body: some View {
         Form {
             Section {
                 Toggle(L("settings.fullscreen"), isOn: $openFullscreen)
                 Toggle(L("settings.autoNext"), isOn: $autoNext)
+                Toggle(L("settings.clock"), isOn: $showClock)
+            }
+            Section {
+                Picker(L("settings.seekStep"), selection: $seekStep) {
+                    ForEach(Self.seekSteps, id: \.self) { Text(String(format: L("unit.seconds"), $0)).tag($0) }
+                }
+                Picker(L("settings.barsHide"), selection: $barsHide) {
+                    ForEach([2, 3, 5, 10], id: \.self) { Text(String(format: L("unit.seconds"), $0)).tag($0) }
+                    Text(L("settings.never")).tag(0)
+                }
+            }
+            Section {
+                Picker(L("settings.videoScale"), selection: $videoScale) {
+                    ForEach(VideoScale.allCases, id: \.self) { Text(L("settings.scale.\($0.rawValue)")).tag($0) }
+                }
+                Text(L("settings.videoScaleHint")).font(.caption).foregroundStyle(.secondary)
+                Picker(L("settings.buffer"), selection: $bufferSize) {
+                    ForEach(BufferSize.allCases, id: \.self) { Text(L("settings.buffer.\($0.rawValue)")).tag($0) }
+                }
+                Text(L("settings.bufferHint")).font(.caption).foregroundStyle(.secondary)
             }
             Section {
                 TextField(L("settings.language.sub"), text: $subLang, prompt: Text("he,en"))

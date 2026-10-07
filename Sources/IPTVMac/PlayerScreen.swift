@@ -35,6 +35,11 @@ struct PlayerScreen: View {
     @State private var showSpeed = false
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
+    @AppStorage("seekStep") private var seekStep = 10
+    @AppStorage("videoScale") private var videoScale = VideoScale.fit
+    @AppStorage("bufferSize") private var bufferSize = BufferSize.normal
+    @AppStorage("barsHideSeconds") private var barsHide = 3
+    @AppStorage("showClock") private var showClock = false
 
     var body: some View {
         ZStack {
@@ -70,6 +75,9 @@ struct PlayerScreen: View {
                         epgLines
                     }
                     Spacer()
+                    if showClock {
+                        TimelineView(.everyMinute) { Text($0.date.formatted(date: .omitted, time: .shortened)).monospacedDigit() }
+                    }
                     if let item = request.item {
                         Button { model.toggleFavorite(item) } label: {
                             Image(systemName: model.isFavorite(item) ? "star.fill" : "star").font(.title2)
@@ -91,11 +99,12 @@ struct PlayerScreen: View {
         .onAppear { focused = true; revealBars() }
         .onKeyPress(.escape) { model.stopPlayback(); return .handled }
         .onKeyPress(.space) { revealBars(); pm.mpv.togglePause(); return .handled }
-        .onKeyPress(.leftArrow) { revealBars(); pm.mpv.seek(by: -10); return .handled }
-        .onKeyPress(.rightArrow) { revealBars(); pm.mpv.seek(by: 10); return .handled }
+        .onKeyPress(.leftArrow) { skip(-1); return .handled }
+        .onKeyPress(.rightArrow) { skip(1); return .handled }
         .onKeyPress("2") { if !request.isLive { revealBars(); pm.toggleDoubleSpeed() }; return .handled }
         .onKeyPress("[") { if !request.isLive { revealBars(); pm.stepSpeed(up: false) }; return .handled }
         .onKeyPress("]") { if !request.isLive { revealBars(); pm.stepSpeed(up: true) }; return .handled }
+        .onKeyPress("a") { videoScale = videoScale.next; return .handled }
         .onKeyPress("f") { NSApp.keyWindow?.toggleFullScreen(nil); return .handled }
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             providers.first?.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { data, _ in
@@ -125,7 +134,10 @@ struct PlayerScreen: View {
         .task(id: request.id) { if let item = request.item, request.isLive { await model.watchSchedule(of: item) } else { model.schedule = [] } }
         .onChange(of: subScale) { pm.applySubtitleStyle() }
         .onChange(of: subDelay) { pm.applySubtitleStyle() }
-        .onChange(of: showSpeed) { if !showSpeed { focused = true; revealBars() } }   // the popover had the keyboard focus and the bar's 3 s timer
+        .onChange(of: videoScale) { pm.applyVideoScale() }
+        .onChange(of: bufferSize) { pm.applyBuffer() }
+        .onChange(of: barsHide) { revealBars() }
+        .onChange(of: showSpeed) { if !showSpeed { focused = true; revealBars() } }   // the popover had the keyboard focus and the bar's hide timer
     }
 
     /// Now / next from the channel's EPG (live channels only; empty when the provider has no guide).
@@ -144,13 +156,14 @@ struct PlayerScreen: View {
 
     private var barsVisible: Bool { showBars || showSpeed || pm.paused || pm.error != nil }
 
-    /// Title bar and controls fade out after 3 s without mouse movement, so a full-screen video shows nothing on top.
+    /// Title bar and controls fade out after `barsHide` seconds (0 = never) without mouse movement, so a full-screen video shows nothing on top.
     private func revealBars() {
         showBars = true
         hideTask?.cancel()
+        guard barsHide > 0 else { return }
         hideTask = Task {
-            try? await Task.sleep(for: .seconds(3))
-            // Hover events stop while a button is held, so dragging the seek slider for 3 s would hide the bar under the pointer.
+            try? await Task.sleep(for: .seconds(barsHide))
+            // Hover events stop while a button is held, so dragging the seek slider for a few seconds would hide the bar under the pointer.
             while NSEvent.pressedMouseButtons != 0 && !Task.isCancelled { try? await Task.sleep(for: .milliseconds(500)) }
             guard !Task.isCancelled, !showSpeed else { return }
             showBars = false
@@ -158,10 +171,16 @@ struct PlayerScreen: View {
         }
     }
 
+    private func skip(_ direction: Double) { revealBars(); pm.mpv.seek(by: direction * Double(seekStep)) }
+
     private var controls: some View {
         HStack(spacing: 16) {
             Button { pm.mpv.togglePause() } label: { Image(systemName: pm.paused ? "play.fill" : "pause.fill") }
             if !request.isLive {
+                Button { skip(-1) } label: { Image(systemName: "gobackward.\(seekStep)") }
+                    .help(String(format: L("player.skipBack"), String(format: L("unit.seconds"), seekStep)))
+                Button { skip(1) } label: { Image(systemName: "goforward.\(seekStep)") }
+                    .help(String(format: L("player.skipForward"), String(format: L("unit.seconds"), seekStep)))
                 Slider(value: Binding(get: { pm.position }, set: { pm.mpv.seek(to: $0) }), in: 0...max(pm.duration, 1))
                 Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption)
             } else { Spacer() }
@@ -170,6 +189,7 @@ struct PlayerScreen: View {
             }
             trackMenu(type: "sub", title: L("player.subtitles"), prop: "sid", icon: "captions.bubble")
             trackMenu(type: "audio", title: L("player.audio"), prop: "aid", icon: "speaker.wave.2")
+            sleepMenu
             if request.item?.tvArchive == true && request.isLive {
                 Button { showCatchup = true } label: { Image(systemName: "clock.arrow.circlepath") }.help(L("player.catchup"))
             }
@@ -177,6 +197,19 @@ struct PlayerScreen: View {
             Button { NSApp.keyWindow?.toggleFullScreen(nil) } label: { Image(systemName: "arrow.up.left.and.arrow.down.right") }.help(L("player.fullscreen"))
         }
         .buttonStyle(.plain).font(.title3).padding().background(.black.opacity(0.5))
+    }
+
+    private var sleepMenu: some View {
+        HStack(spacing: 4) {
+            Menu {
+                Button(L("player.off")) { pm.setSleep(minutes: 0) }
+                ForEach([15, 30, 45, 60, 90, 120], id: \.self) { m in
+                    Button(String(format: L("unit.minutes"), m)) { pm.setSleep(minutes: m) }
+                }
+            } label: { Image(systemName: pm.sleepMinutesLeft == nil ? "moon.zzz" : "moon.zzz.fill") }
+            .menuStyle(.borderlessButton).fixedSize().help(L("player.sleep"))
+            if let m = pm.sleepMinutesLeft { Text(String(format: L("unit.minutesShort"), m)).font(.caption).monospacedDigit() }
+        }
     }
 
     private func label(_ t: Track) -> String {
