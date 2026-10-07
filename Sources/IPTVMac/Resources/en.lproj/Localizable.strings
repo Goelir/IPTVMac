@@ -117,3 +117,6 @@
 "db.recovered.title" = "The database was damaged";
 "db.recovered.body" = "IPTVMac started with a fresh database (add your source again). The damaged file was kept here:\n%@";
 "menu.showWindow" = "Show Window";
+"settings.tab.general" = "General";
+"settings.tab.player" = "Player";
+"settings.tab.playlists" = "Playlists";

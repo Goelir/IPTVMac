@@ -117,3 +117,6 @@
 "db.recovered.title" = "מסד הנתונים ניזוק";
 "db.recovered.body" = "IPTVMac התחילה עם מסד נתונים חדש (הוסף את המקור מחדש). הקובץ הפגום נשמר כאן:\n%@";
 "menu.showWindow" = "הצג חלון";
+"settings.tab.general" = "כללי";
+"settings.tab.player" = "נגן";
+"settings.tab.playlists" = "רשימות";
