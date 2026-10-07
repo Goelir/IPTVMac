@@ -63,12 +63,15 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleShortVersionString</key><string>__VERSION__</string>
 <key>CFBundleVersion</key><string>__VERSION__</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
-<key>CFBundleLocalizations</key><array><string>en</string><string>he</string><string>ar</string></array>
+<key>CFBundleLocalizations</key><array>__LOCALIZATIONS__</array>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSAppTransportSecurity</key><dict><key>NSAllowsArbitraryLoads</key><true/></dict>
 </dict></plist>
 PLIST
 sed -i '' "s/__VERSION__/$VERSION/g" "$APP/Contents/Info.plist"
+# every Resources/<lang>.lproj folder is a UI language macOS may pick
+LOCS="$(cd Sources/IPTVMac/Resources && for d in *.lproj; do printf '<string>%s</string>' "${d%.lproj}"; done)"
+sed -i '' "s|__LOCALIZATIONS__|$LOCS|" "$APP/Contents/Info.plist"
 find "$APP/Contents/Frameworks" -name '*.dylib' -exec codesign --force --sign - {} \;
 codesign --force --deep --sign - "$APP"
 echo "Built $APP"

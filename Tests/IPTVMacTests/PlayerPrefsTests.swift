@@ -79,7 +79,11 @@ private func request(_ name: String) -> PlayRequest {
     }
     func specs(_ s: String) -> [String] { s.split(separator: "%", omittingEmptySubsequences: false).dropFirst().map { String($0.prefix(1)) } }
     let en = try table("en")
-    for lang in ["he", "ar"] {
+    // every folder on disk is a listed language and the other way round
+    let folders = try FileManager.default.contentsOfDirectory(at: try #require(l10nBundle.resourceURL), includingPropertiesForKeys: nil)
+        .filter { $0.pathExtension == "lproj" && $0.lastPathComponent != "Base.lproj" }.map { $0.deletingPathExtension().lastPathComponent }
+    #expect(Set(folders) == Set(InterfaceLanguage.codes), "folders without a row or rows without a folder: \(Set(folders).symmetricDifference(InterfaceLanguage.codes))")
+    for lang in InterfaceLanguage.codes where lang != "en" {
         let t = try table(lang)
         #expect(Set(t.keys) == Set(en.keys), "\(lang): missing \(Set(en.keys).subtracting(t.keys)), extra \(Set(t.keys).subtracting(en.keys))")
         for (k, v) in en { #expect(specs(t[k] ?? "") == specs(v), "\(lang) \(k)") }

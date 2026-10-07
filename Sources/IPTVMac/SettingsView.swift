@@ -33,7 +33,7 @@ struct GeneralSettings: View {
                 }.onChange(of: appearance) { _, v in Appearance.apply(v) }
                 Picker(L("settings.interfaceLanguage"), selection: $language) {
                     Text(L("settings.system")).tag("system")
-                    Text("עברית").tag("he"); Text("English").tag("en"); Text("العربية").tag("ar")
+                    ForEach(InterfaceLanguage.all, id: \.code) { Text($0.name).tag($0.code) }
                 }.onChange(of: language) { _, v in InterfaceLanguage.set(v) }
                 Text(L("settings.languageRestart")).font(.caption).foregroundStyle(.secondary)
             }

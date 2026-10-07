@@ -22,7 +22,7 @@ Open an issue and include: the IPTVMac version (Settings), your macOS version, w
 
 ## Translations
 
-Copy `Sources/IPTVMac/Resources/en.lproj/Localizable.strings` to `<lang>.lproj/`, translate the values, and open a pull request.
+Copy `Sources/IPTVMac/Resources/en.lproj/Localizable.strings` to `<lang>.lproj/` (an Apple language code such as `pt` or `zh-Hans`) and translate the values. Add one row for the language, written in its own language, to `InterfaceLanguage.all` in `Sources/IPTVMac/AppPrefs.swift`. Run `python3 scripts/check-strings.py <lang>` (it checks the keys and the `%@` / `%d` placeholders) and open a pull request.
 
 ## License
 

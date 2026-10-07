@@ -62,7 +62,7 @@ def software_ld(desc, lang):
     return {
         "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac",
         "applicationCategory": "MultimediaApplication", "operatingSystem": "macOS 14 or later (Apple Silicon)",
-        "softwareVersion": VERSION, "description": desc, "url": BASE, "inLanguage": ["en", "he", "ar"],
+        "softwareVersion": VERSION, "description": desc, "url": BASE, "inLanguage": ["en", "he", "ar", "es", "fr", "de", "pt", "it", "ru", "uk", "pl", "ro", "bg", "nl", "sv", "cs", "hu", "el", "sq", "tr", "fa", "ur", "hi", "bn", "id", "vi", "th", "zh-Hans", "zh-Hant", "ja", "ko"],
         "downloadUrl": DOWNLOAD, "license": "https://www.gnu.org/licenses/gpl-3.0.html", "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "image": BASE + "social-preview.png",
@@ -71,7 +71,7 @@ def software_ld(desc, lang):
         "sameAs": [REPO],
         "featureList": ["Xtream Codes and M3U sources", "Instant full-text search", "Built-in mpv player with subtitles",
                         "Picture in Picture", "Catch-up TV", "Downloads", "Several playlists", "Playback speed 0.25x to 4x", "Sleep timer",
-                        "Backup and restore", "Hebrew, English and Arabic interface"],
+                        "Backup and restore", "Interface in 31 languages"],
     }
 
 def faq_ld(items):
@@ -110,7 +110,7 @@ HOME = {
          ("Several playlists", "Switch between playlists from the toolbar, or show all of them together with the playlist name on each item."),
          ("Speed, skip and sleep timer", "Play from 0.25x to 4x, choose the skip step, and set a sleep timer."),
          ("Backup and settings", "Export playlists (without passwords), favorites and history; light or dark appearance; hide categories by words."),
-         ("Hebrew, English, Arabic", "A full interface in three languages, with right-to-left layout."),
+         ("31 languages", "Hebrew, English, Arabic, Spanish, French, German, Russian, Chinese, Japanese, Hindi and more, with right-to-left layout. Pick one in Settings."),
          ("Updates itself", "Checks GitHub Releases, verifies a SHA-256 checksum and installs the new version.")],
   install_h="Install in one line", install_p="Paste this in Terminal. It downloads the latest release, checks its SHA-256, copies IPTVMac to Applications and opens it.",
   copy="Copy", copied="Copied", video="Watch the 95-second install video on YouTube",
@@ -118,7 +118,7 @@ HOME = {
   dmg_h="Or download the DMG", dmg_steps=["Open IPTVMac.dmg and drag the app onto the Applications icon.", "The first launch is blocked: open System Settings, Privacy &amp; Security, and choose Open Anyway next to IPTVMac.", "Or run xattr -dr com.apple.quarantine /Applications/IPTVMac.app in Terminal."],
   faq_h="Questions",
   faq=[
-   ("What is IPTVMac?", "IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in Hebrew, English and Arabic."),
+   ("What is IPTVMac?", "IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages."),
    ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include, host or link to any channels, movies or series. You add a source from a provider you are authorized to use."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
@@ -163,7 +163,7 @@ HOME = {
          ("כמה רשימות", "עוברים בין רשימות מסרגל הכלים, או מציגים את כולן יחד עם שם הרשימה על כל פריט."),
          ("מהירות, דילוג וטיימר שינה", "ניגון מ-0.25× עד 4×, בחירת צעד הדילוג, וטיימר שינה."),
          ("גיבוי והגדרות", "ייצוא של הרשימות (בלי סיסמאות), המועדפים וההיסטוריה; מראה בהיר או כהה; הסתרת קטגוריות לפי מילים."),
-         ("עברית, אנגלית, ערבית", "ממשק מלא בשלוש שפות, עם פריסה מימין לשמאל."),
+         ("31 שפות", "עברית, אנגלית, ערבית, ספרדית, צרפתית, גרמנית, רוסית, סינית, יפנית, הינדי ועוד, עם פריסה מימין לשמאל. בוחרים בהגדרות."),
          ("מתעדכן לבד", "בודק את GitHub Releases, מאמת SHA-256 ומתקין את הגרסה החדשה.")],
   install_h="התקנה בשורה אחת", install_p="מדביקים בטרמינל. השורה מורידה את הגרסה האחרונה, בודקת SHA-256, מעתיקה את IPTVMac ל-Applications ופותחת אותה.",
   copy="העתק", copied="הועתק", video="צפו בסרטון ההתקנה של 95 שניות ביוטיוב (באנגלית)",
@@ -171,7 +171,7 @@ HOME = {
   dmg_h="או הורדת ה-DMG", dmg_steps=["פותחים את IPTVMac.dmg וגוררים את האפליקציה על אייקון Applications.", "ההפעלה הראשונה נחסמת: בהגדרות המערכת, פרטיות ואבטחה, לוחצים Open Anyway ליד IPTVMac.", "או מריצים בטרמינל xattr -dr com.apple.quarantine /Applications/IPTVMac.app"],
   faq_h="שאלות נפוצות",
   faq=[
-   ("מה זה IPTVMac?", "IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. הוא מנגן מקורות Xtream Codes ו-M3U עם נגן mpv מובנה, חיפוש מיידי, כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וממשק בעברית, אנגלית וערבית."),
+   ("מה זה IPTVMac?", "IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. הוא מנגן מקורות Xtream Codes ו-M3U עם נגן mpv מובנה, חיפוש מיידי, כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וממשק ב-31 שפות."),
    ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל, לא מארח ולא מקשר לערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
@@ -352,7 +352,7 @@ Sitemap: {BASE}sitemap.xml
     d = HOME["en"]
     facts = f"""# IPTVMac
 
-> IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and a Hebrew, English and Arabic interface. Apple Silicon, macOS 14 or later. GPL-3.0. It is a player only and includes no channels or content.
+> IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Apple Silicon, macOS 14 or later. GPL-3.0. It is a player only and includes no channels or content.
 
 Latest version: {VERSION}. Download: {DOWNLOAD}
 Install in Terminal: `{INSTALL_CMD}`

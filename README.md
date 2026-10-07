@@ -45,7 +45,7 @@
 | **Playlists** | Xtream Codes (server, username, password) and M3U (name and link). With several playlists, switch between them from the toolbar or choose **All playlists** to see everything together: search, favorites and continue watching across all of them, with the playlist name on every item. |
 | **Resume and next episode** | Movies and episodes continue where you stopped; when an episode ends, the next one starts after a 5-second countdown (you can cancel it or turn it off). |
 | **Settings** | Appearance (system, light, dark), interface language, automatic playlist refresh, hide categories by words, network buffer size, **backup and restore** of your playlists (without passwords), favorites and watch history, and clearing history, favorites or the image cache. |
-| **Languages** | Hebrew, English and Arabic UI, with right-to-left layout. More languages are easy to add ([translations](#contributing-translations)). |
+| **Languages** | 31 interface languages: Hebrew, English, Arabic, Spanish, French, German, Portuguese, Italian, Russian, Ukrainian, Polish, Romanian, Bulgarian, Dutch, Swedish, Czech, Hungarian, Greek, Albanian, Turkish, Persian, Urdu, Hindi, Bengali, Indonesian, Vietnamese, Thai, Chinese (Simplified and Traditional), Japanese and Korean, with right-to-left layout for Hebrew, Arabic, Persian and Urdu. The app follows your Mac's language, or pick one in Settings. Apart from Hebrew, English and Arabic the translations were written with AI help and no native speaker has reviewed them yet: corrections are welcome ([translations](#contributing-translations)). |
 | **Updates** | The app checks GitHub Releases, verifies a SHA-256 and updates itself. |
 
 <details>
@@ -161,7 +161,9 @@ Bug reports and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md
 
 ### Contributing translations
 
-Copy `Sources/IPTVMac/Resources/en.lproj/Localizable.strings` to `<lang>.lproj/` and translate the values.
+1. Copy `Sources/IPTVMac/Resources/en.lproj/Localizable.strings` to `<lang>.lproj/` (an Apple language code such as `pt` or `zh-Hans`) and translate the values. Keep every key and every `%@` / `%d` placeholder, in the same order.
+2. Add the language, written in its own language, to `InterfaceLanguage.all` in `Sources/IPTVMac/AppPrefs.swift` (this fills the language picker in Settings).
+3. Run `python3 scripts/check-strings.py <lang>`; it must print `OK`.
 
 ## Third-party components
 
