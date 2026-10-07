@@ -36,7 +36,7 @@
 |---|---|
 | **Live, Movies, Series** | Three sections with categories, posters, channel logos, a "Continue watching" list and favorites. |
 | **Search** | Type to search inside the current category, inside the section, or everywhere (results are grouped by section). Hebrew, Arabic and Latin text. |
-| **Player** | Opens full screen, controls fade out until you move the mouse. Space, arrows (seek 10 s), `F` full screen, `2` double speed, `Esc` back. |
+| **Player** | Opens full screen, controls fade out until you move the mouse. Space, arrows (seek 10 s), `F` full screen, `2` double speed, `[` / `]` slower / faster, the speed button picks 0.25× to 4× (movies and episodes), `Esc` back. |
 | **Subtitles and audio** | Embedded tracks, external `.srt`/`.ass` files (menu or drag and drop), size and delay settings, preferred languages. |
 | **Picture in Picture** | A floating always-on-top mini player that follows you across Spaces; go back to browsing while the video keeps playing. |
 | **Catch-up** | Watch past programs on channels whose provider supports it (Xtream `tv_archive`), picked from the EPG. |
