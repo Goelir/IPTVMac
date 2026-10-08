@@ -86,6 +86,10 @@
 "player.speed" = "Afspeelsnelheid";
 "player.speedNormal" = "Normaal";
 "player.speedReset" = "Normale snelheid";
+"settings.seekPreview" = "Voorbeeldafbeeldingen op de voortgangsbalk";
+"settings.seekPreviewNote" = "Opent een tweede verbinding met je aanbieder. Zet dit uit als het afspelen stopt of je aanbieder maar één verbinding toestaat.";
+"player.seekBar" = "Afspeelpositie";
+"player.seekValue" = "%@ van %@";
 "settings.clock" = "Toon de tijd in de speler";
 "settings.seekStep" = "Sprongstap (pijltjestoetsen en sprongknoppen)";
 "settings.barsHide" = "Verberg de bediening na";

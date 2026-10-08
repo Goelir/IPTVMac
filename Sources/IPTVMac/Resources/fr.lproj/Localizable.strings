@@ -86,6 +86,10 @@
 "player.speed" = "Vitesse de lecture";
 "player.speedNormal" = "Normale";
 "player.speedReset" = "Vitesse normale";
+"settings.seekPreview" = "Aperçu en vignettes sur la barre de progression";
+"settings.seekPreviewNote" = "Ouvre une seconde connexion vers votre fournisseur. Désactivez l’option si la lecture s’arrête ou si votre fournisseur n’autorise qu’une seule connexion.";
+"player.seekBar" = "Position de lecture";
+"player.seekValue" = "%@ sur %@";
 "settings.clock" = "Afficher l’heure dans le lecteur";
 "settings.seekStep" = "Pas de saut (touches fléchées et boutons de saut)";
 "settings.barsHide" = "Masquer les commandes après";

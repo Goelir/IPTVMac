@@ -86,6 +86,10 @@
 "player.speed" = "Oynatma hızı";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Normal hız";
+"settings.seekPreview" = "İlerleme çubuğunda küçük resim önizlemesi";
+"settings.seekPreviewNote" = "Sağlayıcınıza ikinci bir bağlantı açar. Oynatma duruyorsa veya sağlayıcınız yalnızca tek bağlantıya izin veriyorsa kapatın.";
+"player.seekBar" = "Oynatma konumu";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "Oynatıcıda saati göster";
 "settings.seekStep" = "Atlama adımı (ok tuşları ve atlama düğmeleri)";
 "settings.barsHide" = "Denetimleri şu süre sonra gizle";

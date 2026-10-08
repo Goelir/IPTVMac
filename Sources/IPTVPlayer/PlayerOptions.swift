@@ -33,3 +33,19 @@ extension MPVPlayer {
         setProperty("demuxer-readahead-secs", String(b.readaheadSecs))
     }
 }
+
+/// Options of every libmpv instance the app creates (player and seek previewer).
+/// Streams, playlists and subtitles come from a third party: verify HTTPS certificates (the Xtream password is in the URL),
+/// and switch off everything that can run code or read the disk (the bundled mpv has no scripts/ytdl, a dev build would).
+enum EngineOptions {
+    static let hardened: [(String, String)] = [
+        ("network-timeout", "15"),
+        ("stream-lavf-o", "reconnect=1,reconnect_streamed=1,reconnect_delay_max=5"),
+        ("tls-verify", "yes"),
+        ("tls-ca-file", "/etc/ssl/cert.pem"),
+        ("embeddedfonts", "no"),
+        ("ytdl", "no"),
+        ("load-scripts", "no"),
+        ("config", "no"),
+    ]
+}

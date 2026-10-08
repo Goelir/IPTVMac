@@ -86,6 +86,10 @@
 "player.speed" = "سرعة التشغيل";
 "player.speedNormal" = "عادية";
 "player.speedReset" = "السرعة العادية";
+"settings.seekPreview" = "معاينة مصغّرة على شريط التقدّم";
+"settings.seekPreviewNote" = "يفتح اتصالًا ثانيًا بمزوّد الخدمة. أوقفه إذا توقف التشغيل أو إذا كان مزوّد الخدمة يسمح باتصال واحد فقط.";
+"player.seekBar" = "موضع التشغيل";
+"player.seekValue" = "%@ من %@";
 "settings.clock" = "إظهار الوقت في المشغّل";
 "settings.seekStep" = "مدة التخطي (مفاتيح الأسهم وأزرار التخطي)";
 "settings.barsHide" = "إخفاء عناصر التحكم بعد";

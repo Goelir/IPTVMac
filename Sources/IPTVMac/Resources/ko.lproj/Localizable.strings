@@ -86,6 +86,10 @@
 "player.speed" = "재생 속도";
 "player.speedNormal" = "보통";
 "player.speedReset" = "보통 속도";
+"settings.seekPreview" = "탐색 막대에 미리보기 썸네일 표시";
+"settings.seekPreviewNote" = "제공업체에 두 번째 연결을 엽니다. 재생이 멈추거나 제공업체가 연결을 하나만 허용하면 끄세요.";
+"player.seekBar" = "재생 위치";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "플레이어에 시간 표시";
 "settings.seekStep" = "건너뛰기 간격(방향키 및 건너뛰기 버튼)";
 "settings.barsHide" = "컨트롤 자동 숨김 시간";

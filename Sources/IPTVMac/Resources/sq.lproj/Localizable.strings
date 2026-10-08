@@ -86,6 +86,10 @@
 "player.speed" = "Shpejtësia e luajtjes";
 "player.speedNormal" = "Normale";
 "player.speedReset" = "Shpejtësia normale";
+"settings.seekPreview" = "Pamje paraprake në shiritin e ecurisë";
+"settings.seekPreviewNote" = "Hap një lidhje të dytë me ofruesin tuaj. Çaktivizojeni nëse luajtja ndalon ose ofruesi juaj lejon vetëm një lidhje.";
+"player.seekBar" = "Pozicioni i luajtjes";
+"player.seekValue" = "%@ nga %@";
 "settings.clock" = "Shfaq orën në luajtës";
 "settings.seekStep" = "Hapi i kalimit (tastet me shigjeta dhe butonat e kalimit)";
 "settings.barsHide" = "Fshih kontrollet pas";

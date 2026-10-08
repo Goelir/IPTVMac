@@ -86,6 +86,10 @@
 "player.speed" = "Lejátszási sebesség";
 "player.speedNormal" = "Normál";
 "player.speedReset" = "Normál sebesség";
+"settings.seekPreview" = "Előnézeti kép a keresősávon";
+"settings.seekPreviewNote" = "Második kapcsolatot nyit a szolgáltatóhoz. Kapcsolja ki, ha a lejátszás megáll, vagy ha a szolgáltatója csak egy kapcsolatot engedélyez.";
+"player.seekBar" = "Lejátszási pozíció";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "Idő megjelenítése a lejátszóban";
 "settings.seekStep" = "Ugrás lépésköze (nyílbillentyűk és ugrógombok)";
 "settings.barsHide" = "Vezérlők elrejtése ennyi idő után";

@@ -86,6 +86,10 @@
 "player.speed" = "پلے بیک کی رفتار";
 "player.speedNormal" = "عام";
 "player.speedReset" = "عام رفتار";
+"settings.seekPreview" = "پروگریس بار پر تھمب نیل پیش منظر";
+"settings.seekPreviewNote" = "آپ کے فراہم کنندہ سے دوسرا کنکشن کھولتا ہے۔ اگر پلے بیک رک جائے یا آپ کا فراہم کنندہ صرف ایک کنکشن کی اجازت دیتا ہو تو اسے بند کر دیں۔";
+"player.seekBar" = "پلے بیک کی پوزیشن";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "پلیئر میں وقت دکھائیں";
 "settings.seekStep" = "چھلانگ کا وقفہ (ایرو کیز اور اسکپ بٹن)";
 "settings.barsHide" = "کنٹرولز چھپائیں اتنی دیر بعد";

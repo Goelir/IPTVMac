@@ -86,6 +86,10 @@
 "player.speed" = "Viteza de redare";
 "player.speedNormal" = "Normală";
 "player.speedReset" = "Viteză normală";
+"settings.seekPreview" = "Miniaturi de previzualizare pe bara de progres";
+"settings.seekPreviewNote" = "Deschide o a doua conexiune către furnizorul tău. Dezactivează opțiunea dacă redarea se oprește sau dacă furnizorul tău permite o singură conexiune.";
+"player.seekBar" = "Poziția de redare";
+"player.seekValue" = "%@ din %@";
 "settings.clock" = "Afișează ora în player";
 "settings.seekStep" = "Pasul de salt (tastele săgeți și butoanele de salt)";
 "settings.barsHide" = "Ascunde controalele după";

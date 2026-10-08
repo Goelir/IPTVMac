@@ -86,6 +86,10 @@
 "player.speed" = "Tốc độ phát";
 "player.speedNormal" = "Bình thường";
 "player.speedReset" = "Tốc độ bình thường";
+"settings.seekPreview" = "Xem trước hình thu nhỏ trên thanh tiến trình";
+"settings.seekPreviewNote" = "Mở kết nối thứ hai tới nhà cung cấp của bạn. Hãy tắt nếu phát bị dừng hoặc nhà cung cấp của bạn chỉ cho phép một kết nối.";
+"player.seekBar" = "Vị trí phát";
+"player.seekValue" = "%@ trên %@";
 "settings.clock" = "Hiển thị giờ trong trình phát";
 "settings.seekStep" = "Bước tua (phím mũi tên và nút tua)";
 "settings.barsHide" = "Ẩn các nút điều khiển sau";
