@@ -13,6 +13,7 @@ final class PlayerModel {
     var tracks: [Track] = []
     var error: String?
     private(set) var request: PlayRequest
+    let preview = SeekPreview()             // thumbnails for the seek bar's hover bubble (its own hidden engine, opened on the first hover)
     private var retries = 0
     private var timer: Timer?
     private var ticks = 0
@@ -82,8 +83,16 @@ final class PlayerModel {
         loadGen += 1
         wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
+        preview.reset()
         setSpeed(1)
         mpv.load(new.url, start: new.start)
+    }
+
+    /// The pointer is over the seek bar at `time`. Network sources get thumbnails only when the user turned the setting on (a second connection).
+    func previewHover(_ time: Double) {
+        preview.hover(time, duration: duration) { [request] in
+            PreviewSource.path(for: request.url, isLive: request.isLive, networkAllowed: UserDefaults.standard.bool(forKey: "seekPreview"))
+        }
     }
 
     private func handleFailure() {
@@ -143,6 +152,7 @@ final class PlayerModel {
         saveIfLoaded()
         if let a = activity { ProcessInfo.processInfo.endActivity(a); activity = nil }
         timer?.invalidate(); timer = nil
+        preview.shutdown()
         mpv.shutdown()
     }
 }

@@ -86,6 +86,10 @@
 "player.speed" = "প্লেব্যাকের গতি";
 "player.speedNormal" = "স্বাভাবিক";
 "player.speedReset" = "স্বাভাবিক গতি";
+"settings.seekPreview" = "সিক বারে থাম্বনেইল প্রিভিউ";
+"settings.seekPreviewNote" = "আপনার প্রদানকারীর সঙ্গে দ্বিতীয় একটি সংযোগ খোলে। প্লেব্যাক বন্ধ হয়ে গেলে বা আপনার প্রদানকারী শুধু একটি সংযোগের অনুমতি দিলে এটি বন্ধ করুন।";
+"player.seekBar" = "প্লেব্যাকের অবস্থান";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "প্লেয়ারে সময় দেখান";
 "settings.seekStep" = "স্কিপের ধাপ (অ্যারো কী ও স্কিপ বোতাম)";
 "settings.barsHide" = "এত সময় পরে কন্ট্রোল লুকান";

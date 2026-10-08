@@ -86,6 +86,10 @@
 "player.speed" = "Rychlost přehrávání";
 "player.speedNormal" = "Normální";
 "player.speedReset" = "Normální rychlost";
+"settings.seekPreview" = "Náhledy na ukazateli průběhu přehrávání";
+"settings.seekPreviewNote" = "Otevře druhé připojení k vašemu poskytovateli. Vypněte, pokud se přehrávání zastaví nebo váš poskytovatel povoluje jen jedno připojení.";
+"player.seekBar" = "Pozice přehrávání";
+"player.seekValue" = "%@ z %@";
 "settings.clock" = "Zobrazovat čas v přehrávači";
 "settings.seekStep" = "Krok přeskoku (šipky a tlačítka přeskoku)";
 "settings.barsHide" = "Skrýt ovládací prvky po";

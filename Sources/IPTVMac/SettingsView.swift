@@ -86,6 +86,7 @@ struct PlayerSettings: View {
     @AppStorage("seekStep") private var seekStep = 10
     @AppStorage("barsHideSeconds") private var barsHide = 3
     @AppStorage("showClock") private var showClock = false
+    @AppStorage("seekPreview") private var seekPreview = false
     @AppStorage("videoScale") private var videoScale = VideoScale.fit
     @AppStorage("bufferSize") private var bufferSize = BufferSize.normal
 
@@ -104,6 +105,8 @@ struct PlayerSettings: View {
                     ForEach([2, 3, 5, 10], id: \.self) { Text(String(format: L("unit.seconds"), $0)).tag($0) }
                     Text(L("settings.never")).tag(0)
                 }
+                Toggle(L("settings.seekPreview"), isOn: $seekPreview)
+                Text(L("settings.seekPreviewNote")).font(.caption).foregroundStyle(.secondary)
             }
             Section {
                 Picker(L("settings.videoScale"), selection: $videoScale) {

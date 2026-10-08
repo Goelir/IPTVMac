@@ -86,6 +86,10 @@
 "player.speed" = "再生速度";
 "player.speedNormal" = "標準";
 "player.speedReset" = "標準速度";
+"settings.seekPreview" = "シークバーにサムネイルを表示";
+"settings.seekPreviewNote" = "プロバイダへの2つ目の接続を開きます。再生が止まる場合や、プロバイダが接続を1つしか許可していない場合は、オフにしてください。";
+"player.seekBar" = "再生位置";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "プレーヤーに時刻を表示";
 "settings.seekStep" = "スキップ間隔（矢印キーとスキップボタン）";
 "settings.barsHide" = "コントロールを自動的に隠すまでの時間";

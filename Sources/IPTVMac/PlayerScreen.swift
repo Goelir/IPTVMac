@@ -33,6 +33,8 @@ struct PlayerScreen: View {
     @State private var showBars = true
     @State private var hideTask: Task<Void, Never>?
     @State private var showSpeed = false
+    @State private var seekActive = false   // the pointer is on the seek bar (or drags it): the controls stay
+    @State private var playerWidth: CGFloat = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("subScale") private var subScale = 1.0
     @AppStorage("subDelay") private var subDelay = 0.0
@@ -105,6 +107,8 @@ struct PlayerScreen: View {
             .animation(.easeInOut(duration: 0.25), value: barsVisible)
         }
         .animation(reduceMotion ? nil : .smooth(duration: 0.3), value: model.upNext != nil)
+        .coordinateSpace(name: "player")
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { playerWidth = $0 }
         .onContinuousHover { if case .active = $0 { revealBars() } }
         .focusable()
         .focused($focused)
@@ -143,13 +147,14 @@ struct PlayerScreen: View {
         .task {   // SwiftUI re-applies the toolbar whenever its content changes, so keep the full-screen state enforced
             while !Task.isCancelled { model.updateToolbar(); try? await Task.sleep(for: .milliseconds(300)) }
         }
-        .onDisappear { model.updateToolbar() }
+        .onDisappear { model.updateToolbar(); pm.preview.release() }   // Picture-in-Picture removes this view: the preview connection goes with it
         .task(id: request.id) { if let item = request.item, request.isLive { await model.watchSchedule(of: item) } else { model.schedule = [] } }
         .onChange(of: subScale) { pm.applySubtitleStyle() }
         .onChange(of: subDelay) { pm.applySubtitleStyle() }
         .onChange(of: videoScale) { pm.applyVideoScale() }
         .onChange(of: bufferSize) { pm.applyBuffer() }
         .onChange(of: barsHide) { revealBars() }
+        .onChange(of: seekActive) { if !seekActive { revealBars() } }
         .onChange(of: showSpeed) { if !showSpeed { focused = true; revealBars() } }   // the popover had the keyboard focus and the bar's hide timer
     }
 
@@ -167,7 +172,7 @@ struct PlayerScreen: View {
         }
     }
 
-    private var barsVisible: Bool { showBars || showSpeed || pm.paused || pm.error != nil }
+    private var barsVisible: Bool { showBars || showSpeed || seekActive || pm.paused || pm.error != nil }
 
     /// Title bar and controls fade out after `barsHide` seconds (0 = never) without mouse movement, so a full-screen video shows nothing on top.
     private func revealBars() {
@@ -178,7 +183,7 @@ struct PlayerScreen: View {
             try? await Task.sleep(for: .seconds(barsHide))
             // Hover events stop while a button is held, so dragging the seek slider for a few seconds would hide the bar under the pointer.
             while NSEvent.pressedMouseButtons != 0 && !Task.isCancelled { try? await Task.sleep(for: .milliseconds(500)) }
-            guard !Task.isCancelled, !showSpeed else { return }
+            guard !Task.isCancelled, !showSpeed, !seekActive else { return }
             showBars = false
             NSCursor.setHiddenUntilMouseMoves(true)
         }
@@ -199,7 +204,8 @@ struct PlayerScreen: View {
                     .help(String(format: L("player.skipBack"), String(format: L("unit.seconds"), seekStep)))
                 Button { skip(1) } label: { Image(systemName: "goforward.\(seekStep)") }
                     .help(String(format: L("player.skipForward"), String(format: L("unit.seconds"), seekStep)))
-                Slider(value: Binding(get: { pm.position }, set: { pm.mpv.seek(to: $0) }), in: 0...max(pm.duration, 1))
+                SeekBar(position: pm.position, duration: pm.duration, preview: pm.preview, containerWidth: playerWidth, active: $seekActive,
+                        onSeek: { pm.mpv.seek(to: $0) }, onHover: { pm.previewHover($0) }, onSkip: { skip($0) })
                 Text("\(fmt(pm.position)) / \(fmt(pm.duration))").monospacedDigit().font(.caption).foregroundStyle(.white.opacity(0.85))
             } else { Spacer() }
             if !request.isLive {   // a live stream cannot run faster than real time

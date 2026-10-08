@@ -86,6 +86,10 @@
 "player.speed" = "ความเร็วในการเล่น";
 "player.speedNormal" = "ปกติ";
 "player.speedReset" = "ความเร็วปกติ";
+"settings.seekPreview" = "แสดงภาพตัวอย่างบนแถบเลื่อนเวลา";
+"settings.seekPreviewNote" = "เปิดการเชื่อมต่อที่สองไปยังผู้ให้บริการของคุณ ปิดตัวเลือกนี้หากการเล่นหยุด หรือผู้ให้บริการของคุณอนุญาตเพียงหนึ่งการเชื่อมต่อ";
+"player.seekBar" = "ตำแหน่งการเล่น";
+"player.seekValue" = "%@ จาก %@";
 "settings.clock" = "แสดงเวลาในเครื่องเล่น";
 "settings.seekStep" = "ระยะข้าม (ปุ่มลูกศรและปุ่มข้าม)";
 "settings.barsHide" = "ซ่อนตัวควบคุมหลังจาก";

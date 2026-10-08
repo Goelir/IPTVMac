@@ -86,6 +86,10 @@
 "player.speed" = "播放速度";
 "player.speedNormal" = "正常";
 "player.speedReset" = "正常速度";
+"settings.seekPreview" = "在进度条上显示缩略图预览";
+"settings.seekPreviewNote" = "会向服务商打开第二个连接。如果播放中断，或服务商只允许一个连接，请关闭此选项。";
+"player.seekBar" = "播放位置";
+"player.seekValue" = "%@ / %@";
 "settings.clock" = "在播放器中显示时间";
 "settings.seekStep" = "跳转步长（方向键和跳转按钮）";
 "settings.barsHide" = "无操作后隐藏控制栏";

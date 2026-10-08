@@ -86,6 +86,10 @@
 "player.speed" = "سرعت پخش";
 "player.speedNormal" = "عادی";
 "player.speedReset" = "سرعت عادی";
+"settings.seekPreview" = "پیش‌نمایش تصویری روی نوار پیشرفت";
+"settings.seekPreviewNote" = "یک اتصال دوم به ارائه‌دهنده شما باز می‌کند. اگر پخش متوقف شد یا ارائه‌دهنده شما فقط یک اتصال را مجاز می‌داند، آن را خاموش کنید.";
+"player.seekBar" = "موقعیت پخش";
+"player.seekValue" = "%@ از %@";
 "settings.clock" = "نمایش ساعت در پخش‌کننده";
 "settings.seekStep" = "گام پرش (کلیدهای جهت‌نما و دکمه‌های پرش)";
 "settings.barsHide" = "پنهان کردن کنترل‌ها پس از";

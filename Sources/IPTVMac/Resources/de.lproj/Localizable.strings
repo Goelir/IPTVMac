@@ -86,6 +86,10 @@
 "player.speed" = "Wiedergabegeschwindigkeit";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Normale Geschwindigkeit";
+"settings.seekPreview" = "Vorschaubilder in der Zeitleiste";
+"settings.seekPreviewNote" = "Öffnet eine zweite Verbindung zu deinem Anbieter. Schalte die Option aus, wenn die Wiedergabe stoppt oder dein Anbieter nur eine Verbindung erlaubt.";
+"player.seekBar" = "Wiedergabeposition";
+"player.seekValue" = "%@ von %@";
 "settings.clock" = "Uhrzeit im Player anzeigen";
 "settings.seekStep" = "Sprungweite (Pfeiltasten und Sprungtasten)";
 "settings.barsHide" = "Steuerelemente ausblenden nach";

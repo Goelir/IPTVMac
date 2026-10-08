@@ -86,6 +86,10 @@
 "player.speed" = "Velocidade de reprodução";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Velocidade normal";
+"settings.seekPreview" = "Miniaturas de pré-visualização na barra de progresso";
+"settings.seekPreviewNote" = "Abre uma segunda conexão com o seu provedor. Desative se a reprodução parar ou se o seu provedor permitir apenas uma conexão.";
+"player.seekBar" = "Posição de reprodução";
+"player.seekValue" = "%@ de %@";
 "settings.clock" = "Mostrar a hora no player";
 "settings.seekStep" = "Salto (teclas de seta e botões de salto)";
 "settings.barsHide" = "Ocultar os controles após";

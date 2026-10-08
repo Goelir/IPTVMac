@@ -86,6 +86,10 @@
 "player.speed" = "Uppspelningshastighet";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Normal hastighet";
+"settings.seekPreview" = "Förhandsvisning på tidslinjen";
+"settings.seekPreviewNote" = "Öppnar en andra anslutning till din leverantör. Stäng av om uppspelningen avbryts eller om din leverantör bara tillåter en anslutning.";
+"player.seekBar" = "Uppspelningsposition";
+"player.seekValue" = "%@ av %@";
 "settings.clock" = "Visa klockan i spelaren";
 "settings.seekStep" = "Hoppsteg (piltangenter och hoppknappar)";
 "settings.barsHide" = "Dölj reglagen efter";

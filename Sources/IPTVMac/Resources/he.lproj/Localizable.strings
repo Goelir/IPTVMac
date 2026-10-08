@@ -86,6 +86,10 @@
 "player.speed" = "מהירות ניגון";
 "player.speedNormal" = "רגילה";
 "player.speedReset" = "מהירות רגילה";
+"settings.seekPreview" = "תצוגה מקדימה בסרגל ההתקדמות";
+"settings.seekPreviewNote" = "פותח חיבור שני אל הספק שלך. כבה אם ההפעלה נעצרת או אם הספק שלך מאפשר חיבור אחד בלבד.";
+"player.seekBar" = "מיקום ההפעלה";
+"player.seekValue" = "%@ מתוך %@";
 "settings.clock" = "הצג את השעה בנגן";
 "settings.seekStep" = "גודל הדילוג (מקשי החצים וכפתורי הדילוג)";
 "settings.barsHide" = "הסתר את הבקרים אחרי";

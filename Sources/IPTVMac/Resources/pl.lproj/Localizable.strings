@@ -86,6 +86,10 @@
 "player.speed" = "Szybkość odtwarzania";
 "player.speedNormal" = "Normalna";
 "player.speedReset" = "Normalna szybkość";
+"settings.seekPreview" = "Miniatury podglądu na pasku postępu";
+"settings.seekPreviewNote" = "Otwiera drugie połączenie z dostawcą. Wyłącz, jeśli odtwarzanie się zatrzymuje lub dostawca zezwala tylko na jedno połączenie.";
+"player.seekBar" = "Pozycja odtwarzania";
+"player.seekValue" = "%@ z %@";
 "settings.clock" = "Pokazuj czas w odtwarzaczu";
 "settings.seekStep" = "Krok przewijania (klawisze strzałek i przyciski przewijania)";
 "settings.barsHide" = "Ukrywaj elementy sterujące po";

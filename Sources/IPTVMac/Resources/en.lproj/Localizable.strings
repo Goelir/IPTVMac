@@ -86,6 +86,10 @@
 "player.speed" = "Playback speed";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Normal speed";
+"settings.seekPreview" = "Preview thumbnails on the seek bar";
+"settings.seekPreviewNote" = "Opens a second connection to your provider. Turn it off if playback stops or your provider allows only one connection.";
+"player.seekBar" = "Playback position";
+"player.seekValue" = "%@ of %@";
 "settings.clock" = "Show the time in the player";
 "settings.seekStep" = "Skip step (arrow keys and skip buttons)";
 "settings.barsHide" = "Hide the controls after";

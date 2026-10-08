@@ -86,6 +86,10 @@
 "player.speed" = "Kecepatan pemutaran";
 "player.speedNormal" = "Normal";
 "player.speedReset" = "Kecepatan normal";
+"settings.seekPreview" = "Pratinjau gambar mini di bilah progres";
+"settings.seekPreviewNote" = "Membuka koneksi kedua ke penyedia Anda. Matikan jika pemutaran berhenti atau penyedia Anda hanya mengizinkan satu koneksi.";
+"player.seekBar" = "Posisi pemutaran";
+"player.seekValue" = "%@ dari %@";
 "settings.clock" = "Tampilkan jam di pemutar";
 "settings.seekStep" = "Langkah lompat (tombol panah dan tombol lompat)";
 "settings.barsHide" = "Sembunyikan kontrol setelah";
