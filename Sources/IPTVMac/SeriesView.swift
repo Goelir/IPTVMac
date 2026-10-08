@@ -8,6 +8,7 @@ struct SeriesView: View {
     @State private var episodes: [Episode] = []
     @State private var loading = true
     @State private var error: String?
+    @State private var info: ItemInfo?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -16,6 +17,7 @@ struct SeriesView: View {
                 Spacer()
                 Button(L("player.close")) { dismiss() }
             }
+            if let info, info.hasContent { SeriesHeader(series: series, info: info).transition(.opacity) }
             if loading { ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity).transition(.opacity) }
             else if let error {
                 Label(error, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.red)
@@ -49,12 +51,15 @@ struct SeriesView: View {
         }
         .padding().frame(minWidth: 520, minHeight: 480)
         .motion(value: loading)
+        .motion(value: info)
         .task {
             guard let a = model.playlist(id: series.accountId) else { return }
+            info = await model.cachedInfo(series)        // from an earlier visit; the episodes request below refreshes it for free
             do {
                 episodes = try await SyncService(db: model.db).episodes(account: a, password: a.id.flatMap { model.secrets.password(for: $0) }, seriesId: series.streamId)
             } catch { self.error = error.localizedDescription }
             loading = false
+            if let fresh = await model.cachedInfo(series) { info = fresh }
         }
     }
 }

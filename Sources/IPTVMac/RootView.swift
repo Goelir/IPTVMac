@@ -13,6 +13,7 @@ struct RootView: View {
         }
         .sheet(isPresented: $model.showGuide) { OnboardingView(isFirstRun: false) }
         .sheet(item: $model.openSeries) { SeriesView(series: $0) }
+        .sheet(item: $model.openInfo) { InfoSheet(item: $0) }
         .sheet(isPresented: $model.showDownloads) { DownloadsView() }
         .sheet(item: $model.passwordPrompt) { PasswordPrompt(account: $0) }
     }

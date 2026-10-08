@@ -68,6 +68,7 @@ final class AppModel {
     var player: PlayerModel?
     var pip = false
     var openSeries: Item?
+    var openInfo: Item?              // the provider's details sheet (movies and series of Xtream playlists)
     var showGuide = false
     var showDownloads = false
     /// Episodes of the series being watched (set when an episode starts from the series screen) and the next-episode countdown.

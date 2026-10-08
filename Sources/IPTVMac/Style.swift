@@ -119,7 +119,7 @@ private struct Pulse: ViewModifier {
     }
 }
 
-private extension View { func pulsing() -> some View { modifier(Pulse()) } }
+extension View { func pulsing() -> some View { modifier(Pulse()) } }
 
 let placeholderFill = LinearGradient(colors: [Color.primary.opacity(0.10), Color.primary.opacity(0.04)], startPoint: .top, endPoint: .bottom)
 

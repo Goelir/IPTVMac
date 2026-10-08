@@ -63,6 +63,7 @@ struct PosterCell: View {
     @Environment(\.accessibilityReduceMotion) private var reduce
     let item: Item
     @State private var hover = false
+    @FocusState private var infoFocused: Bool
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
         VStack(alignment: .leading, spacing: 6) {
@@ -77,6 +78,7 @@ struct PosterCell: View {
                 .overlay { shape.strokeBorder(Color.primary.opacity(hover ? 0.28 : 0.10), lineWidth: 1) }
                 .overlay { if model.lastPlayedID == item.id { shape.strokeBorder(Color.accentColor, lineWidth: 3) } }
                 .overlay(alignment: .topLeading) { PlaylistBadge(item: item, onArtwork: true).padding(5) }
+                .overlay(alignment: .topTrailing) { if model.hasInfo(item) { infoButton } }
                 .shadow(color: .black.opacity(hover ? 0.35 : 0), radius: hover ? 10 : 0, y: hover ? 5 : 0)
                 .scaleEffect(hover && !reduce ? 1.035 : 1)
             Text(item.name).font(.callout).lineLimit(2, reservesSpace: true)
@@ -88,9 +90,26 @@ struct PosterCell: View {
         .animation(reduce ? nil : .smooth(duration: 0.18), value: hover)
         .onTapGesture { model.play(item) }
         .contextMenu {
+            if model.hasInfo(item) { Button(L("info.details")) { model.openInfo = item } }
             Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) }
             if item.type == .movie { Button(L("downloads.add")) { model.download(item) } }
         }
+    }
+
+    /// Shows under the pointer or when focused; stays in the accessibility tree and focus order, so VoiceOver and keyboard users can reach it.
+    private var infoButton: some View {
+        let label = "\(L("info.details")), \(item.name)"
+        return Button { model.openInfo = item } label: {
+            Image(systemName: "info").font(.system(size: 11, weight: .bold)).foregroundStyle(.white)
+                .frame(width: 24, height: 24).background(Color.black.opacity(0.62), in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain).focused($infoFocused)
+        .help(L("info.details")).accessibilityLabel(label)
+        .opacity(hover || infoFocused ? 1 : 0)
+        .allowsHitTesting(hover || infoFocused)        // a click on the corner while it is hidden still plays the title
+        .motion(.easeOut(duration: 0.12), value: infoFocused)
+        .padding(5)
     }
 }
 

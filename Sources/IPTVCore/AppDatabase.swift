@@ -130,6 +130,17 @@ public final class AppDatabase {
                 END;
                 """)
         }
+        // What the provider says about a movie or series (parsed JSON, no credentials), kept for 14 days; goes with its playlist.
+        m.registerMigration("v4-item-info") { db in
+            try db.create(table: "item_info") { t in
+                t.column("accountId", .integer).notNull().references("account", onDelete: .cascade)
+                t.column("type", .text).notNull()
+                t.column("streamId", .text).notNull()
+                t.column("json", .text).notNull()
+                t.column("fetched", .datetime).notNull()
+                t.primaryKey(["accountId", "type", "streamId"])
+            }
+        }
         return m
     }
 }

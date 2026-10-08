@@ -125,7 +125,7 @@ public final class SyncService {
         guard let urls = XtreamURLs(server: account.server ?? "", username: account.username ?? "", password: password ?? "")
         else { return try cached() }
         do {
-            let info = try await XtreamClient(urls: urls, session: session).seriesInfo(seriesId)
+            let info = try await XtreamClient(urls: urls, session: session).rawSeriesInfo(seriesId)
             var raw: [[String: Any]] = []
             if let dict = info["episodes"] as? [String: Any] {
                 for k in dict.keys.sorted(by: { (Int($0) ?? 0) < (Int($1) ?? 0) }) { raw += dict[k] as? [[String: Any]] ?? [] }
@@ -138,7 +138,9 @@ public final class SyncService {
                                number: int(d["episode_num"]) ?? 0, title: str(d["title"]) ?? "Episode \(int(d["episode_num"]) ?? 0)",
                                streamId: id, containerExt: str(d["container_extension"]))
             }
+            let details = ItemInfo(response: info)     // the same response also carries the series details
             try await db.dbQueue.write { d in
+                if details.hasContent { try ItemInfoStore.save(d, accountId: aid, type: .series, streamId: seriesId, info: details) }
                 if !eps.isEmpty {   // episodes the provider no longer lists must not be served from the cache
                     let ids = String(decoding: try JSONEncoder().encode(eps.map(\.streamId)), as: UTF8.self)
                     try d.execute(sql: "DELETE FROM episode WHERE accountId = ? AND seriesId = ? AND streamId NOT IN (SELECT value FROM json_each(?))",
@@ -157,6 +159,30 @@ public final class SyncService {
             let c = try cached()
             if c.isEmpty { throw error }
             return c
+        }
+    }
+
+    // MARK: Details
+
+    /// What the provider says about a movie or series (Xtream only; M3U has nothing): from the cache for 14 days, else fetched.
+    /// A failed fetch falls back to an older cached copy. An answer without details is not cached, so reopening tries again.
+    public func info(account: Account, password: String?, type: ItemType, streamId: String,
+                     now: Date = Date(), refresh: Bool = false) async throws -> ItemInfo {
+        guard let aid = account.id, account.kind == .xtream, type != .live else { return ItemInfo() }
+        func cached(_ maxAge: TimeInterval?) async throws -> ItemInfo? {
+            try await db.dbQueue.read { try ItemInfoStore.cached($0, accountId: aid, type: type, streamId: streamId, now: now, maxAge: maxAge) }
+        }
+        if !refresh, let hit = try await cached(ItemInfoStore.ttl) { return hit }
+        guard let urls = XtreamURLs(server: account.server ?? "", username: account.username ?? "", password: password ?? "")
+        else { throw IPTVError.badConfig }
+        do {
+            let client = XtreamClient(urls: urls, session: session)
+            let info = type == .movie ? try await client.vodInfo(streamId: streamId) : try await client.seriesInfo(seriesId: streamId)
+            if info.hasContent { try await db.dbQueue.write { try ItemInfoStore.save($0, accountId: aid, type: type, streamId: streamId, info: info, now: now) } }
+            return info
+        } catch {
+            if let stale = try? await cached(nil) { return stale }
+            throw error
         }
     }
 }

@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import IPTVCore
 
 enum ClearKind: String, CaseIterable, Identifiable { case history, favorites, images; var id: String { rawValue } }
@@ -23,6 +23,24 @@ extension AppModel {
         if !selectedCategory.hasPrefix("__"), !categories.contains(where: { categoryTag($0) == selectedCategory }) { selectedCategory = "__all" }
         scheduleSearch()
     }
+
+    /// Details exist only for movies and series of an Xtream playlist (an M3U file has none).
+    func hasInfo(_ item: Item) -> Bool { item.type != .live && playlist(id: item.accountId)?.kind == .xtream }
+
+    /// The provider's details for a title: cached for 14 days, else fetched (never for a whole list, only when a sheet asks).
+    func loadInfo(_ item: Item, refresh: Bool = false) async throws -> ItemInfo {
+        guard let a = playlist(id: item.accountId), let id = a.id else { return ItemInfo() }
+        guard hasPassword(a) else { throw IPTVError.badCredentials }
+        return try await SyncService(db: db).info(account: a, password: secrets.password(for: id), type: item.type, streamId: item.streamId, refresh: refresh)
+    }
+
+    /// Whatever is cached, however old: for showing something at once while a fresh copy is on its way.
+    func cachedInfo(_ item: Item) async -> ItemInfo? {
+        try? await db.dbQueue.read { try ItemInfoStore.cached($0, accountId: item.accountId, type: item.type, streamId: item.streamId, maxAge: nil) }
+    }
+
+    /// Only the link we build from the validated video id is ever opened, never a URL from the provider.
+    func openTrailer(_ info: ItemInfo) { if let u = info.trailerURL { NSWorkspace.shared.open(u) } }
 
     func exportBackup(to url: URL) async throws {
         try await db.dbQueue.read { try Backup.make($0) }.write(to: url)

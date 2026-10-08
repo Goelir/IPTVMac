@@ -65,11 +65,16 @@ public struct Item: Codable, Identifiable, Hashable, FetchableRecord, MutablePer
     }
     public mutating func didInsert(_ inserted: InsertionSuccess) { id = inserted.rowID }
 
-    /// The logo/poster URL is provider-controlled and fetched without a click: http(s) only, and never a device on the user's own
-    /// network (a `tvg-logo="http://192.168.1.1/reboot"` would be a browse-to-trigger request).
-    public var iconURL: URL? {
-        guard let s = icon, let u = URL(string: s), ["http", "https"].contains(u.scheme?.lowercased() ?? ""),
-              let h = u.host?.lowercased(), !h.isEmpty else { return nil }
+    /// The logo/poster URL is provider-controlled and fetched without a click: see `RemoteImage.safeURL`.
+    public var iconURL: URL? { RemoteImage.safeURL(icon) }
+}
+
+/// Image links come from the provider and are fetched without a click: http(s) only, and never a device on the user's own
+/// network (a `tvg-logo="http://192.168.1.1/reboot"` would be a browse-to-trigger request).
+public enum RemoteImage {
+    public static func safeURL(_ s: String?) -> URL? {
+        guard let s = s?.trimmingCharacters(in: .whitespacesAndNewlines), s.utf8.count <= 2048, let u = URL(string: s),
+              ["http", "https"].contains(u.scheme?.lowercased() ?? ""), let h = u.host?.lowercased(), !h.isEmpty else { return nil }
         if h == "localhost" || h.hasSuffix(".local") || h.hasSuffix(".internal") || h.hasSuffix(".lan") || !h.contains(".") && !h.contains(":") { return nil }
         let p = h.split(separator: ".").compactMap { Int($0) }
         if p.count == 4 {

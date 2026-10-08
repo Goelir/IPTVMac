@@ -101,8 +101,16 @@ public struct XtreamClient {
         try await listings("get_simple_data_table", streamId).compactMap(entry)
     }
 
-    func seriesInfo(_ id: String) async throws -> [String: Any] {
+    func rawSeriesInfo(_ id: String) async throws -> [String: Any] {
         guard let o = try await json(urls.api("get_series_info", ["series_id": id])) as? [String: Any] else { throw IPTVError.badResponse }
         return o
     }
+
+    /// Panels answer `[]`, `null` or `false` for a title they know nothing about: that is "no details", not an error.
+    private func details(_ action: String, _ params: [String: String]) async throws -> ItemInfo {
+        ItemInfo(response: try await json(urls.api(action, params)) as? [String: Any] ?? [:])
+    }
+
+    public func vodInfo(streamId: String) async throws -> ItemInfo { try await details("get_vod_info", ["vod_id": streamId]) }
+    public func seriesInfo(seriesId: String) async throws -> ItemInfo { try await details("get_series_info", ["series_id": seriesId]) }
 }
