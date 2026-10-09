@@ -1,0 +1,128 @@
+/* IPTVFX: motion and graphics layer for the IPTVMac site. Pairs with fx.js. No dependencies.
+   Motion language: one easing family (expo-out arrivals, accelerating exits) and one duration scale. */
+:root {
+  --fx-ease: cubic-bezier(.16, 1, .3, 1);
+  --fx-ease-in: cubic-bezier(.7, 0, .84, 0);
+  --fx-ease-io: cubic-bezier(.65, 0, .35, 1);
+  --fx-d1: 150ms; --fx-d2: 300ms; --fx-d3: 600ms; --fx-d4: 1100ms;
+  --fx-violet: #6f59e6; --fx-lilac: #a496ff;
+  --fx-glow: 111 89 230;
+  --fx-glow-a: .24;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --fx-glow-a: .16; } }
+:root[data-theme="light"] { --fx-glow-a: .16; }
+
+/* typed so CSS can use them in calc() and animate them */
+@property --p { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --pin { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --in { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+/* hero atmosphere */
+[data-fx-hero] { isolation: isolate; }
+.fx-canvas {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%;
+  display: block; pointer-events: none; opacity: 0;
+}
+.fx-canvas.fx-ready { opacity: 1; transition: opacity var(--fx-d4) var(--fx-ease); }
+/* no WebGL (or context lost): the same light, painted with plain gradients */
+.fx-canvas[hidden] { display: none; }
+[data-fx="css"] .fx-css {
+  opacity: 1; animation: fx-fadein var(--fx-d4) var(--fx-ease) both;
+  background:
+    radial-gradient(46% 36% at 50% 44%, rgb(var(--fx-glow) / var(--fx-glow-a)), transparent 74%),
+    conic-gradient(from 134deg at 20% -34%, transparent 0 4deg, rgb(var(--fx-glow) / calc(var(--fx-glow-a) * .9)) 15deg, transparent 27deg,
+      rgb(var(--fx-glow) / calc(var(--fx-glow-a) * .45)) 33deg, transparent 42deg);
+  -webkit-mask-image: linear-gradient(#000 45%, transparent 98%);
+  mask-image: linear-gradient(#000 45%, transparent 98%);
+}
+[data-fx="css"] .fx-css:dir(rtl) {
+  background:
+    radial-gradient(46% 36% at 50% 44%, rgb(var(--fx-glow) / var(--fx-glow-a)), transparent 74%),
+    conic-gradient(from 190deg at 80% -34%, transparent 0 4deg, rgb(var(--fx-glow) / calc(var(--fx-glow-a) * .9)) 15deg, transparent 27deg,
+      rgb(var(--fx-glow) / calc(var(--fx-glow-a) * .45)) 33deg, transparent 42deg);
+}
+
+@keyframes fx-fadein { from { opacity: 0; } }
+
+/* 3D tilt + parallax layers. The root gets --fx-rx/--fx-ry (deg), --fx-mx/--fx-my (-1..1), --fx-a (0..1 how far
+   from rest) and --fx-lx/--fx-ly (%). At rest every layer sits flat, so the static poster matches the idle pose. */
+[data-fx-tilt] {
+  transform: perspective(var(--fx-persp, 1200px)) rotateX(var(--fx-rx, 0deg)) rotateY(var(--fx-ry, 0deg));
+  transform-style: preserve-3d;
+}
+[data-fx-tilt].fx-live { will-change: transform; }
+[data-fx-tilt] [data-depth] {
+  translate:
+    calc(var(--fx-mx, 0) * var(--d, 0) * var(--fx-par, 14px))
+    calc(var(--fx-my, 0) * var(--d, 0) * var(--fx-par, 14px))
+    calc(var(--d, 0) * var(--fx-z, 44px) * var(--fx-a, 0));
+}
+[data-fx-tilt][data-fx-glare]::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(circle at var(--fx-lx, 50%) var(--fx-ly, 0%), rgb(255 255 255 / .11), transparent 52%);
+}
+
+/* magnetic: needs a box that takes `translate` (inline-block, flex, grid, block) */
+[data-fx-magnetic] { translate: var(--fx-tx, 0px) var(--fx-ty, 0px); }
+[data-fx-magnetic] [data-fx-mag-in] { translate: calc(var(--fx-tx, 0px) * .4) calc(var(--fx-ty, 0px) * .4); }
+
+/* split text: each unit sits in a clipping mask and rises into place */
+.fx-w {
+  display: inline-block; contain: paint; vertical-align: baseline; /* contain: paint clips like overflow but keeps the text baseline in WebKit */
+  padding: .14em .08em .28em; margin: -.14em -.08em -.28em;
+}
+.fx-wd { display: inline-block; white-space: nowrap; }
+.fx-wi { display: inline-block; transform-origin: 0 100%; }
+.fx-wi:dir(rtl) { transform-origin: 100% 100%; }
+.fx-split-ready:not(.fx-in) .fx-wi { transform: translate3d(0, 135%, 0) rotate(4deg); }
+html:not(.fx-rm) .fx-split-ready .fx-wi {
+  transition: transform 1s var(--fx-ease) calc(var(--fx-delay, 0ms) + min(var(--i, 0) * var(--fx-step, 55ms), 900ms));
+}
+html.fx-rm .fx-split-ready:not(.fx-in) .fx-wi { transform: none; opacity: 0; }
+html.fx-rm .fx-split-ready .fx-wi { transition: opacity var(--fx-d3) ease-out; }
+/* optional: hide split headlines until fx.js has prepared them (add class fx-pending to <html>
+   in an inline script; JS removes it; the animation is a failsafe if the script never runs) */
+html.fx-pending [data-fx-split]:not(.fx-split-ready) { visibility: hidden; animation: fx-unhide 0s 1.6s forwards; }
+@keyframes fx-unhide { to { visibility: visible; } }
+
+@supports not (contain: paint) { .fx-w, .fx-m { overflow: clip; } }
+
+/* morphing word */
+.fx-m {
+  display: inline-block; box-sizing: content-box; /* its width is animated from measured content widths */
+  position: relative; white-space: nowrap; contain: paint; vertical-align: baseline;
+  padding: .14em .08em .28em; margin: -.14em -.08em -.28em;
+}
+.fx-ml { display: inline-block; white-space: nowrap; }
+.fx-g { display: inline-block; white-space: pre; }
+.fx-ml.fx-out { position: absolute; inset-block-start: .14em; inset-inline-start: .08em; } /* the leaving word; the arriving one stays in flow so the line keeps its height and baseline */
+.fx-sr {
+  position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* cursor follower (only when an element carries data-fx-cursor; fine pointers only) */
+.fx-cursor { position: fixed; inset: 0 auto auto 0; z-index: 2147483000; pointer-events: none; opacity: 0; transition: opacity var(--fx-d2) ease; }
+html.fx-cursor-on .fx-cursor { opacity: 1; }
+.fx-cursor i { position: absolute; left: 0; top: 0; display: block; border-radius: 50%; will-change: transform; }
+.fx-cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--fx-lilac); }
+.fx-cursor-ring {
+  width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1px solid rgb(164 150 255 / .6);
+  transition: scale var(--fx-d2) var(--fx-ease), background-color var(--fx-d2) ease, opacity var(--fx-d2) ease;
+}
+.fx-cursor.is-link .fx-cursor-ring { scale: 1.7; background: rgb(111 89 230 / .14); }
+.fx-cursor.is-down .fx-cursor-ring { scale: .84; }
+.fx-cursor.is-link.is-down .fx-cursor-ring { scale: 1.42; }
+.fx-cursor.is-text .fx-cursor-ring, .fx-cursor.is-text .fx-cursor-dot { opacity: 0; }
+.fx-cursor.is-down .fx-cursor-ring { scale: .84; }
+:root[data-theme="light"] .fx-cursor-dot { background: var(--fx-violet); }
+:root[data-theme="light"] .fx-cursor-ring { border-color: rgb(111 89 230 / .6); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .fx-cursor-dot { background: var(--fx-violet); }
+  :root:not([data-theme="dark"]) .fx-cursor-ring { border-color: rgb(111 89 230 / .6); }
+}
+html.fx-cursor-hide, html.fx-cursor-hide * { cursor: none !important; }
+
+/* reduced motion: JS stops driving tilt/magnetic (variables stay at rest) and the canvas just appears */
+@media (prefers-reduced-motion: reduce) { .fx-canvas.fx-ready { transition: none; } [data-fx="css"] .fx-css { animation: none; } }
+html.fx-rm .fx-canvas.fx-ready { transition: none; }
