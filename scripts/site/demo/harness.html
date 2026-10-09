@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IPTVMac demo harness</title>
+<link rel="stylesheet" href="demo.css">
+<style>
+  :root{color-scheme:dark light;--bg:#0c0b14;--fg:#ecebf7;--mut:#9a98b4;--ln:#2a2840}
+  @media (prefers-color-scheme:light){:root{--bg:#f4f3fa;--fg:#17152b;--mut:#5d5b78;--ln:#d6d4e6}}
+  body.light{--bg:#f4f3fa;--fg:#17152b;--mut:#5d5b78;--ln:#d6d4e6}
+  body.dark{--bg:#0c0b14;--fg:#ecebf7;--mut:#9a98b4;--ln:#2a2840}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif}
+  .bar{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--bg);z-index:5}
+  .bar[hidden]{display:none}
+  .bar label{display:flex;gap:.4rem;align-items:center;color:var(--mut)}
+  .bar button,.bar select{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--ln);border-radius:6px;padding:.2rem .6rem}
+  .bar button[aria-pressed=true]{background:#6f59e6;border-color:#6f59e6;color:#fff}
+  .bar input[type=range]{width:220px}
+  output{min-width:3ch;font-variant-numeric:tabular-nums;color:var(--fg)}
+  main{padding:2rem 1rem}
+  #stage{margin-inline:auto;width:min(1180px,100%)}
+  p.alt{max-width:70ch;margin:1.2rem auto 0;color:var(--mut)}
+  pre{margin:1rem auto 0;max-width:1180px;color:var(--mut);font-size:12px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<!-- Test harness for demo.js. URL: ?scene=search&p=0.5&lang=he&w=1120&rm=1&bare=1&bg=light  (bare hides the controls) -->
+<div class="bar" id="bar">
+  <span id="scenes"></span>
+  <label>progress <input id="p" type="range" min="0" max="1" step="0.005" value="0"> <output id="pv">0</output></label>
+  <span id="ps"></span>
+  <label>page lang <select id="lang"><option value="en">en</option><option value="he">he</option></select></label>
+  <label>width <select id="w"><option value="100">fluid</option><option value="1120">1120</option><option value="820">820</option><option value="640">640</option><option value="375">375</option></select></label>
+  <label><input id="rm" type="checkbox"> reduced motion</label>
+  <label><input id="bgl" type="checkbox"> light page</label>
+</div>
+<main>
+  <div id="stage"></div>
+  <p class="alt" id="alt">Interactive preview of the IPTVMac app: type in the search field, drag the playback speed, drag the Picture in Picture window, pick a playlist or hover a language. All titles are invented.</p>
+  <pre id="st"></pre>
+</main>
+<script src="demo.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search), scenes = IPTVDemo.scenes, demo, root = document.getElementById('stage');
+  var $ = function (i) { return document.getElementById(i); };
+  if (q.get('bare')) { $('bar').hidden = true; document.querySelector('main').style.paddingTop = '1rem'; $('alt').hidden = true; $('st').hidden = true; }
+  if (q.get('bg') === 'light') document.body.classList.add('light');
+  var state = { scene: q.get('scene') || 'search', p: parseFloat(q.get('p') || '0'), lang: q.get('lang') || 'en', w: q.get('w') || '100', rm: q.get('rm') === '1' };
+  $('lang').value = state.lang; $('w').value = state.w; $('rm').checked = state.rm; $('bgl').checked = q.get('bg') === 'light';
+  scenes.forEach(function (s) { var b = document.createElement('button'); b.textContent = s; b.dataset.s = s; b.onclick = function () { state.scene = s; state.p = 0; apply(); }; $('scenes').appendChild(b); });
+  [0, .25, .5, .75, 1].forEach(function (v) { var b = document.createElement('button'); b.textContent = v; b.onclick = function () { state.p = v; apply(); }; $('ps').appendChild(b); });
+  function mountIt() {
+    if (demo) demo.destroy();
+    root.style.width = state.w === '100' ? '' : state.w + 'px';
+    root.setAttribute('aria-label', 'Interactive preview of the IPTVMac app');
+    document.documentElement.lang = state.lang; document.documentElement.dir = state.lang === 'he' ? 'rtl' : 'ltr';
+    demo = IPTVDemo.mount(root, { lang: state.lang, reducedMotion: state.rm }); window.demo = demo;
+  }
+  function apply() {
+    demo.setProgress(state.scene, state.p); $('p').value = state.p; $('pv').textContent = (+state.p).toFixed(2);
+    [].forEach.call($('scenes').children, function (b) { b.setAttribute('aria-pressed', b.dataset.s === state.scene); });
+    $('st').textContent = JSON.stringify(demo.getState());
+  }
+  $('p').oninput = function () { state.p = parseFloat(this.value); apply(); };
+  $('lang').onchange = function () { state.lang = this.value; mountIt(); apply(); };
+  $('w').onchange = function () { state.w = this.value; mountIt(); apply(); };
+  $('rm').onchange = function () { state.rm = this.checked; mountIt(); apply(); };
+  $('bgl').onchange = function () { document.body.classList.toggle('light', this.checked); document.body.classList.toggle('dark', !this.checked); };
+  mountIt(); apply();
+  window.__apply = function (s, p) { state.scene = s; state.p = p; apply(); };
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>
