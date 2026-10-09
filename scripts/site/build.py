@@ -9,6 +9,8 @@ VERSION = (ROOT / "VERSION").read_text().strip()
 BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
+FREE_REPO = "https://github.com/iptv-org/iptv"
+FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
 YT_INSTALL = "https://youtu.be/TgaoFEEMg48"
 INSTALL_CMD = "curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash"
 UPDATED = "2026-10-06"
@@ -140,10 +142,14 @@ HOME = {
   copy="Copy", copied="Copied", video="Watch the 95-second install video on YouTube",
   why="Why a command? IPTVMac is not notarized by Apple, which needs a paid developer account, and macOS blocks apps that a browser marked as downloaded from the internet. A file fetched with curl is not marked, so there is nothing to bypass. The script is short and public: install.sh.",
   dmg_h="Or download the DMG", dmg_steps=["Open IPTVMac.dmg and drag the app onto the Applications icon.", "The first launch is blocked: open System Settings, Privacy &amp; Security, and choose Open Anyway next to IPTVMac.", "Or run xattr -dr com.apple.quarantine /Applications/IPTVMac.app in Terminal."],
+  free_h="No playlist yet?",
+  free_p="IPTVMac is only a player, so it needs a playlist. If you do not have a provider, iptv-org is a free, independent open source project that publishes M3U playlists of publicly available channels from around the world. In IPTVMac choose M3U, give it a name and paste the link below.",
+  free_note="IPTVMac is not affiliated with iptv-org. Whether a stream is available, and whether you may watch it, depends on the channel and on your country: use only what you are allowed to.",
+  free_btn="Open iptv-org on GitHub",
   faq_h="Questions",
   faq=[
    ("What is IPTVMac?", "IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages."),
-   ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include, host or link to any channels, movies or series. You add a source from a provider you are authorized to use."),
+   ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
    ("Is IPTVMac free?", "Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking."),
@@ -159,7 +165,7 @@ HOME = {
   alt_h="Other IPTV players for Mac",
   alt_p="IPTVMac is Mac only. If you need something different:",
   alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
-  foot="IPTVMac is a media player. It does not include, host or link to any content; use only sources you are authorized to access.",
+  foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   lic="Open source under GPL-3.0.", other_lang=("he/", "עברית")),
  "he": dict(
   lang="he", prefix="he/", up="../",
@@ -193,10 +199,14 @@ HOME = {
   copy="העתק", copied="הועתק", video="צפו בסרטון ההתקנה של 95 שניות ביוטיוב (באנגלית)",
   why="למה פקודה? IPTVMac לא עברה אימות (notarization) של Apple, שדורש חשבון מפתחים בתשלום, ו-macOS חוסמת אפליקציות שהדפדפן סימן כ״הורדו מהאינטרנט״. קובץ שמורידים עם curl לא מסומן, ולכן אין מה לעקוף. הסקריפט קצר וגלוי: install.sh.",
   dmg_h="או הורדת ה-DMG", dmg_steps=["פותחים את IPTVMac.dmg וגוררים את האפליקציה על אייקון Applications.", "ההפעלה הראשונה נחסמת: בהגדרות המערכת, פרטיות ואבטחה, לוחצים Open Anyway ליד IPTVMac.", "או מריצים בטרמינל xattr -dr com.apple.quarantine /Applications/IPTVMac.app"],
+  free_h="אין לכם רשימה?",
+  free_p="IPTVMac הוא נגן בלבד, ולכן צריך רשימת ערוצים. אם אין לכם ספק, iptv-org הוא פרויקט עצמאי בקוד פתוח וחינמי שמפרסם רשימות M3U של ערוצים זמינים לציבור מכל העולם. ב-IPTVMac בוחרים M3U, נותנים שם ומדביקים את הקישור שלמטה.",
+  free_note="IPTVMac אינו קשור ל-iptv-org. אם סטרים זמין, ואם מותר לכם לצפות בו, תלוי בערוץ ובמדינה שלכם: השתמשו רק במה שמותר לכם.",
+  free_btn="פתחו את iptv-org ב-GitHub",
   faq_h="שאלות נפוצות",
   faq=[
    ("מה זה IPTVMac?", "IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. הוא מנגן מקורות Xtream Codes ו-M3U עם נגן mpv מובנה, חיפוש מיידי, כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וממשק ב-31 שפות."),
-   ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל, לא מארח ולא מקשר לערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו."),
+   ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל ולא מארח ערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו. אם אין לכם, הפרויקט העצמאי בקוד פתוח iptv-org מפרסם רשימות חינמיות של ערוצים זמינים לציבור; הקישור בעמוד."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
    ("האם IPTVMac חינמי?", "כן. הוא חינמי ובקוד פתוח ברישיון GPL-3.0, בלי פרסומות ובלי מעקב."),
@@ -212,7 +222,7 @@ HOME = {
   alt_h="נגני IPTV אחרים ל-Mac",
   alt_p="IPTVMac הוא ל-Mac בלבד. אם אתם צריכים משהו אחר:",
   alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
-  foot="IPTVMac הוא נגן. הוא לא כולל, לא מארח ולא מקשר לתוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם.",
+  foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   lic="קוד פתוח ברישיון GPL-3.0.", other_lang=("../", "English")),
 }
 
@@ -331,6 +341,7 @@ def home(code):
 <section id="install"><div class="wrap install"><div class="install-main"><h2>{e(c["install_h"])}</h2><p class="lead">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}</div>
 <div class="install-why"><p class="why">{e(c["why"])}</p><p class="why"><a class="yt" href="{YT_INSTALL}">{ICON_PLAY}{e(c["video"])}</a></p></div>
 <div class="dmg"><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:24px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></p></div></div></section>
+<section id="free"><div class="wrap qa-grid"><h2>{e(c["free_h"])}</h2><div><p class="lead">{e(c["free_p"])}</p><p><code dir="ltr">{FREE_M3U}</code></p><p class="why">{e(c["free_note"])}</p><p style="margin-top:20px"><a class="btn" href="{FREE_REPO}" rel="noopener">{e(c["free_btn"])}</a></p></div></div></section>
 <section id="faq" style="padding-top:0"><div class="wrap qa-grid"><h2>{e(c["faq_h"])}</h2><div class="faq">{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</div></div></section>
 <section id="guides" class="guides"><div class="wrap"><h2>{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong>{e(t)}</strong><span>{e(s)}</span><span class="go">{e(c["guide_go"])}{ICON_CHEV}</span></a>' for u, t, s in c["guides"])}</div></div></section>
 <section class="alt"><div class="wrap"><h2>{e(c["alt_h"])}</h2><p>{e(c["alt_p"])}</p><ul>{"".join(f"<li>{e(x)}</li>" for x in c["alt"])}</ul></div></section>
@@ -375,6 +386,8 @@ GUIDES = [
   body=f"""
 <h2>What you need</h2>
 <p>The link (URL) of an M3U or M3U8 playlist from a source you are authorized to use. IPTVMac takes the link; opening a local .m3u file is not supported yet.</p>
+<h2>No playlist yet?</h2>
+<p>The independent open source project <a href="https://github.com/iptv-org/iptv" rel="noopener">iptv-org</a> publishes M3U playlists of publicly available channels from around the world, for example <code>https://iptv-org.github.io/iptv/index.m3u</code> (about 11,000 entries). IPTVMac is not affiliated with it, and whether a stream is available or allowed in your country depends on the channel: use only what you are allowed to.</p>
 <h2>Add it in IPTVMac</h2>
 <ol>
 <li><a href="{DOWNLOAD}">Install IPTVMac</a> (Apple Silicon Mac, macOS 14 or later).</li>
@@ -436,7 +449,7 @@ def guide(g):
 {g["body"]}
 <p style="margin-top:36px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}Download IPTVMac for Mac</a></p>
 <div class="related"><h2>More guides</h2><ul>{related}</ul></div>
-<p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include, host or link to any content.</p>
+<p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include or host any content.</p>
 </article></div></main>
 <footer><div class="wrap"><p>Open source under GPL-3.0. <a href="{REPO}">GitHub</a> · <a href="../">Home</a></p></div></footer>
 </body></html>
@@ -475,6 +488,7 @@ Source code: {REPO}
 """ + "".join(f"- [{g['h1']}]({BASE}guides/{g['slug']}.html): {g['answer']}\n" for g in GUIDES) + f"""
 ## Facts
 - Requirements: Apple Silicon Mac (M1 or later), macOS 14 or later. Intel Macs are not supported.
+- Free playlists: the independent project iptv-org (github.com/iptv-org/iptv) publishes M3U playlists of publicly available channels, e.g. https://iptv-org.github.io/iptv/index.m3u ; IPTVMac is not affiliated with it.
 - Sources: Xtream Codes (server address, username, password) and M3U (playlist link). A local .m3u file is not supported yet.
 - Player: mpv (libmpv, bundled). Hardware decoding, automatic reconnect, embedded and external subtitles, playback speed from 0.25x to 4x for movies and episodes, configurable skip step, fit/fill/stretch, sleep timer.
 - Several playlists: switch between them or show all playlists together (search, favorites and continue watching across all).

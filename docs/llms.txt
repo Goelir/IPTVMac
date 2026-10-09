@@ -14,6 +14,7 @@ Source code: https://github.com/Goelir/IPTVMac
 
 ## Facts
 - Requirements: Apple Silicon Mac (M1 or later), macOS 14 or later. Intel Macs are not supported.
+- Free playlists: the independent project iptv-org (github.com/iptv-org/iptv) publishes M3U playlists of publicly available channels, e.g. https://iptv-org.github.io/iptv/index.m3u ; IPTVMac is not affiliated with it.
 - Sources: Xtream Codes (server address, username, password) and M3U (playlist link). A local .m3u file is not supported yet.
 - Player: mpv (libmpv, bundled). Hardware decoding, automatic reconnect, embedded and external subtitles, playback speed from 0.25x to 4x for movies and episodes, configurable skip step, fit/fill/stretch, sleep timer.
 - Several playlists: switch between them or show all playlists together (search, favorites and continue watching across all).
@@ -28,7 +29,7 @@ Source code: https://github.com/Goelir/IPTVMac
 
 ## FAQ
 - What is IPTVMac? IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages.
-- Does IPTVMac include channels or a subscription? No. IPTVMac is only a player. It does not include, host or link to any channels, movies or series. You add a source from a provider you are authorized to use.
+- Does IPTVMac include channels or a subscription? No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page.
 - Does it work with Xtream Codes and M3U? Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link.
 - Which Macs are supported? Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported.
 - Is IPTVMac free? Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking.

@@ -60,7 +60,17 @@ The app opens a short three-step guide. You add a playlist from your provider:
 - **Xtream Codes:** server address (for example `http://host:8080`), username and password. Your provider gives you these.
 - **M3U:** a name and the playlist link.
 
-IPTVMac is only a player. It does not include, host or link to any channels, movies or series: you need a source you are allowed to use.
+IPTVMac is only a player. It does not include or host any channels, movies or series: you need a source you are allowed to use.
+
+### No playlist yet?
+
+If you do not have a provider, [iptv-org/iptv](https://github.com/iptv-org/iptv) is a free, independent open source project that publishes M3U playlists of publicly available channels from around the world. In IPTVMac choose **M3U**, give it a name and paste:
+
+```
+https://iptv-org.github.io/iptv/index.m3u
+```
+
+It holds about 11,000 entries (loading takes a moment); the project's README also lists playlists by country, language and category. IPTVMac is not affiliated with iptv-org. Whether a stream is available, and whether you may watch it, depends on the channel and on your country: use only what you are allowed to.
 
 ## Screenshots
 
