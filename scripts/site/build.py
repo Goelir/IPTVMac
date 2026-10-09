@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """Generates the static website in docs/ (home EN + HE, three guides, robots.txt, sitemap.xml, llms.txt).
-Run: python3 scripts/site/build.py   (no dependencies). Edit the content below, not the generated HTML."""
+Run: python3 scripts/site/build.py   (no dependencies). Edit the content below, not the generated HTML.
+
+Layout of scripts/site/:
+  build.py, site.css, site.js   this generator and the page's own style and script
+  poster/, make-posters.mjs     source and renderer of the hero poster (AVIF/WebP/JPEG in docs/assets)
+  demo/demo.js, demo/demo.css   optional interactive mock of the app (window.IPTVDemo), copied to docs/assets when present
+  fx/fx.js, fx/fx.css           optional motion layer (window.IPTVFX), copied to docs/assets when present
+The page is complete without the optional modules: every chapter has a static composition, the modules only replace it."""
 import json, html, pathlib, re, hashlib, shutil
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -16,24 +23,53 @@ INSTALL_CMD = "curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/
 UPDATED = "2026-10-06"
 e = html.escape
 
-# CSS and JS live next to this script and are copied into docs/assets with a content hash for cache busting.
+# ---------- assets ----------
 SRC = pathlib.Path(__file__).resolve().parent
-ASSET_V = ""
+OWN = ("site.css", "site.js")
+MODULES = {"demo": ("demo.js", "demo.css"), "fx": ("fx.js", "fx.css")}   # scripts/site/<name>/<file> -> docs/assets/<file>
+VER = {}        # asset file name -> short content hash, for cache busting
+HAS = {}        # module name -> {"js": url, "css": url or None}; only modules whose file exists are wired into the pages
+def _copy(src, name):
+    shutil.copyfile(src, DOCS / "assets" / name)
+    VER[name] = hashlib.sha1(src.read_bytes()).hexdigest()[:8]
 def publish_assets():
-    global ASSET_V
-    h = hashlib.sha1()
-    for n in ("site.css", "site.js"):
-        shutil.copyfile(SRC / n, DOCS / "assets" / n)
-        h.update((SRC / n).read_bytes())
-    ASSET_V = h.hexdigest()[:8]
+    (DOCS / "assets").mkdir(exist_ok=True)
+    for n in OWN: _copy(SRC / n, n)
+    for mod, (js, css) in MODULES.items():
+        if (SRC / mod / js).exists():
+            _copy(SRC / mod / js, js)
+            if (SRC / mod / css).exists(): _copy(SRC / mod / css, css)
+            HAS[mod] = {"js": f"assets/{js}?v={VER[js]}", "css": f"assets/{css}?v={VER[css]}" if css in VER else None}
+def av(up, name): return f"{up}assets/{name}?v={VER[name]}"
+
+# ---------- icons (one stroke family: 1.7, round) ----------
+def svg(path, vb="0 0 20 20", cls="", fill="none"):
+    return f'<svg{f" class={chr(34)}{cls}{chr(34)}" if cls else ""} viewBox="{vb}" fill="{fill}" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{path}</svg>'
+ICON_COPY = svg('<rect x="7" y="7" width="9.5" height="9.5" rx="2.2"/><path d="M13 7V5.4A2.2 2.2 0 0 0 10.8 3.2H5.4A2.2 2.2 0 0 0 3.2 5.4v5.4A2.2 2.2 0 0 0 5.4 13H7"/>', cls="cp")
+ICON_OK = svg('<path d="M4 10.5l4 4 8-9"/>', cls="ok")
+ICON_CHEV = svg('<path d="M7.5 4l6 6-6 6"/>', cls="chev")
+ICON_DL = svg('<path d="M10 3v10m0 0L6 9m4 4l4-4M4 16.5h12"/>')
+ICON_GH = '<svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M9 1.2a7.8 7.8 0 0 0-2.47 15.2c.39.07.53-.17.53-.37v-1.4c-2.17.47-2.63-1.04-2.63-1.04-.35-.9-.87-1.14-.87-1.14-.71-.49.05-.48.05-.48.78.06 1.2.81 1.2.81.7 1.2 1.83.85 2.28.65.07-.51.27-.85.5-1.05-1.73-.2-3.55-.87-3.55-3.86 0-.85.3-1.55.8-2.1-.08-.2-.35-1 .08-2.07 0 0 .65-.21 2.14.8a7.4 7.4 0 0 1 3.9 0c1.49-1.01 2.14-.8 2.14-.8.43 1.07.16 1.87.08 2.07.5.55.8 1.25.8 2.1 0 3-1.82 3.66-3.56 3.85.28.24.53.72.53 1.45v2.15c0 .2.14.45.54.37A7.8 7.8 0 0 0 9 1.2z"/></svg>'
+ICON_PLAY = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7 4.6v10.8a.6.6 0 0 0 .9.5l8.6-5.4a.6.6 0 0 0 0-1L7.9 4.1a.6.6 0 0 0-.9.5z"/></svg>'
+ICON_PAUSE = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="3.6" height="12" rx="1.2"/><rect x="11.4" y="4" width="3.6" height="12" rx="1.2"/></svg>'
+ICON_SEARCH = svg('<circle cx="9" cy="9" r="5.5"/><path d="M13.2 13.2L17 17"/>')
+ICON_MOON = svg('<path d="M16.5 11.6A6.8 6.8 0 0 1 8.4 3.5a6.8 6.8 0 1 0 8.1 8.1z"/>')
+ICON_MOON_T = svg('<path d="M16.5 11.6A6.8 6.8 0 0 1 8.4 3.5a6.8 6.8 0 1 0 8.1 8.1z"/>', cls="moon")
+ICON_SUN = svg('<circle cx="10" cy="10" r="3.4"/><path d="M10 2.2v1.6M10 16.2v1.6M2.2 10h1.6M16.2 10h1.6M4.5 4.5l1.1 1.1M14.4 14.4l1.1 1.1M15.5 4.5l-1.1 1.1M5.6 14.4l-1.1 1.1"/>', cls="sun")
+ICON_PIP = svg('<rect x="2.5" y="4" width="15" height="12" rx="2.2"/><rect x="9.5" y="9.5" width="6" height="4.2" rx="1" fill="currentColor" stroke="none"/>')
+ICON_FS = svg('<path d="M3.5 7.5v-4h4M16.5 7.5v-4h-4M3.5 12.5v4h4M16.5 12.5v4h-4"/>')
+ICON_BACK = svg('<path d="M4.2 10a5.8 5.8 0 1 0 1.8-4.2M4 3.2v3.6h3.6"/>')
+ICON_FWD = svg('<path d="M15.8 10a5.8 5.8 0 1 1-1.8-4.2M16 3.2v3.6h-3.6"/>')
+ICON_X = svg('<path d="M5 5l10 10M15 5L5 15"/>')
+ICON_CHECK = svg('<path d="M4 10.5l4 4 8-9"/>')
 
 # ---------- shared pieces ----------
-def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", extra_ld=()):
+def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", extra_ld=(), preload=""):
     up = "../" * depth
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in alternates)
     ld = "".join(f'<script type="application/ld+json">{json.dumps(o, ensure_ascii=False)}</script>' for o in extra_ld)
-    fonts = "".join(f'<link rel="preload" href="{up}assets/fonts/plex-{f}.woff2" as="font" type="font/woff2" crossorigin>'
-                    for f in (["latin-400", "latin-600"] + (["hebrew-400", "hebrew-600"] if lang == "he" else [])))
+    fonts = "".join(f'<link rel="preload" href="{up}assets/fonts/{f}.woff2" as="font" type="font/woff2" crossorigin>'
+                    for f in ["instrument-latin", "jetbrainsmono-latin"] + (["heebo-hebrew"] if lang == "he" else []))
     return f'''<!doctype html>
 <html lang="{lang}" dir="{'rtl' if lang == 'he' else 'ltr'}">
 <head>
@@ -43,9 +79,9 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{canonical}">
 {alts}
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f4f5f9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0c0e16" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#f6f5fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0912" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="IPTVMac">
 <meta property="og:locale" content="{'he_IL' if lang == 'he' else 'en_US'}">
@@ -59,30 +95,13 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <meta name="twitter:image" content="{BASE}social-preview.png">
 <link rel="icon" type="image/png" href="{up}assets/favicon.png">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
-{fonts}
-<link rel="stylesheet" href="{up}assets/site.css?v={ASSET_V}">
-<script>document.documentElement.classList.add("js")</script>
+{fonts}{preload}
+<link rel="stylesheet" href="{av(up, 'site.css')}">
+<script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("iptvmac-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 {ld}
 </head>
 <body>
 '''
-
-def pic(up, name, alt, attrs="", cls="shot"):
-    # WebP (1200 px wide) first, JPEG fallback; regenerate with: cwebp -q 78 -resize 1200 0 NN-x.jpg -o NN-x.webp
-    return (f'<picture><source type="image/webp" srcset="{up}screenshots/{name}.webp">'
-            f'<img class="{cls}" src="{up}screenshots/{name}.jpg" width="1800" height="1130" alt="{e(alt)}" {attrs}></picture>')
-
-ICON_COPY = '<svg class="cp" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.8"/><path d="M10.5 5.5V4a1.8 1.8 0 0 0-1.8-1.8H4A1.8 1.8 0 0 0 2.2 4v4.7A1.8 1.8 0 0 0 4 10.5h1.5"/></svg>'
-ICON_OK = '<svg class="ok" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>'
-ICON_CHEV = '<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>'
-ICON_DL = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2.5v9m0 0L5.5 8M9 11.5L12.5 8M3 14.5h12"/></svg>'
-ICON_GH = '<svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M9 1.2a7.8 7.8 0 0 0-2.47 15.2c.39.07.53-.17.53-.37v-1.4c-2.17.47-2.63-1.04-2.63-1.04-.35-.9-.87-1.14-.87-1.14-.71-.49.05-.48.05-.48.78.06 1.2.81 1.2.81.7 1.2 1.83.85 2.28.65.07-.51.27-.85.5-1.05-1.73-.2-3.55-.87-3.55-3.86 0-.85.3-1.55.8-2.1-.08-.2-.35-1 .08-2.07 0 0 .65-.21 2.14.8a7.4 7.4 0 0 1 3.9 0c1.49-1.01 2.14-.8 2.14-.8.43 1.07.16 1.87.08 2.07.5.55.8 1.25.8 2.1 0 3-1.82 3.66-3.56 3.85.28.24.53.72.53 1.45v2.15c0 .2.14.45.54.37A7.8 7.8 0 0 0 9 1.2z"/></svg>'
-ICON_PLAY = '<svg viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="6" fill="currentColor"/><path d="M8.6 6.8v8.4l7-4.2z" fill="var(--bg)"/></svg>'
-
-def cmd_block(copy, done):
-    return (f'<div class="cmd"><span class="prompt" aria-hidden="true">$</span><code>{e(INSTALL_CMD)}</code>'
-            f'<button class="copy" type="button" data-done="{e(done)}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(copy)}</span></button>'
-            f'<span class="sr" role="status" aria-live="polite"></span></div>')
 
 def software_ld(desc, lang):
     return {
@@ -108,40 +127,86 @@ def video_ld(name, desc):
     return {"@context": "https://schema.org", "@type": "VideoObject", "name": name, "description": desc, "embedUrl": "https://www.youtube.com/embed/TgaoFEEMg48", "url": YT_INSTALL,
             "thumbnailUrl": BASE + "assets/demo-poster.jpg", "uploadDate": UPDATED, "contentUrl": BASE + "assets/demo.mp4"}
 
-# ---------- home pages ----------
+# Interface languages, each written in its own language (lang code, name, RTL flag). Same 31 as the app's picker.
+LANGS = [("he", "עברית", 1), ("en", "English", 0), ("ar", "العربية", 1), ("es", "Español", 0), ("fr", "Français", 0), ("de", "Deutsch", 0),
+         ("pt", "Português", 0), ("it", "Italiano", 0), ("ru", "Русский", 0), ("uk", "Українська", 0), ("pl", "Polski", 0), ("ro", "Română", 0),
+         ("bg", "Български", 0), ("nl", "Nederlands", 0), ("sv", "Svenska", 0), ("cs", "Čeština", 0), ("hu", "Magyar", 0), ("el", "Ελληνικά", 0),
+         ("sq", "Shqip", 0), ("tr", "Türkçe", 0), ("fa", "فارسی", 1), ("ur", "اردو", 1), ("hi", "हिन्दी", 0), ("bn", "বাংলা", 0),
+         ("id", "Bahasa Indonesia", 0), ("vi", "Tiếng Việt", 0), ("th", "ไทย", 0), ("zh-Hans", "简体中文", 0), ("zh-Hant", "繁體中文", 0),
+         ("ja", "日本語", 0), ("ko", "한국어", 0)]
+assert len(LANGS) == 31
+# The word "native" in each interface language: the headline cycles through them when the fx module is present.
+NATIVE = {"he": "מקורי", "en": "native", "ar": "أصلي", "es": "nativo", "fr": "natif", "de": "nativ", "pt": "nativo", "it": "nativo", "ru": "нативный",
+          "uk": "нативний", "pl": "natywny", "ro": "nativ", "bg": "нативен", "nl": "native", "sv": "nativ", "cs": "nativní", "hu": "natív", "el": "εγγενής",
+          "sq": "nativ", "tr": "yerel", "fa": "بومی", "ur": "مقامی", "hi": "नेटिव", "bn": "নেটিভ", "id": "asli", "vi": "gốc", "th": "เนทีฟ",
+          "zh-Hans": "原生", "zh-Hant": "原生", "ja": "ネイティブ", "ko": "네이티브"}
+def native_words(first):
+    out = [NATIVE[first]]
+    for l, _, _ in LANGS:
+        if NATIVE[l] not in out: out.append(NATIVE[l])
+    return out
+
+# Real UI strings from the app, for the right-to-left comparison (read from the app's own translation files).
+def app_strings(code):
+    t = (ROOT / "Sources/IPTVMac/Resources" / f"{code}.lproj/Localizable.strings").read_text()
+    g = lambda k: re.search(r'^"%s"\s*=\s*"(.*)";' % re.escape(k), t, re.M).group(1)
+    return {k: g(f"tab.{k}") for k in ("live", "movies", "series")} | {"search": g("search.prompt")}
+
+# ---------- copy ----------
+# SEO fields (title, desc, faq, guides) are carried over unchanged from the previous site.
 HOME = {
  "en": dict(
   lang="en", prefix="", up="",
   title="IPTVMac: IPTV Player for Mac (Xtream Codes and M3U)",
   desc="IPTVMac is a free, open source IPTV player for Mac. Xtream Codes and M3U, instant search, Picture in Picture, catch-up, downloads and subtitles. Apple Silicon, macOS 14+.",
-  nav=[("#features", "Features"), ("#install", "Install"), ("#faq", "FAQ"), ("#guides", "Guides"), (REPO, "GitHub"), ("he/", "עברית")],
-  h1="IPTV player for Mac, built natively",
-  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and downloads. Free and open source.",
-  dl="Download for Mac", src="View source on GitHub",
-  meta=f"Version {VERSION}. Apple Silicon, macOS 14 or later.",
-  alt_movies="IPTVMac movies screen with poster grid and category sidebar",
-  alt_player="IPTVMac full screen player showing a film scene",
-  demo_h="Watch it work", demo_p="An 80 second tour: live channels, search, favorites, the player, 2x speed, Picture in Picture and downloads. The channels and posters are invented for the demo; the footage is the Blender Foundation film Sintel.",
-  feats_h="What you get",
-  feats=[
-   ("02-search", "Search that keeps up with 100,000 items", "Type to search inside a category, inside a section, or everywhere. Results appear as you type and are grouped into live, movies and series.", "IPTVMac global search results grouped by live, movies and series"),
-   ("05-player", "A player that copes with bad streams", "Built on mpv. It plays the broken TS and HLS streams that system players give up on, reconnects when a stream drops, and hides its controls so the picture fills the screen.", "IPTVMac player in full screen"),
-   ("06-pip", "Keep watching while you browse", "A floating Picture in Picture window stays on top, across Spaces. Pick another channel or movie and the video keeps playing.", "IPTVMac Picture in Picture window floating over the movie list"),
-   ("07-downloads", "Save movies and whole seasons", "Download movies and episodes, or a whole season on Xtream series, to a folder you choose. Play them from the Downloads screen.", "IPTVMac Downloads screen"),
-  ],
-  small=[("Subtitles and audio", "Embedded tracks, .srt and .ass files by menu or drag and drop, size and delay, preferred languages."),
-         ("Catch-up and guide", "Watch past programs on channels that support it, and see what is on now and next."),
-         ("Next episode", "When an episode ends, the next one starts after a 5 second countdown. You can cancel it."),
-         ("Favorites and resume", "Star channels and movies. Movies and episodes continue where you stopped."),
-         ("Several playlists", "Switch between playlists from the toolbar, or show all of them together with the playlist name on each item."),
-         ("Speed, skip and sleep timer", "Play from 0.25x to 4x, choose the skip step, and set a sleep timer."),
-         ("Backup and settings", "Export playlists (without passwords), favorites and history; light or dark appearance; hide categories by words."),
-         ("31 languages", "Hebrew, English, Arabic, Spanish, French, German, Russian, Chinese, Japanese, Hindi and more, with right-to-left layout. Pick one in Settings."),
-         ("Updates itself", "Checks GitHub Releases, verifies a SHA-256 checksum and installs the new version.")],
-  install_h="Install in one line", install_p="Paste this in Terminal. It downloads the latest release, checks its SHA-256, copies IPTVMac to Applications and opens it.",
-  copy="Copy", copied="Copied", video="Watch the 95-second install video on YouTube",
-  why="Why a command? IPTVMac is not notarized by Apple, which needs a paid developer account, and macOS blocks apps that a browser marked as downloaded from the internet. A file fetched with curl is not marked, so there is nothing to bypass. The script is short and public: install.sh.",
-  dmg_h="Or download the DMG", dmg_steps=["Open IPTVMac.dmg and drag the app onto the Applications icon.", "The first launch is blocked: open System Settings, Privacy &amp; Security, and choose Open Anyway next to IPTVMac.", "Or run xattr -dr com.apple.quarantine /Applications/IPTVMac.app in Terminal."],
+  skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
+  nav=[("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#languages", "Languages"), ("#install", "Install"), ("#faq", "FAQ")],
+  gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
+  h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">for Mac.</span>',
+  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and downloads. Free and open source, with no account.",
+  cmd_b="Install in one line.", cmd_t="Paste it in Terminal. macOS shows no warning, and the app updates itself afterwards.",
+  copy="Copy", copied="Copied", copy_aria="Copy the install command",
+  dl="Download the DMG", src="View the source", tour="Watch the 80-second tour",
+  meta=f"Version {VERSION}. Apple Silicon, macOS 14 or later. GPL-3.0.",
+  cue="Scroll to see it work", rail_aria="Chapters",
+  hero_alt="The IPTVMac window showing a wall of movie posters, with a small Picture in Picture window floating in front of it",
+  # chapters
+  search_h="Search that keeps up with 100,000 items.",
+  search_p="Your library lives in a local SQLite database with full-text search, so results appear as you type. Search inside a category, inside a section or everywhere. Results come back grouped into live channels, movies and series.",
+  search_f=["Hebrew, Arabic and Latin text.", "Search runs on your Mac, in a local database."],
+  search_count="items in our test library, searched in well under a second",
+  search_alt="IPTVMac search results for the letters na, grouped into live channels, movies and series",
+  loupe_n="4",
+  player_h="Every speed from 0.25x to 4x.",
+  player_p="Playback runs on mpv. It plays the broken TS and HLS streams that trip up system players and reconnects when a stream drops. Speed works on movies, episodes and catch-up; a live stream cannot run faster than real time.",
+  player_f=["Sleep timer from 15 minutes to 2 hours.", "Skip step from 5 to 60 seconds.", "Fit, fill or stretch the picture."],
+  player_alt="The IPTVMac player in full screen: a character in a snowstorm, with the controls fading in at the bottom",
+  dial="Playback speed", keys=[("[", "slower"), ("]", "faster"), ("2", "double speed"), ("A", "fit, fill, stretch")],
+  pip_h="Keep watching while you browse.",
+  pip_p="Picture in Picture is IPTVMac's own floating window. It stays on top of other apps and follows you across Spaces, including over full screen apps. Pick another channel or movie in the main window and the video keeps playing.",
+  pip_f=["Works on live channels, movies and episodes.", "Drag it anywhere and resize it.", "Hover for pause, close and a button back to the main window."],
+  pip_hint="Drag the floating window to move it.", pip_label="Picture in Picture window. Drag it, or use the arrow keys.",
+  pip_alt="The IPTVMac movie list with the Picture in Picture window floating over it",
+  pip_win_alt="A small floating window playing a film scene, with pause in the middle",
+  pl_h="Several playlists, one library.",
+  pl_p="Add as many Xtream Codes and M3U sources as you like and switch between them from the toolbar. Choose All playlists to search, favorite and continue watching across every one, with the playlist name on each item.",
+  pl_f=["Xtream Codes: server address, username and password.", "M3U: a name and the playlist link."],
+  pl_alt="IPTVMac poster wall with the name of the playlist shown on each item",
+  pl_all="All playlists", pl_names=[("Cinema Club", "Xtream Codes", "#a496ff"), ("Weekend Box", "M3U", "#ffb347"), ("Kids Corner", "M3U", "#3dd6c0")],
+  langs_h="31 languages, each in its own script.",
+  langs_p="IPTVMac follows your Mac's language, or you pick one in Settings. Hebrew, Arabic, Persian and Urdu get a layout that mirrors the whole interface.",
+  langs_note="Apart from Hebrew, English and Arabic, the translations were written with AI help and no native speaker has reviewed them yet. Corrections are welcome.",
+  langs_link="How to contribute a translation", langs_href=REPO + "#contributing-translations",
+  trio_h="The same toolbar in three languages, as the app draws it:",
+  install_h="Install in one line.",
+  install_p="Paste it in Terminal. The script downloads the latest release, checks its signature and SHA-256, copies IPTVMac to Applications and opens it. After that the app updates itself.",
+  reqs="Needs an Apple Silicon Mac (M1 or later) and macOS 14 or later.",
+  term="Terminal", opens="IPTVMac opens", opens_s="First launch shows a three-step guide.",
+  why_h="Why a command?",
+  why="IPTVMac is not notarized by Apple, which needs a paid developer account, and macOS blocks apps that a browser marked as downloaded from the internet. A file fetched with curl is not marked, so there is nothing to bypass. The script is short and public: install.sh.",
+  video="Watch the 95-second install video on YouTube",
+  dmg_h="Or download the DMG",
+  dmg_steps=["Open IPTVMac.dmg and drag the app onto the Applications icon.", "The first launch is blocked: open System Settings, Privacy &amp; Security, and choose Open Anyway next to IPTVMac.", "Or run <code>xattr -dr com.apple.quarantine /Applications/IPTVMac.app</code> in Terminal."],
   free_h="No playlist yet?",
   free_p="IPTVMac is only a player, so it needs a playlist. If you do not have a provider, iptv-org is a free, independent open source project that publishes M3U playlists of publicly available channels from around the world. In IPTVMac choose M3U, give it a name and paste the link below.",
   free_note="IPTVMac is not affiliated with iptv-org. Whether a stream is available, and whether you may watch it, depends on the channel and on your country: use only what you are allowed to.",
@@ -158,47 +223,72 @@ HOME = {
    ("Can I watch past programs (catch-up)?", "Yes, on channels where your provider supports catch-up. Pick a program from the guide."),
    ("Is it safe to use?", "The source code is public. Updates come from GitHub Releases and are checked against a SHA-256 checksum. Account passwords are stored in the app's local database, readable only by your user."),
   ],
-  guides_h="Guides",
+  guides_h="Guides", guide_go="Read the guide",
   guides=[("guides/xtream-codes-on-mac.html", "How to watch Xtream Codes IPTV on a Mac", "What you need from your provider and how to set it up."),
           ("guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "Add a playlist link and get Live, Movies and Series."),
           ("guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "Keep a stream in a floating window while you do something else.")],
-  alt_h="Other IPTV players for Mac",
-  alt_p="IPTVMac is Mac only. If you need something different:",
-  alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
+  cta_l=["Free.", "Open source."], cta_p="GPL-3.0. No account, no ads, no tracking.", cta_dl="Download for Mac", cta_src="Source on GitHub",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
-  lic="Open source under GPL-3.0.", other_lang=("he/", "עברית")),
+  foot_about="A free, open source IPTV player for Mac.",
+  foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
+             ("Learn", [("#faq", "Questions"), ("#free", "Free playlists")]),
+             ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac")])],
+  alt_h="Other IPTV players for Mac.", alt_p="IPTVMac is Mac only. If you need something different:",
+  alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
+  credit='Demo footage: "Sintel" by the Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. All titles and channels on this page are invented.',
+  tour_close="Close the video", tour_note='80 seconds: live channels, search, favorites, the player, 2x speed, Picture in Picture and downloads. The channels and posters are invented for the demo; the footage is the Blender Foundation film "Sintel" (CC BY 3.0).',
+  lic="Open source under GPL-3.0."),
  "he": dict(
   lang="he", prefix="he/", up="../",
   title="IPTVMac: נגן IPTV ל-Mac (Xtream Codes ו-M3U)",
   desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וכתוביות. Apple Silicon, macOS 14 ומעלה.",
-  nav=[("#features", "יכולות"), ("#install", "התקנה"), ("#faq", "שאלות נפוצות"), ("#guides", "מדריכים"), (REPO, "GitHub"), ("../", "English")],
-  h1="נגן IPTV ל-Mac, בנוי במקור",
-  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה והורדות. חינם ובקוד פתוח.",
-  dl="הורדה ל-Mac", src="קוד המקור ב-GitHub",
-  meta=f"גרסה {VERSION}. Apple Silicon, macOS 14 ומעלה.",
-  alt_movies="מסך הסרטים ב-IPTVMac עם רשת כרזות וסרגל קטגוריות",
-  alt_player="הנגן של IPTVMac במסך מלא",
-  demo_h="ראו איך זה עובד", demo_p="סיור של 80 שניות: ערוצים, חיפוש, מועדפים, הנגן, מהירות כפולה, תמונה בתוך תמונה והורדות. הערוצים והכרזות בדויים לצורך ההדגמה; הקטע המנוגן הוא הסרט Sintel של Blender Foundation.",
-  feats_h="מה מקבלים",
-  feats=[
-   ("02-search", "חיפוש שעומד בקצב של 100,000 פריטים", "מקלידים ומחפשים בתוך קטגוריה, בתוך חלק או בכל מקום. התוצאות מופיעות תוך כדי הקלדה ומקובצות לערוצים, סרטים וסדרות.", "תוצאות חיפוש כללי ב-IPTVMac מקובצות לפי ערוצים, סרטים וסדרות"),
-   ("05-player", "נגן שמתמודד עם סטרימים בעייתיים", "מבוסס על mpv. הוא מנגן סטרימים פגומים שנגני מערכת מוותרים עליהם, מתחבר מחדש כשהסטרים נופל, ומסתיר את הבקרים כדי שהתמונה תמלא את המסך.", "הנגן של IPTVMac במסך מלא"),
-   ("06-pip", "ממשיכים לצפות ומחפשים הלאה", "חלון צף של תמונה בתוך תמונה נשאר מעל הכול, בכל שולחן עבודה. בוחרים ערוץ או סרט אחר, והסרט ממשיך לרוץ.", "חלון תמונה בתוך תמונה של IPTVMac צף מעל רשימת הסרטים"),
-   ("07-downloads", "שומרים סרטים ועונות שלמות", "מורידים סרטים ופרקים, ובסדרות Xtream גם עונה שלמה, לתיקייה שבחרתם. מנגנים ממסך ההורדות.", "מסך ההורדות של IPTVMac"),
-  ],
-  small=[("כתוביות ואודיו", "רצועות מובנות, קבצי srt ו-ass בתפריט או בגרירה, גודל והזזה, שפות מועדפות."),
-         ("צפייה בהיסטוריה ולוח שידורים", "צפייה בתוכניות מהעבר בערוצים שתומכים, ומה משודר עכשיו ואחר כך."),
-         ("הפרק הבא", "כשפרק נגמר, הפרק הבא מתחיל אחרי ספירה של 5 שניות. אפשר לבטל."),
-         ("מועדפים והמשך צפייה", "מסמנים ערוצים וסרטים בכוכב. סרטים ופרקים ממשיכים מהמקום שעצרתם."),
-         ("כמה רשימות", "עוברים בין רשימות מסרגל הכלים, או מציגים את כולן יחד עם שם הרשימה על כל פריט."),
-         ("מהירות, דילוג וטיימר שינה", "ניגון מ-0.25× עד 4×, בחירת צעד הדילוג, וטיימר שינה."),
-         ("גיבוי והגדרות", "ייצוא של הרשימות (בלי סיסמאות), המועדפים וההיסטוריה; מראה בהיר או כהה; הסתרת קטגוריות לפי מילים."),
-         ("31 שפות", "עברית, אנגלית, ערבית, ספרדית, צרפתית, גרמנית, רוסית, סינית, יפנית, הינדי ועוד, עם פריסה מימין לשמאל. בוחרים בהגדרות."),
-         ("מתעדכן לבד", "בודק את GitHub Releases, מאמת SHA-256 ומתקין את הגרסה החדשה.")],
-  install_h="התקנה בשורה אחת", install_p="מדביקים בטרמינל. השורה מורידה את הגרסה האחרונה, בודקת SHA-256, מעתיקה את IPTVMac ל-Applications ופותחת אותה.",
-  copy="העתק", copied="הועתק", video="צפו בסרטון ההתקנה של 95 שניות ביוטיוב (באנגלית)",
-  why="למה פקודה? IPTVMac לא עברה אימות (notarization) של Apple, שדורש חשבון מפתחים בתשלום, ו-macOS חוסמת אפליקציות שהדפדפן סימן כ״הורדו מהאינטרנט״. קובץ שמורידים עם curl לא מסומן, ולכן אין מה לעקוף. הסקריפט קצר וגלוי: install.sh.",
-  dmg_h="או הורדת ה-DMG", dmg_steps=["פותחים את IPTVMac.dmg וגוררים את האפליקציה על אייקון Applications.", "ההפעלה הראשונה נחסמת: בהגדרות המערכת, פרטיות ואבטחה, לוחצים Open Anyway ליד IPTVMac.", "או מריצים בטרמינל xattr -dr com.apple.quarantine /Applications/IPTVMac.app"],
+  skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
+  nav=[("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#languages", "שפות"), ("#install", "התקנה"), ("#faq", "שאלות")],
+  gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
+  h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">ל-Mac.</span>',
+  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה והורדות. חינם ובקוד פתוח, בלי חשבון.",
+  cmd_b="התקנה בשורה אחת.", cmd_t="מדביקים בטרמינל. macOS לא מציגה אזהרה, ואחר כך האפליקציה מתעדכנת לבד.",
+  copy="העתק", copied="הועתק", copy_aria="העתקת פקודת ההתקנה",
+  dl="הורדת ה-DMG", src="קוד המקור", tour="לצפות בסיור של 80 שניות",
+  meta=f"גרסה {VERSION}. Apple Silicon, macOS 14 ומעלה. GPL-3.0.",
+  cue="גוללים כדי לראות איך זה עובד", rail_aria="פרקים",
+  hero_alt="חלון IPTVMac עם קיר כרזות של סרטים, ולפניו חלון קטן של תמונה בתוך תמונה",
+  search_h="חיפוש שעומד בקצב של 100,000 פריטים.",
+  search_p="הספרייה שלכם נשמרת במסד SQLite מקומי עם חיפוש טקסט מלא, ולכן התוצאות מופיעות תוך כדי הקלדה. מחפשים בתוך קטגוריה, בתוך חלק או בכל מקום. התוצאות חוזרות מקובצות לערוצים, סרטים וסדרות.",
+  search_f=["עברית, ערבית ולטינית.", "החיפוש רץ על ה-Mac שלכם, במסד נתונים מקומי."],
+  search_count="פריטים בספריית הבדיקה, והחיפוש לוקח פחות משנייה",
+  search_alt="תוצאות חיפוש ב-IPTVMac עבור האותיות na, מקובצות לערוצים, סרטים וסדרות",
+  loupe_n="4",
+  player_h="כל מהירות מ-0.25× עד 4×.",
+  player_p="הניגון רץ על mpv. הוא מנגן סטרימים פגומים מסוג TS ו-HLS שנגני מערכת נתקעים בהם, ומתחבר מחדש כשהסטרים נופל. המהירות פועלת בסרטים, בפרקים ובצפייה בהיסטוריה; שידור חי לא יכול לרוץ מהר מזמן אמת.",
+  player_f=["טיימר שינה מ-15 דקות עד שעתיים.", "צעד דילוג מ-5 עד 60 שניות.", "התאמה, מילוי או מתיחה של התמונה."],
+  player_alt="הנגן של IPTVMac במסך מלא: דמות בסופת שלגים, והבקרים מופיעים בתחתית",
+  dial="מהירות ניגון", keys=[("[", "איטי יותר"), ("]", "מהיר יותר"), ("2", "מהירות כפולה"), ("A", "התאמה, מילוי, מתיחה")],
+  pip_h="ממשיכים לצפות ומחפשים הלאה.",
+  pip_p="תמונה בתוך תמונה היא חלון צף של IPTVMac עצמה. הוא נשאר מעל אפליקציות אחרות ומלווה אתכם בין שולחנות עבודה, גם מעל אפליקציות במסך מלא. בוחרים ערוץ או סרט אחר בחלון הראשי, והסרט ממשיך לרוץ.",
+  pip_f=["עובד בערוצים, בסרטים ובפרקים.", "אפשר לגרור לכל מקום ולשנות גודל.", "מעבירים עכבר לקבלת השהיה, סגירה וחזרה לחלון הראשי."],
+  pip_hint="גוררים את החלון הצף כדי להזיז אותו.", pip_label="חלון תמונה בתוך תמונה. גוררים אותו, או משתמשים בחצים.",
+  pip_alt="רשימת הסרטים ב-IPTVMac, ומעליה חלון תמונה בתוך תמונה צף",
+  pip_win_alt="חלון צף קטן שמנגן סצנה מסרט, עם כפתור השהיה באמצע",
+  pl_h="כמה רשימות, ספרייה אחת.",
+  pl_p="מוסיפים כמה מקורות Xtream Codes ו-M3U שרוצים ועוברים ביניהם מסרגל הכלים. בוחרים All playlists כדי לחפש, לסמן מועדפים ולהמשיך לצפות בכולם יחד, עם שם הרשימה על כל פריט.",
+  pl_f=["Xtream Codes: כתובת שרת, שם משתמש וסיסמה.", "M3U: שם וקישור לרשימה."],
+  pl_alt="קיר כרזות ב-IPTVMac, עם שם הרשימה על כל פריט",
+  pl_all="All playlists", pl_names=[("Cinema Club", "Xtream Codes", "#a496ff"), ("Weekend Box", "M3U", "#ffb347"), ("Kids Corner", "M3U", "#3dd6c0")],
+  langs_h="31 שפות, כל אחת בכתב שלה.",
+  langs_p="האפליקציה פועלת בשפת ה-Mac שלכם, או שבוחרים שפה בהגדרות. עברית, ערבית, פרסית ואורדו מקבלות פריסה שמשקפת את כל הממשק.",
+  langs_note="מלבד עברית, אנגלית וערבית, התרגומים נכתבו בעזרת AI ועדיין לא נבדקו על ידי דובר שפת אם. תיקונים יתקבלו בברכה.",
+  langs_link="איך לתרום תרגום (באנגלית)", langs_href=REPO + "#contributing-translations",
+  trio_h="אותו סרגל כלים בשלוש שפות, כפי שהאפליקציה מציירת אותו:",
+  install_h="התקנה בשורה אחת.",
+  install_p="מדביקים בטרמינל. הסקריפט מוריד את הגרסה האחרונה, בודק חתימה ו-SHA-256, מעתיק את IPTVMac ל-Applications ופותח אותה. מאותו רגע האפליקציה מתעדכנת לבד.",
+  reqs="נדרש Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה.",
+  term="Terminal", opens="IPTVMac נפתחת", opens_s="בהפעלה הראשונה מוצג מדריך של שלושה שלבים.",
+  why_h="למה פקודה?",
+  why="IPTVMac לא עברה אימות (notarization) של Apple, שדורש חשבון מפתחים בתשלום, ו-macOS חוסמת אפליקציות שהדפדפן סימן כ״הורדו מהאינטרנט״. קובץ שמורידים עם curl לא מסומן, ולכן אין מה לעקוף. הסקריפט קצר וגלוי: install.sh.",
+  video="צפו בסרטון ההתקנה של 95 שניות ביוטיוב (באנגלית)",
+  dmg_h="או הורדת ה-DMG",
+  dmg_steps=["פותחים את IPTVMac.dmg וגוררים את האפליקציה על אייקון Applications.", "ההפעלה הראשונה נחסמת: בהגדרות המערכת, פרטיות ואבטחה, לוחצים Open Anyway ליד IPTVMac.", "או מריצים בטרמינל <code>xattr -dr com.apple.quarantine /Applications/IPTVMac.app</code>"],
   free_h="אין לכם רשימה?",
   free_p="IPTVMac הוא נגן בלבד, ולכן צריך רשימת ערוצים. אם אין לכם ספק, iptv-org הוא פרויקט עצמאי בקוד פתוח וחינמי שמפרסם רשימות M3U של ערוצים זמינים לציבור מכל העולם. ב-IPTVMac בוחרים M3U, נותנים שם ומדביקים את הקישור שלמטה.",
   free_note="IPTVMac אינו קשור ל-iptv-org. אם סטרים זמין, ואם מותר לכם לצפות בו, תלוי בערוץ ובמדינה שלכם: השתמשו רק במה שמותר לכם.",
@@ -215,141 +305,232 @@ HOME = {
    ("אפשר לצפות בתוכניות מהעבר?", "כן, בערוצים שהספק תומך בהם. בוחרים תוכנית מלוח השידורים."),
    ("האם זה בטוח?", "קוד המקור פומבי. העדכונים מגיעים מ-GitHub Releases ונבדקים מול SHA-256. סיסמאות החשבונות נשמרות במסד הנתונים המקומי של האפליקציה, נגיש רק למשתמש שלכם."),
   ],
-  guides_h="מדריכים (באנגלית)",
+  guides_h="מדריכים (באנגלית)", guide_go="לקריאת המדריך",
   guides=[("../guides/xtream-codes-on-mac.html", "How to watch Xtream Codes IPTV on a Mac", "מה צריך מהספק ואיך מגדירים."),
           ("../guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "מוסיפים קישור לרשימה ומקבלים ערוצים, סרטים וסדרות."),
           ("../guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "משאירים סטרים בחלון צף ועושים משהו אחר.")],
-  alt_h="נגני IPTV אחרים ל-Mac",
-  alt_p="IPTVMac הוא ל-Mac בלבד. אם אתם צריכים משהו אחר:",
-  alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
+  cta_l=["חינם.", "קוד פתוח."], cta_p="GPL-3.0. בלי חשבון, בלי פרסומות ובלי מעקב.", cta_dl="הורדה ל-Mac", cta_src="קוד המקור ב-GitHub",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
-  lic="קוד פתוח ברישיון GPL-3.0.", other_lang=("../", "English")),
+  foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac.",
+  foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
+             ("מידע", [("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
+             ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac")])],
+  alt_h="נגני IPTV אחרים ל-Mac.", alt_p="IPTVMac הוא ל-Mac בלבד. אם אתם צריכים משהו אחר:",
+  alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
+  credit='קטעי הדגמה: "Sintel" של Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. כל הכותרים והערוצים בעמוד בדויים.',
+  tour_close="סגירת הסרטון", tour_note='80 שניות: ערוצים, חיפוש, מועדפים, הנגן, מהירות כפולה, תמונה בתוך תמונה והורדות. הערוצים והכרזות בדויים לצורך ההדגמה; הקטע המנוגן הוא הסרט Sintel של Blender Foundation (CC BY 3.0).',
+  lic="קוד פתוח ברישיון GPL-3.0."),
 }
 
-# Interface languages, each written in its own language (lang code, name, RTL flag). Same 31 as the app's picker.
-LANGS = [("he", "עברית", 1), ("en", "English", 0), ("ar", "العربية", 1), ("es", "Español", 0), ("fr", "Français", 0), ("de", "Deutsch", 0),
-         ("pt", "Português", 0), ("it", "Italiano", 0), ("ru", "Русский", 0), ("uk", "Українська", 0), ("pl", "Polski", 0), ("ro", "Română", 0),
-         ("bg", "Български", 0), ("nl", "Nederlands", 0), ("sv", "Svenska", 0), ("cs", "Čeština", 0), ("hu", "Magyar", 0), ("el", "Ελληνικά", 0),
-         ("sq", "Shqip", 0), ("tr", "Türkçe", 0), ("fa", "فارسی", 1), ("ur", "اردو", 1), ("hi", "हिन्दी", 0), ("bn", "বাংলা", 0),
-         ("id", "Bahasa Indonesia", 0), ("vi", "Tiếng Việt", 0), ("th", "ไทย", 0), ("zh-Hans", "简体中文", 0), ("zh-Hant", "繁體中文", 0),
-         ("ja", "日本語", 0), ("ko", "한국어", 0)]
-assert len(LANGS) == 31
+# ---------- building blocks ----------
+def wbr_cmd(cmd):
+    # soft break opportunities so the command wraps at slashes and before the pipe; textContent (what Copy uses) is unchanged
+    parts = re.split(r'(?<=/)(?=[A-Za-z])|(?= \|)', cmd)
+    return "<wbr>".join(e(p) for p in parts)
 
-# Strings added or reworded in the redesign (merged over HOME below).
-HOME_NEW = {
- "en": dict(
-  skip="Skip to content", nav_aria="Main",
-  h1="A native IPTV player for Mac.",
-  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and downloads. Free and open source, with no account.",
-  dl="Download the DMG",
-  cmd_label_b="Install in one line.", cmd_label="Paste it in Terminal. macOS shows no warning, and the app updates itself afterwards.",
-  stage_alt="IPTVMac movies screen with a poster grid and category sidebar", pip_alt="The Picture in Picture window floating over the movie list",
-  why_h="Why IPTVMac",
-  facts=[("Fast", "Your library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second."),
-       ("Stable", "Playback runs on mpv, bundled in the app. It plays the broken TS and HLS streams that trip up system players, and reconnects when a stream drops."),
-       ("Native", "SwiftUI, with no Electron and no web view. There is nothing else to install: the player is inside the app."),
-       ("Open", "GPL-3.0, no accounts, no analytics. The app talks only to the servers you add, and to GitHub for updates.")],
-  small=[("Subtitles and audio", "Embedded tracks, .srt and .ass files by menu or drag and drop, size and delay, preferred languages."),
-         ("Catch-up and guide", "Watch past programs on channels that support it, and see what is on now and next."),
-         ("Next episode", "When an episode ends, the next one starts after a 5 second countdown. You can cancel it."),
-         ("Favorites and resume", "Star channels and movies. Movies and episodes continue where you stopped."),
-         ("Several playlists", "Switch between playlists from the toolbar, or choose All playlists to search and browse them together, with the playlist name on each item."),
-         ("Speed, skip and sleep timer", "Play from 0.25x to 4x, choose the skip step, and set a sleep timer."),
-         ("Backup and settings", "Export playlists (without passwords), favorites and history; light or dark appearance; hide categories by words."),
-         ("Updates itself", "Checks GitHub Releases, verifies the release signature and SHA-256 checksum, and installs the new version.")],
-  langs_h="31 interface languages",
-  langs_p="The app follows your Mac's language, or you pick one in Settings. Hebrew, Arabic, Persian and Urdu get a right-to-left layout.",
-  langs_note="Apart from Hebrew, English and Arabic, the translations were written with AI help and no native speaker has reviewed them yet. Corrections are welcome.",
-  langs_link="How to contribute a translation", langs_href=REPO + "#contributing-translations",
-  guide_go="Read the guide",
-  ),
- "he": dict(
-  skip="דלג לתוכן", nav_aria="ראשי",
-  h1="נגן IPTV מקורי ל-Mac.",
-  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה והורדות. חינם ובקוד פתוח, בלי חשבון.",
-  dl="הורדת ה-DMG",
-  cmd_label_b="התקנה בשורה אחת.", cmd_label="מדביקים בטרמינל. macOS לא מציגה אזהרה, ואחר כך האפליקציה מתעדכנת לבד.",
-  stage_alt="מסך הסרטים ב-IPTVMac עם רשת כרזות וסרגל קטגוריות", pip_alt="חלון תמונה בתוך תמונה צף מעל רשימת הסרטים",
-  why_h="למה IPTVMac",
-  facts=[("מהיר", "הספרייה שלכם נשמרת במסד SQLite מקומי עם חיפוש טקסט מלא. הקלדה מוצאת ערוץ מתוך 100,000 פריטים בפחות משנייה."),
-       ("יציב", "הניגון רץ על mpv שמובנה באפליקציה. הוא מנגן סטרימים פגומים שנגני מערכת נתקעים בהם, ומתחבר מחדש כשהסטרים נופל."),
-       ("מקורי", "SwiftUI, בלי Electron ובלי web view. אין מה להתקין בנוסף: הנגן נמצא בתוך האפליקציה."),
-       ("פתוח", "GPL-3.0, בלי חשבונות ובלי אנליטיקס. האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub לעדכונים.")],
-  small=[("כתוביות ואודיו", "רצועות מובנות, קבצי srt ו-ass בתפריט או בגרירה, גודל והזזה, שפות מועדפות."),
-         ("צפייה בהיסטוריה ולוח שידורים", "צפייה בתוכניות מהעבר בערוצים שתומכים, ומה משודר עכשיו ואחר כך."),
-         ("הפרק הבא", "כשפרק נגמר, הפרק הבא מתחיל אחרי ספירה של 5 שניות. אפשר לבטל."),
-         ("מועדפים והמשך צפייה", "מסמנים ערוצים וסרטים בכוכב. סרטים ופרקים ממשיכים מהמקום שעצרתם."),
-         ("כמה רשימות", "עוברים בין רשימות מסרגל הכלים, או בוחרים All playlists כדי לחפש ולעיין בכולן יחד, עם שם הרשימה על כל פריט."),
-         ("מהירות, דילוג וטיימר שינה", "ניגון מ-0.25× עד 4×, בחירת צעד הדילוג, וטיימר שינה."),
-         ("גיבוי והגדרות", "ייצוא של הרשימות (בלי סיסמאות), המועדפים וההיסטוריה; מראה בהיר או כהה; הסתרת קטגוריות לפי מילים."),
-         ("מתעדכן לבד", "בודק את GitHub Releases, מאמת את חתימת הגרסה ואת ה-SHA-256, ומתקין את הגרסה החדשה.")],
-  langs_h="31 שפות ממשק",
-  langs_p="האפליקציה פועלת בשפת ה-Mac שלכם, או שבוחרים שפה בהגדרות. עברית, ערבית, פרסית ואורדו מקבלות פריסה מימין לשמאל.",
-  langs_note="מלבד עברית, אנגלית וערבית, התרגומים נכתבו בעזרת AI ועדיין לא נבדקו על ידי דובר שפת אם. תיקונים יתקבלו בברכה.",
-  langs_link="איך לתרום תרגום (באנגלית)", langs_href=REPO + "#contributing-translations",
-  guide_go="לקריאת המדריך",
-  ),
-}
-for _k, _v in HOME_NEW.items():
-    HOME[_k].update(_v)
+def cmd_block(c, cls=""):
+    return (f'<div class="cmd {cls}"><span class="prompt" aria-hidden="true">$</span><code>{wbr_cmd(INSTALL_CMD)}</code>'
+            f'<button class="copy" type="button" data-done="{e(c["copied"])}" aria-label="{e(c["copy_aria"])}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(c["copy"])}</span></button>'
+            f'<span class="sr" role="status" aria-live="polite"></span></div>')
 
+def pic(up, name, alt, cls="", sizes="(min-width: 1000px) 60vw, 100vw", eager=False, widths=(1200, 1800), fmt="jpg"):
+    # screenshots are published as WebP (1200 px, and 1800 px where present) with a JPEG fallback
+    sets = {1200: f"{up}screenshots/{name}.webp 1200w", 1800: f"{up}screenshots/{name}-1800.webp 1800w"}
+    ss = ", ".join(sets[w] for w in widths)
+    return (f'<picture{f" class={chr(34)}{cls}{chr(34)}" if cls else ""}><source type="image/webp" srcset="{ss}" sizes="{sizes}">'
+            f'<img src="{up}screenshots/{name}.jpg" width="1800" height="1130" alt="{e(alt)}" {"fetchpriority=high" if eager else "loading=lazy"} decoding="async"></picture>')
 
-def lang_wall():
+def win(inner, bar=True):
+    # the static composition of one app window (the demo module draws its own window in the slot next to it)
+    return (f'<div class="win static-win">{"<div class=win-bar><i></i><i></i><i></i></div>" if bar else ""}'
+            f'<div class="win-body">{inner}</div></div>')
+
+def slot(scene):
+    return f'<div class="demo-slot" data-iptvdemo-mount data-scene="{scene}"></div>'
+
+def header_html(c, depth, home=True):
+    up = "../" * depth
+    prefix = "" if home else up
+    links = "".join(f'<a{" class=keep" if h == "#install" else ""} href="{prefix}{h}">{e(t)}</a>' for h, t in c["nav"])
+    ol = c["other_lang"]
+    href = ol[0] if home else (up + ("he/" if ol[2] == "he" else ""))
+    return f'''<a class="skip" href="#main">{e(c["skip"])}</a>
+<div class="prog" aria-hidden="true"></div>
+<header class="top" id="top"><a class="brand" href="{up or './'}" aria-label="{e(c["home_aria"])}"><img src="{up}logo.png" width="30" height="30" alt=""><span class="brand-t">IPTVMac</span></a>
+<nav class="nav" aria-label="{e(c["nav_aria"])}">{links}</nav>
+<div class="tools"><a class="ibtn" href="{REPO}" aria-label="{e(c["gh"])}" rel="noopener">{ICON_GH}</a>
+<button class="ibtn theme" type="button" aria-label="{e(c["theme"])}">{ICON_SUN}{ICON_MOON_T}</button>
+<a class="pill" href="{href}" hreflang="{ol[2]}" lang="{ol[2]}">{e(ol[1])}</a></div></header>
+'''
+
+def footer_html(c, depth, home=True):
+    # on the home page the closing section already carries the "no content" disclaimer right above the footer
+    up = "../" * depth
+    cols = ""
+    for h, items in c["foot_cols"]:
+        cols += f'<div><h3>{e(h)}</h3><ul>' + "".join(
+            f'<li><a href="{(href if href.startswith("http") else (up if not home and href.startswith("#") else "") + href)}"{" rel=noopener" if href.startswith("http") else ""}>{e(t)}</a></li>' for href, t in items) + '</ul></div>'
+    alts = "".join(f"<li>{e(x)}</li>" for x in c["alt"])
+    return f'''<footer class="site"><div class="wrap">
+<div class="foot"><div class="about"><a class="brand" href="{up or './'}"><img src="{up}logo.png" width="30" height="30" alt="">IPTVMac</a><p>{e(c["foot_about"])}</p></div>{cols}</div>
+<div class="fine-print">{"" if home else f"<p>{e(c['foot'])}</p>"}
+<p><b>{e(c["alt_h"])}</b> {e(c["alt_p"])} {" ".join(e(x) for x in c["alt"])}</p>
+<p>{c["credit"]}</p><p>{e(c["lic"])} <a href="{REPO}">GitHub</a></p></div></div></footer>
+'''
+
+def script_tag(up, c, mods=True):
+    attrs = ""
+    for mod in ("fx", "demo"):
+        if mods and mod in HAS:
+            attrs += f' data-{mod}-js="{up}{HAS[mod]["js"]}"' + (f' data-{mod}-css="{up}{HAS[mod]["css"]}"' if HAS[mod]["css"] else "")
+    return f'<script src="{av(up, "site.js")}" defer id="site-js" data-lang="{c["lang"]}"{attrs}></script>\n'
+
+# ---------- home page ----------
+def chapter(cid, c, flip, text, stage, length=230):
+    return (f'<section class="chap{" rev" if flip else ""}" id="{cid}" data-fx-scene data-chapter="{cid}" aria-labelledby="{cid}-h" style="--len:{length}svh">'
+            f'<div class="chap-pin"><div class="chap-text">{text}</div>{stage}<div class="chap-line" aria-hidden="true"><i></i></div></div></section>\n')
+
+def ctext(cid, h, p, facts, extra=""):
+    fl = "".join(f"<li>{f}</li>" for f in facts)
+    return f'<h2 id="{cid}-h" data-fx-split>{e(h)}</h2><p>{e(p)}</p><ul class="facts">{fl}</ul>{extra}'
+
+def tag_positions(c):
+    # one playlist tag on each poster of the movies screenshot (7 columns x 3 rows, last row has 6); numbers measured on the 1800x1130 image
+    out, names = "", c["pl_names"]
+    for r in range(3):
+        for col in range(7 if r < 2 else 6):
+            n, _, color = names[(col * 2 + r * 3 + (col // 3)) % 3]
+            left = (310 + col * 213.5 + 9) / 1800 * 100
+            top = (64 + r * 336.5 + 290 - 34) / 1130 * 100
+            out += f'<b style="left:{left:.2f}%;top:{top:.2f}%;--c:{color}">{e(n)}</b>'
+    return out
+
+def stage_search(c, up):
+    return (f'<div class="stage stage-search"><div class="win-wrap">'
+            + win(pic(up, "02-search", c["search_alt"], "static", widths=(1200, 1800))) + slot("search")
+            + f'<div class="loupe fallback-only" aria-hidden="true">{ICON_SEARCH}<span class="q">na</span><small>{c["loupe_n"]}</small></div></div></div>')
+
+def stage_player(c, up):
+    ctrl = (f'<div class="ctrl fallback-only" aria-hidden="true">{ICON_PAUSE}{ICON_BACK}{ICON_FWD}<div class="seek"><i></i></div><span class="t">07:21 / 14:48</span>'
+            f'<span class="spd" id="spd-pill">1x</span><span class="moon-wrap">{ICON_MOON}</span>{ICON_PIP}{ICON_FS}</div>')
+    return (f'<div class="stage stage-player"><div class="win-wrap">'
+            + win(pic(up, "05-player", c["player_alt"], "static", widths=(1200, 1800)) + ctrl) + slot("player") + '</div></div>')
+
+def stage_pip(c, up):
+    pip = (f'<div class="pip fallback-only" data-drag tabindex="0" role="group" aria-label="{e(c["pip_label"])}"><picture><source type="image/webp" srcset="{up}assets/pip-window.webp">'
+           f'<img src="{up}assets/pip-window.jpg" width="588" height="330" alt="{e(c["pip_win_alt"])}" loading="lazy" decoding="async" draggable="false"></picture></div>')
+    return (f'<div class="stage stage-pip"><div class="win-wrap">'
+            + win(pic(up, "03-movies", c["pip_alt"], "static", widths=(1200, 1800))) + slot("pip") + pip + '</div></div>')
+
+def stage_playlists(c, up):
+    items = ""
+    for n, kind, color in c["pl_names"]:
+        items += f'<li><span class="dot" style="--c:{color}"></span>{e(n)}<small>{e(kind)}</small></li>'
+    menu = f'<ul class="menu fallback-only" aria-hidden="true">{items}<hr><li class="all">{ICON_CHECK}{e(c["pl_all"])}</li></ul>'
+    return (f'<div class="stage stage-playlists"><div class="win-wrap">'
+            + win(pic(up, "03-movies", c["pl_alt"], "static", widths=(1200, 1800)) + f'<div class="tags fallback-only" aria-hidden="true">{tag_positions(c)}</div>' + menu) + slot("playlists")
+            + '</div></div>')
+
+def lang_wall(c):
     return '<ul class="wall">' + "".join(
-        f'<li><span lang="{l}"{" dir=\"rtl\" class=\"rtl\"" if r else ""}>{e(n)}</span></li>' for l, n, r in LANGS) + '</ul>'
+        f'<li><span lang="{l}"{" dir=rtl class=rtl" if r else ""} data-lang="{l}">{e(n)}</span></li>' for l, n, r in LANGS) + '</ul>'
+
+def minis():
+    out = ""
+    for code, rtl in (("he", 1), ("en", 0), ("ar", 1)):
+        s = app_strings(code)
+        out += (f'<div class="mini" lang="{code}" dir="{"rtl" if rtl else "ltr"}"><span class="sb">{svg('<rect x="3" y="4.5" width="14" height="11" rx="2.5"/><path d="M8 4.5v11"/>')}</span>'
+                f'<span class="seg"><span>{e(s["live"])}</span><span>{e(s["movies"])}</span><span>{e(s["series"])}</span></span><span class="srch">{e(s["search"])}</span></div>')
+    return out
+
+def term(c):
+    return f'''<div class="term" id="term"><div class="term-bar"><i></i><i></i><i></i><span class="ttl">{e(c["term"])}</span>
+<button class="copy" type="button" data-done="{e(c["copied"])}" aria-label="{e(c["copy_aria"])}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(c["copy"])}</span></button><span class="sr" role="status" aria-live="polite"></span></div>
+<div class="term-body"><span class="ln t1"><span class="ps">~ %</span> <code>{e(INSTALL_CMD)}</code></span>
+<span class="ln t2 dim">Looking up the latest release...</span>
+<span class="ln t3 dim">Downloading IPTVMac v{e(VERSION)}...</span>
+<span class="bar" aria-hidden="true"><i></i></span>
+<span class="ln t5"><span class="ok">Installed:</span> /Applications/IPTVMac.app</span>
+<div class="opens"><img src="{c["up"]}logo.png" width="52" height="52" alt="" loading="lazy"><div>{e(c["opens"])}<small>{e(c["opens_s"])}</small></div></div></div></div>'''
 
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
     canon = BASE + c["prefix"]
     alts = [("en", BASE), ("he", BASE + "he/"), ("x-default", BASE)]
-    faq = c["faq"]
-    ld = [software_ld(c["desc"], c["lang"]), faq_ld(faq), video_ld("IPTVMac demo", c["demo_p"])]
-    out = head(c["title"], c["desc"], canon, c["lang"], 1 if he else 0, alts, extra_ld=ld)
-    nav = "".join(
-        (f'<a class="lang" href="{u}" hreflang="{"en" if he else "he"}" lang="{"en" if he else "he"}">{e(t)}</a>' if u == c["other_lang"][0] else
-         f'<a{" class=keep" if u == "#install" else ""} href="{u}">{e(t)}</a>') for u, t in c["nav"])
-    shot = (f'<picture><source type="image/webp" srcset="{up}screenshots/03-movies.webp 1200w, {up}screenshots/03-movies-1800.webp 1800w" sizes="(min-width: 1280px) 1240px, 100vw">'
-            f'<img src="{up}screenshots/03-movies.jpg" width="1800" height="1130" alt="{e(c["stage_alt"])}" fetchpriority="high"></picture>')
-    pip = (f'<picture class="pipwin"><source type="image/webp" srcset="{up}assets/pip-window.webp">'
-           f'<img src="{up}assets/pip-window.jpg" width="588" height="330" alt="{e(c["pip_alt"])}" decoding="async"></picture>')
-    out += f'''<a class="skip" href="#main">{e(c["skip"])}</a>
-<div class="wrap"><header class="top"><a class="brand" href="./"><img src="{up}logo.png" width="34" height="34" alt="">IPTVMac</a><nav aria-label="{e(c["nav_aria"])}">{nav}</nav></header></div>
-<main id="main">
-<div class="hero"><div class="wrap">
- <div class="hero-grid">
-  <h1>{e(c["h1"])}</h1>
-  <div class="hero-side">
-   <p class="lede">{e(c["lede"])}</p>
-   <div class="actions"><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="btn" href="{REPO}">{ICON_GH}{e(c["src"])}</a></div>
-   <p class="meta">{e(c["meta"])}</p>
-  </div>
- </div>
- <div class="cmd-wrap"><p class="cmd-label"><strong>{e(c["cmd_label_b"])}</strong> {e(c["cmd_label"])}</p>{cmd_block(c["copy"], c["copied"])}</div>
-</div>
-<div class="stage-top"><div class="window"><div class="frame">{shot}</div>{pip}</div></div></div>
-<section class="stage" id="demo"><div class="wrap stage-body"><div class="stage-grid"><div><h2>{e(c["demo_h"])}</h2><p>{e(c["demo_p"])}</p></div>
-<video controls preload="none" poster="{up}assets/demo-poster.webp" width="1280" height="720"><source src="{up}assets/demo.mp4" type="video/mp4"></video></div></div></section>
-<section id="why"><div class="wrap"><h2>{e(c["why_h"])}</h2><div class="why-grid">{"".join(f"<div><h3>{e(h)}</h3><p>{e(p)}</p></div>" for h, p in c["facts"])}</div></div></section>
-<section id="features" style="padding-top:0"><div class="wrap"><h2>{e(c["feats_h"])}</h2>
-<div class="feats">
+    ld = [software_ld(c["desc"], c["lang"]), faq_ld(c["faq"]), video_ld("IPTVMac demo", c["tour_note"])]
+    srcs = lambda ext: ", ".join(f"{up}assets/hero-window-{w}.{ext} {w}w" for w in (900, 1400, 1800))
+    sizes = "(min-width: 1001px) 58vw, 100vw"
+    preload = f'<link rel="preload" as="image" type="image/avif" imagesrcset="{srcs("avif")}" imagesizes="{sizes}" fetchpriority="high">\n'
+    out = head(c["title"], c["desc"], canon, c["lang"], 1 if he else 0, alts, extra_ld=ld, preload=preload)
+    out += header_html(c, 1 if he else 0)
+    words = json.dumps(native_words(code), ensure_ascii=False)
+    morph = f"<span class=\"morph\" data-fx-morph data-words='{words}'>{e(NATIVE[code])}</span>"
+    h1 = c["h1"].replace("{m}", morph)
+    hero_pic = (f'<picture><source type="image/avif" srcset="{srcs("avif")}" sizes="{sizes}"><source type="image/webp" srcset="{srcs("webp")}" sizes="{sizes}">'
+                f'<img src="{up}assets/hero-window-1400.jpg" srcset="{srcs("jpg")}" sizes="{sizes}" width="1800" height="1186" alt="{e(c["hero_alt"])}" fetchpriority="high" decoding="async"></picture>')
+    hero_pip = (f'<picture class="pip hero-pip"><source type="image/webp" srcset="{up}assets/pip-window.webp"><img src="{up}assets/pip-window.jpg" width="588" height="330" alt="" decoding="async"></picture>')
+    out += f'''<main id="main">
+<section class="hero" id="hero" data-fx-scene aria-labelledby="h1"><canvas class="hero-canvas" data-fx-canvas aria-hidden="true"></canvas>
+<div class="hero-copy"><h1 id="h1">{h1}</h1>
+<p class="lede">{e(c["lede"])}</p>
+<div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div>
+<div class="actions"><a class="btn" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a>
+<a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a></div>
+<p class="meta">{e(c["meta"])}</p></div>
+<div class="hero-obj" data-fx-tilt><div class="pose"><div class="win hero-win">{hero_pic}</div>{hero_pip}</div></div>
+<a class="cue" href="#search">{e(c["cue"])}</a></section>
 '''
-    for i, (img, h, p, alt) in enumerate(c["feats"]):
-        out += (f'<div class="feat"{" data-on" if i == 0 else ""}><div class="feat-text"><h3>{e(h)}</h3><p>{e(p)}</p></div>'
-                f'<figure><div class="frame">{pic(up, img, alt, "loading=\"lazy\" decoding=\"async\"", "")}</div></figure></div>\n')
-    out += '</div>\n<div class="small-feats">' + "".join(f'<div><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in c["small"]) + '</div>\n</div></section>\n'
-    out += f'''<section class="langs" id="languages"><div class="wrap langs-grid"><div><h2>{e(c["langs_h"])}</h2><p>{e(c["langs_p"])}</p><p class="note">{e(c["langs_note"])} <a href="{c["langs_href"]}">{e(c["langs_link"])}</a></p></div>{lang_wall()}</div></section>
-<section id="install"><div class="wrap install"><div class="install-main"><h2>{e(c["install_h"])}</h2><p class="lead">{e(c["install_p"])}</p>{cmd_block(c["copy"], c["copied"])}</div>
-<div class="install-why"><p class="why">{e(c["why"])}</p><p class="why"><a class="yt" href="{YT_INSTALL}">{ICON_PLAY}{e(c["video"])}</a></p></div>
-<div class="dmg"><h3>{e(c["dmg_h"])}</h3><ol class="steps">{"".join(f"<li>{s}</li>" for s in c["dmg_steps"])}</ol><p style="margin-top:24px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></p></div></div></section>
-<section id="free"><div class="wrap qa-grid"><h2>{e(c["free_h"])}</h2><div><p class="lead">{e(c["free_p"])}</p><p><code dir="ltr">{FREE_M3U}</code></p><p class="why">{e(c["free_note"])}</p><p style="margin-top:20px"><a class="btn" href="{FREE_REPO}" rel="noopener">{e(c["free_btn"])}</a></p></div></div></section>
-<section id="faq" style="padding-top:0"><div class="wrap qa-grid"><h2>{e(c["faq_h"])}</h2><div class="faq">{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</div></div></section>
-<section id="guides" class="guides"><div class="wrap"><h2>{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong>{e(t)}</strong><span>{e(s)}</span><span class="go">{e(c["guide_go"])}{ICON_CHEV}</span></a>' for u, t, s in c["guides"])}</div></div></section>
-<section class="alt"><div class="wrap"><h2>{e(c["alt_h"])}</h2><p>{e(c["alt_p"])}</p><ul>{"".join(f"<li>{e(x)}</li>" for x in c["alt"])}</ul></div></section>
+    # 1 search
+    out += chapter("search", c, False,
+        ctext("search", c["search_h"], c["search_p"], [e(f) for f in c["search_f"]],
+              f'<div class="count"><span class="num" data-count="100000">100,000</span><span>{e(c["search_count"])}</span></div>'),
+        stage_search(c, up))
+    # 2 player
+    dial = (f'<div class="dial fallback-only"><div class="dial-head"><label for="spd">{e(c["dial"])}</label><output id="spd-out" for="spd">1x</output></div>'
+            f'<input id="spd" type="range" min="0.25" max="4" step="0.05" value="1"><div class="dial-ticks" aria-hidden="true"><span>0.25x</span><span>1x</span><span>2x</span><span>4x</span></div></div>')
+    keys = '<div class="keys">' + "".join(f"<span><kbd>{e(k)}</kbd>{e(t)}</span>" for k, t in c["keys"]) + "</div>"
+    out += chapter("player", c, True, ctext("player", c["player_h"], c["player_p"], [e(f) for f in c["player_f"]], dial + keys), stage_player(c, up))
+    # 3 pip
+    out += chapter("pip", c, False, ctext("pip", c["pip_h"], c["pip_p"], [e(f) for f in c["pip_f"]], f'<p class="hint" hidden>{e(c["pip_hint"])}</p>'), stage_pip(c, up))
+    # 4 playlists
+    out += chapter("playlists", c, True, ctext("playlists", c["pl_h"], c["pl_p"], [e(f) for f in c["pl_f"]]), stage_playlists(c, up))
+    # 5 languages
+    out += f'''<section class="langs" id="languages" data-fx-scene aria-labelledby="languages-h"><div class="wrap">
+<div class="langs-head"><h2 id="languages-h" data-fx-split>{e(c["langs_h"])}</h2><p>{e(c["langs_p"])}</p></div>
+<div class="langs-body">{lang_wall(c)}
+<div class="langs-side"><div class="stage"><div class="trio fallback-only"><p class="hint">{e(c["trio_h"])}</p>{minis()}</div>
+<div class="win-wrap demo-only">{slot("languages")}</div></div>
+<p class="langs-note">{e(c["langs_note"])} <a href="{c["langs_href"]}" rel="noopener">{e(c["langs_link"])}</a></p></div></div></div></section>
+'''
+    # 6 install
+    steps = "".join(f"<li>{s}</li>" for s in c["dmg_steps"])
+    out += f'''<section class="install" id="install" data-fx-scene aria-labelledby="install-h"><div class="wrap"><div class="install-grid">
+<div class="install-text"><h2 id="install-h" data-fx-split>{e(c["install_h"])}</h2><p>{e(c["install_p"])}</p><p class="reqs">{e(c["reqs"])}</p>
+<p style="margin-top:14px"><a class="link" href="{YT_INSTALL}" rel="noopener">{ICON_PLAY}{e(c["video"])}</a></p></div>
+{term(c)}</div>
+<div class="note"><div><h3>{e(c["why_h"])}</h3><p>{e(c["why"])}</p></div>
+<div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{steps}</ol><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></div></div></div></section>
+'''
+    # free playlists, faq, guides
+    out += f'''<section class="free" id="free" aria-labelledby="free-h"><div class="wrap free-grid"><h2 id="free-h">{e(c["free_h"])}</h2><div><p>{e(c["free_p"])}</p>
+<div class="m3u"><code>{FREE_M3U}</code><button class="copy" type="button" data-done="{e(c["copied"])}" aria-label="{e(c["copy_aria"])}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(c["copy"])}</span></button><span class="sr" role="status" aria-live="polite"></span></div>
+<p class="fine">{e(c["free_note"])}</p><a class="btn" href="{FREE_REPO}" rel="noopener">{e(c["free_btn"])}</a></div></div></section>
+<section class="faq-sec" id="faq" aria-labelledby="faq-h"><div class="wrap faq-grid"><h2 id="faq-h">{e(c["faq_h"])}</h2>
+<div class="faqs">{"".join(f'<details name="faq"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in c["faq"])}</div></div></section>
+<section class="guides" id="guides" aria-labelledby="guides-h"><div class="wrap"><h2 id="guides-h">{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong lang="en" dir="ltr">{e(t)}</strong><span>{e(s)}</span>{ICON_CHEV}<span class="sr">{e(c["guide_go"])}</span></a>' for u, t, s in c["guides"])}</div></div></section>
+'''
+    # closing
+    out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
+<p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
+<p class="disc">{e(c["foot"])}</p></div></section>
 </main>
-<footer><div class="wrap"><p>{e(c["foot"])}</p><p>{e(c["lic"])} <a href="{REPO}">GitHub</a> · <a href="{c["other_lang"][0]}">{e(c["other_lang"][1])}</a></p></div></footer>
-<script src="{up}assets/site.js?v={ASSET_V}" defer></script>
-</body></html>
 '''
+    out += footer_html(c, 1 if he else 0)
+    rail = "".join(f'<li><a href="{h}"><span>{e(t)}</span></a></li>' for h, t in c["foot_cols"][0][1])
+    out += f'<nav class="rail" aria-label="{e(c["rail_aria"])}"><ul>{rail}</ul></nav>\n'
+    out += (f'<dialog class="tour" id="tour" aria-label="{e(c["tour"])}"><button class="x" type="button" aria-label="{e(c["tour_close"])}">{ICON_X}</button>'
+            f'<video controls preload="none" playsinline width="1280" height="720" data-poster="{up}assets/demo-poster.webp"><source src="{up}assets/demo.mp4" type="video/mp4"></video><p>{e(c["tour_note"])}</p></dialog>\n')
+    out += script_tag(up, c) + '</body></html>\n'
     path = DOCS / (c["prefix"] + "index.html"); path.parent.mkdir(parents=True, exist_ok=True); path.write_text(out)
 
 
@@ -429,7 +610,10 @@ GUIDES = [
           ("Is it the system Picture in Picture?", "No. It is IPTVMac's own always-on-top floating window, which also appears over full screen apps.")]),
 ]
 
+def slug(t): return re.sub(r"[^a-z0-9]+", "-", re.sub(r"<[^>]+>", "", t).lower()).strip("-")
+
 def guide(g):
+    c = HOME["en"]
     canon = BASE + f"guides/{g['slug']}.html"
     ld = [{"@context": "https://schema.org", "@type": "Article", "headline": g["h1"], "description": g["desc"],
            "datePublished": UPDATED, "dateModified": UPDATED, "inLanguage": "en", "mainEntityOfPage": canon,
@@ -438,22 +622,28 @@ def guide(g):
           faq_ld(g["faq"]), {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
               {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE},
               {"@type": "ListItem", "position": 2, "name": g["h1"], "item": canon}]}]
+    toc = []
+    def ident(m):
+        i = slug(m.group(1)); toc.append((i, m.group(1)))
+        return f'<h2 id="{i}">{m.group(1)}</h2>'
+    body = re.sub(r"<h2>(.*?)</h2>", ident, g["body"])
     out = head(g["title"], g["desc"], canon, "en", 1, og_type="article", extra_ld=ld)
+    out += header_html(c, 1, home=False)
     related = "".join(f'<li><a href="{o["slug"]}.html">{e(o["h1"])}</a></li>' for o in GUIDES if o is not g)
-    out += f'''<a class="skip" href="#main">Skip to content</a>
-<div class="wrap"><header class="top"><a class="brand" href="../"><img src="../logo.png" width="34" height="34" alt="">IPTVMac</a><nav aria-label="Main"><a href="../#features">Features</a><a class="keep" href="../#install">Install</a><a href="../#faq">FAQ</a><a href="{REPO}">GitHub</a></nav></header></div>
-<main id="main"><div class="wrap"><article class="guide">
-<p class="crumbs"><a href="../">IPTVMac</a> / Guides</p>
+    tocs = "".join(f'<a href="#{i}">{t}</a>' for i, t in toc)
+    out += f'''<main id="main"><div class="wrap g-wrap"><div class="g-grid">
+<article class="g-main"><nav class="crumbs" aria-label="Breadcrumb"><a href="../">IPTVMac</a> / <a href="../#guides">Guides</a></nav>
 <h1>{e(g["h1"])}</h1>
 <p class="answer">{e(g["answer"])}</p>
-{g["body"]}
-<p style="margin-top:36px"><a class="btn primary" href="{DOWNLOAD}">{ICON_DL}Download IPTVMac for Mac</a></p>
-<div class="related"><h2>More guides</h2><ul>{related}</ul></div>
-<p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include or host any content.</p>
-</article></div></main>
-<footer><div class="wrap"><p>Open source under GPL-3.0. <a href="{REPO}">GitHub</a> · <a href="../">Home</a></p></div></footer>
-</body></html>
+<div class="prose">{body}</div>
+<p style="margin-top:36px"><a class="btn fill" href="{DOWNLOAD}">{ICON_DL}Download IPTVMac for Mac</a></p>
+<div class="g-foot"><h2>More guides</h2><ul>{related}</ul><p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include or host any content.</p></div></article>
+<aside class="g-side"><nav class="toc" aria-label="On this page"><p class="side-h">On this page</p>{tocs}</nav>
+<div class="side-cta"><p class="side-h">Install in one line</p>{cmd_block(c)}</div></aside>
+</div></div></main>
 '''
+    out += footer_html(c, 1, home=False)
+    out += script_tag("../", c, mods=False) + '</body></html>\n'
     (DOCS / "guides" / f"{g['slug']}.html").write_text(out)
 
 # ---------- crawler files ----------
