@@ -1,0 +1,1 @@
+First release for Android TV and Google TV. Browse Live, Movies and Series with the remote, search instantly, and play with the built-in mpv player: subtitles, audio tracks, speed, catch-up.

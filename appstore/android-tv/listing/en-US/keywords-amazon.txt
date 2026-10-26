@@ -1,0 +1,1 @@
+iptv,m3u,m3u8,xtream,player,live tv,channels,epg,hls,vod,movies,series,subtitles,catch-up
