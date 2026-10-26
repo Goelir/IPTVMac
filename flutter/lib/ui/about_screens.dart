@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/ui/onboarding.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const privacyUrl = 'https://goelir.github.io/IPTVMac/privacy/';
 const sourceUrl = 'https://github.com/Goelir/IPTVMac';
 
-Future<void> _open(String url) => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+Future<void> _open(String url) async {
+  try {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  } catch (_) {} // a TV may have no browser to open it with
+}
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -18,7 +24,8 @@ class AboutScreen extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final t = Theme.of(context).textTheme;
     final cs = Theme.of(context).colorScheme;
-    return Scaffold(
+    return TvFrame(
+      child: Scaffold(
       appBar: AppBar(title: Text(l.settingsAbout)),
       body: Center(
         child: ConstrainedBox(
@@ -44,6 +51,7 @@ class AboutScreen extends StatelessWidget {
               child: Column(children: [
                 ListTile(
                   key: const Key('privacy-link'),
+                  autofocus: isTelevision,
                   leading: const Icon(Icons.shield_outlined),
                   title: Text(l.aboutPrivacy),
                   subtitle: const Text('goelir.github.io/IPTVMac/privacy'),
@@ -55,7 +63,10 @@ class AboutScreen extends StatelessWidget {
                   leading: const Icon(Icons.description_outlined),
                   title: Text(l.aboutAcknowledgements),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AcknowledgementsScreen())),
+                  onTap: () {
+                    tvExpectEntry(); // the text page takes focus (its Up and Down scroll it) once it has loaded
+                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AcknowledgementsScreen()));
+                  },
                 ),
                 ListTile(leading: const Icon(Icons.code), title: Text(l.aboutSource), trailing: const Icon(Icons.open_in_new, size: 18), onTap: () => _open(sourceUrl)),
               ]),
@@ -63,33 +74,52 @@ class AboutScreen extends StatelessWidget {
           ]),
         ),
       ),
+      ),
     );
   }
 }
 
 /// The notices and licence texts (about 100 KB): a lazily built list of lines, not one giant text.
-class AcknowledgementsScreen extends StatelessWidget {
+class AcknowledgementsScreen extends StatefulWidget {
   const AcknowledgementsScreen({super.key});
+  @override
+  State<AcknowledgementsScreen> createState() => _AcknowledgementsScreenState();
+}
+
+class _AcknowledgementsScreenState extends State<AcknowledgementsScreen> {
+  final _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(l.aboutAcknowledgements)),
-      body: FutureBuilder<String>(
-        future: rootBundle.loadString('assets/Acknowledgements.md'),
-        builder: (context, s) {
-          if (!s.hasData) return const Center(child: CircularProgressIndicator());
-          final lines = s.data!.split('\n');
-          final style = Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'monospace');
-          return SelectionArea(
-            child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-              itemCount: lines.length,
-              itemBuilder: (_, i) => Text(lines[i], style: style),
-            ),
-          );
-        },
+    return TvFrame(
+      child: Scaffold(
+        appBar: AppBar(title: Text(l.aboutAcknowledgements)),
+        body: FutureBuilder<String>(
+          future: rootBundle.loadString('assets/Acknowledgements.md'),
+          builder: (context, s) {
+            if (!s.hasData) return const Center(child: CircularProgressIndicator());
+            final lines = s.data!.split('\n');
+            final style = Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'monospace');
+            return TvScrollKeys(
+              controller: _scroll,
+              child: SelectionArea(
+                child: ListView.builder(
+                  controller: _scroll,
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                  itemCount: lines.length,
+                  itemBuilder: (_, i) => Text(lines[i], style: style),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

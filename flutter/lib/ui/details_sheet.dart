@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/sync_worker.dart';
 import 'package:iptvmac/core/item_info.dart';
@@ -106,6 +107,7 @@ class _DetailsSheetState extends State<DetailsSheet> {
         Wrap(spacing: 10, runSpacing: 10, crossAxisAlignment: WrapCrossAlignment.center, children: [
           if (!widget.playing)
             FilledButton.icon(
+              autofocus: isTelevision,
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text(resumable ? l.infoResume : l.infoPlay),
               style: FilledButton.styleFrom(minimumSize: const Size(140, 48)),
@@ -118,7 +120,7 @@ class _DetailsSheetState extends State<DetailsSheet> {
           if (info?.trailerURL != null) IconButton.filledTonal(icon: const Icon(Icons.smart_display_outlined), tooltip: l.infoTrailer, onPressed: () => openTrailer(info!.trailerURL!)),
           if (m.canDownload(item))
             DownloadButton(tonal: true, entryKey: DownloadEntry.keyOf(item.accountId, item.type, item.streamId, null), start: (d) => m.downloadMovie(d, item)),
-          FavoriteButton(favorite: fav, tonal: true, onPressed: () => m.toggleFavorite(item)),
+          FavoriteButton(favorite: fav, tonal: true, autofocus: isTelevision && widget.playing, onPressed: () => m.toggleFavorite(item)),
         ]),
         const SizedBox(height: 20),
         switch (_phase) {

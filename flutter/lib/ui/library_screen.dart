@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/downloads/downloads_model.dart';
@@ -27,13 +28,13 @@ class LibraryScreen extends StatelessWidget {
         onRefresh: m.sync,
         child: shelf.isEmpty && groups.isEmpty
             ? EmptyState(icon: Icons.video_library_outlined, title: l.libraryEmpty, hint: l.libraryEmptyHint)
-            : CustomScrollView(physics: const AlwaysScrollableScrollPhysics(), slivers: [
+            : CustomScrollView(physics: const AlwaysScrollableScrollPhysics(), scrollCacheExtent: tvCache(1500), slivers: [
                 const SliverToBoxAdapter(child: SizedBox(height: 12)),
-                if (shelf.isNotEmpty) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(bottom: 20), child: ContinueShelf(entries: shelf))),
+                if (shelf.isNotEmpty) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(bottom: 20), child: ContinueShelf(entries: shelf, autofocus: true))),
                 if (groups.isNotEmpty) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 4), child: Text(l.catFavorites, style: heading))),
-                for (final (type, items) in groups) ...[
+                for (final (g, (type, items)) in groups.indexed) ...[
                   SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 8), child: Text(sectionTitle(l, type), style: t.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)))),
-                  if (type == ItemType.live) ChannelListSliver(items: items) else PosterGridSliver(items: items),
+                  if (type == ItemType.live) ChannelListSliver(items: items, autofocus: g == 0 && shelf.isEmpty) else PosterGridSliver(items: items, autofocus: g == 0 && shelf.isEmpty),
                 ],
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
               ]),

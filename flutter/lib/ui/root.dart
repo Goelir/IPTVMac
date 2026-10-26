@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/downloads/downloads_model.dart';
@@ -8,6 +11,7 @@ import 'package:iptvmac/ui/library_screen.dart';
 import 'package:iptvmac/ui/missing_strings.dart';
 import 'package:iptvmac/ui/onboarding.dart';
 import 'package:iptvmac/ui/settings_screen.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:provider/provider.dart';
 
 /// First run: the welcome and add-source flow. Afterwards: five sections (a bottom bar on a phone, a rail on a tablet or a
@@ -22,6 +26,8 @@ class _RootScreenState extends State<RootScreen> {
   var _index = 0;
   var _asking = false;
   late final LibraryModel _model = context.read<LibraryModel>();
+  final _railGroup = FocusNode(canRequestFocus: false, skipTraversal: true); // the rail's focusable parts hang under this one (TV)
+  FocusNode? _lastInContent; // where the remote left the section to go to the rail (TV)
 
   @override
   void initState() {
@@ -36,6 +42,7 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void dispose() {
     _model.removeListener(_maybeAskPassword);
+    _railGroup.dispose();
     super.dispose();
   }
 
@@ -65,7 +72,7 @@ class _RootScreenState extends State<RootScreen> {
       builder: (c) => AlertDialog(
         title: Text(l.dbRecoveredTitle),
         content: Text(l.dbRecoveredBody(path)),
-        actions: [TextButton(onPressed: () => Navigator.pop(c), child: Text(l.playerClose))],
+        actions: [TextButton(autofocus: isTelevision, onPressed: () => Navigator.pop(c), child: Text(l.playerClose))],
       ),
     );
   }
@@ -84,7 +91,8 @@ class _RootScreenState extends State<RootScreen> {
     if (!hasAccounts) return const OnboardingScreen();
     final l = AppLocalizations.of(context);
     final size = MediaQuery.sizeOf(context);
-    final rail = size.width >= 600 || size.height < 480;
+    final rail = isTelevision || size.width >= 600 || size.height < 480; // a TV: always the rail, the remote moves along it
+    final tight = isTelevision && size.height - MediaQuery.viewInsetsOf(context).bottom < 700; // the TV keyboard is up: shorter rail entries
     final running = context.select<DownloadsModel, int>((d) => d.activeCount); // a count on the Library tab, where Downloads is
     Widget library(IconData i) => Badge(isLabelVisible: running > 0, label: Text('$running'), child: Icon(i));
     final dests = [
@@ -102,23 +110,28 @@ class _RootScreenState extends State<RootScreen> {
       _ => const SettingsScreen(),
     };
     if (rail) {
-      return Scaffold(
+      final scaffold = Scaffold(
         body: Row(children: [
           ColoredBox(
             color: Theme.of(context).colorScheme.surfaceContainerLow,
             child: SafeArea(
-              child: NavigationRail(
-                selectedIndex: _index,
-                onDestinationSelected: _select,
-                labelType: NavigationRailLabelType.all,
-                backgroundColor: Colors.transparent,
-                destinations: [for (final d in dests) NavigationRailDestination(icon: d.$1, selectedIcon: d.$2, label: Text(d.$3))],
+              child: Focus(
+                focusNode: _railGroup,
+                child: NavigationRail(
+                  selectedIndex: _index,
+                  onDestinationSelected: _select,
+                  labelType: tight ? NavigationRailLabelType.selected : NavigationRailLabelType.all,
+                  backgroundColor: Colors.transparent,
+                  destinations: [for (final d in dests) NavigationRailDestination(icon: d.$1, selectedIcon: d.$2, label: Text(d.$3))],
+                ),
               ),
             ),
           ),
           Expanded(child: body),
         ]),
       );
+      if (!isTelevision) return scaffold;
+      return TvFrame(child: Actions(actions: {DirectionalFocusIntent: _RailAction(this)}, child: scaffold));
     }
     return Scaffold(
       body: body,
@@ -128,6 +141,43 @@ class _RootScreenState extends State<RootScreen> {
         destinations: [for (final d in dests) NavigationDestination(icon: d.$1, selectedIcon: d.$2, label: d.$3)],
       ),
     );
+  }
+}
+
+/// The arrows on a TV: from the section, Left (Right in right-to-left) lands on the rail's selected entry, not on whichever entry is
+/// nearest; from the rail, the way back lands where the section was left.
+class _RailAction extends Action<DirectionalFocusIntent> {
+  _RailAction(this.state);
+  final _RootScreenState state;
+
+  @override
+  bool isEnabled(DirectionalFocusIntent intent) => !intent.ignoreTextFields || FocusManager.instance.primaryFocus?.context?.widget is! EditableText;
+
+  @override
+  Object? invoke(DirectionalFocusIntent intent) {
+    final from = FocusManager.instance.primaryFocus;
+    if (from == null) return null;
+    final rail = state._railGroup.descendants.where((n) => n.canRequestFocus).toList();
+    final wasInRail = rail.contains(from);
+    from.focusInDirection(intent.direction);
+    scheduleMicrotask(() {
+      // the focus manager has moved focus by now
+      final to = FocusManager.instance.primaryFocus;
+      if (to == null || to == from) return;
+      final inRail = rail.contains(to);
+      if (!wasInRail && inRail) {
+        state._lastInContent = from;
+        if (rail.length == 5) rail[state._index].requestFocus(); // one focusable per entry
+      } else if (wasInRail && !inRail) {
+        final vertical = intent.direction == TraversalDirection.up || intent.direction == TraversalDirection.down;
+        final last = state._lastInContent;
+        final lastOk = last != null && last.context?.mounted == true && last.canRequestFocus;
+        // the ends of the rail are ends (Down from Settings stays on Settings); into the section: where it was left, else its first stop
+        final back = vertical ? from : (lastOk ? last : tvFirstStop());
+        if (back != null && back.context?.mounted == true && back.canRequestFocus) back.requestFocus();
+      }
+    });
+    return null;
   }
 }
 
@@ -156,7 +206,18 @@ class _PasswordDialogState extends State<_PasswordDialog> {
       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(Missing.passwordBody(widget.account.name)),
         const SizedBox(height: 12),
-        TextField(key: const Key('password-field'), controller: _c, obscureText: true, autofocus: true, decoration: InputDecoration(labelText: l.fieldPassword), onChanged: (_) => setState(() {})),
+        TvEditable(
+          builder: (_, node, readOnly, done) => TextField(
+              key: const Key('password-field'),
+              controller: _c,
+              focusNode: node,
+              readOnly: readOnly,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(labelText: l.fieldPassword),
+              onChanged: (_) => setState(() {}),
+              onSubmitted: (_) => done()),
+        ),
       ]),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: Text(l.playerClose)),
