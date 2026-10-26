@@ -63,7 +63,10 @@ class AboutScreen extends StatelessWidget {
                   leading: const Icon(Icons.description_outlined),
                   title: Text(l.aboutAcknowledgements),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AcknowledgementsScreen())),
+                  onTap: () {
+                    tvExpectEntry(); // the text page takes focus (its Up and Down scroll it) once it has loaded
+                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const AcknowledgementsScreen()));
+                  },
                 ),
                 ListTile(leading: const Icon(Icons.code), title: Text(l.aboutSource), trailing: const Icon(Icons.open_in_new, size: 18), onTap: () => _open(sourceUrl)),
               ]),

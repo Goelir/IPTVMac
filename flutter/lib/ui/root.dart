@@ -169,7 +169,10 @@ class _RailAction extends Action<DirectionalFocusIntent> {
         if (rail.length == 5) rail[state._index].requestFocus(); // one focusable per entry
       } else if (wasInRail && !inRail) {
         final vertical = intent.direction == TraversalDirection.up || intent.direction == TraversalDirection.down;
-        final back = vertical ? from : state._lastInContent; // the ends of the rail are ends: Down from Settings stays on Settings
+        final last = state._lastInContent;
+        final lastOk = last != null && last.context?.mounted == true && last.canRequestFocus;
+        // the ends of the rail are ends (Down from Settings stays on Settings); into the section: where it was left, else its first stop
+        final back = vertical ? from : (lastOk ? last : tvFirstStop());
         if (back != null && back.context?.mounted == true && back.canRequestFocus) back.requestFocus();
       }
     });

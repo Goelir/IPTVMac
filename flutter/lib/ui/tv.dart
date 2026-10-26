@@ -78,6 +78,18 @@ class TvEntry extends StatefulWidget {
   State<TvEntry> createState() => _TvEntryState();
 }
 
+final _entries = <_TvEntryState>[];
+
+/// The first stop of what is on screen now (the last [TvEntry] that is mounted), for the rail to hand focus to when the remote moves
+/// from the rail into the section.
+FocusNode? tvFirstStop() {
+  for (final e in _entries.reversed) {
+    final n = e._node.descendants.where((n) => n.canRequestFocus).firstOrNull;
+    if (n != null) return n;
+  }
+  return null;
+}
+
 class _TvEntryState extends State<TvEntry> {
   final _node = FocusNode(canRequestFocus: false, skipTraversal: true);
 
@@ -85,6 +97,7 @@ class _TvEntryState extends State<TvEntry> {
   void initState() {
     super.initState();
     if (isTelevision) {
+      _entries.add(this);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         final f = FocusManager.instance.primaryFocus;
@@ -96,6 +109,7 @@ class _TvEntryState extends State<TvEntry> {
 
   @override
   void dispose() {
+    _entries.remove(this);
     _node.dispose();
     super.dispose();
   }
@@ -200,7 +214,8 @@ class TvScrollKeys extends StatelessWidget {
   @override
   Widget build(BuildContext context) => !isTelevision
       ? child
-      : Focus(
+      : TvEntry(
+          child: Focus(
           autofocus: true,
           onKeyEvent: (_, e) {
             if (e is KeyUpEvent || !controller.hasClients) return KeyEventResult.ignored;
@@ -212,7 +227,7 @@ class TvScrollKeys extends StatelessWidget {
             return KeyEventResult.handled;
           },
           child: child,
-        );
+        ));
 }
 
 /// Around the whole app (MaterialApp.builder, TV only): draws the focus ring over whatever has focus, makes the text a little

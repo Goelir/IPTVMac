@@ -258,7 +258,7 @@ class PosterGridSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final minCell = (MediaQuery.sizeOf(context).width >= 600 ? 140.0 : 104.0) * _scale(context);
+    final minCell = (isTelevision ? 120.0 : MediaQuery.sizeOf(context).width >= 600 ? 140.0 : 104.0) * _scale(context); // a TV: about six across at 1080p
     final text = textHeight(context, 2) + 6;
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

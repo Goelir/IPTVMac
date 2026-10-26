@@ -220,7 +220,13 @@ class _CategoryChipsState extends State<CategoryChips> {
     return SizedBox(
       height: 52,
       child: Row(children: [
-        IconButton(icon: const Icon(Icons.filter_list), tooltip: l.catTitle, onPressed: m.openCategoryIndex),
+        IconButton(
+            icon: const Icon(Icons.filter_list),
+            tooltip: l.catTitle,
+            onPressed: () {
+              tvExpectEntry(); // the front page that replaces the chips takes focus
+              m.openCategoryIndex();
+            }),
         Expanded(
           child: ListView(
             controller: _scroll,

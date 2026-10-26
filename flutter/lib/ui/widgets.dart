@@ -103,7 +103,7 @@ class EmptyState extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(hint!, style: t.bodyMedium?.copyWith(color: cs.onSurfaceVariant), textAlign: TextAlign.center),
                 ],
-                if (actionLabel != null) ...[const SizedBox(height: 20), FilledButton.tonal(
+                if (actionLabel != null) ...[const SizedBox(height: 20), TvEntry(child: FilledButton.tonal(
                     autofocus: isTelevision,
                     onPressed: onAction == null
                         ? null
@@ -111,7 +111,7 @@ class EmptyState extends StatelessWidget {
                             tvExpectEntry(); // what comes next (the list, the retry's result) takes focus from this button's place
                             onAction!();
                           },
-                    child: Text(actionLabel!))],
+                    child: Text(actionLabel!)))],
               ]),
             ),
           ),

@@ -123,7 +123,9 @@ class _SourcesSectionState extends State<_SourcesSection> {
       trailing: isTelevision ? null : Row(mainAxisSize: MainAxisSize.min, children: [refresh, delete]),
       onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SourceFormScreen(edit: a))),
     );
-    return isTelevision ? Row(children: [Expanded(child: tile), refresh, delete, const SizedBox(width: 8)]) : tile;
+    if (!isTelevision) return tile;
+    final row = Row(children: [Expanded(child: tile), refresh, delete, const SizedBox(width: 8)]);
+    return i == 0 ? TvEntry(child: row) : row;
   }
 
   @override

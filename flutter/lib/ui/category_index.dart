@@ -27,7 +27,8 @@ class _CategoryIndexState extends State<CategoryIndex> {
     final cats = [for (final c in m.categories) if (q.isEmpty || c.name.toLowerCase().contains(q)) c];
     final allLabel = switch (widget.type) { ItemType.live => l.catAllLive, ItemType.movie => l.catAllMovies, ItemType.series => l.catAllSeries };
 
-    Widget row(String tag, String title, {IconData? icon, int? count, bool first = false}) => ListTile(
+    Widget row(String tag, String title, {IconData? icon, int? count, bool first = false}) {
+      final tile = ListTile(
           autofocus: isTelevision && first,
           leading: icon == null ? null : Icon(icon, color: scheme.primary),
           title: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -37,6 +38,8 @@ class _CategoryIndexState extends State<CategoryIndex> {
             m.selectCategory(tag);
           },
         );
+      return isTelevision && first ? TvEntry(child: tile) : tile;
+    }
 
     return Column(children: [
       Padding(

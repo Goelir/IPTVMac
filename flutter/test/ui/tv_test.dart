@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iptvmac/app/device.dart';
+import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/downloads/downloads_model.dart';
 import 'package:iptvmac/downloads/library_downloads.dart';
 import 'package:iptvmac/player/play_request.dart';
@@ -105,6 +106,10 @@ void main() {
     expect(focusedText(), 'Movies');
     await press(tester, select);
     expect(find.text('All movies'), findsOneWidget); // the Movies front page
+    await press(tester, right); // from the rail into the new section: its first row, not whatever is nearest
+    expect(focusedText(), 'All movies');
+    await press(tester, left);
+    expect(focusedText(), 'Movies'); // the selected entry of the rail
 
     await press(tester, down); // Series
     await press(tester, down); // Library
@@ -394,6 +399,83 @@ void main() {
     await press(tester, select);
     await settle(tester);
     expect(h.provider.calls.length, greaterThan(before));
+  });
+
+  testWidgets('series page: Play takes focus once the episodes are in, episodes are reachable, Back returns to the poster', (tester) async {
+    await shell(tester);
+    await press(tester, left);
+    await press(tester, down);
+    await press(tester, down); // Series
+    await press(tester, select);
+    await press(tester, right);
+    expect(focusedText(), 'All series');
+    await press(tester, select);
+    expect(focusInside<PosterCell>(), isTrue);
+    final poster = focusedText();
+    await press(tester, select);
+    await frames(tester);
+    expect(find.text('Pilot'), findsOneWidget);
+    expect(focusedText(), 'Play S1 E1', reason: 'the series page loads on its own; the remote does not have to find its way in');
+    await press(tester, down); // the season chips
+    expect(focusInside<ChoiceChip>(), isTrue);
+    await press(tester, down);
+    expect(focusedText(), '1'); // the episode row starts with its number
+    await press(tester, down);
+    expect(focusedText(), '2');
+    await back(tester);
+    expect(find.text('Pilot'), findsNothing);
+    expect(focusedText(), poster);
+  });
+
+  testWidgets('about: first row focused, Acknowledgements scrolls with Up and Down, Back steps out one level at a time', (tester) async {
+    await shell(tester);
+    await press(tester, left);
+    for (var i = 0; i < 4; i++) {
+      await press(tester, down);
+    }
+    await press(tester, select);
+    await press(tester, right);
+    await moveTo(tester, 'About');
+    await press(tester, select);
+    expect(focusedText(), 'Privacy');
+    await press(tester, down);
+    expect(focusedText(), 'Acknowledgements');
+    await press(tester, select);
+    await frames(tester);
+    await frames(tester);
+    final scroll = tester.state<ScrollableState>(find.byType(Scrollable).last);
+    expect(scroll.position.pixels, 0);
+    await press(tester, down);
+    expect(scroll.position.pixels, greaterThan(100), reason: 'a page with nothing to focus still scrolls with the remote');
+    await press(tester, up);
+    expect(scroll.position.pixels, 0);
+    await back(tester);
+    expect(focusedText(), 'Acknowledgements');
+    await back(tester);
+    expect(focusedText(), 'About');
+    await back(tester); // Settings is not the first tab: Back goes to Live, it does not leave
+    expect(find.text('All channels'), findsOneWidget);
+  });
+
+  testWidgets('a direct-link movie (playlist) opens the details sheet on a TV, where its favorite star is', (tester) async {
+    final h = await Harness.create(tester);
+    h.provider.m3u = '#EXTM3U\n#EXTINF:-1 group-title="Films",Open Film\nhttp://example.test/film.mp4\n';
+    await tester.runAsync(() => h.model.addAccount(Account(name: 'List', kind: AccountKind.m3u, url: 'http://list.test/a.m3u')));
+    await h.pumpApp(tester, size: tvSize);
+    await go(tester, index: true);
+    await press(tester, left);
+    await press(tester, down);
+    await press(tester, select); // Movies
+    await press(tester, right);
+    await press(tester, select); // All movies
+    expect(focusInside<PosterCell>(), isTrue);
+    await press(tester, select);
+    expect(find.text('Play'), findsOneWidget); // a phone would have started playing; here the sheet comes first
+    expect(find.text('Open Film'), findsWidgets);
+    await press(tester, right);
+    await press(tester, right);
+    await press(tester, select);
+    expect(h.model.favoriteKeys, hasLength(1));
   });
 
   testWidgets('phones are untouched: no ring, no rail on a phone, no text scaling', (tester) async {
