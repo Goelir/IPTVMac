@@ -46,6 +46,7 @@ class PlayerModel extends ChangeNotifier {
     core.onEndChanged = _endChanged;
     core.onSleep = close;
     core.addListener(_pulse);
+    if (isTelevision) tvExitHooks.add(close); // a long press of Back leaves the app: stop and save first
     this.upNext.addListener(notifyListeners);
     _subs = [
       system.pipChanges.stream.listen(_pipChanged),
@@ -243,6 +244,7 @@ class PlayerModel extends ChangeNotifier {
   void shutdown() {
     if (_closed) return;
     _closed = true;
+    tvExitHooks.remove(close);
     core.close(); // saves the position
     upNext.cancel();
     _pipTimer?.cancel();

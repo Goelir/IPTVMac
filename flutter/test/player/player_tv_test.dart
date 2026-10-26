@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -250,6 +252,19 @@ void main() {
       await t.sendKeyUpEvent(LogicalKeyboardKey.goBack, physicalKey: PhysicalKeyboardKey.escape);
       await t.pump(const Duration(milliseconds: 50));
       expect(controlsUp, findsNothing, reason: 'the first Back only hides the controls');
+      await end(t);
+    });
+
+    testWidgets('when the app leaves (a long press of Back) the player stops and saves its position first', (t) async {
+      final host = StepHost();
+      final (e, _, _) = await openTv(t, movie(), host: host);
+      playing(e, position: 42);
+      await t.pump(const Duration(milliseconds: 600)); // a tick reads the position
+      unawaited(exitApp()); // the hooks run first; SystemNavigator.pop has no handler in a test and never answers
+      await t.pump();
+      expect(host.closed, 1);
+      expect(host.saves.last.$2, 42.0);
+      expect(tvExitHooks, isEmpty, reason: 'the hook removes itself');
       await end(t);
     });
 

@@ -269,7 +269,10 @@ class _TvShellState extends State<TvShell> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _rescue());
   }
 
+  final _longBack = LongBackExit();
+
   bool _key(KeyEvent e) {
+    if (_longBack.handle(e)) return true;
     if (e is KeyDownEvent && {LogicalKeyboardKey.arrowUp, LogicalKeyboardKey.arrowDown, LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.arrowRight}.contains(e.logicalKey)) {
       _entryUntil = null; // the person is moving by hand now
     }
