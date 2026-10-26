@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:iptvmac/app/app.dart';
 import 'package:iptvmac/app/demo_seed.dart';
@@ -31,6 +32,7 @@ Future<void> main() async {
     failure = e.toString();
   }
   isTelevision = await detectTelevision();
+  if (isTelevision) await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // a TV has no bars; an emulator or box that draws them gets none
   final model = LibraryModel(
     db: db,
     secrets: SecureSecretStore(),
