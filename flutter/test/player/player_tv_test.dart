@@ -156,14 +156,14 @@ void main() {
       await end(t);
     });
 
-    testWidgets('Up and Down zap on a live channel: Up the previous one, Down the next', (t) async {
+    testWidgets('Up and Down zap on a live channel: Up the next one (channel up), Down the previous one', (t) async {
       final host = StepHost()..zapTo = live('x');
       final (e, _, _) = await openTv(t, live(), host: host);
       await hideControls(t);
       await press(t, LogicalKeyboardKey.arrowDown);
-      expect(zapped(e), 'Next');
-      await press(t, LogicalKeyboardKey.arrowUp);
       expect(zapped(e), 'Prev');
+      await press(t, LogicalKeyboardKey.arrowUp);
+      expect(zapped(e), 'Next');
       expect(e.loads.length, 3);
       await end(t);
     });
@@ -177,7 +177,7 @@ void main() {
       await press(t, LogicalKeyboardKey.arrowDown);
       await press(t, LogicalKeyboardKey.arrowUp);
       expect(e.loads.length, 4);
-      expect(zapped(e), 'Prev');
+      expect(zapped(e), 'Next');
       expect(focusLabel(), 'player');
       await end(t);
     });

@@ -58,8 +58,8 @@ class PlayerTvKeys {
   static final _info = {LogicalKeyboardKey.contextMenu, LogicalKeyboardKey.info, LogicalKeyboardKey.settings};
   static final _repeating = {LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.arrowRight, LogicalKeyboardKey.mediaFastForward, LogicalKeyboardKey.mediaRewind};
 
-  /// Up is the previous channel, Down the next one (the order of the list); CH+ is the next channel number.
-  static const _zapUp = -1;
+  /// Like a TV remote: Up is channel up (the next one in the list, as CH+), Down the previous one.
+  static const _zapUp = 1;
 
   KeyEventResult onKey(FocusNode _, KeyEvent e) {
     final k = e.logicalKey;
@@ -103,10 +103,10 @@ class PlayerTvKeys {
         model.previous();
         return handled;
       case LogicalKeyboardKey.channelUp:
-        model.zap(-_zapUp);
+        model.zap(1);
         return handled;
       case LogicalKeyboardKey.channelDown:
-        model.zap(_zapUp);
+        model.zap(-1);
         return handled;
     }
     if (_info.contains(k)) {
