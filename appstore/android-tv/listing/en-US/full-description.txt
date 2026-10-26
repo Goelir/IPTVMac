@@ -1,0 +1,41 @@
+IPTVMac is a player for your own IPTV playlists, made for the big screen and the remote control. Add an M3U playlist link or an Xtream Codes login from a provider you are authorized to use, and browse your live channels, movies and series with the arrow keys.
+
+IPTVMac is only a player. It includes no channels, movies, series or subscriptions, and it needs a source of your own to show anything.
+
+GET STARTED IN THREE STEPS
+1. Choose M3U or Xtream Codes.
+2. Enter a name and the playlist link, or the server address, username and password from your provider.
+3. Select Test connection, then Save and sync. Your lists appear under Live, Movies and Series.
+
+MADE FOR THE REMOTE
+• Everything works with the directional pad, OK and Back. No touch screen and no mouse needed.
+• Large, clear screens that are readable from the sofa.
+• Playback controls you can reach with the remote: pause, seek, speed, subtitles, audio track.
+
+FIND THINGS FAST
+• Instant search across all your channels, movies and series, in Latin, Hebrew, Arabic and other scripts.
+• Search inside a category, inside a section or everywhere.
+• Favorites and Continue watching, with your resume position remembered.
+• Hide categories you never want to see.
+
+A PLAYER BUILT FOR STREAMS
+• Built-in mpv player with hardware decoding. It plays common formats (HLS, MPEG-TS, MP4, MKV) and reconnects when a stream drops.
+• Subtitles from the stream, and audio track selection.
+• Playback speed from 0.25x to 4x for movies and episodes.
+• Fit, fill or stretch, a sleep timer, and automatic next episode.
+• Catch-up TV and the program guide on channels where your provider supports them.
+
+AND MORE
+• Several sources in one library: switch between them, or search them all at once.
+• Back up and restore your sources, favorites and history.
+• 31 languages, including right-to-left layouts.
+
+PRIVATE BY DESIGN
+No account, no ads, no analytics, no tracking. Your sources, favorites and history stay on your device, and the app talks only to the servers you add. Privacy policy: https://goelir.github.io/IPTVMac/privacy/
+
+GOOD TO KNOW
+• Needs Android TV or Google TV with Android 8 or later.
+• Use only sources you are authorized to access. What is available depends on your provider and your country. IPTVMac has no code to bypass copy protection, and DRM-protected streams do not play.
+• Free and open source (GPL-3.0): https://github.com/Goelir/IPTVMac
+• Support: https://goelir.github.io/IPTVMac/support/ (it also has a demo playlist of open-licence films, so you can try the app without a provider).
+• Screenshots use invented titles. Demo footage: "Sintel" © Blender Foundation, CC BY 3.0 (durian.blender.org).
