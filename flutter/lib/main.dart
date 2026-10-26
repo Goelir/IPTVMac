@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:iptvmac/app/app.dart';
 import 'package:iptvmac/app/demo_seed.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/secure_secret_store.dart';
 import 'package:iptvmac/app/sync_worker.dart';
@@ -29,6 +30,7 @@ Future<void> main() async {
     db = AppDatabase.memory();
     failure = e.toString();
   }
+  isTelevision = await detectTelevision();
   final model = LibraryModel(
     db: db,
     secrets: SecureSecretStore(),

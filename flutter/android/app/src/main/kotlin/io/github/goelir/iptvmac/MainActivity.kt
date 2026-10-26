@@ -41,6 +41,7 @@ class MainActivity : AudioServiceActivity() {
             ch.setMethodCallHandler { call, result ->
                 when (call.method) {
                     "isSupported" -> result.success(pipSupported())
+                    "isTelevision" -> result.success(isTelevision())
                     "enter" -> {
                         remember(call.argument<Double>("aspect"), call.argument<Boolean>("playing"))
                         result.success(pipSupported() && enterPip())
@@ -113,6 +114,12 @@ class MainActivity : AudioServiceActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 4711)
+    }
+
+    /** Android TV, Google TV and Fire TV: a remote control and no touch screen (lib/app/device.dart). */
+    private fun isTelevision(): Boolean {
+        val ui = getSystemService(Context.UI_MODE_SERVICE) as android.app.UiModeManager
+        return ui.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION || packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
     }
 
     companion object {

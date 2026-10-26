@@ -8,8 +8,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- Downloads (background_downloader): a foreground service of type dataSync keeps a long download alive in the background. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <!-- A TV is optional, not required: the same app runs on phones and on Android TV / Google TV / Fire TV, where the remote control replaces the touch screen. -->
+    <uses-feature android:name="android.software.leanback" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
     <application
         android:label="IPTVMac"
+        android:banner="@drawable/tv_banner"
         android:allowBackup="false"
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
@@ -36,6 +40,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
         <!-- audio_service: the media session and its foreground service (notification, lock screen, headset buttons). -->
