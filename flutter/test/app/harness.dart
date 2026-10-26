@@ -18,6 +18,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// An invented Xtream provider at http://panel.test (user "u", password "p"): two channels, two movies, one series with
 /// three episodes in two seasons, a guide for the first channel and details for the first movie.
 class FakeProvider {
+  /// More movies ("Film 01", "Film 02", ...) in the Action category, for a poster grid that has several rows.
+  int extraMovies = 0;
+
   /// The releases feed github.com would answer (null = a feed with no releases), and how often it was asked.
   String? feed;
   int feedCalls = 0;
@@ -40,7 +43,8 @@ class FakeProvider {
         'get_live_streams' =>
           '[{"stream_id":1,"name":"News 24","category_id":"5","epg_channel_id":"n24"},{"stream_id":2,"name":"Sport One","category_id":"5"},{"stream_id":3,"name":"Night Show","category_id":"6"}]',
         'get_vod_streams' =>
-          '[{"stream_id":10,"name":"Big Movie","category_id":"7","container_extension":"mkv"},{"stream_id":11,"name":"Other Film","category_id":"7"}]',
+          '[{"stream_id":10,"name":"Big Movie","category_id":"7","container_extension":"mkv"},{"stream_id":11,"name":"Other Film","category_id":"7"}'
+              '${[for (var i = 1; i <= extraMovies; i++) ',{"stream_id":${100 + i},"name":"Film ${i.toString().padLeft(2, '0')}","category_id":"7"}'].join()}]',
         'get_series' => '[{"series_id":20,"name":"The Show","category_id":"8"}]',
         'get_short_epg' => q['stream_id'] == '1' ? _epg() : '{"epg_listings":[]}',
         'get_vod_info' =>

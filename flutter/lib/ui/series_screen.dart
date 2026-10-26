@@ -161,12 +161,14 @@ class _SeriesScreenState extends State<SeriesScreen> {
         const SizedBox(height: 16),
         Wrap(spacing: 10, runSpacing: 10, crossAxisAlignment: WrapCrossAlignment.center, children: [
           if (next != null)
-            FilledButton.icon(
+            TvEntry(
+              child: FilledButton.icon(
               autofocus: isTelevision,
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text(next.resume ? l.seriesContinueEp(next.episode.season, next.episode.number) : l.seriesPlayEp(next.episode.season, next.episode.number)),
               style: FilledButton.styleFrom(minimumSize: const Size(140, 48)),
               onPressed: () => _play(next.episode),
+              ),
             ),
           if (info?.trailerURL != null) IconButton.filledTonal(icon: const Icon(Icons.smart_display_outlined), tooltip: l.infoTrailer, onPressed: () => openTrailer(info!.trailerURL!)),
           FavoriteButton(favorite: fav, tonal: true, onPressed: () => m.toggleFavorite(series)),

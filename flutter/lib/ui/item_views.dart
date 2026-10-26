@@ -130,33 +130,41 @@ class _ChannelRowState extends State<ChannelRow> {
     final fav = m.isFavorite(item);
     final cs = Theme.of(context).colorScheme;
     final current = m.lastPlayedId == item.id;
-    return Material(
-      color: current ? cs.primary.withValues(alpha: 0.12) : Colors.transparent,
-      child: InkWell(
-        autofocus: isTelevision && widget.autofocus,
-        onTap: () => openItem(context, item, zapList: widget.zapList),
-        onLongPress: () => m.toggleFavorite(item),
+    final main = <Widget>[
+      ChannelLogo(item: item, size: min(52 * _scale(context), 76)),
+      const SizedBox(width: 12),
+      Expanded(
         child: Padding(
-          padding: const EdgeInsetsDirectional.only(start: 16, end: 4, top: 4, bottom: 4),
-          child: Row(children: [
-            ChannelLogo(item: item, size: min(52 * _scale(context), 76)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(item.name, textDirection: titleDirection(item.name), maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: current ? cs.primary : null)),
-                  ProgramLine(item: item),
-                ]),
-              ),
-            ),
-            PlaylistBadge(item: item),
-            if (item.tvArchive) Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Icon(Icons.history, size: 18, color: cs.onSurfaceVariant)),
-            FavoriteButton(favorite: fav, onPressed: () => m.toggleFavorite(item)),
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(item.name, textDirection: titleDirection(item.name), maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: current ? cs.primary : null)),
+            ProgramLine(item: item),
           ]),
         ),
       ),
+    ];
+    final tail = <Widget>[
+      PlaylistBadge(item: item),
+      if (item.tvArchive) Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: Icon(Icons.history, size: 18, color: cs.onSurfaceVariant)),
+      FavoriteButton(favorite: fav, onPressed: () => m.toggleFavorite(item)),
+    ];
+    InkWell tappable(Widget child) => InkWell(
+          autofocus: isTelevision && widget.autofocus,
+          onTap: () => openItem(context, item, zapList: widget.zapList),
+          onLongPress: () => m.toggleFavorite(item),
+          child: child,
+        );
+    final row = Material(
+      color: current ? cs.primary.withValues(alpha: 0.12) : Colors.transparent,
+      // On a TV the star is next to the row, not inside it: the remote moves from one focusable to a neighbour, never into a child.
+      child: isTelevision
+          ? Row(children: [
+              Expanded(child: tappable(Padding(padding: const EdgeInsetsDirectional.only(start: 16, end: 4, top: 4, bottom: 4), child: Row(children: main)))),
+              Padding(padding: const EdgeInsetsDirectional.only(end: 4), child: Row(children: tail)),
+            ])
+          : tappable(Padding(padding: const EdgeInsetsDirectional.only(start: 16, end: 4, top: 4, bottom: 4), child: Row(children: [...main, ...tail]))),
     );
+    return isTelevision && widget.autofocus ? TvEntry(child: row) : row;
   }
 }
 
@@ -207,7 +215,7 @@ class PosterCell extends StatelessWidget {
     final current = m.lastPlayedId == item.id;
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
-    return Semantics(
+    final cell = Semantics(
       customSemanticsActions: {CustomSemanticsAction(label: fav ? l.favRemove : l.favAdd): () => m.toggleFavorite(item)},
       child: TvScale(
         child: InkWell(
@@ -238,6 +246,7 @@ class PosterCell extends StatelessWidget {
         ),
       ),
     );
+    return isTelevision && autofocus ? TvEntry(child: cell) : cell;
   }
 }
 
@@ -309,7 +318,7 @@ class ContinueCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final label = entry.season != null && entry.episode != null ? l.seriesEpShort(entry.season!, entry.episode!) : null;
     final t = Theme.of(context).textTheme;
-    return TvScale(
+    final card = TvScale(
       child: InkWell(
       autofocus: isTelevision && autofocus,
       borderRadius: BorderRadius.circular(10),
@@ -332,5 +341,6 @@ class ContinueCard extends StatelessWidget {
       ]),
       ),
     );
+    return isTelevision && autofocus ? TvEntry(child: card) : card;
   }
 }

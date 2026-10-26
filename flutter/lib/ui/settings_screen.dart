@@ -101,6 +101,31 @@ class _SourcesSectionState extends State<_SourcesSection> {
     }
   }
 
+  /// One source. On a TV the buttons sit beside the tile, not inside it: the remote moves between neighbours, never into a child.
+  Widget _sourceRow(BuildContext context, LibraryModel m, AppLocalizations l, ColorScheme cs, int i, Account a) {
+    final refresh = IconButton(icon: const Icon(Icons.refresh), tooltip: l.syncNow, onPressed: m.syncing ? null : () => m.sync([a]));
+    final delete = IconButton(
+      icon: const Icon(Icons.delete_outline),
+      tooltip: l.settingsDelete,
+      onPressed: () async {
+        if (await confirm(context, title: a.name, message: l.sourceDeleteWarn, action: l.settingsDelete)) await m.deleteAccount(a);
+      },
+    );
+    final tile = ListTile(
+      key: Key('source-${a.id}'),
+      autofocus: isTelevision && i == 0,
+      leading: Icon(a.kind == AccountKind.xtream ? Icons.dns_outlined : Icons.list_alt, color: cs.primary),
+      title: Text(a.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text([a.kind == AccountKind.xtream ? l.kindXtream : l.kindM3u, if (a.kind == AccountKind.xtream) a.username].whereType<String>().join(' · '), maxLines: 1, overflow: TextOverflow.ellipsis),
+        if (m.subscriptions[a.id] case final s? when s.expires != null) SubscriptionLine(s),
+      ]),
+      trailing: isTelevision ? null : Row(mainAxisSize: MainAxisSize.min, children: [refresh, delete]),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SourceFormScreen(edit: a))),
+    );
+    return isTelevision ? Row(children: [Expanded(child: tile), refresh, delete, const SizedBox(width: 8)]) : tile;
+  }
+
   @override
   Widget build(BuildContext context) {
     final m = context.watch<LibraryModel>();
@@ -114,28 +139,7 @@ class _SourcesSectionState extends State<_SourcesSection> {
               ? Text('${l.syncFailed}: ${m.syncMessage}', style: TextStyle(color: cs.error))
               : null,
       children: [
-        for (final (i, a) in m.accounts.indexed)
-          ListTile(
-            key: Key('source-${a.id}'),
-            autofocus: isTelevision && i == 0,
-            leading: Icon(a.kind == AccountKind.xtream ? Icons.dns_outlined : Icons.list_alt, color: cs.primary),
-            title: Text(a.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-            subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text([a.kind == AccountKind.xtream ? l.kindXtream : l.kindM3u, if (a.kind == AccountKind.xtream) a.username].whereType<String>().join(' · '), maxLines: 1, overflow: TextOverflow.ellipsis),
-              if (m.subscriptions[a.id] case final s? when s.expires != null) SubscriptionLine(s),
-            ]),
-            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-              IconButton(icon: const Icon(Icons.refresh), tooltip: l.syncNow, onPressed: m.syncing ? null : () => m.sync([a])),
-              IconButton(
-                icon: const Icon(Icons.delete_outline),
-                tooltip: l.settingsDelete,
-                onPressed: () async {
-                  if (await confirm(context, title: a.name, message: l.sourceDeleteWarn, action: l.settingsDelete)) await m.deleteAccount(a);
-                },
-              ),
-            ]),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SourceFormScreen(edit: a))),
-          ),
+        for (final (i, a) in m.accounts.indexed) _sourceRow(context, m, l, cs, i, a),
         ListTile(
           key: const Key('add-source-tile'),
           leading: Icon(Icons.add_circle, color: cs.primary),

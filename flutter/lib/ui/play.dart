@@ -18,6 +18,7 @@ Widget Function(PlayRequest, PlayerHost) playerBuilder = (r, h) => PlayerScreen(
 Future<void> openItem(BuildContext context, Item item, {List<Item> zapList = const []}) {
   final model = context.read<LibraryModel>();
   if (model.opensSeries(item)) {
+    tvExpectEntry(); // the series page loads its episodes; its Play button takes focus when they are there
     return Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SeriesScreen(series: item)));
   }
   // On a TV the sheet is also where a direct-link movie gets its favorite star (a phone uses a long press for that).

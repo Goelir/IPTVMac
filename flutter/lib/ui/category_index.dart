@@ -32,7 +32,10 @@ class _CategoryIndexState extends State<CategoryIndex> {
           leading: icon == null ? null : Icon(icon, color: scheme.primary),
           title: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
           trailing: count == null ? null : Text('$count', style: Theme.of(context).textTheme.bodySmall),
-          onTap: () => m.selectCategory(tag),
+          onTap: () {
+            tvExpectEntry();
+            m.selectCategory(tag);
+          },
         );
 
     return Column(children: [

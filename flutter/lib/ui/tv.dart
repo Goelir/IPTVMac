@@ -55,6 +55,55 @@ class _TvScaleState extends State<TvScale> {
   }
 }
 
+DateTime? _entryUntil;
+
+/// Call when the remote's Select replaces what is on screen with something new (a category opens its list, a series its page): the
+/// first stop of the new content ([TvEntry]) then takes focus, which would otherwise fall back to where it was before (the rail).
+/// Any arrow key cancels it.
+void tvExpectEntry() {
+  if (isTelevision) _entryUntil = DateTime.now().add(const Duration(seconds: 8));
+}
+
+bool _takeEntry() {
+  final until = _entryUntil;
+  _entryUntil = null;
+  return until != null && DateTime.now().isBefore(until);
+}
+
+/// The first stop of a screen's content (TV only): takes focus when it appears and nothing has it, or when [tvExpectEntry] was called.
+class TvEntry extends StatefulWidget {
+  const TvEntry({super.key, required this.child});
+  final Widget child;
+  @override
+  State<TvEntry> createState() => _TvEntryState();
+}
+
+class _TvEntryState extends State<TvEntry> {
+  final _node = FocusNode(canRequestFocus: false, skipTraversal: true);
+
+  @override
+  void initState() {
+    super.initState();
+    if (isTelevision) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final f = FocusManager.instance.primaryFocus;
+        if (!_takeEntry() && f != null && f is! FocusScopeNode) return;
+        _node.descendants.where((n) => n.canRequestFocus).firstOrNull?.requestFocus();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _node.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => isTelevision ? Focus(focusNode: _node, child: widget.child) : widget.child;
+}
+
 bool _isSelect(LogicalKeyboardKey k) => k == LogicalKeyboardKey.select || k == LogicalKeyboardKey.enter || k == LogicalKeyboardKey.numpadEnter;
 
 /// A text field for the remote: it is read-only (no keyboard) while the cursor merely rests on it; Select starts typing and opens the
@@ -105,17 +154,27 @@ class _TvEditableState extends State<TvEditable> {
   KeyEventResult _key(FocusNode _, KeyEvent e) {
     if (e is KeyUpEvent) return KeyEventResult.ignored;
     final k = e.logicalKey;
+    final dir = switch (k) {
+      LogicalKeyboardKey.arrowUp => TraversalDirection.up,
+      LogicalKeyboardKey.arrowDown => TraversalDirection.down,
+      LogicalKeyboardKey.arrowLeft => TraversalDirection.left,
+      LogicalKeyboardKey.arrowRight => TraversalDirection.right,
+      _ => null,
+    };
     if (!_editing) {
       if (e is KeyDownEvent && _isSelect(k)) {
         _start();
         return KeyEventResult.handled;
       }
-      return KeyEventResult.ignored;
+      if (dir == null) return KeyEventResult.ignored;
+      // Resting on the field: all four arrows move on (a text field would otherwise keep Left and Right for its cursor).
+      Actions.maybeInvoke(context, DirectionalFocusIntent(dir, ignoreTextFields: false));
+      return KeyEventResult.handled;
     }
     // Typing: left and right move the cursor; up and down leave the field (a single line has no use for them).
-    if (k == LogicalKeyboardKey.arrowUp || k == LogicalKeyboardKey.arrowDown) {
+    if (dir == TraversalDirection.up || dir == TraversalDirection.down) {
       _stop();
-      _node.focusInDirection(k == LogicalKeyboardKey.arrowUp ? TraversalDirection.up : TraversalDirection.down);
+      Actions.maybeInvoke(context, DirectionalFocusIntent(dir!, ignoreTextFields: false));
       return KeyEventResult.handled;
     }
     if (k == LogicalKeyboardKey.escape || k == LogicalKeyboardKey.goBack) {
@@ -173,12 +232,21 @@ class _TvShellState extends State<TvShell> {
   void initState() {
     super.initState();
     FocusManager.instance.addListener(_focusChanged);
+    HardwareKeyboard.instance.addHandler(_key);
     WidgetsBinding.instance.addPostFrameCallback((_) => _rescue());
+  }
+
+  bool _key(KeyEvent e) {
+    if (e is KeyDownEvent && {LogicalKeyboardKey.arrowUp, LogicalKeyboardKey.arrowDown, LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.arrowRight}.contains(e.logicalKey)) {
+      _entryUntil = null; // the person is moving by hand now
+    }
+    return false;
   }
 
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
+    HardwareKeyboard.instance.removeHandler(_key);
     super.dispose();
   }
 

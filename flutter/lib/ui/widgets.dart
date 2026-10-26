@@ -5,6 +5,7 @@ import 'package:iptvmac/core/android_update.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:provider/provider.dart';
 
 /// A slim progress bar; fills from the start edge (so from the right in right-to-left languages).
@@ -102,7 +103,15 @@ class EmptyState extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(hint!, style: t.bodyMedium?.copyWith(color: cs.onSurfaceVariant), textAlign: TextAlign.center),
                 ],
-                if (actionLabel != null) ...[const SizedBox(height: 20), FilledButton.tonal(autofocus: isTelevision, onPressed: onAction, child: Text(actionLabel!))],
+                if (actionLabel != null) ...[const SizedBox(height: 20), FilledButton.tonal(
+                    autofocus: isTelevision,
+                    onPressed: onAction == null
+                        ? null
+                        : () {
+                            tvExpectEntry(); // what comes next (the list, the retry's result) takes focus from this button's place
+                            onAction!();
+                          },
+                    child: Text(actionLabel!))],
               ]),
             ),
           ),
