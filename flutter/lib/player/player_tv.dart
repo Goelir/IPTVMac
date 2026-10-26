@@ -63,7 +63,13 @@ class PlayerTvKeys {
 
   KeyEventResult onKey(FocusNode _, KeyEvent e) {
     final k = e.logicalKey;
-    if (e is KeyUpEvent) return _held.remove(k) ? KeyEventResult.handled : KeyEventResult.ignored;
+    if (e is KeyUpEvent) {
+      if (!_held.remove(k)) return KeyEventResult.ignored;
+      // Back acts on key-UP. If the player closed on key-down, this handler would be gone when the key-up arrives, Android would take
+      // that unhandled key-up for a system Back, and the app would leave to the home screen right after the player closed.
+      if (_back.contains(k) && !model.closed) model.back();
+      return KeyEventResult.handled;
+    }
     if (model.closed) return KeyEventResult.ignored;
     if (e is KeyRepeatEvent && !_repeating.contains(k)) return _held.contains(k) ? KeyEventResult.handled : KeyEventResult.ignored;
     model.keyActivity();
@@ -75,10 +81,7 @@ class PlayerTvKeys {
   KeyEventResult _handle(LogicalKeyboardKey k, KeyEvent e) {
     const handled = KeyEventResult.handled;
     final step = model.prefs.seekStep;
-    if (_back.contains(k)) {
-      model.back();
-      return handled;
-    }
+    if (_back.contains(k)) return handled; // the action runs on key-up (see onKey)
     switch (k) {
       case LogicalKeyboardKey.mediaPlayPause:
         model.togglePause();

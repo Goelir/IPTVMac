@@ -240,6 +240,19 @@ void main() {
       expect(host.closed, 1);
     });
 
+    testWidgets('Back acts on key-up: the key-down does nothing and both halves of the press stay inside the player', (t) async {
+      final host = StepHost();
+      await openTv(t, movie(), host: host);
+      await t.sendKeyDownEvent(LogicalKeyboardKey.goBack, physicalKey: PhysicalKeyboardKey.escape);
+      await t.pump(const Duration(milliseconds: 400));
+      expect(host.closed, 0, reason: 'closing on key-down would leave the key-up to Android, which then leaves the app');
+      expect(controlsUp, findsOneWidget);
+      await t.sendKeyUpEvent(LogicalKeyboardKey.goBack, physicalKey: PhysicalKeyboardKey.escape);
+      await t.pump(const Duration(milliseconds: 50));
+      expect(controlsUp, findsNothing, reason: 'the first Back only hides the controls');
+      await end(t);
+    });
+
     testWidgets('system back does the same as the Back key', (t) async {
       final host = StepHost();
       await openTv(t, movie(), host: host);
