@@ -132,7 +132,7 @@ class TvEditable extends StatefulWidget {
   State<TvEditable> createState() => _TvEditableState();
 }
 
-class _TvEditableState extends State<TvEditable> {
+class _TvEditableState extends State<TvEditable> with WidgetsBindingObserver {
   late final FocusNode _own = FocusNode();
   FocusNode get _node => widget.focusNode ?? _own;
   var _editing = false;
@@ -141,10 +141,12 @@ class _TvEditableState extends State<TvEditable> {
   void initState() {
     super.initState();
     _node.addListener(_focusChanged);
+    if (isTelevision) WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _node.removeListener(_focusChanged);
     _own.dispose();
     super.dispose();
@@ -152,6 +154,22 @@ class _TvEditableState extends State<TvEditable> {
 
   void _focusChanged() {
     if (!_node.hasFocus && _editing) setState(() => _editing = false);
+  }
+
+  var _sawKeyboard = false;
+
+  /// Back closes the keyboard without telling the field: when the keyboard goes away, typing is over (the arrows move on again).
+  /// Read from the window, not from MediaQuery: the Scaffold takes the keyboard out of the MediaQuery of its body.
+  @override
+  void didChangeMetrics() {
+    if (!_editing) {
+      _sawKeyboard = false;
+    } else if (View.of(context).viewInsets.bottom > 0) {
+      _sawKeyboard = true;
+    } else if (_sawKeyboard) {
+      _sawKeyboard = false;
+      _stop();
+    }
   }
 
   void _start() {

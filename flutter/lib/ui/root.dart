@@ -92,6 +92,7 @@ class _RootScreenState extends State<RootScreen> {
     final l = AppLocalizations.of(context);
     final size = MediaQuery.sizeOf(context);
     final rail = isTelevision || size.width >= 600 || size.height < 480; // a TV: always the rail, the remote moves along it
+    final tight = isTelevision && size.height - MediaQuery.viewInsetsOf(context).bottom < 700; // the TV keyboard is up: shorter rail entries
     final running = context.select<DownloadsModel, int>((d) => d.activeCount); // a count on the Library tab, where Downloads is
     Widget library(IconData i) => Badge(isLabelVisible: running > 0, label: Text('$running'), child: Icon(i));
     final dests = [
@@ -119,7 +120,7 @@ class _RootScreenState extends State<RootScreen> {
                 child: NavigationRail(
                   selectedIndex: _index,
                   onDestinationSelected: _select,
-                  labelType: NavigationRailLabelType.all,
+                  labelType: tight ? NavigationRailLabelType.selected : NavigationRailLabelType.all,
                   backgroundColor: Colors.transparent,
                   destinations: [for (final d in dests) NavigationRailDestination(icon: d.$1, selectedIcon: d.$2, label: Text(d.$3))],
                 ),

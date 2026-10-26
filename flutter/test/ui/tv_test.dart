@@ -280,6 +280,24 @@ void main() {
     expect(find.byKey(const Key('tv-focus-ring')), findsOneWidget, reason: 'focus is not lost when the first-run screen is replaced');
   });
 
+  testWidgets('a keyboard closed with Back ends typing, so the arrows move on again', (tester) async {
+    final h = await Harness.create(tester);
+    await h.pumpApp(tester, size: tvSize);
+    await press(tester, select); // Add source…
+    final name = find.byKey(const Key('field-name'));
+    expect(tester.widget<TextField>(name).readOnly, isTrue);
+    await press(tester, select);
+    expect(tester.widget<TextField>(name).readOnly, isFalse);
+    tester.view.viewInsets = const FakeViewPadding(bottom: 300); // the keyboard slides up
+    await frames(tester);
+    tester.view.viewInsets = FakeViewPadding.zero; // Back: it slides away, the field is not told
+    addTearDown(tester.view.resetViewInsets);
+    await frames(tester);
+    expect(tester.widget<TextField>(name).readOnly, isTrue);
+    await press(tester, down); // the arrows move on instead of moving a cursor
+    expect(FocusManager.instance.primaryFocus, isNot(tester.widget<TextField>(name).focusNode));
+  });
+
   testWidgets('settings: Select opens the interval dialog with the chosen option focused, Back closes it and focus returns; choices by remote', (tester) async {
     final h = await shell(tester);
     await press(tester, left);
