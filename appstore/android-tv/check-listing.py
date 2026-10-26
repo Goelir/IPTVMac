@@ -49,4 +49,11 @@ for name, (w, h, alpha) in GFX.items():
     if ctype in (4, 6) and not alpha: err("graphics", f"{name} has an alpha channel, Play rejects that here")
     if len(b) > 1024 * 1024: err("graphics", f"{name} is {len(b)} bytes, over 1 MB")
     print(f"{name:36} {pw}x{ph} colour type {ctype} {len(b) // 1024} KB")
+for p in sorted((ROOT / "screenshots").glob("tv-*.*")):      # TV screenshots: 16:9 1920x1080, PNG without alpha
+    b = p.read_bytes()
+    if b[:8] != b"\x89PNG\r\n\x1a\n": print(f"  note    {p.name}: not a PNG, not checked"); continue
+    pw, ph, depth, ctype = struct.unpack(">IIBB", b[16:26])
+    if (pw, ph) != (1920, 1080): err("screenshots", f"{p.name} is {pw}x{ph}, expected 1920x1080")
+    if ctype in (4, 6): err("screenshots", f"{p.name} has an alpha channel")
+    print(f"{p.name:36} {pw}x{ph} colour type {ctype}")
 print("PROBLEMS" if bad else "all Android TV listing texts and graphics ok"); sys.exit(1 if bad else 0)
