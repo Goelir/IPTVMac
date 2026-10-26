@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/player_host.dart';
 import 'package:iptvmac/core/models.dart';
@@ -6,6 +7,7 @@ import 'package:iptvmac/player/play_request.dart';
 import 'package:iptvmac/player/player_screen.dart';
 import 'package:iptvmac/ui/details_sheet.dart';
 import 'package:iptvmac/ui/series_screen.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:provider/provider.dart';
 
 /// Builds the player screen. Tests replace it to see what the shell hands to the player.
@@ -18,7 +20,8 @@ Future<void> openItem(BuildContext context, Item item, {List<Item> zapList = con
   if (model.opensSeries(item)) {
     return Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SeriesScreen(series: item)));
   }
-  if (item.type == ItemType.movie && item.directURL == null) return showItemDetails(context, item);
+  // On a TV the sheet is also where a direct-link movie gets its favorite star (a phone uses a long press for that).
+  if (item.type == ItemType.movie && (item.directURL == null || isTelevision)) return showItemDetails(context, item);
   return playItem(context, item, zapList: zapList);
 }
 
@@ -38,7 +41,7 @@ Future<void> openPlayer(BuildContext context, PlayRequest r, {List<Item> zapList
     closed = true;
     nav.pop(); // a real pop: the player screen blocks a plain back (PopScope) and asks us to leave
   }, onShowDetails: (item) => showItemDetails(nav.context, item, playing: true));
-  await nav.push(MaterialPageRoute<void>(builder: (_) => playerBuilder(r, host), fullscreenDialog: true));
+  await nav.push(MaterialPageRoute<void>(builder: (_) => playerBuilder(r, host), fullscreenDialog: true, settings: const RouteSettings(name: playerRouteName)));
   closed = true;
   model.reloadContinue();
 }

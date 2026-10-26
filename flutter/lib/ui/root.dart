@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/downloads/downloads_model.dart';
@@ -8,6 +9,7 @@ import 'package:iptvmac/ui/library_screen.dart';
 import 'package:iptvmac/ui/missing_strings.dart';
 import 'package:iptvmac/ui/onboarding.dart';
 import 'package:iptvmac/ui/settings_screen.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:provider/provider.dart';
 
 /// First run: the welcome and add-source flow. Afterwards: five sections (a bottom bar on a phone, a rail on a tablet or a
@@ -65,7 +67,7 @@ class _RootScreenState extends State<RootScreen> {
       builder: (c) => AlertDialog(
         title: Text(l.dbRecoveredTitle),
         content: Text(l.dbRecoveredBody(path)),
-        actions: [TextButton(onPressed: () => Navigator.pop(c), child: Text(l.playerClose))],
+        actions: [TextButton(autofocus: isTelevision, onPressed: () => Navigator.pop(c), child: Text(l.playerClose))],
       ),
     );
   }
@@ -84,7 +86,7 @@ class _RootScreenState extends State<RootScreen> {
     if (!hasAccounts) return const OnboardingScreen();
     final l = AppLocalizations.of(context);
     final size = MediaQuery.sizeOf(context);
-    final rail = size.width >= 600 || size.height < 480;
+    final rail = isTelevision || size.width >= 600 || size.height < 480; // a TV: always the rail, the remote moves along it
     final running = context.select<DownloadsModel, int>((d) => d.activeCount); // a count on the Library tab, where Downloads is
     Widget library(IconData i) => Badge(isLabelVisible: running > 0, label: Text('$running'), child: Icon(i));
     final dests = [
@@ -102,22 +104,24 @@ class _RootScreenState extends State<RootScreen> {
       _ => const SettingsScreen(),
     };
     if (rail) {
-      return Scaffold(
-        body: Row(children: [
-          ColoredBox(
-            color: Theme.of(context).colorScheme.surfaceContainerLow,
-            child: SafeArea(
-              child: NavigationRail(
-                selectedIndex: _index,
-                onDestinationSelected: _select,
-                labelType: NavigationRailLabelType.all,
-                backgroundColor: Colors.transparent,
-                destinations: [for (final d in dests) NavigationRailDestination(icon: d.$1, selectedIcon: d.$2, label: Text(d.$3))],
+      return TvFrame(
+        child: Scaffold(
+          body: Row(children: [
+            ColoredBox(
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              child: SafeArea(
+                child: NavigationRail(
+                  selectedIndex: _index,
+                  onDestinationSelected: _select,
+                  labelType: NavigationRailLabelType.all,
+                  backgroundColor: Colors.transparent,
+                  destinations: [for (final d in dests) NavigationRailDestination(icon: d.$1, selectedIcon: d.$2, label: Text(d.$3))],
+                ),
               ),
             ),
-          ),
-          Expanded(child: body),
-        ]),
+            Expanded(child: body),
+          ]),
+        ),
       );
     }
     return Scaffold(
@@ -156,7 +160,18 @@ class _PasswordDialogState extends State<_PasswordDialog> {
       content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(Missing.passwordBody(widget.account.name)),
         const SizedBox(height: 12),
-        TextField(key: const Key('password-field'), controller: _c, obscureText: true, autofocus: true, decoration: InputDecoration(labelText: l.fieldPassword), onChanged: (_) => setState(() {})),
+        TvEditable(
+          builder: (_, node, readOnly, done) => TextField(
+              key: const Key('password-field'),
+              controller: _c,
+              focusNode: node,
+              readOnly: readOnly,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(labelText: l.fieldPassword),
+              onChanged: (_) => setState(() {}),
+              onSubmitted: (_) => done()),
+        ),
       ]),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: Text(l.playerClose)),

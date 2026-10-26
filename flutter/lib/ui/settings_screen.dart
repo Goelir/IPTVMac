@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:intl/intl.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/core/backup.dart';
@@ -14,6 +15,7 @@ import 'package:iptvmac/ui/about_screens.dart';
 import 'package:iptvmac/ui/downloads_screen.dart';
 import 'package:iptvmac/ui/missing_strings.dart';
 import 'package:iptvmac/ui/source_form.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:iptvmac/ui/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 640),
-          child: ListView(padding: const EdgeInsets.only(bottom: 24), children: const [
+          child: ListView(padding: const EdgeInsets.only(bottom: 24), scrollCacheExtent: tvCache(3000), children: const [
             _SourcesSection(),
             _PreferencesSection(),
             _UpdatesSection(),
@@ -74,7 +76,7 @@ Future<bool> confirm(BuildContext context, {required String title, required Stri
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
+        TextButton(autofocus: isTelevision, onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
         TextButton(onPressed: () => Navigator.pop(c, true), child: Text(action, style: TextStyle(color: Theme.of(c).colorScheme.error))),
       ],
     ),
@@ -112,9 +114,10 @@ class _SourcesSectionState extends State<_SourcesSection> {
               ? Text('${l.syncFailed}: ${m.syncMessage}', style: TextStyle(color: cs.error))
               : null,
       children: [
-        for (final a in m.accounts)
+        for (final (i, a) in m.accounts.indexed)
           ListTile(
             key: Key('source-${a.id}'),
+            autofocus: isTelevision && i == 0,
             leading: Icon(a.kind == AccountKind.xtream ? Icons.dns_outlined : Icons.list_alt, color: cs.primary),
             title: Text(a.name, maxLines: 1, overflow: TextOverflow.ellipsis),
             subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -163,6 +166,7 @@ class _PreferencesSection extends StatelessWidget {
               builder: (c) => SimpleDialog(title: Text(l.settingsRefresh), children: [
                 for (final e in labels.entries)
                   ListTile(
+                    autofocus: isTelevision && e.key == (labels.containsKey(m.refreshHours) ? m.refreshHours : 0),
                     title: Text(e.value),
                     trailing: e.key == m.refreshHours ? Icon(Icons.check, color: Theme.of(c).colorScheme.primary) : null,
                     onTap: () => Navigator.pop(c, e.key),
@@ -204,7 +208,7 @@ class _UpdatesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final m = context.watch<LibraryModel>();
     final l = AppLocalizations.of(context);
-    if (m.appVersion == null) return const SizedBox.shrink();
+    if (m.appVersion == null || isTelevision) return const SizedBox.shrink(); // the release page needs a browser, which a TV rarely has
     final newer = m.newerVersion;
     final subtitle = switch (m.updateCheck) {
       UpdateCheck.checking => l.syncRunning,
@@ -262,15 +266,20 @@ class _HiddenCategoriesSectionState extends State<_HiddenCategoriesSection> {
       children: [
         Padding(
           padding: const EdgeInsets.all(12),
-          child: TextField(
-            key: const Key('hidden-words'),
-            controller: _c,
-            autocorrect: false,
-            decoration: InputDecoration(labelText: l.settingsHideCategoriesWords, hintText: 'xxx, adult'),
-            onChanged: (v) {
-              _debounce?.cancel();
-              _debounce = Timer(const Duration(milliseconds: 600), () => m.setHiddenWords(v)); // applied once typing pauses
-            },
+          child: TvEditable(
+            builder: (_, node, readOnly, done) => TextField(
+              key: const Key('hidden-words'),
+              controller: _c,
+              focusNode: node,
+              readOnly: readOnly,
+              autocorrect: false,
+              decoration: InputDecoration(labelText: l.settingsHideCategoriesWords, hintText: 'xxx, adult'),
+              onChanged: (v) {
+                _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 600), () => m.setHiddenWords(v)); // applied once typing pauses
+              },
+              onSubmitted: (_) => done(),
+            ),
           ),
         ),
       ],
@@ -315,6 +324,7 @@ class _BackupSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isTelevision) return const SizedBox.shrink(); // the file picker needs a file manager, which a TV does not have
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
     return _Section(title: l.settingsBackup, note: Text(l.backupWarn), children: [

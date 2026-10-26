@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:intl/intl.dart';
 import 'package:iptvmac/core/android_update.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -101,7 +102,7 @@ class EmptyState extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(hint!, style: t.bodyMedium?.copyWith(color: cs.onSurfaceVariant), textAlign: TextAlign.center),
                 ],
-                if (actionLabel != null) ...[const SizedBox(height: 20), FilledButton.tonal(onPressed: onAction, child: Text(actionLabel!))],
+                if (actionLabel != null) ...[const SizedBox(height: 20), FilledButton.tonal(autofocus: isTelevision, onPressed: onAction, child: Text(actionLabel!))],
               ]),
             ),
           ),
@@ -113,11 +114,12 @@ class EmptyState extends StatelessWidget {
 
 /// A star button (48 dp) that toggles a favorite.
 class FavoriteButton extends StatelessWidget {
-  const FavoriteButton({super.key, required this.favorite, required this.onPressed, this.tonal = false});
+  const FavoriteButton({super.key, required this.favorite, required this.onPressed, this.tonal = false, this.autofocus = false});
 
   final bool favorite;
   final VoidCallback onPressed;
   final bool tonal;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +127,8 @@ class FavoriteButton extends StatelessWidget {
     final icon = Icon(favorite ? Icons.star_rounded : Icons.star_outline_rounded, color: favorite ? Colors.amber : null);
     final tip = favorite ? l.favRemove : l.favAdd;
     return tonal
-        ? IconButton.filledTonal(onPressed: onPressed, icon: icon, tooltip: tip)
-        : IconButton(onPressed: onPressed, icon: icon, tooltip: tip);
+        ? IconButton.filledTonal(autofocus: autofocus, onPressed: onPressed, icon: icon, tooltip: tip)
+        : IconButton(autofocus: autofocus, onPressed: onPressed, icon: icon, tooltip: tip);
   }
 }
 
@@ -150,7 +152,7 @@ class UpdateBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = context.select<LibraryModel, String?>((m) => m.updateAvailable);
-    if (v == null) return const SizedBox.shrink();
+    if (v == null || isTelevision) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
     return Material(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/ui/bidi.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/sync_worker.dart';
@@ -17,6 +18,7 @@ import 'package:iptvmac/ui/details_sheet.dart';
 import 'package:iptvmac/ui/info_parts.dart';
 import 'package:iptvmac/ui/item_views.dart';
 import 'package:iptvmac/ui/play.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:iptvmac/ui/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +106,7 @@ class _SeriesScreenState extends State<SeriesScreen> {
       if (_seasons.length > 1) {
         body.add(SizedBox(
           height: 52,
-          child: ListView(scrollDirection: Axis.horizontal, padding: const EdgeInsets.symmetric(horizontal: 16), children: [
+          child: ListView(scrollCacheExtent: tvCache(1200), scrollDirection: Axis.horizontal, padding: const EdgeInsets.symmetric(horizontal: 16), children: [
             for (final s in _seasons)
               Padding(padding: const EdgeInsetsDirectional.only(end: 8), child: Center(child: AppChip(label: '${l.seriesSeason} $s', selected: _season == s, onTap: () => setState(() => _season = s)))),
           ]),
@@ -130,9 +132,11 @@ class _SeriesScreenState extends State<SeriesScreen> {
         ),
       ));
     }
-    return Scaffold(
-      appBar: AppBar(title: Text(series.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
-      body: ListView(children: body),
+    return TvFrame(
+      child: Scaffold(
+        appBar: AppBar(title: Text(series.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
+        body: ListView(scrollCacheExtent: tvCache(1500), children: body),
+      ),
     );
   }
 
@@ -158,6 +162,7 @@ class _SeriesScreenState extends State<SeriesScreen> {
         Wrap(spacing: 10, runSpacing: 10, crossAxisAlignment: WrapCrossAlignment.center, children: [
           if (next != null)
             FilledButton.icon(
+              autofocus: isTelevision,
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text(next.resume ? l.seriesContinueEp(next.episode.season, next.episode.number) : l.seriesPlayEp(next.episode.season, next.episode.number)),
               style: FilledButton.styleFrom(minimumSize: const Size(140, 48)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 
 /// The look: one violet on quiet surfaces (colours from ios/Sources/UI/Theme.swift and the asset catalog), Material 3 parts.
 abstract final class Brand {
@@ -45,7 +46,12 @@ abstract final class Brand {
         filled: true,
         fillColor: raised,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+        // A text field is not drawn over by the TV focus ring, so its own border shows where the cursor is.
+        focusedBorder: isTelevision
+            ? OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: dark ? Colors.white : const Color(0xFF1A1040), width: 3))
+            : null,
       ),
+      navigationRailTheme: isTelevision ? const NavigationRailThemeData(minWidth: 104, minExtendedWidth: 220) : null,
     );
   }
 }

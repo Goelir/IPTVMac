@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/watch_progress.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/ui/category_index.dart';
 import 'package:iptvmac/ui/item_views.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:iptvmac/ui/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +71,7 @@ class PlaylistMenu extends StatelessWidget {
         ],
       );
     }
-    if (MediaQuery.sizeOf(context).width >= 600) {
+    if (isTelevision || MediaQuery.sizeOf(context).width >= 600) {
       return IconButton(onPressed: m.syncing ? null : m.sync, icon: const Icon(Icons.refresh), tooltip: l.syncNow);
     }
     return const SizedBox.shrink();
@@ -113,30 +115,35 @@ class _SearchFieldState extends State<SearchField> {
     final cs = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-      child: TextField(
-        controller: _controller,
+      child: TvEditable(
         focusNode: _focus,
-        textInputAction: TextInputAction.search,
-        onChanged: _model.setSearchText,
-        onSubmitted: (t) {
-          _model.prefs.addRecent(t);
-          setState(() {});
-        },
-        decoration: InputDecoration(
-          hintText: l.searchPrompt,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _controller.text.isEmpty
-              ? null
-              : IconButton(
-                  icon: const Icon(Icons.close),
-                  tooltip: MaterialLocalizations.of(context).clearButtonTooltip,
-                  onPressed: () {
-                    _controller.clear();
-                    _model.setSearchText('');
-                  }),
-          isDense: false,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          fillColor: cs.surfaceContainerHigh,
+        builder: (_, node, readOnly, done) => TextField(
+            controller: _controller,
+            focusNode: node,
+            readOnly: readOnly,
+            textInputAction: TextInputAction.search,
+            onChanged: _model.setSearchText,
+            onSubmitted: (t) {
+              done();
+              _model.prefs.addRecent(t);
+              setState(() {});
+            },
+            decoration: InputDecoration(
+              hintText: l.searchPrompt,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _controller.text.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.close),
+                      tooltip: MaterialLocalizations.of(context).clearButtonTooltip,
+                      onPressed: () {
+                        _controller.clear();
+                        _model.setSearchText('');
+                      }),
+              isDense: false,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              fillColor: cs.surfaceContainerHigh,
+            ),
         ),
       ),
     );
@@ -217,6 +224,7 @@ class _CategoryChipsState extends State<CategoryChips> {
         Expanded(
           child: ListView(
             controller: _scroll,
+            scrollCacheExtent: tvCache(1200), // the remote can only move to chips that are built
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsetsDirectional.only(end: 16),
             children: [for (final c in chips) Padding(padding: const EdgeInsetsDirectional.only(end: 8), child: Center(child: c))],
@@ -244,6 +252,7 @@ class ResultsView extends StatelessWidget {
     } else {
       final shelf = m.selectedCategory == '__all' && m.searchText.isEmpty ? m.continueEntries(type) : const <ContinueEntry>[];
       body = CustomScrollView(
+        scrollCacheExtent: tvCache(1500), // the remote can only move to rows and cells that are built
         // The offset is kept per section and category: coming back from the player (which rotates the phone, so the shell
         // switches between the bottom bar and the rail and rebuilds this screen) or from another tab lands on the same row.
         key: PageStorageKey<String>('results-${type.name}-${m.selectedCategory}-${m.searchText.isEmpty}'),
@@ -253,11 +262,11 @@ class ResultsView extends StatelessWidget {
           if (everywhere)
             for (final t in ItemType.values) ..._group(context, l, t, [for (final i in results) if (i.type == t) i])
           else if (type == ItemType.live)
-            ChannelListSliver(items: results)
+            ChannelListSliver(items: results, autofocus: true)
           else ...[
-            if (shelf.isNotEmpty) SliverPadding(padding: const EdgeInsets.only(top: 12, bottom: 20), sliver: SliverToBoxAdapter(child: ContinueShelf(entries: shelf))),
+            if (shelf.isNotEmpty) SliverPadding(padding: const EdgeInsets.only(top: 12, bottom: 20), sliver: SliverToBoxAdapter(child: ContinueShelf(entries: shelf, autofocus: true))),
             if (shelf.isEmpty) const SliverToBoxAdapter(child: SizedBox(height: 12)),
-            PosterGridSliver(items: results),
+            PosterGridSliver(items: results, autofocus: shelf.isEmpty),
           ],
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],

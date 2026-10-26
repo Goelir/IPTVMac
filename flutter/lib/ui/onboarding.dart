@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/source_draft.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/ui/missing_strings.dart';
@@ -76,15 +77,18 @@ class OnboardingScreen extends StatelessWidget {
                         const SizedBox(height: 28),
                         FilledButton(
                           key: const Key('add-source'),
+                          autofocus: isTelevision,
                           style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                           onPressed: () => _open(context),
                           child: Text(l.accountAdd),
                         ),
-                        const SizedBox(height: 12),
-                        Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, spacing: 10, children: [
-                          Text(l.onbPasteHint, style: t.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
-                          OutlinedButton.icon(onPressed: () => _paste(context), icon: const Icon(Icons.content_paste, size: 18), label: Text(Missing.paste)),
-                        ]),
+                        if (!isTelevision) ...[ // a TV has no clipboard to paste a link from
+                          const SizedBox(height: 12),
+                          Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, spacing: 10, children: [
+                            Text(l.onbPasteHint, style: t.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                            OutlinedButton.icon(onPressed: () => _paste(context), icon: const Icon(Icons.content_paste, size: 18), label: Text(Missing.paste)),
+                          ]),
+                        ],
                       ]),
                     ),
                   ),

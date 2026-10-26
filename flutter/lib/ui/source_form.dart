@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/source_draft.dart';
 import 'package:iptvmac/app/sync_worker.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/ui/missing_strings.dart';
+import 'package:iptvmac/ui/tv.dart';
 import 'package:provider/provider.dart';
 
 enum _Test { idle, testing, ok, failed }
@@ -82,7 +84,7 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
   }
 
   Future<void> _test() async {
-    FocusScope.of(context).unfocus();
+    if (!isTelevision) FocusScope.of(context).unfocus(); // on a TV the button keeps focus (the remote has nowhere else to be)
     setState(() => _state = _Test.testing);
     try {
       await context.read<LibraryModel>().testConnection(kind: _d.kind, server: _d.server, username: _d.username, password: _d.password, url: _d.url);
@@ -134,14 +136,16 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
           ]),
         );
     final xtream = _d.kind == AccountKind.xtream;
-    return Scaffold(
+    return TvFrame(
+      child: Scaffold(
       appBar: AppBar(title: Text(editing ? l.settingsEditSource : l.accountAdd)),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: FilledButton(
             style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-            onPressed: !_d.canTest || _state == _Test.testing || _busy ? null : (ready ? _save : _test),
+            // While testing a phone shows the button disabled; on a TV it stays enabled (and does nothing) so the remote keeps its place.
+            onPressed: !_d.canTest || _busy ? null : _state == _Test.testing ? (isTelevision ? () {} : null) : (ready ? _save : _test),
             child: _state == _Test.testing
                 ? Row(mainAxisSize: MainAxisSize.min, children: [
                     const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
@@ -165,17 +169,24 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
               ),
               Padding(padding: const EdgeInsets.fromLTRB(4, 8, 4, 16), child: Text(xtream ? l.onbWhereXtream : l.onbWhereM3u, style: Theme.of(context).textTheme.bodySmall)),
             ],
-            TextField(
+            TvEditable(builder: (_, node, readOnly, done) => TextField(
+              focusNode: node,
+              readOnly: readOnly,
+              onSubmitted: (_) => done(),
+              autofocus: isTelevision,
               key: const Key('field-name'),
               controller: _name,
               decoration: InputDecoration(labelText: l.fieldName),
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.next,
               onChanged: (v) => _changed(() => _d.name = v),
-            ),
+            )),
             const SizedBox(height: 12),
             if (xtream) ...[
-              TextField(
+              TvEditable(builder: (_, node, readOnly, done) => TextField(
+                focusNode: node,
+                readOnly: readOnly,
+                onSubmitted: (_) => done(),
                 key: const Key('field-server'),
                 controller: _server,
                 decoration: InputDecoration(labelText: l.fieldServer, hintText: 'http://host:8080'),
@@ -183,10 +194,13 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
                 autocorrect: false,
                 textInputAction: TextInputAction.next,
                 onChanged: (v) => _changed(() => _d.server = v),
-              ),
+              )),
               if (_d.serverLooksWrong) problem(l.fieldServerInvalid),
               const SizedBox(height: 12),
-              TextField(
+              TvEditable(builder: (_, node, readOnly, done) => TextField(
+                focusNode: node,
+                readOnly: readOnly,
+                onSubmitted: (_) => done(),
                 key: const Key('field-username'),
                 controller: _user,
                 decoration: InputDecoration(labelText: l.fieldUsername),
@@ -194,9 +208,12 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
                 enableSuggestions: false,
                 textInputAction: TextInputAction.next,
                 onChanged: (v) => _changed(() => _d.username = v),
-              ),
+              )),
               const SizedBox(height: 12),
-              TextField(
+              TvEditable(builder: (_, node, readOnly, done) => TextField(
+                focusNode: node,
+                readOnly: readOnly,
+                onSubmitted: (_) => done(),
                 key: const Key('field-password'),
                 controller: _pass,
                 decoration: InputDecoration(labelText: editing ? l.settingsNewPassword : l.fieldPassword),
@@ -204,22 +221,25 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
                 autocorrect: false,
                 enableSuggestions: false,
                 onChanged: (v) => _changed(() => _d.password = v),
-              ),
+              )),
               if (editing) Padding(padding: const EdgeInsets.fromLTRB(4, 6, 4, 0), child: Text(Missing.passwordNote, style: Theme.of(context).textTheme.bodySmall)),
             ] else ...[
-              TextField(
+              TvEditable(builder: (_, node, readOnly, done) => TextField(
+                focusNode: node,
+                readOnly: readOnly,
+                onSubmitted: (_) => done(),
                 key: const Key('field-url'),
                 controller: _url,
                 decoration: InputDecoration(labelText: l.fieldUrl, hintText: 'https://example.com/list.m3u'),
                 keyboardType: TextInputType.url,
                 autocorrect: false,
                 minLines: 1,
-                maxLines: 4,
+                maxLines: isTelevision ? 1 : 4,
                 onChanged: (v) => _changed(() => _d.url = v),
-              ),
+              )),
               if (_d.urlLooksWrong) problem(l.fieldUrlInvalid),
             ],
-            if (!editing)
+            if (!editing && !isTelevision) // a TV has no clipboard to paste a link from
               Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: Row(children: [
@@ -236,7 +256,7 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
               ),
             if (editing) ...[
               const SizedBox(height: 16),
-              OutlinedButton(onPressed: !_d.canTest || _state == _Test.testing ? null : _test, child: Text(l.onbTest)),
+              OutlinedButton(onPressed: !_d.canTest ? null : _state == _Test.testing ? (isTelevision ? () {} : null) : _test, child: Text(l.onbTest)),
               const SizedBox(height: 8),
               TextButton(
                 style: TextButton.styleFrom(foregroundColor: cs.error),
@@ -246,6 +266,7 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
             ],
           ]),
         ),
+      ),
       ),
     );
   }
@@ -261,7 +282,7 @@ class _SourceFormScreenState extends State<SourceFormScreen> {
         title: Text(a.name),
         content: Text(l.sourceDeleteWarn),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
+          TextButton(autofocus: isTelevision, onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
           TextButton(onPressed: () => Navigator.pop(c, true), child: Text(l.settingsDelete, style: TextStyle(color: Theme.of(c).colorScheme.error))),
         ],
       ),
