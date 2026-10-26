@@ -5,6 +5,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../app/device.dart';
 import 'media_session.dart';
 import 'player_system.dart';
 
@@ -31,7 +32,8 @@ class AndroidPlayerSystem extends PlayerSystem {
 
   @override
   Future<void> enter({required bool lockLandscape}) async {
-    unawaited(_channel.invokeMethod<void>('requestNotificationPermission').catchError((Object _) {})); // Android 13+: the playback notification needs it
+    if (!isTelevision) unawaited(_channel.invokeMethod<void>('requestNotificationPermission').catchError((Object _) {})); // Android 13+: the playback notification needs it
+    if (isTelevision) return; // a TV has no system bars to hide and is always landscape: no "Viewing full screen" prompt
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     if (lockLandscape) await SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }

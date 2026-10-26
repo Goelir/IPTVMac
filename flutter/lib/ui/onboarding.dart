@@ -64,6 +64,8 @@ class OnboardingScreen extends StatelessWidget {
                         Semantics(header: true, child: Text(l.onbWelcomeTitle, textAlign: TextAlign.center, style: t.headlineMedium?.copyWith(fontWeight: FontWeight.bold))),
                         const SizedBox(height: 10),
                         Text(l.onbWelcomeBody, textAlign: TextAlign.center, style: t.titleMedium?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.normal)),
+                        const SizedBox(height: 6),
+                        Text(l.onbWelcomeRights, textAlign: TextAlign.center, style: t.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
                         const SizedBox(height: 22),
                         Container(
                           padding: const EdgeInsets.all(14),
