@@ -96,6 +96,7 @@ private struct Welcome: View {
                     VStack(spacing: 10) {
                         Text(L("onb.welcome.title")).font(.largeTitle.weight(.bold)).multilineTextAlignment(.center).accessibilityAddTraits(.isHeader)
                         Text(L("onb.welcome.body")).font(.title3).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        Text(L("onb.welcome.rights")).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: 460)
                     Label { Text(L("onb.noChannels")).font(.footnote).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true) } icon: {

@@ -247,5 +247,6 @@
   "unitHoursShort": "unit.hoursShort",
   "subExpires": "sub.expires",
   "subExpired": "sub.expired",
-  "subDaysLeft": "sub.daysLeft"
+  "subDaysLeft": "sub.daysLeft",
+  "onbWelcomeRights": "onb.welcome.rights"
 }

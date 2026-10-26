@@ -38,7 +38,7 @@ Future<void> main() async {
     dbPath: path,
     syncRunner: failure == null ? null : inlineSyncRunner(db),
     dbMovedAside: movedAside,
-    appVersion: (await PackageInfo.fromPlatform()).version,
+    appVersion: storeBuild ? null : (await PackageInfo.fromPlatform()).version, // null: no GitHub update check in store builds
     onClearImages: () async {
       PaintingBinding.instance.imageCache.clear();
       await DefaultCacheManager().emptyCache();

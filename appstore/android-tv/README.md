@@ -142,7 +142,7 @@ Verified here: the command below builds a bundle. **Measured 2026-10-26** in thi
 cd flutter
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 export ANDROID_HOME=$HOME/Library/Android/sdk
-flutter pub get && flutter gen-l10n && flutter build appbundle --release
+flutter pub get && flutter gen-l10n && flutter build appbundle --release --dart-define=STORE_BUILD=true   # STORE_BUILD: no GitHub update banner or setting in a store build
 AAB=build/app/outputs/bundle/release/app-release.aab
 ls -l $AAB
 

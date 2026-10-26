@@ -247,3 +247,4 @@
 "sub.expires" = "Expires %@";
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
+"onb.welcome.rights" = "Use only sources you are authorized to access.";

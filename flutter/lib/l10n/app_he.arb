@@ -248,5 +248,6 @@
   "unitHoursShort": "{p1} שע׳",
   "subExpires": "תוקף עד {p1}",
   "subExpired": "פג תוקף ב-{p1}",
-  "subDaysLeft": "ימים שנותרו: {p1}"
+  "subDaysLeft": "ימים שנותרו: {p1}",
+  "onbWelcomeRights": "השתמשו רק במקורות שיש לכם הרשאה לגשת אליהם."
 }

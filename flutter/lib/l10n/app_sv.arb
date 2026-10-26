@@ -248,5 +248,6 @@
   "unitHoursShort": "{p1} tim",
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
-  "subDaysLeft": "Days left: {p1}"
+  "subDaysLeft": "Days left: {p1}",
+  "onbWelcomeRights": "Use only sources you are authorized to access."
 }

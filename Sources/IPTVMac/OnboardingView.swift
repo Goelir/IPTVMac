@@ -81,6 +81,7 @@ struct OnboardingView: View {
         }
         Text(L("onb.welcome.title")).font(.largeTitle.weight(.semibold)).multilineTextAlignment(.center)
         Text(L("onb.welcome.body")).font(.title3).foregroundStyle(.secondary).multilineTextAlignment(.center).frame(maxWidth: 400)
+        Text(L("onb.welcome.rights")).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center).frame(maxWidth: 400)
     }
 
     @ViewBuilder private var source: some View {

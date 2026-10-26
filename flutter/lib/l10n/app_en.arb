@@ -407,5 +407,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "onbWelcomeRights": "Use only sources you are authorized to access."
 }
