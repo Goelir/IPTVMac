@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
+import '../app/device.dart';
 import 'android_player_system.dart';
 import 'engine.dart';
 import 'media_kit_engine.dart';
@@ -13,6 +14,7 @@ import 'player_model.dart';
 import 'player_options.dart';
 import 'player_prefs.dart';
 import 'player_system.dart';
+import 'player_tv.dart';
 import 'player_widgets.dart';
 
 /// The full-screen player. The shell pushes it with a [PlayRequest] and a [PlayerHost]; it never touches the library itself.
@@ -47,7 +49,7 @@ class _PlayerScreenState extends State<PlayerScreen> with WidgetsBindingObserver
     super.didChangeDependencies();
     if (_starting) return;
     _starting = true;
-    _start(MediaQuery.sizeOf(context).shortestSide < 600);
+    _start(!isTelevision && MediaQuery.sizeOf(context).shortestSide < 600);
   }
 
   Future<void> _start(bool phone) async {
@@ -80,28 +82,44 @@ class _PlayerScreenState extends State<PlayerScreen> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     final model = _model;
     return Theme(
-      data: ThemeData(brightness: Brightness.dark, useMaterial3: true),
-      child: Localizations.override(
+      data: ThemeData(brightness: Brightness.dark, useMaterial3: true, focusColor: isTelevision ? Colors.white30 : null),
+      child: tvDirectional(context, Localizations.override(
         context: context,
         delegates: const [LocaleNamesLocalizationsDelegate()],
         child: PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) model == null ? widget.host.closePlayer() : model.close();
+            if (!didPop) model == null ? widget.host.closePlayer() : model.back();
           },
           child: Material(
             color: Colors.black,
             child: model == null ? const SizedBox.expand() : ListenableBuilder(listenable: model, builder: (_, _) => _PlayerView(model: model)),
           ),
         ),
-      ),
+      )),
     );
   }
 }
 
-class _PlayerView extends StatelessWidget {
+class _PlayerView extends StatefulWidget {
   const _PlayerView({required this.model});
   final PlayerModel model;
+
+  @override
+  State<_PlayerView> createState() => _PlayerViewState();
+}
+
+class _PlayerViewState extends State<_PlayerView> {
+  final _nodes = PlayerTvNodes();
+  late final _keys = PlayerTvKeys(widget.model, _nodes);
+
+  PlayerModel get model => widget.model;
+
+  @override
+  void dispose() {
+    _nodes.dispose();
+    super.dispose();
+  }
 
   static const _scrim = BoxDecoration(
     gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x99000000), Color(0x40000000), Color(0x99000000)]),
@@ -118,7 +136,7 @@ class _PlayerView extends StatelessWidget {
       VideoScale.fill => BoxFit.cover,
       VideoScale.stretch => BoxFit.fill,
     };
-    return Stack(fit: StackFit.expand, children: [
+    final view = Stack(fit: StackFit.expand, children: [
       model.core.engine.buildVideo(fit),
       PlayerGestureSurface(model: model),
       IgnorePointer(child: AnimatedOpacity(opacity: visible ? 1 : 0, duration: const Duration(milliseconds: 200), child: const DecoratedBox(decoration: _scrim))),
@@ -126,16 +144,19 @@ class _PlayerView extends StatelessWidget {
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-            child: IgnorePointer(
-              ignoring: !visible,
-              child: AnimatedOpacity(
-                opacity: visible ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: Column(children: [
-                  PlayerTopBar(model: model),
-                  Expanded(child: transport && !model.upNext.isCounting ? Center(child: PlayerTransport(model: model)) : const SizedBox.shrink()),
-                  if (transport && !model.upNext.isCounting) PlayerBottomPanel(model: model),
-                ]),
+            child: ExcludeFocus(
+              excluding: isTelevision && !visible, // hidden controls take no D-pad focus
+              child: IgnorePointer(
+                ignoring: !visible,
+                child: AnimatedOpacity(
+                  opacity: visible ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Column(children: [
+                    PlayerTopBar(model: model),
+                    Expanded(child: transport && !model.upNext.isCounting ? Center(child: PlayerTransport(model: model, playFocus: _nodes.play)) : const SizedBox.shrink()),
+                    if (transport && !model.upNext.isCounting) PlayerBottomPanel(model: model, subtitlesFocus: _nodes.subtitles),
+                  ]),
+                ),
               ),
             ),
           ),
@@ -145,5 +166,11 @@ class _PlayerView extends StatelessWidget {
       if (!pip && failed) PlayerErrorCard(model: model),
       if (!pip && model.upNext.isCounting) UpNextCard(model: model),
     ]);
+    if (!isTelevision) return view;
+    // The focus left the player (the controls hid, a card went away): take it back, unless a menu or another screen is on top.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !model.closed && !_nodes.root.hasFocus && (ModalRoute.of(context)?.isCurrent ?? true)) _nodes.root.requestFocus();
+    });
+    return Focus(focusNode: _nodes.root, autofocus: true, skipTraversal: true, onKeyEvent: _keys.onKey, child: view);
   }
 }

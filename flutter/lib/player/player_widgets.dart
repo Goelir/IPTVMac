@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../app/device.dart';
 import '../l10n/app_localizations.dart';
 import 'player_gestures.dart';
 import 'player_model.dart';
 import 'player_options.dart';
+import 'player_tv.dart';
 import 'seek_bar_math.dart';
 
 /// The dark translucent panel behind the player's controls (like the iPhone player).
@@ -36,7 +38,7 @@ class PlayerButton extends StatelessWidget {
   final bool filled;
 
   @override
-  Widget build(BuildContext context) => IconButton(
+  Widget build(BuildContext context) => tvRing(IconButton(
         onPressed: onPressed,
         tooltip: label,
         iconSize: size,
@@ -47,7 +49,7 @@ class PlayerButton extends StatelessWidget {
             : null,
         constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
         icon: Icon(icon),
-      );
+      ));
 }
 
 String scaleName(AppLocalizations l, VideoScale s) => switch (s) {
@@ -73,7 +75,10 @@ class PlayerHud extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Stack(children: [
-          if (skip != null) Positioned.fill(child: _SkipRipple(key: ValueKey(skip.id), side: skip.side, label: skip.label)),
+          if (skip != null && isTelevision)
+            Align(alignment: Alignment.bottomCenter, child: Padding(padding: const EdgeInsets.only(bottom: 140), child: _SeekPill(skip.side, skip.label)))
+          else if (skip != null)
+            Positioned.fill(child: _SkipRipple(key: ValueKey(skip.id), side: skip.side, label: skip.label)),
           if (level != null) Positioned.fill(child: _LevelHud(kind: level.kind, value: level.value, label: level.kind == LevelKind.brightness ? l.playerBrightness : l.playerVolume)),
           if (drag != null)
             Align(
@@ -117,6 +122,24 @@ class PlayerHud extends StatelessWidget {
       ),
     );
   }
+}
+
+/// TV: the seek a key made, small and low: the arrow's direction and the running total ("+10", "+20"...).
+class _SeekPill extends StatelessWidget {
+  const _SeekPill(this.side, this.label);
+  final TouchSide side;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => PlayerSurface(
+        radius: 24,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(side == TouchSide.left ? Icons.fast_rewind : Icons.fast_forward, color: Colors.white, size: 26),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600, fontFeatures: [FontFeature.tabularFigures()])),
+        ]),
+      );
 }
 
 /// A soft half-disc on the tapped side with the running total ("+10", "+20"...).
@@ -213,7 +236,7 @@ class PlayerErrorCard extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 460),
-        child: PlayerSurface(
+        child: _TvScope(child: PlayerSurface(
           radius: 20,
           padding: const EdgeInsets.all(20),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -229,10 +252,10 @@ class PlayerErrorCard extends StatelessWidget {
             const SizedBox(height: 16),
             Wrap(spacing: 12, runSpacing: 8, alignment: WrapAlignment.center, children: [
               OutlinedButton(onPressed: model.close, child: Text(l.playerBack)),
-              FilledButton(onPressed: model.retry, child: Text(l.playerRetry)),
+              FilledButton(autofocus: isTelevision, onPressed: model.retry, child: Text(l.playerRetry)),
             ]),
           ]),
-        ),
+        )),
       ),
     );
   }
@@ -255,7 +278,7 @@ class UpNextCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
-            child: PlayerSurface(
+            child: _TvScope(child: PlayerSurface(
               radius: 18,
               padding: const EdgeInsets.all(14),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -267,12 +290,22 @@ class UpNextCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 TextButton(onPressed: model.upNext.cancel, child: Text(l.nextCancel)),
-                FilledButton(onPressed: model.playUpNextNow, child: Text(l.nextNow)),
+                FilledButton(autofocus: isTelevision, onPressed: model.playUpNextNow, child: Text(l.nextNow)),
               ]),
-            ),
+            )),
           ),
         ),
       ),
     );
   }
+}
+
+/// A card with buttons on a TV: its own focus scope, so that the button with `autofocus` takes the focus when the card appears
+/// (the player's screen holds the focus until then) and the arrows stay among the card's buttons.
+class _TvScope extends StatelessWidget {
+  const _TvScope({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => isTelevision ? FocusScope(child: child) : child;
 }

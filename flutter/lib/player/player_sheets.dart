@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../app/device.dart';
 import '../l10n/app_localizations.dart';
 import 'player_model.dart';
 import 'playback_speed.dart';
+import 'player_tv.dart';
 
 /// Playback speed: the presets as chips, a slider for in-between values and a reset (movies only).
 Future<void> showSpeedSheet(BuildContext context, PlayerModel model) => model.withSheet(() => showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (_) => ListenableBuilder(listenable: model, builder: (context, _) => _SpeedSheet(model: model)),
+      builder: (c) => tvDirectional(c, ListenableBuilder(listenable: model, builder: (context, _) => _SpeedSheet(model: model))),
     ));
 
 class _SpeedSheet extends StatelessWidget {
@@ -31,7 +33,12 @@ class _SpeedSheet extends StatelessWidget {
           const SizedBox(height: 12),
           Wrap(spacing: 8, runSpacing: 8, children: [
             for (final v in PlaybackSpeed.presets)
-              ChoiceChip(label: Text(PlaybackSpeed.label(v)), selected: (v - speed).abs() < 0.001, onSelected: (_) => model.setSpeed(v)),
+              ChoiceChip(
+                autofocus: isTelevision && (PlaybackSpeed.presets.any((p) => (p - speed).abs() < 0.001) ? (v - speed).abs() < 0.001 : v == 1), // a sheet starts on the speed in use
+                label: Text(PlaybackSpeed.label(v)),
+                selected: (v - speed).abs() < 0.001,
+                onSelected: (_) => model.setSpeed(v),
+              ),
           ]),
           Row(children: [
             const Icon(Icons.hourglass_bottom, size: 18),
@@ -60,7 +67,7 @@ class _SpeedSheet extends StatelessWidget {
 Future<void> showSubtitleAdjustSheet(BuildContext context, PlayerModel model) => model.withSheet(() => showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (_) => ListenableBuilder(listenable: model, builder: (context, _) => _SubtitleAdjustSheet(model: model)),
+      builder: (c) => tvDirectional(c, ListenableBuilder(listenable: model, builder: (context, _) => _SubtitleAdjustSheet(model: model))),
     ));
 
 class _SubtitleAdjustSheet extends StatelessWidget {
@@ -79,6 +86,7 @@ class _SubtitleAdjustSheet extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(l.playerSubtitleAdjust, style: Theme.of(context).textTheme.titleMedium),
           _Stepper(
+            autofocus: true,
             label: l.settingsSubscale,
             value: '${(scale * 100).round()}%',
             onMinus: () => model.setSubtitleStyle(scale: tenth(scale - 0.1, 0.5, 2)),
@@ -105,7 +113,8 @@ class _SubtitleAdjustSheet extends StatelessWidget {
 }
 
 class _Stepper extends StatelessWidget {
-  const _Stepper({required this.label, required this.value, required this.onMinus, required this.onPlus});
+  const _Stepper({required this.label, required this.value, required this.onMinus, required this.onPlus, this.autofocus = false});
+  final bool autofocus;
   final String label;
   final String value;
   final VoidCallback onMinus;
@@ -116,6 +125,6 @@ class _Stepper extends StatelessWidget {
         Expanded(child: Text(label)),
         IconButton(onPressed: onMinus, icon: const Icon(Icons.remove_circle_outline), tooltip: '−'),
         SizedBox(width: 56, child: Text(value, textAlign: TextAlign.center, style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]))),
-        IconButton(onPressed: onPlus, icon: const Icon(Icons.add_circle_outline), tooltip: '+'),
+        IconButton(autofocus: autofocus && isTelevision, onPressed: onPlus, icon: const Icon(Icons.add_circle_outline), tooltip: '+'),
       ]);
 }

@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/ui/bidi.dart';
 import 'missing_strings.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -9,6 +10,7 @@ import 'player_model.dart';
 import 'player_options.dart';
 import 'player_seek_bar.dart';
 import 'player_sheets.dart';
+import 'player_tv.dart';
 import 'player_widgets.dart';
 import 'playback_speed.dart';
 import 'track_label.dart';
@@ -56,8 +58,8 @@ class PlayerTopBar extends StatelessWidget {
             model.touchControls();
           },
         ),
-      if (model.pipSupported) PlayerButton(icon: Icons.picture_in_picture_alt, label: l.playerPip, onPressed: model.startPip),
-      if (model.canRotate)
+      if (model.pipSupported && !isTelevision) PlayerButton(icon: Icons.picture_in_picture_alt, label: l.playerPip, onPressed: model.startPip),
+      if (model.canRotate && !isTelevision)
         PlayerButton(
           icon: model.portrait ? Icons.stay_current_landscape : Icons.stay_current_portrait,
           label: MissingStrings.rotateScreen,
@@ -71,8 +73,9 @@ const _shadow = [Shadow(color: Colors.black54, blurRadius: 4)];
 
 /// Skip back / play / skip forward for movies; previous channel / play / next channel for live. Not mirrored in right-to-left languages.
 class PlayerTransport extends StatelessWidget {
-  const PlayerTransport({super.key, required this.model});
+  const PlayerTransport({super.key, required this.model, this.playFocus});
   final PlayerModel model;
+  final FocusNode? playFocus; // the play button's node: the TV key layer puts the focus there
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +99,7 @@ class PlayerTransport extends StatelessWidget {
             },
           ),
         SizedBox(width: model.isLive ? 24 : 36),
-        _PlayPause(model: model, ended: ended),
+        _PlayPause(model: model, ended: ended, focusNode: playFocus),
         SizedBox(width: model.isLive ? 24 : 36),
         if (model.isLive)
           PlayerButton(icon: Icons.skip_next, label: l.playerChannelNext, size: 32, onPressed: model.canZapNext ? () => model.zap(1) : null)
@@ -122,9 +125,10 @@ class PlayerTransport extends StatelessWidget {
 }
 
 class _PlayPause extends StatelessWidget {
-  const _PlayPause({required this.model, required this.ended});
+  const _PlayPause({required this.model, required this.ended, this.focusNode});
   final PlayerModel model;
   final bool ended;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +138,11 @@ class _PlayPause extends StatelessWidget {
     return Semantics(
       button: true,
       label: ended ? l.playerReplay : (core.paused ? l.downloadsPlay : l.downloadsPause),
-      child: GestureDetector(
+      child: tvFocusable(
+        focusNode: focusNode,
+        radius: 40,
+        onActivate: () => ended ? core.replay() : model.togglePause(),
+        child: GestureDetector(
         onTap: () => ended ? core.replay() : model.togglePause(),
         child: Container(
           width: 72,
@@ -148,15 +156,16 @@ class _PlayPause extends StatelessWidget {
               ? const Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3))
               : Icon(ended ? Icons.replay : (core.paused ? Icons.play_arrow : Icons.pause), color: Colors.white, size: 40),
         ),
-      ),
+      )),
     );
   }
 }
 
 /// The seek row and, under it, speed (movies), subtitles, audio, video scale and the sleep timer.
 class PlayerBottomPanel extends StatelessWidget {
-  const PlayerBottomPanel({super.key, required this.model});
+  const PlayerBottomPanel({super.key, required this.model, this.subtitlesFocus});
   final PlayerModel model;
+  final FocusNode? subtitlesFocus; // the subtitles button's node: the TV key layer puts the focus there
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +190,7 @@ class PlayerBottomPanel extends StatelessWidget {
             ),
           _Utility(
             label: l.playerSubtitles,
+            focusNode: subtitlesFocus,
             icon: model.subtitleSelection == 0 ? Icons.closed_caption_outlined : Icons.closed_caption,
             onTap: (anchor) async {
               final picked = await _showMenu<int>(anchor, model, [
@@ -259,7 +269,8 @@ Future<T?> _showMenu<T>(BuildContext anchor, PlayerModel model, List<PopupMenuEn
 }
 
 class _Utility extends StatelessWidget {
-  const _Utility({required this.label, required this.onTap, this.icon, this.child, this.text, this.color = Colors.white});
+  const _Utility({required this.label, required this.onTap, this.icon, this.child, this.text, this.color = Colors.white, this.focusNode});
+  final FocusNode? focusNode;
   final String label;
   final void Function(BuildContext anchor)? onTap;
   final IconData? icon;
@@ -273,7 +284,9 @@ class _Utility extends StatelessWidget {
           button: true,
           label: label,
           excludeSemantics: true,
-          child: InkResponse(
+          child: tvRing(radius: 12, InkResponse(
+            focusNode: focusNode,
+            canRequestFocus: onTap != null, // a disabled button is not a stop for the D-pad
             onTap: onTap == null ? null : () => onTap!(anchor),
             radius: 28,
             child: ConstrainedBox(
@@ -286,7 +299,7 @@ class _Utility extends StatelessWidget {
                     ]),
               ),
             ),
-          ),
+          )),
         ),
       );
 }

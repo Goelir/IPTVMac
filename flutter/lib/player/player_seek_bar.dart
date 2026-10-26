@@ -1,7 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../app/device.dart';
 import '../l10n/app_localizations.dart';
 import 'player_model.dart';
+import 'player_tv.dart';
 import 'seek_bar_math.dart';
 
 /// Elapsed time, the bar, the time left. Always left-to-right, also in Hebrew and Arabic (Apple's rule for timelines).
@@ -43,9 +48,48 @@ class PlayerSeekRow extends StatelessWidget {
   }
 }
 
-class _Bar extends StatelessWidget {
+class _Bar extends StatefulWidget {
   const _Bar({required this.model});
   final PlayerModel model;
+
+  @override
+  State<_Bar> createState() => _BarState();
+}
+
+class _BarState extends State<_Bar> {
+  static const _idle = Duration(milliseconds: 1500);
+  Timer? _commit;
+
+  PlayerModel get model => widget.model;
+
+  @override
+  void dispose() {
+    _commit?.cancel();
+    super.dispose();
+  }
+
+  /// TV: with the bar focused Left/Right (always time, never mirrored) move the target, Select commits it, and so does a pause in the keys.
+  KeyEventResult _key(FocusNode _, KeyEvent e) {
+    if (e is KeyUpEvent) return KeyEventResult.ignored;
+    final k = e.logicalKey;
+    if (k == LogicalKeyboardKey.arrowLeft || k == LogicalKeyboardKey.arrowRight) {
+      final secs = model.seekRepeat.seconds(e, model.prefs.seekStep, model.now);
+      if (secs > 0) model.remoteScrub(k == LogicalKeyboardKey.arrowLeft ? -secs : secs);
+      _commit?.cancel();
+      _commit = Timer(_idle, _commitNow);
+      return KeyEventResult.handled;
+    }
+    if (model.scrubbing && (k == LogicalKeyboardKey.select || k == LogicalKeyboardKey.enter || k == LogicalKeyboardKey.numpadEnter)) {
+      if (e is KeyDownEvent) _commitNow();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
+  void _commitNow() {
+    _commit?.cancel();
+    if (model.scrubbing) model.scrubEnded(commit: true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +105,7 @@ class _Bar extends StatelessWidget {
       decreasedValue: l.playerSeekValue(SeekBarMath.format(model.core.position - model.prefs.seekStep), SeekBarMath.format(duration)),
       onIncrease: () => model.skip(model.prefs.seekStep.toDouble()),
       onDecrease: () => model.skip(-model.prefs.seekStep.toDouble()),
-      child: LayoutBuilder(
+      child: _tv(LayoutBuilder(
         builder: (context, c) {
           final w = c.maxWidth;
           double timeAt(double x) => SeekBarMath.time(x, w, duration);
@@ -90,7 +134,11 @@ class _Bar extends StatelessWidget {
             ),
           );
         },
-      ),
+      )),
     );
   }
+
+  Widget _tv(Widget child) => !isTelevision
+      ? child
+      : tvRing(radius: 8, Focus(onKeyEvent: _key, onFocusChange: (f) => f ? null : _commitNow(), child: child));
 }

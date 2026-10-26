@@ -64,3 +64,7 @@ in `MediaKitEngine` and report it), the gestures on a real touch screen, PiP (en
 the audio_service notification, audio with the screen off, call/headphone interruptions, the notification permission prompt
 (Android 13+: `adb shell pm grant io.github.goelir.iptvmac android.permission.POST_NOTIFICATIONS`, or call the `requestNotificationPermission`
 channel method, which nothing calls yet).
+
+## TV remote (isTelevision)
+
+`player_tv.dart` holds the key map and the focus ring; nothing runs unless `isTelevision` is set. With no control focused (controls hidden, or showing as a banner) Select toggles pause, Left/Right seek by the seek step (Right is always forward; a held key repeats at most 5x/s and seeks up to 4x further), Up/Down zap a live channel (Up previous, Down next) or bring up the controls on a movie. With a control focused the arrows are the normal focus traversal; the seek bar takes Left/Right and Select commits. Back hides the controls, then closes. Menu/Info/context open the details or the subtitles button. Media keys and CH+/CH- are handled in the same place and swallowed, so audio_service does not act on them twice.

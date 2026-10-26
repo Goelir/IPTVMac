@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleState, WidgetsBinding;
 
+import '../app/device.dart';
 import 'engine.dart';
 import 'play_request.dart';
 import 'playback_controller.dart';
@@ -11,6 +12,7 @@ import 'player_gestures.dart';
 import 'player_options.dart';
 import 'player_prefs.dart';
 import 'player_system.dart';
+import 'player_tv.dart';
 import 'up_next.dart';
 
 enum LevelKind { brightness, volume }
@@ -36,6 +38,8 @@ class PlayerModel extends ChangeNotifier {
         videoScale = prefs.videoScale,
         subScale = prefs.subScale,
         subDelay = prefs.subDelay {
+    // A remote is slower than a finger: on a TV the controls stay at least 5 s after the last key (0 = never hide stays 0).
+    if (isTelevision && controls.hideAfter > Duration.zero && controls.hideAfter < tvHideAfter) controls.hideAfter = tvHideAfter;
     engine.setBuffer(prefs.bufferSize.maxBytes, prefs.bufferSize.readaheadSecs);
     _applySubtitleStyle();
     core.onSaveProgress = _save;
@@ -59,7 +63,7 @@ class PlayerModel extends ChangeNotifier {
           skip: skip,
           seek: seekTo,
           next: goNext,
-          previous: () => zap(-1),
+          previous: previous,
           stop: close,
           isPlaying: () => !core.paused,
           seekStep: prefs.seekStep,
@@ -75,6 +79,7 @@ class PlayerModel extends ChangeNotifier {
   final PlayerPrefs prefs;
   final UpNext upNext;
   final ControlsVisibility controls;
+  final seekRepeat = SeekRepeat(); // TV remote: a held Left/Right/fast-forward key seeks faster
 
   bool scrubbing = false; // the seek bar or a horizontal drag is active
   bool sheetOpen = false; // a menu or sheet is up
@@ -103,6 +108,8 @@ class PlayerModel extends ChangeNotifier {
   double _scrubStart = 0;
   double? _levelStart;
   double _speedBeforeBoost = 1;
+  double _remoteTotal = 0;
+  DateTime? _remoteAt;
   bool _closed = false;
   bool _wasPaused = true;
   double _lastAspect = 0;
@@ -116,6 +123,7 @@ class PlayerModel extends ChangeNotifier {
   }
 
   bool get closed => _closed;
+  DateTime get now => _now();
   bool get isLive => request.isLive;
 
   /// The first line of text under the title: the programme on now (live) or the request's own subtitle.
@@ -172,6 +180,52 @@ class PlayerModel extends ChangeNotifier {
 
   void setPlaying(bool on) {
     core.setPlaying(on);
+  }
+
+  /// A play or pause key on the remote: like the button, the user's choice wins over an automatic resume, and the controls show.
+  void remotePlay(bool on) {
+    system.userChose();
+    core.setPlaying(on);
+    touchControls();
+  }
+
+  /// Previous: the previous channel; a movie or episode starts again (the host knows no previous episode).
+  void previous() => isLive ? zap(-1) : seekTo(0);
+
+  /// A key was pressed on the remote: the controls (if up) stay up for another while.
+  void keyActivity() {
+    if (controls.shown) controls.touch(_now());
+  }
+
+  /// Back on a TV remote: first the countdown or the controls go away, then the player closes (everywhere else it closes at once).
+  void back() {
+    if (isTelevision) {
+      if (scrubbing) return scrubEnded(commit: false);
+      if (upNext.isCounting) return upNext.cancel();
+      if (controls.shown && !holdControls) {
+        controls.hide();
+        return notifyListeners();
+      }
+    }
+    close();
+  }
+
+  /// A seek key on the remote (movies and episodes): [seconds] back (negative) or forward, with the running total as feedback.
+  void remoteSeek(double seconds) {
+    if (isLive || seconds == 0) return;
+    final now = _now();
+    final chain = _remoteAt != null && now.difference(_remoteAt!) < SkipAccumulator.window && _remoteTotal.isNegative == seconds.isNegative;
+    _remoteTotal = chain ? _remoteTotal + seconds : seconds;
+    _remoteAt = now;
+    core.seekBy(seconds);
+    _show('skip', () => skipHud = (side: seconds < 0 ? TouchSide.left : TouchSide.right, label: SkipAccumulator.label(_remoteTotal.round()), id: ++_hudSerial), () => skipHud = null);
+  }
+
+  /// Left/Right on the focused seek bar: moves the target by [seconds]; Select ([scrubEnded]) or a pause in the keys commits it.
+  void remoteScrub(double seconds) {
+    if (isLive || core.duration <= 0) return;
+    if (!scrubbing) scrubBegan();
+    barScrubChanged(((dragScrub?.time ?? core.position) + seconds).clamp(0.0, core.duration));
   }
 
   void seekTo(double t) => core.seekTo(t);
@@ -389,6 +443,7 @@ class PlayerModel extends ChangeNotifier {
 
   Future<void> levelBegan(TouchSide side) async {
     _levelStart = null;
+    if (isTelevision) return; // a TV has no brightness to swipe and the volume belongs to the remote
     final kind = side == TouchSide.left ? LevelKind.brightness : LevelKind.volume;
     final v = await (kind == LevelKind.brightness ? system.brightness() : system.volume());
     _levelStart = v ?? 0.5;
