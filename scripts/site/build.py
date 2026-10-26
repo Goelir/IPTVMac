@@ -19,7 +19,7 @@ NOTARIZED_FROM = "0.9.1"   # first release signed with a Developer ID and notari
 BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
-ANDROID_APK = REPO + "/releases/tag/android-v1.0.3"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
+ANDROID_APK = REPO + "/releases/tag/android-v1.0.4"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
 YT_INSTALL = "https://youtu.be/TgaoFEEMg48"
@@ -225,7 +225,7 @@ HOME = {
    ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
-   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.3); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. iPhone and iPad: an app has been submitted to the App Store and is waiting for review. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
+   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. iPhone and iPad: an app has been submitted to the App Store and is waiting for review. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
    ("Is IPTVMac free?", "Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking."),
    ("Why does macOS block the app, and how do I open it?", f"Versions before {NOTARIZED_FROM} are not notarized by Apple, so macOS blocks a copy that was downloaded in a browser. From version {NOTARIZED_FROM}, releases are signed with an Apple Developer ID and notarized, and the DMG opens with a normal double-click. To fix an older copy, install the latest release (the DMG, or the one-line command above, which works for every version), or open System Settings, Privacy and Security, and choose Open Anyway."),
    ("Does IPTVMac have Picture in Picture?", "Yes. A floating window stays on top of other apps and across Spaces while you browse for something else."),
@@ -310,7 +310,7 @@ HOME = {
    ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל ולא מארח ערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו. אם אין לכם, הפרויקט העצמאי בקוד פתוח iptv-org מפרסם רשימות חינמיות של ערוצים זמינים לציבור; הקישור בעמוד."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
-   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.3); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. iPhone ו-iPad: אפליקציה הוגשה ל-App Store וממתינה לבדיקה. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
+   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. iPhone ו-iPad: אפליקציה הוגשה ל-App Store וממתינה לבדיקה. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
    ("האם IPTVMac חינמי?", "כן. הוא חינמי ובקוד פתוח ברישיון GPL-3.0, בלי פרסומות ובלי מעקב."),
    ("למה macOS חוסמת את האפליקציה, ואיך פותחים אותה?", f"גרסאות לפני {NOTARIZED_FROM} לא עברו notarization של Apple, ולכן macOS חוסמת עותק שהורד בדפדפן. מגרסה {NOTARIZED_FROM} ואילך הגרסאות חתומות ב-Apple Developer ID ועברו notarization, וה-DMG נפתח בלחיצה כפולה רגילה. כדי לתקן עותק ישן, מתקינים את הגרסה האחרונה (מה-DMG, או בפקודת ההתקנה שלמעלה, שעובדת בכל הגרסאות), או פותחים הגדרות מערכת, פרטיות ואבטחה, ובוחרים Open Anyway."),
    ("האם יש תמונה בתוך תמונה?", "כן. חלון צף נשאר מעל אפליקציות אחרות ובכל שולחן עבודה בזמן שמחפשים משהו אחר."),

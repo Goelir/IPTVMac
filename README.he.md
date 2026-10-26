@@ -23,7 +23,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 </div>
 
-[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.3) &nbsp;|&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;|&nbsp; [התקנה](#התקנה) &nbsp;|&nbsp; [יכולות](#יכולות) &nbsp;|&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;|&nbsp; [English](README.md)
+[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;|&nbsp; [התקנה](#התקנה) &nbsp;|&nbsp; [יכולות](#יכולות) &nbsp;|&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;|&nbsp; [English](README.md)
 
 <br>
 
@@ -195,7 +195,8 @@ https://iptv-org.github.io/iptv/index.m3u
 IPTVMac היא אפליקציית Mac שאפשר להוריד כבר היום. שתי אפליקציות נוספות חולקות איתה את הנגן והעיצוב, וקוד המקור שלהן במאגר הזה:
 
 - **iPhone ו-iPad** (`ios/`): הוגשה ל-App Store וממתינה לבדיקה. בנייה: `scripts/ios-setup.sh` ואז פותחים את `ios/IPTVPhone.xcodeproj` (ראו [ios/README.md](ios/README.md)).
-- **Android** (`flutter/`): **[הורדת ה-APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.3)** (Android 8 ומעלה; בוחרים בקובץ `arm64-v8a` לכמעט כל טלפון, ובהערות הגרסה ההוראות). Flutter ו-libmpv, 31 שפות שנוצרות מאותן מחרוזות. נגן מגע עם מחוות, תמונה בתוך תמונה, קול שממשיך כשהמסך כבוי, כפתור סיבוב מסך, והורדות של סרטים ופרקים לצפייה בלי רשת (אפליקציית ה-Android היא היחידה, לצד ה-Mac, שיש בה הורדות; באייפון אין). בנייה: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; ראו [flutter/PLAN.md](flutter/PLAN.md)). Android 8 ומעלה. היא מודיעה כשיצא APK חדש (באנר עם קישור לעמוד הגרסה; ההתקנה נשארת ידנית; היא פונה אל github.com לכל היותר אחת לשש שעות, ואפשר לכבות את זה בהגדרות).
+- **Android** (`flutter/`): **[הורדת ה-APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4)** (Android 8 ומעלה; בוחרים בקובץ `arm64-v8a` לכמעט כל טלפון, ובהערות הגרסה ההוראות). Flutter ו-libmpv, 31 שפות שנוצרות מאותן מחרוזות. נגן מגע עם מחוות, תמונה בתוך תמונה, קול שממשיך כשהמסך כבוי, כפתור סיבוב מסך, והורדות של סרטים ופרקים לצפייה בלי רשת (אפליקציית ה-Android היא היחידה, לצד ה-Mac, שיש בה הורדות; באייפון אין). בנייה: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; ראו [flutter/PLAN.md](flutter/PLAN.md)). Android 8 ומעלה. היא מודיעה כשיצא APK חדש (באנר עם קישור לעמוד הגרסה; ההתקנה נשארת ידנית; היא פונה אל github.com לכל היותר אחת לשש שעות, ואפשר לכבות את זה בהגדרות).
+- **Android TV, ‏Google TV ו-Fire TV** (אותה אפליקציה; גרסת הטלוויזיה הראשונה): מורידים את **[IPTVMac-Android-1.0.4-tv.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv.apk)**, קובץ אחד לטלוויזיות של 32 ו-64 ביט. ב-Fire TV או ב-Android TV מתקינים עם האפליקציה Downloader (מקלידים את הכתובת שלמעלה) או מכונן USB; עדיין אין רישום בחנות. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**; בנגן Left/Right מדלגים, Up/Down מחליפים ערוץ, OK עוצר. אין הורדות בטלוויזיה, והעדכון ידני (מתקינים את הקובץ החדש מעל הישן). נבדק בטסטים אוטומטיים ובאמולטור של Android, עוד לא על טלוויזיה אמיתית: מוזמנים לדווח על תקלות.
 
 ## בנייה מקוד המקור
 
