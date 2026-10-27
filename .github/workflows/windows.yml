@@ -50,6 +50,10 @@ jobs:
         working-directory: flutter
         run: flutter test
 
+      - name: Download engine on real Windows (a local server, a real file on disk)
+        working-directory: flutter
+        run: flutter test integration_test/downloads_windows_test.dart -d windows
+
       - name: Build
         working-directory: flutter
         run: flutter build windows --release --build-name=$env:VERSION --split-debug-info=build/symbols
