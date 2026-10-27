@@ -4,7 +4,7 @@
 
 # IPTVMac
 
-**A native IPTV player for the Mac.**<br>
+**A native IPTV player for Mac, Android phones and Android TV.**<br>
 Xtream Codes and M3U, instant search, a built-in player with subtitles, Picture in Picture, catch-up and downloads.<br>
 Free and open source. No accounts, no analytics.
 
@@ -15,9 +15,11 @@ Free and open source. No accounts, no analytics.
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square)](LICENSE)
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple)
 ![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey?style=flat-square)
+![Android 8+](https://img.shields.io/badge/Android-8%2B-3ddc84?style=flat-square&logo=android&logoColor=white)
+![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
-[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;|&nbsp; [Install](#install) &nbsp;|&nbsp; [Features](#features) &nbsp;|&nbsp; [FAQ](#faq) &nbsp;|&nbsp; [עברית](README.he.md)
+[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;|&nbsp; [Install](#install) &nbsp;|&nbsp; [Features](#features) &nbsp;|&nbsp; [FAQ](#faq) &nbsp;|&nbsp; [עברית](README.he.md)
 
 <br>
 
@@ -27,16 +29,27 @@ Free and open source. No accounts, no analytics.
 
 </div>
 
+## Where it runs
+
+| Device | Get it | Status |
+|---|---|---|
+| **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand |
+| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, tested on an emulator, not yet on real TVs |
+| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released |
+
+The same engine, 31 languages and no-account design everywhere.
+
 ## Why IPTVMac
 
 - **Fast.** Your whole library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second, in a category, in a section, or everywhere.
 - **Stable.** Playback runs on [mpv](https://mpv.io) (libmpv, bundled). It plays the broken TS and HLS streams that trip up system players, reconnects when the stream drops, and uses hardware decoding.
-- **Native.** SwiftUI, no Electron, no web view. Nothing else to install: the player is inside the app.
+- **Native.** SwiftUI on Mac and iPhone, Flutter on Android; no Electron, no web view. Nothing else to install: the player is inside the app.
 - **Open.** GPL-3.0, no accounts, no analytics. The app talks only to the servers you add, and to GitHub for updates.
 
 ## Install
 
-Requires an Apple Silicon Mac (M1 or later) and macOS 14 or later.
+**On Mac.** (Android and Android TV: see [Other platforms](#other-platforms).) Requires an Apple Silicon Mac (M1 or later) and macOS 14 or later.
 
 **Install in one line.** Paste this in Terminal:
 

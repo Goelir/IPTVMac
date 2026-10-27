@@ -6,7 +6,7 @@
 
 # IPTVMac
 
-**נגן IPTV מקורי ל-Mac.**<br>
+**נגן IPTV מקורי ל-Mac, לטלפונים של Android ול-Android TV.**<br>
 Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה (catch-up) והורדות.<br>
 חינמי ובקוד פתוח. בלי חשבונות ובלי איסוף נתונים.
 
@@ -19,11 +19,13 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square)](LICENSE)
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple)
 ![Apple Silicon](https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey?style=flat-square)
+![Android 8+](https://img.shields.io/badge/Android-8%2B-3ddc84?style=flat-square&logo=android&logoColor=white)
+![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
 </div>
 
-[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;|&nbsp; [התקנה](#התקנה) &nbsp;|&nbsp; [יכולות](#יכולות) &nbsp;|&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;|&nbsp; [English](README.md)
+[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;|&nbsp; [התקנה](#התקנה) &nbsp;|&nbsp; [יכולות](#יכולות) &nbsp;|&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;|&nbsp; [English](README.md)
 
 <br>
 
@@ -33,16 +35,27 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 </div>
 
+## על אילו מכשירים זה רץ
+
+| מכשיר | איפה להשיג | מצב |
+|---|---|---|
+| **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד |
+| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית |
+| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, נבדקה באמולטור, עוד לא על טלוויזיות אמיתיות |
+| **iPhone ו-iPad** | ממתין לבדיקה ב-App Store; בינתיים אפשר [לבנות מהמקור](#פלטפורמות-נוספות) | לא יצא |
+
+אותו מנוע, 31 שפות ובלי חשבון, בכל מקום.
+
 ## למה IPTVMac
 
 - **מהיר.** כל הספרייה שלך נשמרת במסד נתונים מקומי עם חיפוש טקסט מלא. מציאת ערוץ מתוך 100,000 פריטים לוקחת הרבה פחות משנייה, בתוך קטגוריה, בתוך חלק, או בכל מקום.
 - **יציב.** הניגון רץ על [mpv](https://mpv.io) (libmpv, מובנה). הוא מנגן סטרימים פגומים שנגנים של המערכת נכשלים בהם, מתחבר מחדש כשהסטרים נופל, ומשתמש בפענוח חומרה.
-- **מקורי.** SwiftUI, בלי Electron ובלי דפדפן מובנה. אין מה להתקין בנוסף: הנגן בתוך האפליקציה.
+- **מקורי.** SwiftUI ב-Mac וב-iPhone, ו-Flutter ב-Android; בלי Electron ובלי דפדפן מובנה. אין מה להתקין בנוסף: הנגן בתוך האפליקציה.
 - **פתוח.** GPL-3.0, בלי חשבונות ובלי איסוף נתונים. האפליקציה פונה רק לשרתים שהוספת, ול-GitHub לעדכונים.
 
 ## התקנה
 
-נדרש Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה.
+**ב-Mac.** (‏Android ו-Android TV: ראו [פלטפורמות נוספות](#פלטפורמות-נוספות).) נדרש Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה.
 
 **התקנה בשורה אחת.** הדביקו בטרמינל:
 
