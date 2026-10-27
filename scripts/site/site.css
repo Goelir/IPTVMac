@@ -504,7 +504,7 @@ dialog.tour p { padding: 12px 18px 16px; font-size: .84rem; color: #b8b4d2; }
 /* Devices: Mac, Android phone, Android TV. Each card is complete on its own: a picture, the requirement, three steps and the download. */
 .devices { padding-block: clamp(56px, 9vh, 112px); }
 .dev-lead { color: var(--mute); max-width: 44rem; margin: 10px 0 clamp(24px, 4vh, 40px); }
-.dev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.dev-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
 .dev { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: clamp(16px, 2vw, 22px); border: 1px solid var(--line); border-radius: 18px; background: var(--s2); }
 .dev h3 { font-size: 1.25rem; letter-spacing: -.01em; margin: 0; font-weight: 600; }
 .dev .shot { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: var(--bg); }
@@ -515,6 +515,7 @@ dialog.tour p { padding: 12px 18px 16px; font-size: .84rem; color: #b8b4d2; }
 .dev .acts .btn { min-height: 46px; padding-inline: 18px; font-size: .9375rem; }
 .dev.phone .shot img { object-fit: cover; object-position: top; } /* a portrait phone in a landscape box: show the top of the list at a readable size */
 .dev-ios { margin-top: 22px; color: var(--mute); font-size: .9rem; }
+@media (max-width: 1240px) { .dev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 980px) { .dev-grid { grid-template-columns: minmax(0, 1fr); } .dev .shot { aspect-ratio: 16 / 9; } }
 
 /* ---------- product pages: Download, Features, What's new ----------
@@ -677,7 +678,7 @@ html[lang="he"] .fchap h2 { line-height: 1.1; letter-spacing: -.01em; font-weigh
 .rel li::before { content: ""; position: absolute; inset-inline-start: 0; top: .7em; width: 8px; height: 1px; background: var(--acc); }
 .rel li strong { color: var(--ink); font-weight: 600; }
 .rel-l { margin-top: 18px; font-size: .9rem; }
-.p-mac { color: var(--acc-ink); } .p-android { color: light-dark(#0b7a43, #3ddc84); }
+.p-mac { color: var(--acc-ink); } .p-windows { color: light-dark(#0a64c2, #5cb3ff); } .p-android { color: light-dark(#0b7a43, #3ddc84); }
 
 @media (max-width: 1000px) {
   .pghero { grid-template-columns: minmax(0, 1fr); padding-bottom: 72px; }

@@ -30,7 +30,7 @@
 
   // ---- hero download button and picker: choose by the visitor's device ----
   const ua = navigator.userAgent || "";
-  const rec = /Android/i.test(ua) ? (/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(ua) ? "tv" : "android") : (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? "mac" : null);
+  const rec = /Android/i.test(ua) ? (/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(ua) ? "tv" : "android") : /Windows NT/i.test(ua) ? "windows" : (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? "mac" : null);
   const main = $("#dl-main");
   if (main && rec && main.dataset[rec]) { const [href, label, meta] = JSON.parse(main.dataset[rec]); main.href = href; $(".lbl", main).textContent = label; const m = $("#dl-meta"); if (m) m.textContent = meta; }
 

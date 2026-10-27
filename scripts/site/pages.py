@@ -9,19 +9,19 @@ MONTHS = {
 
 UI = {
  "en": dict(crumb="IPTVMac", free="Free · GPL-3.0 · no account", rec="Recommended for your device", more="All releases on GitHub", src="Source code",
-            mac="Mac", android="Android", tv="Android TV", ios="iPhone and iPad", size="size", platforms="Platforms",
+            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone and iPad", size="size", platforms="Platforms",
             home_aria="IPTVMac home", on="On"),
  "he": dict(crumb="IPTVMac", free="חינמי · GPL-3.0 · בלי חשבון", rec="מומלץ למכשיר שלך", more="כל הגרסאות ב-GitHub", src="קוד המקור",
-            mac="Mac", android="Android", tv="Android TV", ios="iPhone ו-iPad", size="גודל", platforms="פלטפורמות",
+            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone ו-iPad", size="גודל", platforms="פלטפורמות",
             home_aria="IPTVMac, דף הבית", on="ב-"),
 }
 
 # ---------- Download ----------
 DOWNLOAD = {
  "en": dict(
-  title="Download IPTVMac: Mac, Android and Android TV | Free IPTV player",
-  desc="Download IPTVMac for free: the DMG for Mac (Apple Silicon, macOS 14+), the APK for Android phones and tablets, and the TV files for Android TV, Google TV and Fire TV. Signed, checksummed, no account.",
-  h1="Download IPTVMac", lede="One free player for your Mac, your phone and your TV. Pick your device; every download is signed, and the app contains no ads and no tracking.",
+  title="Download IPTVMac: Mac, Windows, Android and Android TV | Free IPTV player",
+  desc="Download IPTVMac for free: the DMG for Mac (Apple Silicon, macOS 14+), the installer for Windows 10 and 11, the APK for Android phones and tablets, and the TV files for Android TV, Google TV and Fire TV. Checksummed, no account.",
+  h1="Download IPTVMac", lede="One free player for your Mac, your PC, your phone and your TV. Pick your device; the app contains no ads and no tracking.",
   mac=dict(h="Mac", req="Apple Silicon (M1 or later), macOS 14 or later.", btn="Download the DMG", alt="Or install from Terminal in one line:",
            steps=["Open IPTVMac.dmg and drag the IPTVMac icon onto Applications.", "Open the app and add your Xtream Codes login or M3U link.", "That is all: the app updates itself."],
            note="Signed with an Apple Developer ID and notarized by Apple, so it opens with a normal double-click. The one-line command works for every version and checks the signature and SHA-256 for you."),
@@ -31,6 +31,9 @@ DOWNLOAD = {
   tv=dict(h="Android TV, Google TV, Fire TV", req="Android 8 or later. Works with the remote control; no touch screen needed.", btn32="Download 32-bit", btn64="Download 64-bit",
           steps=["On the TV, install the Downloader app and open it.", "Type the address of the file, or copy the file to a USB stick and open it with a file manager. Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up one level, and holding Back closes the app."],
           note="Installs directly for now (no store listing yet). Updates are manual: install the new file over the old one. There are no downloads or backup files on the TV version."),
+  win=dict(h="Windows", req="Windows 10 or 11, 64-bit.", btn="Download the installer", portable="Or the portable zip (no install, unzip and run):",
+           steps=["Open IPTVMac-Windows-setup.exe. It installs for your user only and needs no administrator rights.", "Windows may say it protected your PC: the app is not signed with a paid certificate yet. Choose More info, then Run anyway.", "Open IPTVMac and add your Xtream Codes login or M3U link. Space pauses, the arrows seek, F fills the screen."],
+           note="Light by design: about {s} MB to download, and while it just sits open it uses almost no processor. Updates are manual for now: the app tells you when a new version is out, and you run the new installer over the old one."),
   ios=dict(h="iPhone and iPad", req="iOS 17 or later.", soon="Coming soon", body="The iPhone and iPad app is built and waiting for App Store review. You can build it from the source in the meantime.", btn="Build from source"),
   files_h="Which Android file?", files_p="Phones and tablets use one of the first three. TVs use the TV files. If unsure, take the one marked as the usual choice.",
   files_cols=("File", "For", "Size"),
@@ -46,9 +49,9 @@ DOWNLOAD = {
   js_rec="Recommended for your device",
  ),
  "he": dict(
-  title="הורדת IPTVMac: Mac, ‏Android ו-Android TV | נגן IPTV חינמי",
-  desc="הורדה חינמית של IPTVMac: קובץ DMG ל-Mac (‏Apple Silicon, ‏macOS 14 ומעלה), קובץ APK לטלפונים וטאבלטים של Android, וקבצי טלוויזיה ל-Android TV, ל-Google TV ול-Fire TV. חתום, עם סכומי בדיקה, בלי חשבון.",
-  h1="הורדת IPTVMac", lede="נגן חינמי אחד ל-Mac, לטלפון ולטלוויזיה. בוחרים מכשיר; כל קובץ חתום, ובאפליקציה אין פרסומות ואין מעקב.",
+  title="הורדת IPTVMac: Mac, ‏Windows, ‏Android ו-Android TV | נגן IPTV חינמי",
+  desc="הורדה חינמית של IPTVMac: קובץ DMG ל-Mac (‏Apple Silicon, ‏macOS 14 ומעלה), מתקין ל-Windows 10 ו-11, קובץ APK לטלפונים וטאבלטים של Android, וקבצי טלוויזיה ל-Android TV, ל-Google TV ול-Fire TV. עם סכומי בדיקה, בלי חשבון.",
+  h1="הורדת IPTVMac", lede="נגן חינמי אחד ל-Mac, למחשב Windows, לטלפון ולטלוויזיה. בוחרים מכשיר; באפליקציה אין פרסומות ואין מעקב.",
   mac=dict(h="Mac", req="Apple Silicon (‏M1 ומעלה), ‏macOS 14 ומעלה.", btn="הורדת ה-DMG", alt="או התקנה מהטרמינל בשורה אחת:",
            steps=["פותחים את IPTVMac.dmg וגוררים את סמל IPTVMac אל Applications.", "פותחים את האפליקציה ומוסיפים כניסת Xtream Codes או קישור M3U.", "זהו: האפליקציה מתעדכנת לבד."],
            note="חתום ב-Apple Developer ID ומאושר על ידי Apple (notarized), ולכן נפתח בלחיצה כפולה רגילה. הפקודה בשורה אחת עובדת לכל גרסה ובודקת בשבילך את החתימה ואת ה-SHA-256."),
@@ -58,6 +61,9 @@ DOWNLOAD = {
   tv=dict(h="Android TV, ‏Google TV, ‏Fire TV", req="Android 8 ומעלה. עובד עם השלט; אין צורך במסך מגע.", btn32="הורדת 32 ביט", btn64="הורדת 64 ביט",
           steps=["בטלוויזיה מתקינים את האפליקציה Downloader ופותחים אותה.", "מקלידים את כתובת הקובץ, או מעתיקים את הקובץ לכונן USB ופותחים אותו במנהל קבצים. מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה רמה אחת, ולחיצה ארוכה על Back סוגרת את האפליקציה."],
           note="בינתיים מתקינים ישירות (עוד אין רישום בחנות). העדכונים ידניים: מתקינים את הקובץ החדש מעל הישן. בגרסת הטלוויזיה אין הורדות ואין קבצי גיבוי."),
+  win=dict(h="Windows", req="Windows 10 או 11, ‏64 ביט.", btn="הורדת המתקין", portable="או קובץ ה-zip הנייד (בלי התקנה, פותחים ומפעילים):",
+           steps=["פותחים את IPTVMac-Windows-setup.exe. הוא מתקין למשתמש שלכם בלבד ולא צריך הרשאות מנהל.", "ייתכן ש-Windows יגיד שהגן על המחשב: האפליקציה עוד לא חתומה בתעודה בתשלום. בוחרים More info ואז Run anyway.", "פותחים את IPTVMac ומוסיפים כניסת Xtream Codes או קישור M3U. רווח עוצר, החיצים מדלגים, F ממלא את המסך."],
+           note="קלה בכוונה: בערך {s}MB להורדה, ובזמן שהיא רק פתוחה היא כמעט לא צורכת מעבד. העדכונים ידניים בינתיים: האפליקציה מודיעה כשיצאה גרסה חדשה, ומריצים את המתקין החדש מעל הישן."),
   ios=dict(h="iPhone ו-iPad", req="iOS 17 ומעלה.", soon="בקרוב", body="אפליקציית ה-iPhone וה-iPad בנויה וממתינה לבדיקה ב-App Store. בינתיים אפשר לבנות אותה מקוד המקור.", btn="בנייה מקוד המקור"),
   files_h="איזה קובץ Android?", files_p="טלפונים וטאבלטים משתמשים באחד משלושת הראשונים. טלוויזיות משתמשות בקבצי הטלוויזיה. אם לא בטוחים, לוקחים את הקובץ שמסומן כבחירה הרגילה.",
   files_cols=("קובץ", "למי", "גודל"),
@@ -79,7 +85,7 @@ DOWNLOAD = {
 FEATURES = {
  "en": dict(
   title="IPTVMac features: search, player, Picture in Picture, catch-up and more",
-  desc="Everything IPTVMac does: instant search over 100,000 items, a stable mpv player, Picture in Picture, catch-up, subtitles, several playlists, downloads, 31 languages. Mac, Android and Android TV.",
+  desc="Everything IPTVMac does: instant search over 100,000 items, a stable mpv player, Picture in Picture, catch-up, subtitles, several playlists, downloads, 31 languages. Mac, Windows, Android and Android TV.",
   h1="What IPTVMac does", lede="A player for your own Xtream Codes and M3U sources, built to be fast, stable and out of your way.",
   pic_alt="The IPTVMac window showing a wall of movie posters",
   groups=[
@@ -98,6 +104,7 @@ FEATURES = {
      ("Seek preview", "Hover the progress bar and a small window shows the picture at that moment. It is always on for downloaded files and optional for streams.", ("mac",)),
      ("Touch gestures", "Double-tap to skip, swipe for volume and brightness, long-press for 2x, and a button to rotate the screen.", ("android",)),
      ("Made for the remote", "Arrows move, OK selects, Back goes up one level and holding Back closes the app. Up and Down change the channel in the player, and the media keys work.", ("tv",)),
+     ("Made for the keyboard and mouse", "Space pauses, the arrows seek, Up and Down and the wheel change the volume, F fills the screen, Esc steps back, Page Up and Page Down change the channel. A click pauses, a double click fills the screen, and the pointer hides while you watch.", ("windows",)),
    ]),
    ("Your library", [
      ("Several playlists, one library", "Add as many Xtream Codes and M3U sources as you like, switch between them, or choose All playlists to search, favorite and continue watching across every one.", ()),
@@ -111,15 +118,15 @@ FEATURES = {
      ("31 languages", "The whole interface in 31 languages, including right-to-left Hebrew and Arabic, generated from the same strings on every platform.", ()),
      ("Light and dark", "Follows your system or your choice.", ()),
      ("No account, no ads, no tracking", "Nothing is sent to the developer. The app talks only to the servers you add, and to GitHub to check for updates. The source code is public.", ()),
-     ("Written for each platform", "Swift and SwiftUI on Mac and iPhone; Dart with Flutter and a Kotlin layer on Android and Android TV. The video on every one is decoded by the same compiled libmpv engine.", ()),
-     ("Updates", "The Mac app updates itself, verifying each update with a signature. The Android app shows a banner when a new version is out and you install it yourself.", ("mac", "android")),
+     ("Written for each platform", "Swift and SwiftUI on Mac and iPhone; Dart with Flutter on Windows, Android and Android TV, with a small C++ shell on Windows and a Kotlin layer on Android. The video on every one is decoded by the same compiled libmpv engine.", ()),
+     ("Updates", "The Mac app updates itself, verifying each update with a signature. The Windows and Android apps show a banner when a new version is out and you install it yourself.", ("mac", "windows", "android")),
    ]),
   ],
   cta_h="Try it", cta_p="Free, open source and without an account.", cta_btn="Go to downloads",
  ),
  "he": dict(
   title="התכונות של IPTVMac: חיפוש, נגן, תמונה בתוך תמונה, צפייה בהיסטוריה ועוד",
-  desc="כל מה ש-IPTVMac עושה: חיפוש מיידי על פני 100,000 פריטים, נגן mpv יציב, תמונה בתוך תמונה, צפייה בהיסטוריה, כתוביות, כמה רשימות, הורדות ו-31 שפות. Mac, ‏Android ו-Android TV.",
+  desc="כל מה ש-IPTVMac עושה: חיפוש מיידי על פני 100,000 פריטים, נגן mpv יציב, תמונה בתוך תמונה, צפייה בהיסטוריה, כתוביות, כמה רשימות, הורדות ו-31 שפות. Mac, ‏Windows, ‏Android ו-Android TV.",
   h1="מה IPTVMac עושה", lede="נגן למקורות Xtream Codes ו-M3U שלכם, שנבנה להיות מהיר, יציב ולא להפריע.",
   pic_alt="חלון IPTVMac עם קיר של פוסטרים של סרטים",
   groups=[
@@ -138,6 +145,7 @@ FEATURES = {
      ("תצוגה מקדימה בציר הזמן", "מעבירים את העכבר על פס ההתקדמות וחלון קטן מראה את התמונה באותו רגע. תמיד פועל בקבצים שהורדו, ואופציונלי בשידורים.", ("mac",)),
      ("מחוות מגע", "לחיצה כפולה לדילוג, החלקה לעוצמת קול ולבהירות, לחיצה ארוכה ל-2x וכפתור לסיבוב המסך.", ("android",)),
      ("נבנה לשלט", "החיצים מזיזים, OK בוחר, Back עולה רמה אחת ולחיצה ארוכה על Back סוגרת את האפליקציה. למעלה ולמטה מחליפים ערוץ בנגן, ומקשי המדיה עובדים.", ("tv",)),
+     ("נבנה למקלדת ולעכבר", "רווח עוצר, החיצים מדלגים, למעלה ולמטה והגלגלת משנים עוצמת קול, F ממלא את המסך, Esc חוזר אחורה, ו-Page Up ו-Page Down מחליפים ערוץ. קליק עוצר, דאבל-קליק ממלא את המסך, והמצביע נעלם בזמן הצפייה.", ("windows",)),
    ]),
    ("הספרייה שלכם", [
      ("כמה רשימות, ספרייה אחת", "מוסיפים כמה מקורות Xtream Codes ו-M3U שרוצים, עוברים ביניהם, או בוחרים All playlists כדי לחפש, להוסיף למועדפים ולהמשיך לצפות בכולם יחד.", ()),
@@ -151,8 +159,8 @@ FEATURES = {
      ("31 שפות", "כל הממשק ב-31 שפות, כולל עברית וערבית מימין לשמאל, שנוצרות מאותן מחרוזות בכל פלטפורמה.", ()),
      ("בהיר וכהה", "לפי המערכת או לפי הבחירה שלכם.", ()),
      ("בלי חשבון, בלי פרסומות, בלי מעקב", "שום דבר לא נשלח למפתח. האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub כדי לבדוק עדכונים. קוד המקור פומבי.", ()),
-     ("נכתב לכל פלטפורמה", "Swift ו-SwiftUI ב-Mac וב-iPhone; Dart עם Flutter ושכבת Kotlin ב-Android וב-Android TV. את הווידאו בכולן מפענח אותו מנוע libmpv מקומפל.", ()),
-     ("עדכונים", "אפליקציית ה-Mac מתעדכנת לבד ומאמתת כל עדכון בחתימה. אפליקציית ה-Android מציגה באנר כשיוצאת גרסה חדשה, ומתקינים אותה בעצמכם.", ("mac", "android")),
+     ("נכתב לכל פלטפורמה", "Swift ו-SwiftUI ב-Mac וב-iPhone; Dart עם Flutter ב-Windows, ב-Android וב-Android TV, עם מעטפת C++ קטנה ב-Windows ושכבת Kotlin ב-Android. את הווידאו בכולן מפענח אותו מנוע libmpv מקומפל.", ()),
+     ("עדכונים", "אפליקציית ה-Mac מתעדכנת לבד ומאמתת כל עדכון בחתימה. אפליקציות ה-Windows וה-Android מציגות באנר כשיוצאת גרסה חדשה, ומתקינים אותה בעצמכם.", ("mac", "windows", "android")),
    ]),
   ],
   cta_h="מנסים", cta_p="חינמי, קוד פתוח ובלי חשבון.", cta_btn="לדף ההורדות",
@@ -162,6 +170,15 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-10-27", "windows", "1.0.0", "windows-v1.0.0", {
+   "en": ["**The first version for Windows 10 and 11.** A light installer (it installs for your user, no administrator rights) or a portable zip. The same player, search and 31 languages as everywhere else.",
+          "**Built for the keyboard and mouse:** Space pauses, the arrows seek, Up and Down and the wheel change the volume, F or F11 fills the screen, Esc steps back, a click pauses and a double click fills the screen.",
+          "**Easy on the machine:** the display stays awake while a picture plays, video decoding is set to use the graphics card when the driver supports it, and an open app that you are not touching uses almost no processor.",
+          "The app is not signed with a paid certificate yet, so Windows SmartScreen may ask you to choose More info and Run anyway."],
+   "he": ["**הגרסה הראשונה ל-Windows 10 ו-11.** מתקין קל (מתקין למשתמש שלכם, בלי הרשאות מנהל) או קובץ zip נייד. אותו נגן, אותו חיפוש ואותן 31 שפות כמו בכל מקום.",
+          "**נבנתה למקלדת ולעכבר:** רווח עוצר, החיצים מדלגים, למעלה ולמטה והגלגלת משנים עוצמת קול, F או F11 ממלא את המסך, Esc חוזר אחורה, קליק עוצר ודאבל-קליק ממלא את המסך.",
+          "**עדינה למחשב:** המסך נשאר דולק בזמן שמתנגנת תמונה, פענוח הווידאו מוגדר להשתמש בכרטיס המסך כשהדרייבר תומך בכך, ואפליקציה פתוחה שאתם לא נוגעים בה כמעט לא צורכת מעבד.",
+          "האפליקציה עוד לא חתומה בתעודה בתשלום, ולכן Windows SmartScreen עשוי לבקש לבחור More info ואז Run anyway."]}),
  ("2026-10-26", "android", "1.0.4", "android-v1.0.4", {
    "en": ["**The first version for Android TV, Google TV and Fire TV.** It works with a TV remote: arrows move, OK selects, Back goes up, and holding Back closes the app. A clear focus ring shows where you are.",
           "**In the player:** Left and Right seek, Up and Down change the channel, OK pauses and shows the controls, Menu or Info opens the details, and the media keys work.",
@@ -213,33 +230,33 @@ CHANGES = [
 CHANGELOG = {
  "en": dict(title="What's new in IPTVMac: release notes for Mac and Android", desc="Release notes for every IPTVMac version on Mac and Android, newest first: new features, fixes and changes.",
             h1="What's new", lede="Release notes for every version, newest first. The Mac and Android apps have their own version numbers.",
-            filter=("All", "Mac", "Android"), notes="Release notes on GitHub", older="Earlier releases (0.1 to 0.7) are listed on GitHub."),
+            filter=("All", "Mac", "Windows", "Android"), notes="Release notes on GitHub", older="Earlier releases (0.1 to 0.7) are listed on GitHub."),
  "he": dict(title="מה חדש ב-IPTVMac: הערות גרסה ל-Mac ול-Android", desc="הערות הגרסה של כל גרסת IPTVMac ב-Mac וב-Android, מהחדשה לישנה: תכונות חדשות, תיקונים ושינויים.",
             h1="מה חדש", lede="הערות גרסה לכל גרסה, מהחדשה לישנה. לאפליקציות ה-Mac וה-Android יש מספרי גרסה משלהן.",
-            filter=("הכול", "Mac", "Android"), notes="הערות הגרסה ב-GitHub", older="גרסאות מוקדמות (0.1 עד 0.7) מופיעות ב-GitHub."),
+            filter=("הכול", "Mac", "Windows", "Android"), notes="הערות הגרסה ב-GitHub", older="גרסאות מוקדמות (0.1 עד 0.7) מופיעות ב-GitHub."),
 }
 
 # ---------- second pass: hero, marquee, tabs, stats, chapters (used by the redesigned pages) ----------
 DOWNLOAD["en"].update(
   hero=["Download", "IPTVMac", "for free."],
-  main=dict(mac=("Download for Mac", "Version {v} · {s} MB · Apple Silicon, macOS 14+"), android=("Download for Android", "Version {v} · {s} MB · Android 8+"),
+  main=dict(mac=("Download for Mac", "Version {v} · {s} MB · Apple Silicon, macOS 14+"), windows=("Download for Windows", "Version {v} · {s} MB installer · Windows 10 and 11, 64-bit"), android=("Download for Android", "Version {v} · {s} MB · Android 8+"),
             tv=("Download for Android TV", "32-bit file · {s} MB · Android 8+ · remote control")),
   cue="Every device",
-  marquee=["Free", "Open source, GPL-3.0", "No account", "No ads", "No tracking", "31 languages", "Xtream Codes and M3U", "Mac, Android, Android TV", "Powered by mpv", "Picture in Picture"],
+  marquee=["Free", "Open source, GPL-3.0", "No account", "No ads", "No tracking", "31 languages", "Xtream Codes and M3U", "Mac, Windows, Android, Android TV", "Powered by mpv", "Picture in Picture"],
   pick_h="Choose your screen.", pick_p="The file, three steps and what to expect, for each device.",
-  tabs=[("mac", "Mac", "Apple Silicon"), ("android", "Phone and tablet", "Android 8+"), ("tv", "TV", "Android TV, Google TV, Fire TV"), ("ios", "iPhone and iPad", "Coming soon")],
-  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: live channels with the remote-control focus ring",
+  tabs=[("mac", "Mac", "Apple Silicon"), ("windows", "Windows", "Windows 10 and 11"), ("android", "Phone and tablet", "Android 8+"), ("tv", "TV", "Android TV, Google TV, Fire TV"), ("ios", "iPhone and iPad", "Coming soon")],
+  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_win="IPTVMac on Windows 11: the welcome screen", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: live channels with the remote-control focus ring",
   help_h="Need a hand?", help_p="Step-by-step guides, and a support page that never asks for your login.", help_links=[("Read the guides", "#guides"), ("Support", "support/")],
 )
 DOWNLOAD["he"].update(
   hero=["הורדת", "IPTVMac", "בחינם."],
-  main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14+"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8+"),
+  main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14+"), windows=("הורדה ל-Windows", "גרסה {v} · מתקין {s}MB · Windows 10 ו-11, ‏64 ביט"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8+"),
             tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8+ · שלט")),
   cue="כל המכשירים",
-  marquee=["חינמי", "קוד פתוח, GPL-3.0", "בלי חשבון", "בלי פרסומות", "בלי מעקב", "31 שפות", "Xtream Codes ו-M3U", "Mac, ‏Android, ‏Android TV", "מבוסס על mpv", "תמונה בתוך תמונה"],
+  marquee=["חינמי", "קוד פתוח, GPL-3.0", "בלי חשבון", "בלי פרסומות", "בלי מעקב", "31 שפות", "Xtream Codes ו-M3U", "Mac, ‏Windows, ‏Android, ‏Android TV", "מבוסס על mpv", "תמונה בתוך תמונה"],
   pick_h="בוחרים מסך.", pick_p="הקובץ, שלושה שלבים ומה לצפות לו, לכל מכשיר.",
-  tabs=[("mac", "Mac", "Apple Silicon"), ("android", "טלפון וטאבלט", "Android 8+"), ("tv", "טלוויזיה", "Android TV, ‏Google TV, ‏Fire TV"), ("ios", "iPhone ו-iPad", "בקרוב")],
-  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: ערוצים חיים עם מסגרת הפוקוס של השלט",
+  tabs=[("mac", "Mac", "Apple Silicon"), ("windows", "Windows", "Windows 10 ו-11"), ("android", "טלפון וטאבלט", "Android 8+"), ("tv", "טלוויזיה", "Android TV, ‏Google TV, ‏Fire TV"), ("ios", "iPhone ו-iPad", "בקרוב")],
+  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_win="IPTVMac ב-Windows 11: מסך הפתיחה", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: ערוצים חיים עם מסגרת הפוקוס של השלט",
   help_h="צריכים יד?", help_p="מדריכים צעד אחר צעד, ודף תמיכה שלא מבקש לעולם את פרטי הכניסה שלכם.", help_links=[("למדריכים", "#guides"), ("תמיכה", "support/")],
 )
 

@@ -24,6 +24,11 @@ ANDROID_DL = REPO + "/releases/download/android-v1.0.4"   # direct files of that
 AND_VER = ANDROID_DL.rsplit("android-v", 1)[1]
 ANDROID_SIZES = {"arm64-v8a": 41, "armeabi-v7a": 38, "x86_64": 46, "tv-32bit": 38, "tv-64bit": 41}   # MB per file of that release; update with the release bump
 MAC_SIZE = 16   # MB of IPTVMac.dmg
+WIN_DL = REPO + "/releases/download/windows-v1.0.0"   # the Windows release (made by hand from the artifacts of .github/workflows/windows.yml)
+WIN_VER = WIN_DL.rsplit("windows-v", 1)[1]
+WIN_SIZES = {"setup": 26, "portable": 38}   # MB of IPTVMac-Windows-<ver>-setup.exe and -portable.zip
+def win_file(kind): return f"{WIN_DL}/IPTVMac-Windows-{WIN_VER}-{kind}.{'exe' if kind == 'setup' else 'zip'}"
+WIN_REL = REPO + "/releases/tag/windows-v" + WIN_VER
 def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
 ANDROID_APK = REPO + "/releases/tag/android-v1.0.4"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
@@ -170,13 +175,13 @@ def app_strings(code):
 HOME = {
  "en": dict(
   lang="en", prefix="", up="",
-  title="IPTVMac: IPTV Player for Mac, Android and Android TV (Xtream Codes and M3U)",
-  desc="IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
+  title="IPTVMac: IPTV Player for Mac, Windows, Android and Android TV (Xtream Codes and M3U)",
+  desc="IPTVMac is a free, open source IPTV player for Mac, Windows, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
   nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
   h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
-  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Android phones and tablets, and Android TV. Free and open source, with no account.",
+  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Windows, Android phones and tablets, and Android TV. Free and open source, with no account.",
   cmd_b="Install in one line.", cmd_t="Paste it in Terminal, or use the DMG button below. Either way, the app updates itself afterwards.",
   copy="Copy", copied="Copied", copy_aria="Copy the install command",
   dl="Download the DMG", src="View the source", tour="Watch the 80-second tour",
@@ -245,18 +250,18 @@ HOME = {
   cta_l=["Free.", "Open source."], cta_p="GPL-3.0. No account, no ads, no tracking.", cta_dl="Download for Mac", cta_src="Source on GitHub",
   android_h="Android and Android TV", android_dl="Android (APK)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
-  foot_about="A free, open source IPTV player for Mac, Android and Android TV.",
+  foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
   foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
              ("Product", [("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
-  alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Android and Android TV (iPhone is coming). If you need Windows, Linux or something different:",
+  alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Windows, Android and Android TV (iPhone is coming). If you need Linux or something different:",
   alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
   credit='Demo footage: "Sintel" by the Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. All titles and channels on this page are invented.',
   tour_close="Close the video", tour_note='80 seconds: live channels, search, favorites, the player, 2x speed, Picture in Picture and downloads. The channels and posters are invented for the demo; the footage is the Blender Foundation film "Sintel" (CC BY 3.0).',
   lic="Open source under GPL-3.0."),
  "he": dict(
   lang="he", prefix="he/", up="../",
-  title="IPTVMac: נגן IPTV ל-Mac, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
+  title="IPTVMac: נגן IPTV ל-Mac, ל-Windows, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
   desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
   nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
@@ -334,7 +339,7 @@ HOME = {
   foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
              ("המוצר", [("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
-  alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Android וב-Android TV (‏iPhone בדרך). אם אתם צריכים Windows, ‏Linux או משהו אחר:",
+  alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Windows, ב-Android וב-Android TV (‏iPhone בדרך). אם אתם צריכים Linux או משהו אחר:",
   alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
   credit='קטעי הדגמה: "Sintel" של Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. כל הכותרים והערוצים בעמוד בדויים.',
   tour_close="סגירת הסרטון", tour_note='80 שניות: ערוצים, חיפוש, מועדפים, הנגן, מהירות כפולה, תמונה בתוך תמונה והורדות. הערוצים והכרזות בדויים לצורך ההדגמה; הקטע המנוגן הוא הסרט Sintel של Blender Foundation (CC BY 3.0).',
@@ -478,30 +483,34 @@ def term(c):
 
 DEVICES = {
  "en": dict(
-  h="One app, three ways to install.",
+  h="One app, four ways to install.",
   p="The same player, the same 31 languages, no account. Each version is written in the language that suits its platform, not squeezed into one shared shell, and the video itself is decoded by the same compiled libmpv engine everywhere. Pick your device.",
   mac=("Mac", "Apple Silicon, macOS 14 or later. Written in Swift and SwiftUI, Apple's own language and toolkit.", ["Paste the one-line command in Terminal, or open IPTVMac.dmg and drag the app to Applications.", "Add your Xtream Codes login or M3U link.", "The app updates itself."],
        "Download the DMG", "Install on Mac"),
+  win=("Windows", "Windows 10 or 11, 64-bit. Written in Dart with Flutter, with a small C++ shell. Light on memory and processor.", ["Download the installer. It installs for your user only, with no administrator rights.", "If Windows SmartScreen warns (the app is not signed with a paid certificate yet), choose More info, then Run anyway.", "Add your source. Space pauses, the arrows seek, F fills the screen."],
+       "Download the installer"),
   phone=("Android phone and tablet", "Android 8 or later. Written in Dart with Flutter, with a Kotlin layer for the Android system features.", ["Download the arm64-v8a file (it suits almost every phone).", "Open it and allow installs from your browser or Files app.", "Add your source. A banner tells you when a new version is out."],
          "Download the APK"),
   tv=("Android TV, Google TV, Fire TV", "First TV version: remote control, no touch screen. Same Flutter and Kotlin code as the phone, with a layout built for the remote.",
       ["Install the Downloader app on the TV and open it.", "Type the address of the file (below). Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one. A USB stick works too.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up, hold Back to close."],
       "32-bit file", "64-bit file"),
   ios="iPhone and iPad (also Swift and SwiftUI): waiting for App Store review.", all="All downloads and file choices",
-  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: the channel list with the remote-control focus ring",
+  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_win="IPTVMac on Windows 11: the welcome screen", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: the channel list with the remote-control focus ring",
  ),
  "he": dict(
-  h="אפליקציה אחת, שלוש דרכי התקנה.",
+  h="אפליקציה אחת, ארבע דרכי התקנה.",
   p="אותו נגן, אותן 31 שפות, בלי חשבון. כל גרסה כתובה בשפה שמתאימה לפלטפורמה שלה, ולא דחוסה לתוך מעטפת אחת משותפת, ואת הווידאו עצמו מפענח בכל מקום אותו מנוע libmpv מקומפל. בוחרים מכשיר.",
   mac=("Mac", "Apple Silicon, macOS 14 ומעלה. כתובה ב-Swift וב-SwiftUI, השפה והערכה של אפל עצמה.", ["מדביקים את הפקודה בשורה אחת בטרמינל, או פותחים את IPTVMac.dmg וגוררים את האפליקציה ל-Applications.", "מוסיפים כניסת Xtream Codes או קישור M3U.", "האפליקציה מתעדכנת לבד."],
        "הורדת ה-DMG", "התקנה ב-Mac"),
+  win=("Windows", "Windows 10 או 11, ‏64 ביט. כתובה ב-Dart עם Flutter, עם מעטפת C++ קטנה. קלה בזיכרון ובמעבד.", ["מורידים את המתקין. הוא מתקין למשתמש שלכם בלבד, בלי הרשאות מנהל.", "אם Windows SmartScreen מזהיר (האפליקציה עוד לא חתומה בתעודה בתשלום), בוחרים More info ואז Run anyway.", "מוסיפים מקור. רווח עוצר, החיצים מדלגים, F ממלא את המסך."],
+       "הורדת המתקין"),
   phone=("טלפון וטאבלט של Android", "Android 8 ומעלה. כתובה ב-Dart עם Flutter, ועם שכבת Kotlin לתכונות המערכת של Android.", ["מורידים את הקובץ arm64-v8a (מתאים לכמעט כל טלפון).", "פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים.", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה."],
          "הורדת ה-APK"),
   tv=("Android TV, Google TV, Fire TV", "גרסת טלוויזיה ראשונה: שלט, בלי מסך מגע. אותו קוד Flutter ו-Kotlin כמו בטלפון, עם פריסה שנבנתה לשלט.",
       ["מתקינים את האפליקציה Downloader בטלוויזיה ופותחים אותה.", "מקלידים את כתובת הקובץ (למטה). מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט. גם כונן USB עובד.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה, לחיצה ארוכה על Back סוגרת."],
       "קובץ 32 ביט", "קובץ 64 ביט"),
   ios="iPhone ו-iPad (גם הם ב-Swift וב-SwiftUI): ממתין לבדיקה ב-App Store.", all="כל ההורדות ובחירת הקובץ",
-  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט",
+  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_win="IPTVMac ב-Windows 11: מסך הפתיחה", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט",
  ),
 }
 
@@ -513,11 +522,12 @@ def devices_section(c, he, up):
                 f'<h3><bdi dir="{"rtl" if any(ord(ch) > 0x590 and ord(ch) < 0x600 for ch in h) else "ltr"}">{e(h)}</bdi></h3><p class="req">{e(req)}</p><ol class="steps">{li}</ol><div class="acts">{acts}</div></article>')
     mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
                f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#install">{e(d["mac"][4])}</a>')
+    wincard = card(d["win"][0], d["win"][1], d["win"][2], "windows-welcome.webp", d["alt_win"], f'<a class="btn" href="{win_file("setup")}" rel="noopener">{ICON_DL}{e(d["win"][3])}</a>', "winc")
     phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
     tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
               f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
     return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
-            f'<div class="dev-grid">{mac}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
+            f'<div class="dev-grid">{mac}{wincard}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
 
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
@@ -814,14 +824,14 @@ def marquee(items):
 def download_page(code):
     c = HOME[code]; d = pages.DOWNLOAD[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
     btn = lambda href, label, cls="fill": f'<a class="btn {cls}" href="{href}" rel="noopener">{ICON_DL}{e(label)}</a>'
-    mac, an, tv, ios = d["mac"], d["android"], d["tv"], d["ios"]
+    mac, wn, an, tv, ios = d["mac"], d["win"], d["android"], d["tv"], d["ios"]
     mm = d["main"]
     fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
-    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])]}
+    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])]}
     recs = "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
     hero_actions = (f'<div class="hero-big"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
                     f'<span class="big-meta" id="dl-meta">{e(rec["mac"][2])}</span></div>'
-                    f'<div class="hero-sub"><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
+                    f'<div class="hero-sub"><a class="link" href="#windows">{e(ui["windows"])}</a><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
     hero = pghero(code, d["hero"], d["lede"], d["h1"], hero_actions, devstack(up, (d["alt_mac"], d["alt_phone"], d["alt_tv"])), "#pick", d["cue"])
     ol = lambda steps: '<ol class="bsteps">' + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
     other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
@@ -832,6 +842,9 @@ def download_page(code):
     panels = (
       panel("mac", mac["h"], mac["req"], f'<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>{pic("03-movies", d["alt_mac"], 1200, 754)}</div>',
             f'<div class="acts">{btn(DOWNLOAD, mac["btn"])}<span class="sz">v{VERSION} · {MAC_SIZE} MB</span></div>', f'<p class="alt">{e(mac["alt"])}</p>{cmd_block(c)}', mac["steps"], mac["note"])
+      + panel("windows", wn["h"], wn["req"], f'<div class="win">{pic("windows-welcome", d["alt_win"], 1006, 712)}</div>',
+            f'<div class="acts">{btn(win_file("setup"), wn["btn"])}<span class="sz">v{WIN_VER} · {WIN_SIZES["setup"]} MB</span></div>',
+            f'<p class="alt">{e(wn["portable"])} <a href="{win_file("portable")}" rel="noopener">IPTVMac-Windows-{WIN_VER}-portable.zip ({WIN_SIZES["portable"]} MB)</a></p>', wn["steps"], wn["note"].format(s=WIN_SIZES["setup"]))
       + panel("android", an["h"], an["req"], f'<div class="phf"><div class="scr">{pic("android-live", d["alt_phone"], 540, 1210)}</div></div>',
             f'<div class="acts">{btn(apk("arm64-v8a"), an["btn"])}<span class="sz">v{AND_VER} · {ANDROID_SIZES["arm64-v8a"]} MB</span></div>', f'<p class="alt">{e(an["other"])} {other}</p>', an["steps"], an["note"])
       + panel("tv", tv["h"], tv["req"], f'<div class="tvf"><div class="scr">{pic("tv-live", d["alt_tv"], 1280, 720)}</div></div>',
@@ -856,7 +869,7 @@ def download_page(code):
              f'<div class="actions"><a class="btn fill" href="../{hl[0][1]}">{e(hl[0][0])}</a><a class="btn" href="../{hl[1][1]}">{e(hl[1][0])}</a></div></div>'
              f'<p class="pg-fine">{e(d["disclaimer"])}</p></div></section>\n')
     ld = [{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac", "applicationCategory": "MultimediaApplication",
-           "operatingSystem": "macOS 14+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
+           "operatingSystem": "macOS 14+, Windows 10+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
            "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"}]
     product_page("download", code, d["title"], d["desc"], hero, marquee(d["marquee"]) + pick + files + two + help_, ld)
 
@@ -883,7 +896,7 @@ def changelog_page(code):
     def fmt(iso):
         y, m, dd = iso.split("-"); return f"{int(dd)} {pages.MONTHS[code][int(m) - 1]} {y}"
     rows = sorted(pages.CHANGES, key=lambda r: r[0], reverse=True)
-    latest = {p: next(r for r in rows if r[1] == p) for p in ("mac", "android")}
+    latest = {p: next(r for r in rows if r[1] == p) for p in ("mac", "windows", "android")}
     dlh = f"{up}{'he/' if he else ''}download/"
     cards = "".join(f'<div class="lat" data-depth="{k}"><span class="k">{e(d["latest"])} · {e(ui[p])}</span><span class="v">{r[2]}</span><time datetime="{r[0]}">{e(fmt(r[0]))}</time>'
                     f'<a class="btn{" fill" if p == "mac" else ""}" href="{dlh}#{p}">{ICON_DL}{e(d["get"])}</a></div>' for k, (p, r) in enumerate(latest.items(), 1))
@@ -894,7 +907,7 @@ def changelog_page(code):
         items += (f'<article class="rel" data-plat="{plat}" data-rv><div class="rel-meta"><h2 class="rv" id="{plat}-{ver.replace(".", "-")}">{ver}</h2><span class="ptag p-{plat}">{e(ui[plat])}</span>'
                   f'<time datetime="{date}">{e(fmt(date))}</time></div><div><ul>{lis}</ul><p class="rel-l"><a class="link" href="{REPO}/releases/tag/{tag}" rel="noopener">{ICON_GH}{e(d["notes"])}</a></p></div></article>\n')
     flt = (f'<div class="flt" role="group" aria-label="{e(ui["platforms"])}" hidden><button type="button" data-f="" aria-pressed="true">{e(d["filter"][0])}</button>'
-           f'<button type="button" data-f="mac" aria-pressed="false">{e(d["filter"][1])}</button><button type="button" data-f="android" aria-pressed="false">{e(d["filter"][2])}</button></div>')
+           f'<button type="button" data-f="mac" aria-pressed="false">{e(d["filter"][1])}</button><button type="button" data-f="windows" aria-pressed="false">{e(d["filter"][2])}</button><button type="button" data-f="android" aria-pressed="false">{e(d["filter"][3])}</button></div>')
     body = f'<section class="pg-band" id="all" style="padding-top:clamp(24px,4vh,48px)" aria-label="{e(d["h1"])}"><div class="wrap">{flt}<div class="rels">{items}</div><p class="pg-fine"><a href="{REPO}/releases" rel="noopener">{e(d["older"])}</a></p></div></section>\n'
     product_page("changelog", code, d["title"], d["desc"], hero, body)
 
@@ -922,7 +935,7 @@ Sitemap: {BASE}sitemap.xml
     d = HOME["en"]
     facts = f"""# IPTVMac
 
-> IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Mac: Apple Silicon, macOS 14 or later. Android: 8 or later (APK on GitHub Releases, including TV files). GPL-3.0. It is a player only and includes no channels or content.
+> IPTVMac is a free, open source IPTV player for Mac, Windows, Android phones and tablets, and Android TV, Google TV and Fire TV. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Mac: Apple Silicon, macOS 14 or later. Android: 8 or later (APK on GitHub Releases, including TV files). GPL-3.0. It is a player only and includes no channels or content.
 
 Latest version: {VERSION}. Download: {DOWNLOAD}
 Install in Terminal: `{INSTALL_CMD}`
