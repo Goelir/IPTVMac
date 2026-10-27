@@ -73,6 +73,9 @@ class PlayerSystem {
   Future<double?> volume() async => null;
   void setVolume(double v) {}
 
+  /// The window fills the screen (a desktop; a phone and a TV already do).
+  Future<void> setFullscreen(bool on) async {}
+
   Future<bool> isPipSupported() async => false;
 
   /// Enters Picture in Picture; false when the system refused.

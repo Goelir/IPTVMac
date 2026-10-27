@@ -88,6 +88,9 @@ class PlayerModel extends ChangeNotifier {
   bool pipActive = false;
   bool pipSupported = false;
   bool portrait = false; // the rotate button turned the screen upright
+  bool fullscreen = false; // the Windows window fills the screen
+  double _volume = 1; // engine volume on a desktop (0...1); a phone uses the system volume
+  double _volumeBeforeMute = 1;
   final bool canRotate; // phones only: a tablet already follows the device
   bool canZapNext = false;
   bool canZapPrevious = false;
@@ -210,6 +213,36 @@ class PlayerModel extends ChangeNotifier {
     }
     close();
   }
+
+  /// Desktop: the mouse wheel and Up/Down change the volume in steps; the level shows like the swipe's.
+  void volumeBy(double delta) => _setVolume(_volume + delta);
+
+  void toggleMute() => _setVolume(_volume > 0 ? 0 : (_volumeBeforeMute > 0 ? _volumeBeforeMute : 1));
+
+  void _setVolume(double v) {
+    if (_volume > 0) _volumeBeforeMute = _volume;
+    _volume = v.clamp(0.0, 1.0);
+    core.engine.setVolume(_volume);
+    levelHud = (kind: LevelKind.volume, value: _volume, id: ++_hudSerial);
+    final id = _hudSerial;
+    _hudTimers['level']?.cancel();
+    _hudTimers['level'] = Timer(const Duration(milliseconds: 900), () {
+      if (levelHud?.id == id) {
+        levelHud = null;
+        notifyListeners();
+      }
+    });
+    touchControls();
+  }
+
+  Future<void> toggleFullscreen() async {
+    fullscreen = !fullscreen;
+    notifyListeners();
+    await system.setFullscreen(fullscreen);
+  }
+
+  /// Esc on the desktop: leaves full screen first, then closes the player.
+  void escape() => fullscreen ? unawaited(toggleFullscreen()) : back();
 
   /// A seek key on the remote (movies and episodes): [seconds] back (negative) or forward, with the running total as feedback.
   void remoteSeek(double seconds) {

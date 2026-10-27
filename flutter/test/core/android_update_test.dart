@@ -15,6 +15,15 @@ void main() {
     expect(newestAndroidVersion('<html>blocked</html>'), isNull);
   });
 
+  test('the Windows app follows its own tags, not the Android ones', () {
+    final f = feed(['android-v1.0.9', 'windows-v1.0.2', 'windows-v1.0.10', 'v0.9.3', 'windows-v2.0.0-beta.1']);
+    expect(newestAndroidVersion(f, channel: 'windows'), '1.0.10');
+    expect(newestAndroidVersion(f), '1.0.9');
+    expect(newestAndroidVersion(feed(['android-v1.0.9']), channel: 'windows'), isNull);
+    expect(androidReleasePage('1.0.3', channel: 'windows').toString(), 'https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3');
+    expect(() => newestAndroidVersion(f, channel: '.*'), throwsArgumentError, reason: 'the channel is never put into the pattern as given');
+  });
+
   for (final (candidate, current, newer) in [
     ('1.0.3', '1.0.2', true), ('1.0.2', '1.0.2', false), ('1.0.1', '1.0.2', false), ('1.1.0', '1.0.9', true), ('2.0.0', '1.9.9', true),
     ('1.0.10', '1.0.9', true), ('1.0.3', '1.0.2+5', true), ('1.0.2', '1.0.2+9', false), ('x', '1.0.2', false), ('1.0.3', 'dev', false),

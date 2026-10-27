@@ -187,4 +187,4 @@ class UpdateBanner extends StatelessWidget {
 }
 
 /// Opens the release page of [version] in the browser (tests replace this).
-Future<void> Function(String version) openUpdatePage = (v) => launchUrl(androidReleasePage(v), mode: LaunchMode.externalApplication);
+Future<void> Function(String version) openUpdatePage = (v) => launchUrl(androidReleasePage(v, channel: releaseChannel), mode: LaunchMode.externalApplication);

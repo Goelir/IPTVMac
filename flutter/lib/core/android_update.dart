@@ -8,13 +8,19 @@ import 'api_session.dart';
 /// switch to release.txt. The Android releases are published as "not the latest", so `releases/latest` cannot be used for them.
 const androidReleasesFeed = 'https://github.com/Goelir/IPTVMac/releases.atom';
 
-final _tag = RegExp(r'/releases/tag/android-v(\d{1,4})\.(\d{1,4})\.(\d{1,4})(?=["\s<])');
+RegExp _tag(String channel) => RegExp('/releases/tag/$channel-v(\\d{1,4})\\.(\\d{1,4})\\.(\\d{1,4})(?=["\\s<])');
+
+/// "android" or "windows": the tag prefix of the app that asks. Anything else would put arbitrary text into the pattern.
+String _checked(String channel) {
+  if (channel != 'android' && channel != 'windows') throw ArgumentError.value(channel, 'channel');
+  return channel;
+}
 
 /// The newest stable Android version the feed names, e.g. "1.0.2", or null. The Mac releases and the pre-releases
 /// ("android-v0.1.0-beta.1") do not match. Only three numbers are taken from the feed, never a link.
-String? newestAndroidVersion(String feed) {
+String? newestAndroidVersion(String feed, {String channel = 'android'}) {
   List<int>? best;
-  for (final m in _tag.allMatches(feed)) {
+  for (final m in _tag(_checked(channel)).allMatches(feed)) {
     final v = [for (var i = 1; i <= 3; i++) int.parse(m[i]!)];
     if (best == null || _compare(v, best) > 0) best = v;
   }
@@ -40,13 +46,13 @@ bool isNewerVersion(String candidate, String current) {
 }
 
 /// The page of a release, built from a version that passed [newestAndroidVersion]: the app never opens an address taken from the feed.
-Uri androidReleasePage(String version) {
+Uri androidReleasePage(String version, {String channel = 'android'}) {
   if (_parse(version) == null || _parse(version)!.join('.') != version) throw ArgumentError.value(version, 'version');
-  return Uri.https('github.com', '/Goelir/IPTVMac/releases/tag/android-v$version');
+  return Uri.https('github.com', '/Goelir/IPTVMac/releases/tag/${_checked(channel)}-v$version');
 }
 
 /// Asks the feed. Throws on a network failure.
-Future<String?> fetchNewestAndroidVersion(http.Client client) async {
+Future<String?> fetchNewestAndroidVersion(http.Client client, {String channel = 'android'}) async {
   final bytes = await apiGet(client, Uri.parse(androidReleasesFeed), timeout: const Duration(seconds: 30), idleTimeout: const Duration(seconds: 20), maxBytes: 2000000);
-  return newestAndroidVersion(utf8.decode(bytes, allowMalformed: true));
+  return newestAndroidVersion(utf8.decode(bytes, allowMalformed: true), channel: channel);
 }

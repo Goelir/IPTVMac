@@ -11,9 +11,9 @@ import 'track_label.dart';
 
 /// libmpv through media_kit. Needs `MediaKit.ensureInitialized()` before the first one is made (the app's main does it).
 class MediaKitEngine implements PlaybackEngine {
-  MediaKitEngine({String? hwdec = EngineOptions.hwdec, bool tlsVerify = true, String? subLang, String? audioLang}) {
+  MediaKitEngine({String? hwdec, bool tlsVerify = true, String? subLang, String? audioLang}) {
     _player = mk.Player(configuration: const mk.PlayerConfiguration(title: 'IPTVMac'));
-    _video = VideoController(_player, configuration: VideoControllerConfiguration(hwdec: hwdec));
+    _video = VideoController(_player, configuration: VideoControllerConfiguration(hwdec: hwdec ?? EngineOptions.hwdec));
     _native = _player.platform as mk.NativePlayer;
     _ready = _applyOptions(tlsVerify, subLang, audioLang);
     _subs = [

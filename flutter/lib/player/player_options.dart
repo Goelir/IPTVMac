@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 /// How the video fills the window; the name is the stored preference ("videoScale"). Mapped to the widget's BoxFit by the screen.
 enum VideoScale {
   fit,
@@ -27,7 +29,8 @@ enum BufferSize {
 /// its roots as one file per certificate in a directory, not as a bundle, and mpv's TLS library cannot read that.
 abstract final class EngineOptions {
   /// `hwdec` list: the first one that works wins, so a device without MediaCodec falls back to mpv's safe auto list.
-  static const hwdec = 'mediacodec-copy,auto-safe';
+  /// MediaCodec exists only on Android; Windows takes mpv's safe auto list (Direct3D 11 decoding, no copy back where it can).
+  static String get hwdec => Platform.isAndroid ? 'mediacodec-copy,auto-safe' : 'auto-safe';
 
   static Map<String, String> hardened({bool tlsVerify = true}) => {
         'network-timeout': '15',

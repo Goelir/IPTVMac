@@ -8,6 +8,7 @@ import 'package:iptvmac/app/epg_cache.dart';
 import 'package:iptvmac/app/prefs.dart';
 import 'package:iptvmac/app/sync_worker.dart';
 import 'package:iptvmac/app/watch_progress.dart';
+import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/core/android_update.dart';
 import 'package:iptvmac/core/app_database.dart';
 import 'package:iptvmac/core/backup.dart';
@@ -188,7 +189,7 @@ class LibraryModel extends ChangeNotifier {
     updateCheck = UpdateCheck.checking;
     if (manual) notifyListeners();
     try {
-      final v = await fetchNewestAndroidVersion(_client);
+      final v = await fetchNewestAndroidVersion(_client, channel: releaseChannel);
       prefs.updateCheckedAt = _clock().millisecondsSinceEpoch;
       if (v != null) prefs.latestAndroid = v;
       updateCheck = UpdateCheck.done;

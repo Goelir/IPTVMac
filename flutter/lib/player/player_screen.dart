@@ -5,10 +5,12 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 import '../app/device.dart';
 import 'android_player_system.dart';
+import 'desktop_player_system.dart';
 import 'engine.dart';
 import 'media_kit_engine.dart';
 import 'play_request.dart';
 import 'player_controls.dart';
+import 'player_desktop.dart';
 import 'player_gesture_surface.dart';
 import 'player_model.dart';
 import 'player_options.dart';
@@ -56,7 +58,7 @@ class _PlayerScreenState extends State<PlayerScreen> with WidgetsBindingObserver
     final prefs = widget.prefs ?? await PlayerPrefs.load();
     if (!mounted) return;
     final engine = widget.engineFactory?.call(prefs) ?? MediaKitEngine(subLang: prefs.subLang, audioLang: prefs.audioLang);
-    final system = widget.system ?? (Platform.isAndroid ? AndroidPlayerSystem() : PlayerSystem());
+    final system = widget.system ?? (Platform.isAndroid ? AndroidPlayerSystem() : isDesktop ? DesktopPlayerSystem() : PlayerSystem());
     await system.enter(lockLandscape: phone);
     if (!mounted) {
       engine.dispose();
@@ -68,7 +70,7 @@ class _PlayerScreenState extends State<PlayerScreen> with WidgetsBindingObserver
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) _model?.appPaused();
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) _model?.appPaused(); // saves the position; playback goes on (a desktop window can sit behind another)
   }
 
   @override
@@ -112,6 +114,7 @@ class _PlayerView extends StatefulWidget {
 class _PlayerViewState extends State<_PlayerView> {
   final _nodes = PlayerTvNodes();
   late final _keys = PlayerTvKeys(widget.model, _nodes);
+  late final _desktopKeys = PlayerDesktopKeys(widget.model);
 
   PlayerModel get model => widget.model;
 
@@ -138,7 +141,7 @@ class _PlayerViewState extends State<_PlayerView> {
     };
     final view = Stack(fit: StackFit.expand, children: [
       model.core.engine.buildVideo(fit),
-      PlayerGestureSurface(model: model),
+      isDesktop ? PlayerDesktopSurface(model: model) : PlayerGestureSurface(model: model),
       IgnorePointer(child: AnimatedOpacity(opacity: visible ? 1 : 0, duration: const Duration(milliseconds: 200), child: const DecoratedBox(decoration: _scrim))),
       if (!pip)
         SafeArea(
@@ -166,6 +169,7 @@ class _PlayerViewState extends State<_PlayerView> {
       if (!pip && failed) PlayerErrorCard(model: model),
       if (!pip && model.upNext.isCounting) UpNextCard(model: model),
     ]);
+    if (isDesktop) return Focus(autofocus: true, skipTraversal: true, onKeyEvent: _desktopKeys.onKey, child: view);
     if (!isTelevision) return view;
     // The focus left the player (the controls hid, a card went away): take it back, unless a menu or another screen is on top.
     WidgetsBinding.instance.addPostFrameCallback((_) {

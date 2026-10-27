@@ -1,0 +1,115 @@
+# Builds the Windows app on a real Windows machine (Flutter cannot build Windows from a Mac), runs the whole test suite there,
+# starts the app once as a smoke test (a screenshot and the memory it uses are saved), and uploads the portable zip, the installer and
+# the SHA-256 list as artifacts. A release is made by hand from these artifacts (see PROJECT_STATUS.md), tagged "windows-vX.Y.Z".
+name: Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version of the app (X.Y.Z), shown in the app and the file names"
+        default: "0.0.0"
+  push:
+    tags: ["windows-v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.7"
+          channel: stable
+          cache: true
+
+      - name: Version
+        run: |
+          $v = "${{ github.event.inputs.version }}"
+          if ("${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}".Substring("windows-v".Length) }
+          if ($v -notmatch '^\d{1,4}\.\d{1,4}\.\d{1,4}$') { throw "bad version: $v" }
+          "VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "Version $v"
+
+      - name: Packages
+        working-directory: flutter
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: flutter
+        run: flutter analyze
+
+      - name: Tests (on Windows: SQLite, FTS5, paths, everything)
+        working-directory: flutter
+        run: flutter test
+
+      - name: Build
+        working-directory: flutter
+        run: flutter build windows --release --build-name=$env:VERSION --split-debug-info=build/symbols
+
+      - name: Add the Visual C++ runtime next to the app (a clean Windows may not have it)
+        run: |
+          $rel = "flutter/build/windows/x64/runner/Release"
+          foreach ($d in "msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll") { Copy-Item "$env:SystemRoot\System32\$d" $rel }
+          Get-ChildItem $rel | Select-Object Name, @{n="MB";e={[math]::Round($_.Length/1MB,2)}} | Format-Table -AutoSize | Out-String | Write-Host
+          $size = (Get-ChildItem $rel -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+          "Unpacked size: {0:N1} MB" -f $size
+
+      - name: Smoke test (start the app, wait, measure, screenshot)
+        run: |
+          $rel = (Resolve-Path "flutter/build/windows/x64/runner/Release").Path
+          $p = Start-Process "$rel\IPTVMac.exe" -PassThru
+          Start-Sleep -Seconds 20
+          $p.Refresh()
+          if ($p.HasExited) { throw "The app exited by itself with code $($p.ExitCode)" }
+          $ws = [math]::Round($p.WorkingSet64 / 1MB, 1); $cpu = [math]::Round($p.TotalProcessorTime.TotalSeconds, 2)
+          "Running after 20 s. Working set: $ws MB, CPU time so far: $cpu s, window title: '$($p.MainWindowTitle)'"
+          "WORKING_SET_MB=$ws`nCPU_SECONDS=$cpu`nTITLE=$($p.MainWindowTitle)" | Out-File smoke.txt
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("smoke.png")
+          Stop-Process $p -Force
+
+      - name: Package (portable zip)
+        run: |
+          New-Item -ItemType Directory dist | Out-Null
+          Compress-Archive -Path "flutter/build/windows/x64/runner/Release/*" -DestinationPath "dist/IPTVMac-Windows-$env:VERSION-portable.zip" -CompressionLevel Optimal
+
+      - name: Package (installer)
+        run: |
+          choco install innosetup -y --no-progress | Out-Null
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          $src = (Resolve-Path "flutter/build/windows/x64/runner/Release").Path
+          & $iscc "/DAppVersion=$env:VERSION" "/DSourceDir=$src" "/Odist" "flutter/windows/installer/IPTVMac.iss"
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+          Rename-Item "dist/IPTVMac-Setup.exe" "IPTVMac-Windows-$env:VERSION-setup.exe"
+
+      - name: SHA-256
+        run: |
+          Get-ChildItem dist -File | ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name } | Out-File -Encoding ascii dist/SHA256SUMS.txt
+          Get-Content dist/SHA256SUMS.txt
+          Get-ChildItem dist -File | Select-Object Name, @{n="MB";e={[math]::Round($_.Length/1MB,1)}} | Format-Table -AutoSize | Out-String | Write-Host
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: IPTVMac-Windows-${{ env.VERSION }}
+          path: dist/*
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test
+          path: |
+            smoke.png
+            smoke.txt
+          if-no-files-found: ignore
