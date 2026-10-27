@@ -19,7 +19,7 @@ Free and open source. No accounts, no analytics.
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
-[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;|&nbsp; [Install](#install) &nbsp;|&nbsp; [Features](#features) &nbsp;|&nbsp; [FAQ](#faq) &nbsp;|&nbsp; [עברית](README.he.md)
+[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [All downloads](https://goelir.github.io/IPTVMac/download/) &nbsp;|&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;|&nbsp; [What's new](https://goelir.github.io/IPTVMac/changelog/) &nbsp;|&nbsp; [Install](#install) &nbsp;|&nbsp; [Features](#features) &nbsp;|&nbsp; [FAQ](#faq) &nbsp;|&nbsp; [עברית](README.he.md)
 
 <br>
 
