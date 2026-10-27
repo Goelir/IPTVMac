@@ -62,16 +62,21 @@ jobs:
           $size = (Get-ChildItem $rel -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
           "Unpacked size: {0:N1} MB" -f $size
 
-      - name: Smoke test (start the app, wait, measure, screenshot)
+      - name: Smoke test (start the app, wait, measure memory and idle CPU, screenshot)
         run: |
           $rel = (Resolve-Path "flutter/build/windows/x64/runner/Release").Path
           $p = Start-Process "$rel\IPTVMac.exe" -PassThru
           Start-Sleep -Seconds 20
           $p.Refresh()
           if ($p.HasExited) { throw "The app exited by itself with code $($p.ExitCode)" }
-          $ws = [math]::Round($p.WorkingSet64 / 1MB, 1); $cpu = [math]::Round($p.TotalProcessorTime.TotalSeconds, 2)
-          "Running after 20 s. Working set: $ws MB, CPU time so far: $cpu s, window title: '$($p.MainWindowTitle)'"
-          "WORKING_SET_MB=$ws`nCPU_SECONDS=$cpu`nTITLE=$($p.MainWindowTitle)" | Out-File smoke.txt
+          $cpu0 = $p.TotalProcessorTime.TotalSeconds
+          Start-Sleep -Seconds 20
+          $p.Refresh()
+          $idle = ($p.TotalProcessorTime.TotalSeconds - $cpu0) / 20 * 100   # percent of one core while the welcome screen just sits there
+          $ws = [math]::Round($p.WorkingSet64 / 1MB, 1); $priv = [math]::Round($p.PrivateMemorySize64 / 1MB, 1)
+          $line = "After 40 s: working set $ws MB (private $priv MB), CPU while idle {0:N2}% of one core, window title '$($p.MainWindowTitle)', threads $($p.Threads.Count)" -f $idle
+          $line
+          $line | Out-File smoke.txt
           Add-Type -AssemblyName System.Windows.Forms, System.Drawing
           $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
           $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
@@ -93,11 +98,29 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
           Rename-Item "dist/IPTVMac-Setup.exe" "IPTVMac-Windows-$env:VERSION-setup.exe"
 
+      - name: Installer smoke (silent install, start, uninstall)
+        run: |
+          $setup = (Get-ChildItem dist -Filter "*-setup.exe").FullName
+          $dir = Join-Path $env:RUNNER_TEMP "iptvmac-installed"
+          $t = Measure-Command { Start-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=`"$dir`"" -Wait }
+          "Installed in {0:N1} s" -f $t.TotalSeconds
+          if (-not (Test-Path "$dir\IPTVMac.exe")) { throw "The installer did not put IPTVMac.exe in place" }
+          $p = Start-Process "$dir\IPTVMac.exe" -PassThru
+          Start-Sleep -Seconds 10
+          $p.Refresh(); if ($p.HasExited) { throw "The installed app exited with code $($p.ExitCode)" }
+          Stop-Process $p -Force
+          Start-Process "$dir\unins000.exe" -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART" -Wait
+          Start-Sleep -Seconds 2
+          if (Test-Path "$dir\IPTVMac.exe") { throw "The uninstaller left IPTVMac.exe behind" }
+          "Install, start and uninstall all worked."
+
       - name: SHA-256
         run: |
-          Get-ChildItem dist -File | ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name } | Out-File -Encoding ascii dist/SHA256SUMS.txt
-          Get-Content dist/SHA256SUMS.txt
-          Get-ChildItem dist -File | Select-Object Name, @{n="MB";e={[math]::Round($_.Length/1MB,1)}} | Format-Table -AutoSize | Out-String | Write-Host
+          $files = @(Get-ChildItem dist -File)   # listed before the sums file exists
+          $lines = $files | ForEach-Object { "{0}  {1}" -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name }
+          $lines | Out-File -Encoding ascii dist/SHA256SUMS.txt
+          $lines
+          $files | Select-Object Name, @{n="MB";e={[math]::Round($_.Length/1MB,1)}} | Format-Table -AutoSize | Out-String | Write-Host
 
       - uses: actions/upload-artifact@v4
         with:
