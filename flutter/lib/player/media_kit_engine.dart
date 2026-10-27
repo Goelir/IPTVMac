@@ -9,9 +9,10 @@ import 'engine.dart';
 import 'player_options.dart';
 import 'track_label.dart';
 
-/// libmpv through media_kit. Needs `MediaKit.ensureInitialized()` before the first one is made (the app's main does it).
+/// libmpv through media_kit. Initializes media_kit itself the first time one is made.
 class MediaKitEngine implements PlaybackEngine {
   MediaKitEngine({String? hwdec, bool tlsVerify = true, String? subLang, String? audioLang}) {
+    mk.MediaKit.ensureInitialized(); // idempotent: main did it already, except on Windows, where libmpv loads with the first picture
     _player = mk.Player(configuration: const mk.PlayerConfiguration(title: 'IPTVMac'));
     _video = VideoController(_player, configuration: VideoControllerConfiguration(hwdec: hwdec ?? EngineOptions.hwdec));
     _native = _player.platform as mk.NativePlayer;

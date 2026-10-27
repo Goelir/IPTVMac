@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
+  if (!Platform.isWindows) MediaKit.ensureInitialized(); // Windows loads libmpv with the first picture (MediaKitEngine): the app opens lighter and faster
   final dir = await getApplicationSupportDirectory();
   final path = '${dir.path}/iptv.sqlite';
   AppDatabase db;
