@@ -46,7 +46,7 @@ jobs:
         working-directory: flutter
         run: flutter analyze
 
-      - name: Tests (on Windows: SQLite, FTS5, paths, everything)
+      - name: Tests (SQLite, FTS5, paths and everything else, on Windows)
         working-directory: flutter
         run: flutter test
 
