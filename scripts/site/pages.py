@@ -110,7 +110,7 @@ FEATURES = {
      ("Several playlists, one library", "Add as many Xtream Codes and M3U sources as you like, switch between them, or choose All playlists to search, favorite and continue watching across every one.", ()),
      ("Subscription expiry", "Settings shows when each Xtream subscription ends and how many days are left, when your provider shares it: orange in the last week, red once it ended.", ()),
      ("Sync progress", "While a playlist syncs, the status line shows how far it is, in percent.", ("android",)),
-     ("Downloads for offline", "Download movies and episodes (whole seasons on Xtream series) to watch without a network.", ("mac", "android")),
+     ("Downloads for offline", "Download movies and episodes (whole seasons on Xtream series) to watch without a network. On Windows they go to a folder of their own inside your Downloads folder, and they download while the app is open.", ("mac", "windows", "android")),
      ("Backup and restore", "Playlists without passwords, favorites and history, in one file you can move to another device.", ()),
      ("Keep it tidy", "Hide categories by words and refresh playlists automatically, or when you choose.", ()),
    ]),
@@ -151,7 +151,7 @@ FEATURES = {
      ("כמה רשימות, ספרייה אחת", "מוסיפים כמה מקורות Xtream Codes ו-M3U שרוצים, עוברים ביניהם, או בוחרים All playlists כדי לחפש, להוסיף למועדפים ולהמשיך לצפות בכולם יחד.", ()),
      ("תוקף המנוי", "בהגדרות מוצג מתי כל מנוי Xtream מסתיים וכמה ימים נשארו, כשהספק מספק את הנתון: כתום בשבוע האחרון, אדום אחרי שפג.", ()),
      ("התקדמות הסנכרון", "בזמן סנכרון של רשימה, שורת הסטטוס מראה כמה כבר הושלם, באחוזים.", ("android",)),
-     ("הורדות לצפייה בלי רשת", "מורידים סרטים ופרקים (עונות שלמות בסדרות Xtream) כדי לצפות בלי רשת.", ("mac", "android")),
+     ("הורדות לצפייה בלי רשת", "מורידים סרטים ופרקים (עונות שלמות בסדרות Xtream) כדי לצפות בלי רשת. ב-Windows הם נשמרים בתיקייה משלהם בתוך תיקיית ההורדות, ויורדים כל עוד האפליקציה פתוחה.", ("mac", "windows", "android")),
      ("גיבוי ושחזור", "רשימות בלי סיסמאות, מועדפים והיסטוריה, בקובץ אחד שאפשר להעביר למכשיר אחר.", ()),
      ("לשמור על סדר", "מסתירים קטגוריות לפי מילים ומרעננים רשימות אוטומטית, או כשאתם בוחרים.", ()),
    ]),
@@ -170,6 +170,11 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-10-28", "windows", "1.0.1", "windows-v1.0.1", {
+   "en": ["**Downloads for offline viewing.** Download movies and episodes (whole seasons on Xtream series) from the details sheet, and watch them without a network. The files go to `Downloads\\IPTVMac` in your user folder, so they are easy to find, copy and keep. A download goes on while the app is open and picks up again the next time you start it.",
+          "The download engine is tested on a real Windows machine: a file is fetched from a local server, saved to disk and checked for size."],
+   "he": ["**הורדות לצפייה בלי רשת.** מורידים סרטים ופרקים (עונות שלמות בסדרות Xtream) מגיליון הפרטים, וצופים בלי רשת. הקבצים נשמרים ב-`Downloads\\IPTVMac` בתיקיית המשתמש, כך שקל למצוא אותם, להעתיק ולשמור. הורדה נמשכת כל עוד האפליקציה פתוחה וממשיכה כשמפעילים אותה שוב.",
+          "מנוע ההורדה נבדק על מחשב Windows אמיתי: קובץ נמשך משרת מקומי, נשמר בדיסק וגודלו נבדק."]}),
  ("2026-10-27", "windows", "1.0.0", "windows-v1.0.0", {
    "en": ["**The first version for Windows 10 and 11.** A light installer (it installs for your user, no administrator rights) or a portable zip. The same player, search and 31 languages as everywhere else.",
           "**Built for the keyboard and mouse:** Space pauses, the arrows seek, Up and Down and the wheel change the volume, F or F11 fills the screen, Esc steps back, a click pauses and a double click fills the screen.",

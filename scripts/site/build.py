@@ -24,9 +24,9 @@ ANDROID_DL = REPO + "/releases/download/android-v1.0.4"   # direct files of that
 AND_VER = ANDROID_DL.rsplit("android-v", 1)[1]
 ANDROID_SIZES = {"arm64-v8a": 41, "armeabi-v7a": 38, "x86_64": 46, "tv-32bit": 38, "tv-64bit": 41}   # MB per file of that release; update with the release bump
 MAC_SIZE = 16   # MB of IPTVMac.dmg
-WIN_DL = REPO + "/releases/download/windows-v1.0.0"   # the Windows release (made by hand from the artifacts of .github/workflows/windows.yml)
+WIN_DL = REPO + "/releases/download/windows-v1.0.1"   # the Windows release (made by hand from the artifacts of .github/workflows/windows.yml)
 WIN_VER = WIN_DL.rsplit("windows-v", 1)[1]
-WIN_SIZES = {"setup": 26, "portable": 38}   # MB of IPTVMac-Windows-<ver>-setup.exe and -portable.zip
+WIN_SIZES = {"setup": 27, "portable": 39}   # MB of IPTVMac-Windows-<ver>-setup.exe and -portable.zip
 def win_file(kind): return f"{WIN_DL}/IPTVMac-Windows-{WIN_VER}-{kind}.{'exe' if kind == 'setup' else 'zip'}"
 WIN_REL = REPO + "/releases/tag/windows-v" + WIN_VER
 def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
