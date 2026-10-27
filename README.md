@@ -31,12 +31,12 @@ Free and open source. No accounts, no analytics.
 
 ## Where it runs
 
-| Device | Get it | Status |
-|---|---|---|
-| **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself |
-| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand |
-| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, tested on an emulator, not yet on real TVs |
-| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released |
+| Device | Get it | Status | Written in |
+|---|---|---|---|
+| **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself | Swift + SwiftUI |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand | Dart + Flutter, Kotlin layer |
+| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, tested on an emulator, not yet on real TVs | Dart + Flutter, Kotlin layer |
+| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released | Swift + SwiftUI |
 
 The same engine, 31 languages and no-account design everywhere.
 
@@ -44,7 +44,7 @@ The same engine, 31 languages and no-account design everywhere.
 
 - **Fast.** Your whole library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second, in a category, in a section, or everywhere.
 - **Stable.** Playback runs on [mpv](https://mpv.io) (libmpv, bundled). It plays the broken TS and HLS streams that trip up system players, reconnects when the stream drops, and uses hardware decoding.
-- **Native.** SwiftUI on Mac and iPhone, Flutter on Android; no Electron, no web view. Nothing else to install: the player is inside the app.
+- **Native, in the right language for each platform.** Swift and SwiftUI on Mac and iPhone; Dart with Flutter and a Kotlin layer on Android and Android TV. Each app is written for its own platform instead of one shared shell; no Electron, no web view. Nothing else to install: the player is inside the app.
 - **Open.** GPL-3.0, no accounts, no analytics. The app talks only to the servers you add, and to GitHub for updates.
 
 ## Install
