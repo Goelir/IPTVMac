@@ -11,6 +11,7 @@ Layout of scripts/site/:
 The page is complete without the optional modules: every chapter has a static composition, the modules only replace it."""
 import json, html, pathlib, re, hashlib, shutil
 import legal   # copy of the privacy policy and the support page (scripts/site/legal.py)
+import pages   # copy of the Download, Features and What's new pages (scripts/site/pages.py)
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
@@ -20,6 +21,10 @@ BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
 ANDROID_DL = REPO + "/releases/download/android-v1.0.4"   # direct files of that release (the sed that bumps android-vX.Y.Z updates this too)
+AND_VER = ANDROID_DL.rsplit("android-v", 1)[1]
+ANDROID_SIZES = {"arm64-v8a": 41, "armeabi-v7a": 38, "x86_64": 46, "tv-32bit": 38, "tv-64bit": 41}   # MB per file of that release; update with the release bump
+MAC_SIZE = 16   # MB of IPTVMac.dmg
+def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
 ANDROID_APK = REPO + "/releases/tag/android-v1.0.4"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
@@ -168,7 +173,7 @@ HOME = {
   title="IPTVMac: IPTV Player for Mac, Android and Android TV (Xtream Codes and M3U)",
   desc="IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
-  nav=[("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#languages", "Languages"), ("#install", "Install"), ("#devices", "Devices"), ("#faq", "FAQ")],
+  nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
   h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
   lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Android phones and tablets, and Android TV. Free and open source, with no account.",
@@ -242,9 +247,9 @@ HOME = {
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   foot_about="A free, open source IPTV player for Mac, Android and Android TV.",
   foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
-             ("Learn", [("#faq", "Questions"), ("#free", "Free playlists")]),
+             ("Product", [("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
-  alt_h="Other IPTV players for Mac.", alt_p="IPTVMac is Mac only. If you need something different:",
+  alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Android and Android TV (iPhone is coming). If you need Windows, Linux or something different:",
   alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
   credit='Demo footage: "Sintel" by the Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. All titles and channels on this page are invented.',
   tour_close="Close the video", tour_note='80 seconds: live channels, search, favorites, the player, 2x speed, Picture in Picture and downloads. The channels and posters are invented for the demo; the footage is the Blender Foundation film "Sintel" (CC BY 3.0).',
@@ -254,7 +259,7 @@ HOME = {
   title="IPTVMac: נגן IPTV ל-Mac, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
   desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
-  nav=[("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#languages", "שפות"), ("#install", "התקנה"), ("#devices", "מכשירים"), ("#faq", "שאלות")],
+  nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
   gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
   h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">לכל מסך.</span>',
   lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, בטלפונים וטאבלטים של Android וב-Android TV. חינם ובקוד פתוח, בלי חשבון.",
@@ -327,9 +332,9 @@ HOME = {
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
-             ("מידע", [("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
+             ("המוצר", [("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
-  alt_h="נגני IPTV אחרים ל-Mac.", alt_p="IPTVMac הוא ל-Mac בלבד. אם אתם צריכים משהו אחר:",
+  alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Android וב-Android TV (‏iPhone בדרך). אם אתם צריכים Windows, ‏Linux או משהו אחר:",
   alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
   credit='קטעי הדגמה: "Sintel" של Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. כל הכותרים והערוצים בעמוד בדויים.',
   tour_close="סגירת הסרטון", tour_note='80 שניות: ערוצים, חיפוש, מועדפים, הנגן, מהירות כפולה, תמונה בתוך תמונה והורדות. הערוצים והכרזות בדויים לצורך ההדגמה; הקטע המנוגן הוא הסרט Sintel של Blender Foundation (CC BY 3.0).',
@@ -367,7 +372,7 @@ def header_html(c, depth, home=True, home_rel=None, alt_href=None):
     up = "../" * depth
     rel = up if home_rel is None else home_rel
     prefix = "" if home else rel
-    links = "".join(f'<a{" class=keep" if h == "#install" else ""} href="{prefix}{h}">{e(t)}</a>' for h, t in c["nav"])
+    links = "".join(f'<a{" class=keep" if h == "download/" else ""} href="{prefix}{h}">{e(t)}</a>' for h, t in c["nav"])
     ol = c["other_lang"]
     href = ol[0] if home else (alt_href or up + ("he/" if ol[2] == "he" else ""))
     return f'''<a class="skip" href="#main">{e(c["skip"])}</a>
@@ -482,7 +487,7 @@ DEVICES = {
   tv=("Android TV, Google TV, Fire TV", "First TV version: remote control, no touch screen. Same Flutter and Kotlin code as the phone, with a layout built for the remote.",
       ["Install the Downloader app on the TV and open it.", "Type the address of the file (below). Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one. A USB stick works too.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up, hold Back to close."],
       "32-bit file", "64-bit file"),
-  ios="iPhone and iPad (also Swift and SwiftUI): waiting for App Store review.",
+  ios="iPhone and iPad (also Swift and SwiftUI): waiting for App Store review.", all="All downloads and file choices",
   alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: the channel list with the remote-control focus ring",
  ),
  "he": dict(
@@ -495,7 +500,7 @@ DEVICES = {
   tv=("Android TV, Google TV, Fire TV", "גרסת טלוויזיה ראשונה: שלט, בלי מסך מגע. אותו קוד Flutter ו-Kotlin כמו בטלפון, עם פריסה שנבנתה לשלט.",
       ["מתקינים את האפליקציה Downloader בטלוויזיה ופותחים אותה.", "מקלידים את כתובת הקובץ (למטה). מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט. גם כונן USB עובד.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה, לחיצה ארוכה על Back סוגרת."],
       "קובץ 32 ביט", "קובץ 64 ביט"),
-  ios="iPhone ו-iPad (גם הם ב-Swift וב-SwiftUI): ממתין לבדיקה ב-App Store.",
+  ios="iPhone ו-iPad (גם הם ב-Swift וב-SwiftUI): ממתין לבדיקה ב-App Store.", all="כל ההורדות ובחירת הקובץ",
   alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט",
  ),
 }
@@ -512,7 +517,7 @@ def devices_section(c, he, up):
     tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
               f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
     return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
-            f'<div class="dev-grid">{mac}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])}</p></div></section>\n')
+            f'<div class="dev-grid">{mac}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
 
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
@@ -750,14 +755,123 @@ def legal_page(kind, code):
     out += script_tag("../" * depth, c, mods=False) + '</body></html>\n'
     d = DOCS / path; d.mkdir(parents=True, exist_ok=True); (d / "index.html").write_text(out)
 
+
+# ---------- product pages: Download, Features, What's new (EN + HE) ----------
+def md(t):
+    """**bold** and `code` in the page copy -> HTML (the text is escaped first)."""
+    t = e(t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    return re.sub(r"`(.+?)`", r"<code>\1</code>", t)
+
+def product_shell(kind, code, title, desc, body, ld_extra=()):
+    c = HOME[code]; he = code == "he"
+    depth = 2 if he else 1; rel = "../"
+    path = f"{'he/' if he else ''}{kind}/"; canon = BASE + path
+    alts = [("en", BASE + f"{kind}/"), ("he", BASE + f"he/{kind}/"), ("x-default", BASE + f"{kind}/")]
+    ui = pages.UI[code]
+    ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE + ("he/" if he else "")},
+            {"@type": "ListItem", "position": 2, "name": title.split(" | ")[0].split(":")[0], "item": canon}]}, *ld_extra]
+    out = head(title, desc, canon, code, depth, alts, extra_ld=ld)
+    out += header_html(c, depth, home=False, home_rel=rel, alt_href=("../../" if he else "../he/") + f"{kind}/")
+    out += f'<main id="main"><div class="wrap pg">{body}</div></main>\n'
+    out += footer_html(c, depth, home=False, home_rel=rel)
+    out += script_tag("../" * depth, c, mods=False)
+    return out, ui
+
+def crumbs(code, label):
+    rel = "../"
+    return f'<nav class="crumbs" aria-label="{e(legal.UI[code]["bc"])}"><a href="{rel}">IPTVMac</a> / {e(label)}</nav>'
+
+def tag_list(code, plats):
+    ui = pages.UI[code]
+    return "".join(f'<span class="ptag">{e(ui[p])}</span>' for p in plats)
+
+def download_page(code):
+    c = HOME[code]; d = pages.DOWNLOAD[code]; ui = pages.UI[code]; he = code == "he"
+    ol = lambda steps: "<ol class=\"steps\">" + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
+    btn = lambda href, label, cls="fill": f'<a class="btn {cls}" href="{href}" rel="noopener">{ICON_DL}{e(label)}</a>'
+    mac, an, tv, ios = d["mac"], d["android"], d["tv"], d["ios"]
+    other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
+    cards = f"""
+<article class="dl" data-os="mac" id="mac"><div class="dl-top"><h2>{e(mac["h"])}</h2><span class="ver">{e(d["mac_ver"])} {VERSION}</span></div>
+<p class="req">{e(mac["req"])}</p><div class="acts">{btn(DOWNLOAD, mac["btn"])}<span class="sz">{MAC_SIZE} MB</span></div>
+<p class="alt">{e(mac["alt"])}</p>{cmd_block(c)}{ol(mac["steps"])}<p class="dl-note">{e(mac["note"])}</p></article>
+<article class="dl" data-os="android" id="android"><div class="dl-top"><h2>{e(an["h"])}</h2><span class="ver">{e(d["mac_ver"])} {AND_VER}</span></div>
+<p class="req">{e(an["req"])}</p><div class="acts">{btn(apk("arm64-v8a"), an["btn"])}<span class="sz">{ANDROID_SIZES["arm64-v8a"]} MB</span></div>
+<p class="alt">{e(an["other"])} {other}</p>{ol(an["steps"])}<p class="dl-note">{e(an["note"])}</p></article>
+<article class="dl" data-os="tv" id="tv"><div class="dl-top"><h2>{e(tv["h"])}</h2><span class="ver">{e(d["mac_ver"])} {AND_VER}</span></div>
+<p class="req">{e(tv["req"])}</p><div class="acts">{btn(apk("tv-32bit"), tv["btn32"])}<span class="sz">{ANDROID_SIZES["tv-32bit"]} MB</span>{btn(apk("tv-64bit"), tv["btn64"], "")}<span class="sz">{ANDROID_SIZES["tv-64bit"]} MB</span></div>
+<p class="alt dl-url" dir="ltr">{e(apk("tv-32bit"))}</p>{ol(tv["steps"])}<p class="dl-note">{e(tv["note"])}</p></article>
+<article class="dl soon" data-os="ios" id="ios"><div class="dl-top"><h2>{e(ios["h"])}</h2><span class="ver">{e(ios["soon"])}</span></div>
+<p class="req">{e(ios["req"])}</p><p>{e(ios["body"])}</p><div class="acts"><a class="btn" href="{REPO}#other-platforms" rel="noopener">{e(ios["btn"])}</a></div></article>"""
+    cols = d["files_cols"]
+    rows = "".join(f'<tr><th scope="row"><a href="{apk(n)}" rel="noopener"><code>{e(n)}</code></a></th><td>{e(t)}</td><td>{ANDROID_SIZES[k]} MB</td></tr>' for n, t, k in d["files"])
+    table = f'<div class="tbl"><table><thead><tr><th scope="col">{e(cols[0])}</th><th scope="col">{e(cols[1])}</th><th scope="col">{e(cols[2])}</th></tr></thead><tbody>{rows}</tbody></table></div>'
+    verify = "".join(f"<p>{md(x)}</p>" for x in d["verify_p"])
+    body = f"""
+<header class="pg-head">{crumbs(code, d["h1"])}<h1>{e(d["h1"])}</h1><p class="pg-lede">{e(d["lede"])}</p>
+<p class="pg-meta"><span>Mac {VERSION}</span><span>Android {AND_VER}</span><span>{e(ui["free"])}</span></p></header>
+<div class="dl-grid" data-rec="{e(d["js_rec"])}">{cards}</div>
+<section class="pg-sec" aria-labelledby="files-h"><h2 id="files-h">{e(d["files_h"])}</h2><p>{e(d["files_p"])}</p>{table}</section>
+<section class="pg-sec two" aria-labelledby="verify-h"><div><h2 id="verify-h">{e(d["verify_h"])}</h2>{verify}
+<p><a class="link" href="{ANDROID_APK}" rel="noopener">{ICON_GH}{e(d["sums"])}</a></p></div>
+<div><h2 id="older-h">{e(d["older_h"])}</h2><p>{e(d["older_p"])}</p>
+<p class="rowlinks"><a class="link" href="{REPO}/releases" rel="noopener">{ICON_GH}{e(ui["more"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a><a class="link" href="../changelog/">{e(d["changelog"])}</a></p></div></section>
+<p class="pg-fine">{e(d["disclaimer"])}</p>
+<script>(function(){{var u=navigator.userAgent||"",g=document.querySelector(".dl-grid"),k=null;
+if(/Android/i.test(u))k=/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(u)?"tv":"android";else if(/Macintosh|Mac OS X/i.test(u)&&!/iPhone|iPad/i.test(u))k="mac";
+var a=k&&g.querySelector('[data-os="'+k+'"]');if(!a)return;a.classList.add("rec");var b=document.createElement("span");b.className="recbadge";b.textContent=g.dataset.rec;a.insertBefore(b,a.firstChild);g.insertBefore(a,g.firstChild)}})();</script>"""
+    ld = [{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac", "applicationCategory": "MultimediaApplication",
+           "operatingSystem": "macOS 14+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
+           "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"}]
+    out, _ = product_shell("download", code, d["title"], d["desc"], body, ld)
+    path = DOCS / ("he" if he else "") / "download"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+
+def features_page(code):
+    c = HOME[code]; f = pages.FEATURES[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
+    secs = ""
+    for gi, (gh, items) in enumerate(f["groups"]):
+        cards = "".join(f'<li class="feat"><h3>{e(t)}</h3><p>{e(p)}</p>{f"""<p class="plats"><span class="sr">{e(ui["platforms"])}: </span>{tag_list(code, pl)}</p>""" if pl else ""}</li>' for t, p, pl in items)
+        secs += f'<section class="pg-sec" aria-labelledby="g{gi}"><h2 id="g{gi}">{e(gh)}</h2><ul class="feat-grid">{cards}</ul></section>\n'
+    body = f"""
+<header class="pg-head">{crumbs(code, f["h1"])}<h1>{e(f["h1"])}</h1><p class="pg-lede">{e(f["lede"])}</p></header>
+<figure class="pg-shot"><picture><source type="image/webp" srcset="{up}screenshots/03-movies-1800.webp"><img src="{up}screenshots/03-movies.jpg" width="1800" height="1186" alt="{e(f["pic_alt"])}" decoding="async"></picture></figure>
+{secs}<section class="pg-cta" aria-labelledby="cta-h"><h2 id="cta-h">{e(f["cta_h"])}</h2><p>{e(f["cta_p"])}</p><a class="btn fill big" href="{up}{'he/' if he else ''}download/">{ICON_DL}{e(f["cta_btn"])}</a></section>"""
+    out, _ = product_shell("features", code, f["title"], f["desc"], body)
+    path = DOCS / ("he" if he else "") / "features"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+
+def changelog_page(code):
+    c = HOME[code]; d = pages.CHANGELOG[code]; ui = pages.UI[code]; he = code == "he"
+    def fmt(iso):
+        y, m, dd = iso.split("-"); mon = pages.MONTHS[code][int(m) - 1]
+        return f"{int(dd)} {mon} {y}" if he else f"{int(dd)} {mon} {y}"
+    items = ""
+    for date, plat, ver, tag, text in sorted(pages.CHANGES, key=lambda r: r[0], reverse=True):
+        lis = "".join(f"<li>{md(b)}</li>" for b in text[code])
+        items += (f'<article class="rel" data-plat="{plat}"><div class="rel-h"><h2 id="{plat}-{ver.replace(".", "-")}"><span class="ptag p-{plat}">{e(ui[plat])}</span> {ver}</h2>'
+                  f'<time datetime="{date}">{e(fmt(date))}</time></div><ul>{lis}</ul>'
+                  f'<p class="rel-l"><a href="{REPO}/releases/tag/{tag}" rel="noopener">{e(d["notes"])}</a></p></article>\n')
+    # filter (progressive: without JS all releases stay visible)
+    flt = (f'<div class="flt" role="group" aria-label="{e(ui["platforms"])}" hidden><button type="button" data-f="" aria-pressed="true">{e(d["filter"][0])}</button>'
+           f'<button type="button" data-f="mac" aria-pressed="false">{e(d["filter"][1])}</button><button type="button" data-f="android" aria-pressed="false">{e(d["filter"][2])}</button></div>')
+    body = f"""
+<header class="pg-head">{crumbs(code, d["h1"])}<h1>{e(d["h1"])}</h1><p class="pg-lede">{e(d["lede"])}</p></header>
+{flt}<div class="rels">{items}</div><p class="pg-fine"><a href="{REPO}/releases" rel="noopener">{e(d["older"])}</a></p>
+<script>(function(){{var f=document.querySelector(".flt");if(!f)return;f.hidden=false;f.addEventListener("click",function(ev){{var b=ev.target.closest("button");if(!b)return;
+f.querySelectorAll("button").forEach(function(x){{x.setAttribute("aria-pressed",x===b)}});
+document.querySelectorAll(".rel").forEach(function(r){{r.hidden=!!b.dataset.f&&r.dataset.plat!==b.dataset.f}})}})}})();</script>"""
+    out, _ = product_shell("changelog", code, d["title"], d["desc"], body)
+    path = DOCS / ("he" if he else "") / "changelog"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+
 # ---------- crawler files ----------
 def crawler_files():
     en_of = {BASE: BASE, BASE + "he/": BASE}              # page url -> its English url; every entry lists both language versions
     urls = [BASE, BASE + "he/"] + [BASE + f"guides/{g['slug']}.html" for g in GUIDES]
-    for k in legal.LEGAL: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
+    for k in list(legal.LEGAL) + ["download", "features", "changelog"]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for u in urls:
-        sm += f"<url><loc>{u}</loc><lastmod>{legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
+        sm += f"<url><loc>{u}</loc><lastmod>{"2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
         if u in en_of:
             en = en_of[u]; he = en.replace(BASE, BASE + "he/", 1) if en != BASE else BASE + "he/"
             sm += f'<xhtml:link rel="alternate" hreflang="en" href="{en}"/><xhtml:link rel="alternate" hreflang="he" href="{he}"/>'
@@ -781,6 +895,9 @@ Install in Terminal: `{INSTALL_CMD}`
 Install video (95 seconds, English): {YT_INSTALL}
 Source code: {REPO}
 Privacy policy: {BASE}privacy/ (no account, no analytics, no ads, no tracking; nothing is sent to the developer)
+Downloads (Mac, Android, Android TV): {BASE}download/
+Features: {BASE}features/
+Release notes: {BASE}changelog/
 Support: {BASE}support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
 
 ## Guides
@@ -816,5 +933,6 @@ if __name__ == "__main__":
     for g in GUIDES: guide(g)
     for k in legal.LEGAL:
         for code in ("en", "he"): legal_page(k, code)
+    for code in ("en", "he"): download_page(code); features_page(code); changelog_page(code)
     crawler_files()
     print("site built:", ", ".join(sorted(p.name for p in DOCS.rglob("*.html"))))

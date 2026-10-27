@@ -7,6 +7,9 @@ Install in Terminal: `curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMa
 Install video (95 seconds, English): https://youtu.be/TgaoFEEMg48
 Source code: https://github.com/Goelir/IPTVMac
 Privacy policy: https://goelir.github.io/IPTVMac/privacy/ (no account, no analytics, no ads, no tracking; nothing is sent to the developer)
+Downloads (Mac, Android, Android TV): https://goelir.github.io/IPTVMac/download/
+Features: https://goelir.github.io/IPTVMac/features/
+Release notes: https://goelir.github.io/IPTVMac/changelog/
 Support: https://goelir.github.io/IPTVMac/support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
 
 ## Guides

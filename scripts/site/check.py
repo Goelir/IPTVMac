@@ -52,7 +52,7 @@ def check(path):
 
 bad = 0
 for page in [DOCS / "index.html", DOCS / "he/index.html", *sorted((DOCS / "guides").glob("*.html")),
-             *(DOCS / d / n / "index.html" for d in ("", "he") for n in ("privacy", "support"))]:
+             *(DOCS / d / n / "index.html" for d in ("", "he") for n in ("privacy", "support", "download", "features", "changelog"))]:
     errs = check(page); bad += len(errs)
     print(("ok     " if not errs else "ISSUES ") + str(page.relative_to(DOCS)))
     for e in errs: print("   ", e)
