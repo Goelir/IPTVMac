@@ -16,7 +16,7 @@ void main() {
   final apple = Directory('../Sources/IPTVMac/Resources')
       .listSync()
       .whereType<Directory>()
-      .map((d) => d.path.split('/').last)
+      .map((d) => d.path.split(RegExp(r'[\\/]')).last)
       .where((n) => n.endsWith('.lproj'))
       .map((n) => n.replaceAll('.lproj', '').replaceAll('-', '_'))
       .toList()

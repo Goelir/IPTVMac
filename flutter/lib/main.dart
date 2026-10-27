@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +33,7 @@ Future<void> main() async {
     db = AppDatabase.memory();
     failure = e.toString();
   }
+  isDesktop = Platform.isWindows;
   isTelevision = await detectTelevision();
   if (isTelevision) await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // a TV has no bars; an emulator or box that draws them gets none
   final model = LibraryModel(

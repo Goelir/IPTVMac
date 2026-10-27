@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 
 /// Whether the app runs on a TV (Android TV, Google TV, Fire TV): a remote control with a D-pad and no touch screen. Set once at start
@@ -9,8 +6,8 @@ import 'package:flutter/services.dart';
 bool isTelevision = false;
 
 /// The Windows app: a window with a mouse and a keyboard (no touch gestures, no system volume or brightness to swipe, no TV remote).
-/// Tests set it to exercise the desktop player on any machine.
-bool isDesktop = !kIsWeb && Platform.isWindows;
+/// Set once by main on Windows; false everywhere else, also in tests (which set it to exercise the desktop player on any machine).
+bool isDesktop = false;
 
 /// Which releases the update check follows: the tags are "android-vX.Y.Z" and "windows-vX.Y.Z" in the same GitHub repository.
 String get releaseChannel => isDesktop ? 'windows' : 'android';
