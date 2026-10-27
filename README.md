@@ -44,7 +44,7 @@ The same engine, 31 languages and no-account design everywhere.
 
 - **Fast.** Your whole library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second, in a category, in a section, or everywhere.
 - **Stable.** Playback runs on [mpv](https://mpv.io) (libmpv, bundled). It plays the broken TS and HLS streams that trip up system players, reconnects when the stream drops, and uses hardware decoding.
-- **Native, in the right language for each platform.** Swift and SwiftUI on Mac and iPhone; Dart with Flutter and a Kotlin layer on Android and Android TV. Each app is written for its own platform instead of one shared shell; no Electron, no web view. Nothing else to install: the player is inside the app.
+- **Native, in the right language for each platform.** Swift and SwiftUI on Mac and iPhone; Dart with Flutter and a Kotlin layer on Android and Android TV. Each app is written for its own platform instead of one shared shell, and on every one the video is decoded by the same compiled libmpv engine; no Electron, no web view. Nothing else to install: the player is inside the app.
 - **Open.** GPL-3.0, no accounts, no analytics. The app talks only to the servers you add, and to GitHub for updates.
 
 ## Install

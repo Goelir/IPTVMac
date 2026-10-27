@@ -474,7 +474,7 @@ def term(c):
 DEVICES = {
  "en": dict(
   h="One app, three ways to install.",
-  p="The same player, the same 31 languages, no account. Each version is written in the language that suits its platform, not squeezed into one shared shell. Pick your device.",
+  p="The same player, the same 31 languages, no account. Each version is written in the language that suits its platform, not squeezed into one shared shell, and the video itself is decoded by the same compiled libmpv engine everywhere. Pick your device.",
   mac=("Mac", "Apple Silicon, macOS 14 or later. Written in Swift and SwiftUI, Apple's own language and toolkit.", ["Paste the one-line command in Terminal, or open IPTVMac.dmg and drag the app to Applications.", "Add your Xtream Codes login or M3U link.", "The app updates itself."],
        "Download the DMG", "Install on Mac"),
   phone=("Android phone and tablet", "Android 8 or later. Written in Dart with Flutter, with a Kotlin layer for the Android system features.", ["Download the arm64-v8a file (it suits almost every phone).", "Open it and allow installs from your browser or Files app.", "Add your source. A banner tells you when a new version is out."],
@@ -487,7 +487,7 @@ DEVICES = {
  ),
  "he": dict(
   h="אפליקציה אחת, שלוש דרכי התקנה.",
-  p="אותו נגן, אותן 31 שפות, בלי חשבון. כל גרסה כתובה בשפה שמתאימה לפלטפורמה שלה, ולא דחוסה לתוך מעטפת אחת משותפת. בוחרים מכשיר.",
+  p="אותו נגן, אותן 31 שפות, בלי חשבון. כל גרסה כתובה בשפה שמתאימה לפלטפורמה שלה, ולא דחוסה לתוך מעטפת אחת משותפת, ואת הווידאו עצמו מפענח בכל מקום אותו מנוע libmpv מקומפל. בוחרים מכשיר.",
   mac=("Mac", "Apple Silicon, macOS 14 ומעלה. כתובה ב-Swift וב-SwiftUI, השפה והערכה של אפל עצמה.", ["מדביקים את הפקודה בשורה אחת בטרמינל, או פותחים את IPTVMac.dmg וגוררים את האפליקציה ל-Applications.", "מוסיפים כניסת Xtream Codes או קישור M3U.", "האפליקציה מתעדכנת לבד."],
        "הורדת ה-DMG", "התקנה ב-Mac"),
   phone=("טלפון וטאבלט של Android", "Android 8 ומעלה. כתובה ב-Dart עם Flutter, ועם שכבת Kotlin לתכונות המערכת של Android.", ["מורידים את הקובץ arm64-v8a (מתאים לכמעט כל טלפון).", "פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים.", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה."],
