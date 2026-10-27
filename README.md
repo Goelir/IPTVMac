@@ -103,6 +103,29 @@ It holds about 11,000 entries (loading takes a moment); the project's README als
 
 </div>
 
+## Android and Android TV
+
+<p align="center">
+<img src="docs/screenshots/android-live.webp" width="190" alt="IPTVMac on an Android phone: live channels with the program now and next">
+<img src="docs/screenshots/android-series.webp" width="190" alt="IPTVMac on an Android phone: a series page with seasons and episodes">
+<img src="docs/screenshots/tv-live.webp" width="330" alt="IPTVMac on Android TV: the channel list with the remote-control focus ring">
+<img src="docs/screenshots/tv-details.webp" width="330" alt="IPTVMac on Android TV: a movie's details with Play focused">
+</p>
+
+<sub>Demo playlist with invented titles. The two TV pictures come from an emulator: the first TV version has not been tried on a real TV yet.</sub>
+
+**Phone or tablet (Android 8 or later).**
+
+1. Download [IPTVMac-Android-1.0.4-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-arm64-v8a.apk) (it suits almost every phone; the [release page](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) lists the other files).
+2. Open it and allow installs from your browser or Files app when Android asks.
+3. Add your source. A banner tells you when a newer version is out; installing it stays manual.
+
+**Android TV, Google TV and Fire TV.**
+
+1. On the TV install the **Downloader** app (Fire TV: search "Downloader"; Android TV and Google TV: Google Play) and open it.
+2. In Downloader type the address of the file: [32-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (try this first, it runs on almost every TV and box) or [64-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (if the TV says the app is not compatible). A USB stick with the file works too.
+3. Allow Downloader to install apps when the TV asks, install, and open IPTVMac. With the remote: arrows move, OK selects, Back goes up one level, **hold Back to close the app**.
+
 ## Features
 
 | | |

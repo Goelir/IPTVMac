@@ -19,6 +19,7 @@ NOTARIZED_FROM = "0.9.1"   # first release signed with a Developer ID and notari
 BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
+ANDROID_DL = REPO + "/releases/download/android-v1.0.4"   # direct files of that release (the sed that bumps android-vX.Y.Z updates this too)
 ANDROID_APK = REPO + "/releases/tag/android-v1.0.4"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
@@ -167,7 +168,7 @@ HOME = {
   title="IPTVMac: IPTV Player for Mac, Android and Android TV (Xtream Codes and M3U)",
   desc="IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
-  nav=[("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#languages", "Languages"), ("#install", "Install"), ("#faq", "FAQ")],
+  nav=[("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#languages", "Languages"), ("#install", "Install"), ("#devices", "Devices"), ("#faq", "FAQ")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
   h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
   lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Android phones and tablets, and Android TV. Free and open source, with no account.",
@@ -253,7 +254,7 @@ HOME = {
   title="IPTVMac: נגן IPTV ל-Mac, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
   desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
-  nav=[("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#languages", "שפות"), ("#install", "התקנה"), ("#faq", "שאלות")],
+  nav=[("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#languages", "שפות"), ("#install", "התקנה"), ("#devices", "מכשירים"), ("#faq", "שאלות")],
   gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
   h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">לכל מסך.</span>',
   lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, בטלפונים וטאבלטים של Android וב-Android TV. חינם ובקוד פתוח, בלי חשבון.",
@@ -469,6 +470,50 @@ def term(c):
 <span class="ln t5"><span class="ok">Installed:</span> /Applications/IPTVMac.app</span>
 <div class="opens"><img src="{c["up"]}logo.png" width="52" height="52" alt="" loading="lazy"><div>{e(c["opens"])}<small>{e(c["opens_s"])}</small></div></div></div></div>'''
 
+
+DEVICES = {
+ "en": dict(
+  h="One app, three ways to install.",
+  p="The same player, the same 31 languages, no account. Pick your device.",
+  mac=("Mac", "Apple Silicon, macOS 14 or later.", ["Paste the one-line command in Terminal, or open IPTVMac.dmg and drag the app to Applications.", "Add your Xtream Codes login or M3U link.", "The app updates itself."],
+       "Download the DMG", "Install on Mac"),
+  phone=("Android phone and tablet", "Android 8 or later.", ["Download the arm64-v8a file (it suits almost every phone).", "Open it and allow installs from your browser or Files app.", "Add your source. A banner tells you when a new version is out."],
+         "Download the APK"),
+  tv=("Android TV, Google TV, Fire TV", "First TV version: remote control, no touch screen. Tested on an emulator, not yet on real TVs.",
+      ["Install the Downloader app on the TV and open it.", "Type the address of the file (below). Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one. A USB stick works too.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up, hold Back to close."],
+      "32-bit file", "64-bit file"),
+  ios="iPhone and iPad: waiting for App Store review.",
+  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: the channel list with the remote-control focus ring",
+ ),
+ "he": dict(
+  h="אפליקציה אחת, שלוש דרכי התקנה.",
+  p="אותו נגן, אותן 31 שפות, בלי חשבון. בוחרים מכשיר.",
+  mac=("Mac", "Apple Silicon, macOS 14 ומעלה.", ["מדביקים את הפקודה בשורה אחת בטרמינל, או פותחים את IPTVMac.dmg וגוררים את האפליקציה ל-Applications.", "מוסיפים כניסת Xtream Codes או קישור M3U.", "האפליקציה מתעדכנת לבד."],
+       "הורדת ה-DMG", "התקנה ב-Mac"),
+  phone=("טלפון וטאבלט של Android", "Android 8 ומעלה.", ["מורידים את הקובץ arm64-v8a (מתאים לכמעט כל טלפון).", "פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים.", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה."],
+         "הורדת ה-APK"),
+  tv=("Android TV, Google TV, Fire TV", "גרסת טלוויזיה ראשונה: שלט, בלי מסך מגע. נבדקה באמולטור, עוד לא על טלוויזיות אמיתיות.",
+      ["מתקינים את האפליקציה Downloader בטלוויזיה ופותחים אותה.", "מקלידים את כתובת הקובץ (למטה). מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט. גם כונן USB עובד.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה, לחיצה ארוכה על Back סוגרת."],
+      "קובץ 32 ביט", "קובץ 64 ביט"),
+  ios="iPhone ו-iPad: ממתין לבדיקה ב-App Store.",
+  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט",
+ ),
+}
+
+def devices_section(c, he, up):
+    d = DEVICES["he" if he else "en"]
+    def card(h, req, steps, shot, alt, acts, cls=""):
+        li = "".join(f"<li>{e(x)}</li>" for x in steps)
+        return (f'<article class="dev {cls}"><div class="shot"><img src="{up}screenshots/{shot}" alt="{e(alt)}" loading="lazy" decoding="async"></div>'
+                f'<h3><bdi dir="{"rtl" if any(ord(ch) > 0x590 and ord(ch) < 0x600 for ch in h) else "ltr"}">{e(h)}</bdi></h3><p class="req">{e(req)}</p><ol class="steps">{li}</ol><div class="acts">{acts}</div></article>')
+    mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
+               f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#install">{e(d["mac"][4])}</a>')
+    phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
+    tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
+              f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.4-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
+    return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
+            f'<div class="dev-grid">{mac}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])}</p></div></section>\n')
+
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
     canon = BASE + c["prefix"]
@@ -527,8 +572,9 @@ def home(code):
 {term(c)}</div>
 <div class="note"><div><h3>{e(c["why_h"])}</h3><p>{e(c["why"])}</p></div>
 <div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{steps}</ol><p class="old">{c["dmg_old"]}</p><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></div></div>
-<div class="note"><div><h3>{e(c["android_h"])}</h3><p>{e(c["android_p"])}</p><a class="btn" href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a></div></div></div></section>
+</div></section>
 '''
+    out += devices_section(c, he, up)
     # free playlists, faq, guides
     out += f'''<section class="free" id="free" aria-labelledby="free-h"><div class="wrap free-grid"><h2 id="free-h">{e(c["free_h"])}</h2><div><p>{e(c["free_p"])}</p>
 <div class="m3u"><code>{FREE_M3U}</code><button class="copy" type="button" data-done="{e(c["copied"])}" aria-label="{e(c["copy_aria"])}">{ICON_COPY}{ICON_OK}<span class="lbl">{e(c["copy"])}</span></button><span class="sr" role="status" aria-live="polite"></span></div>

@@ -117,6 +117,29 @@ https://iptv-org.github.io/iptv/index.m3u
 
 </div>
 
+## Android ו-Android TV
+
+<p align="center">
+<img src="docs/screenshots/android-live.webp" width="190" alt="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה">
+<img src="docs/screenshots/android-series.webp" width="190" alt="IPTVMac בטלפון Android: עמוד סדרה עם עונות ופרקים">
+<img src="docs/screenshots/tv-live.webp" width="330" alt="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט">
+<img src="docs/screenshots/tv-details.webp" width="330" alt="IPTVMac ב-Android TV: פרטי סרט כשכפתור הניגון בפוקוס">
+</p>
+
+<sub>רשימת הדגמה עם שמות בדויים. שתי תמונות הטלוויזיה הן מאמולטור: גרסת הטלוויזיה הראשונה עוד לא נוסתה על טלוויזיה אמיתית.</sub>
+
+**טלפון או טאבלט (Android 8 ומעלה).**
+
+1. מורידים את [IPTVMac-Android-1.0.4-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-arm64-v8a.apk) (מתאים לכמעט כל טלפון; ב[עמוד הגרסה](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) יש את שאר הקבצים).
+2. פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים כש-Android שואל.
+3. מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה; ההתקנה שלה נשארת ידנית.
+
+**Android TV, ‏Google TV ו-Fire TV.**
+
+1. בטלוויזיה מתקינים את האפליקציה **Downloader** (ב-Fire TV מחפשים "Downloader"; ב-Android TV וב-Google TV ב-Google Play) ופותחים אותה.
+2. ב-Downloader מקלידים את כתובת הקובץ: [32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (מנסים אותו קודם, הוא רץ כמעט על כל טלוויזיה וסטרימר) או [64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (אם הטלוויזיה אומרת שהאפליקציה לא תואמת). גם כונן USB עם הקובץ עובד.
+3. מאשרים ל-Downloader להתקין אפליקציות כשהטלוויזיה שואלת, מתקינים ופותחים את IPTVMac. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**.
+
 ## יכולות
 
 | | |
