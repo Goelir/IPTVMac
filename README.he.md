@@ -41,7 +41,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 |---|---|---|---|
 | **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד | Swift + SwiftUI |
 | **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית | Dart + Flutter, שכבת Kotlin |
-| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, נבדקה באמולטור, עוד לא על טלוויזיות אמיתיות | Dart + Flutter, שכבת Kotlin |
+| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע | Dart + Flutter, שכבת Kotlin |
 | **iPhone ו-iPad** | ממתין לבדיקה ב-App Store; בינתיים אפשר [לבנות מהמקור](#פלטפורמות-נוספות) | לא יצא | Swift + SwiftUI |
 
 אותו מנוע, 31 שפות ובלי חשבון, בכל מקום.
@@ -126,7 +126,7 @@ https://iptv-org.github.io/iptv/index.m3u
 <img src="docs/screenshots/tv-details.webp" width="330" alt="IPTVMac ב-Android TV: פרטי סרט כשכפתור הניגון בפוקוס">
 </p>
 
-<sub>רשימת הדגמה עם שמות בדויים. שתי תמונות הטלוויזיה הן מאמולטור: גרסת הטלוויזיה הראשונה עוד לא נוסתה על טלוויזיה אמיתית.</sub>
+<sub>רשימת הדגמה עם שמות בדויים. שתי תמונות הטלוויזיה הן מאמולטור.</sub>
 
 **טלפון או טאבלט (Android 8 ומעלה).**
 
@@ -232,7 +232,7 @@ IPTVMac היא אפליקציית Mac שאפשר להוריד כבר היום. �
 
 - **iPhone ו-iPad** (`ios/`): הוגשה ל-App Store וממתינה לבדיקה. בנייה: `scripts/ios-setup.sh` ואז פותחים את `ios/IPTVPhone.xcodeproj` (ראו [ios/README.md](ios/README.md)).
 - **Android** (`flutter/`): **[הורדת ה-APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4)** (Android 8 ומעלה; בוחרים בקובץ `arm64-v8a` לכמעט כל טלפון, ובהערות הגרסה ההוראות). Flutter ו-libmpv, 31 שפות שנוצרות מאותן מחרוזות. נגן מגע עם מחוות, תמונה בתוך תמונה, קול שממשיך כשהמסך כבוי, כפתור סיבוב מסך, והורדות של סרטים ופרקים לצפייה בלי רשת (אפליקציית ה-Android היא היחידה, לצד ה-Mac, שיש בה הורדות; באייפון אין). בנייה: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; ראו [flutter/PLAN.md](flutter/PLAN.md)). Android 8 ומעלה. היא מודיעה כשיצא APK חדש (באנר עם קישור לעמוד הגרסה; ההתקנה נשארת ידנית; היא פונה אל github.com לכל היותר אחת לשש שעות, ואפשר לכבות את זה בהגדרות).
-- **Android TV, ‏Google TV ו-Fire TV** (אותה אפליקציה; גרסת הטלוויזיה הראשונה): מורידים את **[קובץ ה-32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk)** (‏38MB; רץ כמעט על כל טלוויזיה וסטרימר, כולל רוב ה-Fire TV Stick) או, אם הטלוויזיה אומרת שהוא לא תואם, את **[קובץ ה-64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk)** (‏41MB). ב-Fire TV או ב-Android TV מתקינים עם האפליקציה Downloader (מקלידים את כתובת הקובץ) או מכונן USB; עדיין אין רישום בחנות. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**; בנגן Left/Right מדלגים, Up/Down מחליפים ערוץ, OK עוצר. אין הורדות בטלוויזיה, והעדכון ידני (מתקינים את הקובץ החדש מעל הישן). נבדק בטסטים אוטומטיים ובאמולטור של Android, עוד לא על טלוויזיה אמיתית: מוזמנים לדווח על תקלות.
+- **Android TV, ‏Google TV ו-Fire TV** (אותה אפליקציה; גרסת הטלוויזיה הראשונה): מורידים את **[קובץ ה-32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk)** (‏38MB; רץ כמעט על כל טלוויזיה וסטרימר, כולל רוב ה-Fire TV Stick) או, אם הטלוויזיה אומרת שהוא לא תואם, את **[קובץ ה-64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk)** (‏41MB). ב-Fire TV או ב-Android TV מתקינים עם האפליקציה Downloader (מקלידים את כתובת הקובץ) או מכונן USB; עדיין אין רישום בחנות. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**; בנגן Left/Right מדלגים, Up/Down מחליפים ערוץ, OK עוצר. אין הורדות בטלוויזיה, והעדכון ידני (מתקינים את הקובץ החדש מעל הישן). מוזמנים לדווח על תקלות.
 
 ## בנייה מקוד המקור
 
