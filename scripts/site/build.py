@@ -113,7 +113,7 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 def software_ld(desc, lang):
     return {
         "@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac",
-        "applicationCategory": "MultimediaApplication", "operatingSystem": "macOS 14 or later (Apple Silicon)",
+        "applicationCategory": "MultimediaApplication", "operatingSystem": "macOS 14 or later (Apple Silicon), Android 8 or later, Android TV, Google TV, Fire OS",
         "softwareVersion": VERSION, "description": desc, "url": BASE, "inLanguage": ["en", "he", "ar", "es", "fr", "de", "pt", "it", "ru", "uk", "pl", "ro", "bg", "nl", "sv", "cs", "hu", "el", "sq", "tr", "fa", "ur", "hi", "bn", "id", "vi", "th", "zh-Hans", "zh-Hant", "ja", "ko"],
         "downloadUrl": DOWNLOAD, "license": "https://www.gnu.org/licenses/gpl-3.0.html", "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
@@ -164,17 +164,17 @@ def app_strings(code):
 HOME = {
  "en": dict(
   lang="en", prefix="", up="",
-  title="IPTVMac: IPTV Player for Mac (Xtream Codes and M3U)",
-  desc="IPTVMac is a free, open source IPTV player for Mac. Xtream Codes and M3U, instant search, Picture in Picture, catch-up, downloads and subtitles. Apple Silicon, macOS 14+.",
+  title="IPTVMac: IPTV Player for Mac, Android and Android TV (Xtream Codes and M3U)",
+  desc="IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
   nav=[("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#languages", "Languages"), ("#install", "Install"), ("#faq", "FAQ")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
-  h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">for Mac.</span>',
-  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and downloads. Free and open source, with no account.",
+  h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
+  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Android phones and tablets, and Android TV. Free and open source, with no account.",
   cmd_b="Install in one line.", cmd_t="Paste it in Terminal, or use the DMG button below. Either way, the app updates itself afterwards.",
   copy="Copy", copied="Copied", copy_aria="Copy the install command",
   dl="Download the DMG", src="View the source", tour="Watch the 80-second tour",
-  meta=f"Version {VERSION}. Apple Silicon, macOS 14 or later. GPL-3.0.",
+  meta=f"Mac {VERSION}: Apple Silicon, macOS 14 or later. Android 8 or later, and Android TV. GPL-3.0.",
   cue="Scroll to see it work", rail_aria="Chapters",
   hero_alt="The IPTVMac window showing a wall of movie posters, with a small Picture in Picture window floating in front of it",
   # chapters
@@ -221,7 +221,7 @@ HOME = {
   free_btn="Open iptv-org on GitHub",
   faq_h="Questions",
   faq=[
-   ("What is IPTVMac?", "IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages."),
+   ("What is IPTVMac?", "IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV (an iPhone and iPad app is waiting for App Store review). It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages."),
    ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
@@ -237,9 +237,9 @@ HOME = {
           ("guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "Add a playlist link and get Live, Movies and Series."),
           ("guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "Keep a stream in a floating window while you do something else.")],
   cta_l=["Free.", "Open source."], cta_p="GPL-3.0. No account, no ads, no tracking.", cta_dl="Download for Mac", cta_src="Source on GitHub",
-  android_dl="Android (APK)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
+  android_h="Android and Android TV", android_dl="Android (APK)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
-  foot_about="A free, open source IPTV player for Mac.",
+  foot_about="A free, open source IPTV player for Mac, Android and Android TV.",
   foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
              ("Learn", [("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
@@ -250,17 +250,17 @@ HOME = {
   lic="Open source under GPL-3.0."),
  "he": dict(
   lang="he", prefix="he/", up="../",
-  title="IPTVMac: נגן IPTV ל-Mac (Xtream Codes ו-M3U)",
-  desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וכתוביות. Apple Silicon, macOS 14 ומעלה.",
+  title="IPTVMac: נגן IPTV ל-Mac, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
+  desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
   nav=[("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#languages", "שפות"), ("#install", "התקנה"), ("#faq", "שאלות")],
   gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
-  h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">ל-Mac.</span>',
-  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה והורדות. חינם ובקוד פתוח, בלי חשבון.",
+  h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">לכל מסך.</span>',
+  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, בטלפונים וטאבלטים של Android וב-Android TV. חינם ובקוד פתוח, בלי חשבון.",
   cmd_b="התקנה בשורה אחת.", cmd_t="מדביקים בטרמינל, או מורידים את ה-DMG בכפתור שלמטה. בשני המקרים האפליקציה מתעדכנת לבד.",
   copy="העתק", copied="הועתק", copy_aria="העתקת פקודת ההתקנה",
   dl="הורדת ה-DMG", src="קוד המקור", tour="לצפות בסיור של 80 שניות",
-  meta=f"גרסה {VERSION}. Apple Silicon, macOS 14 ומעלה. GPL-3.0.",
+  meta=f"Mac {VERSION}: ‏Apple Silicon, macOS 14 ומעלה. ‏Android 8 ומעלה, ו-Android TV. GPL-3.0.",
   cue="גוללים כדי לראות איך זה עובד", rail_aria="פרקים",
   hero_alt="חלון IPTVMac עם קיר כרזות של סרטים, ולפניו חלון קטן של תמונה בתוך תמונה",
   search_h="חיפוש שעומד בקצב של 100,000 פריטים.",
@@ -306,7 +306,7 @@ HOME = {
   free_btn="פתחו את iptv-org ב-GitHub",
   faq_h="שאלות נפוצות",
   faq=[
-   ("מה זה IPTVMac?", "IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac. הוא מנגן מקורות Xtream Codes ו-M3U עם נגן mpv מובנה, חיפוש מיידי, כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וממשק ב-31 שפות."),
+   ("מה זה IPTVMac?", "IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android ול-Android TV, ‏Google TV ו-Fire TV (אפליקציה ל-iPhone ול-iPad ממתינה לבדיקה ב-App Store). הוא מנגן מקורות Xtream Codes ו-M3U עם נגן mpv מובנה, חיפוש מיידי, כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה, הורדות וממשק ב-31 שפות."),
    ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל ולא מארח ערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו. אם אין לכם, הפרויקט העצמאי בקוד פתוח iptv-org מפרסם רשימות חינמיות של ערוצים זמינים לציבור; הקישור בעמוד."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
@@ -322,9 +322,9 @@ HOME = {
           ("../guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "מוסיפים קישור לרשימה ומקבלים ערוצים, סרטים וסדרות."),
           ("../guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "משאירים סטרים בחלון צף ועושים משהו אחר.")],
   cta_l=["חינם.", "קוד פתוח."], cta_p="GPL-3.0. בלי חשבון, בלי פרסומות ובלי מעקב.", cta_dl="הורדה ל-Mac", cta_src="קוד המקור ב-GitHub",
-  android_dl="Android (APK)", android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
+  android_h="Android ו-Android TV", android_dl="Android (APK)", android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
-  foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac.",
+  foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
              ("מידע", [("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
@@ -527,7 +527,7 @@ def home(code):
 {term(c)}</div>
 <div class="note"><div><h3>{e(c["why_h"])}</h3><p>{e(c["why"])}</p></div>
 <div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{steps}</ol><p class="old">{c["dmg_old"]}</p><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></div></div>
-<div class="note"><div><h3>Android</h3><p>{e(c["android_p"])}</p><a class="btn" href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a></div></div></div></section>
+<div class="note"><div><h3>{e(c["android_h"])}</h3><p>{e(c["android_p"])}</p><a class="btn" href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a></div></div></div></section>
 '''
     # free playlists, faq, guides
     out += f'''<section class="free" id="free" aria-labelledby="free-h"><div class="wrap free-grid"><h2 id="free-h">{e(c["free_h"])}</h2><div><p>{e(c["free_p"])}</p>
@@ -728,7 +728,7 @@ Sitemap: {BASE}sitemap.xml
     d = HOME["en"]
     facts = f"""# IPTVMac
 
-> IPTVMac is a free, open source IPTV player for Mac. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Apple Silicon, macOS 14 or later. GPL-3.0. It is a player only and includes no channels or content.
+> IPTVMac is a free, open source IPTV player for Mac, Android phones and tablets, and Android TV, Google TV and Fire TV. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Mac: Apple Silicon, macOS 14 or later. Android: 8 or later (APK on GitHub Releases, including TV files). GPL-3.0. It is a player only and includes no channels or content.
 
 Latest version: {VERSION}. Download: {DOWNLOAD}
 Install in Terminal: `{INSTALL_CMD}`
