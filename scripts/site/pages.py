@@ -218,3 +218,46 @@ CHANGELOG = {
             h1="מה חדש", lede="הערות גרסה לכל גרסה, מהחדשה לישנה. לאפליקציות ה-Mac וה-Android יש מספרי גרסה משלהן.",
             filter=("הכול", "Mac", "Android"), notes="הערות הגרסה ב-GitHub", older="גרסאות מוקדמות (0.1 עד 0.7) מופיעות ב-GitHub."),
 }
+
+# ---------- second pass: hero, marquee, tabs, stats, chapters (used by the redesigned pages) ----------
+DOWNLOAD["en"].update(
+  hero=["Download", "IPTVMac", "for free."],
+  main=dict(mac=("Download for Mac", "Version {v} · {s} MB · Apple Silicon, macOS 14+"), android=("Download for Android", "Version {v} · {s} MB · Android 8+"),
+            tv=("Download for Android TV", "32-bit file · {s} MB · Android 8+ · remote control")),
+  cue="Every device",
+  marquee=["Free", "Open source, GPL-3.0", "No account", "No ads", "No tracking", "31 languages", "Xtream Codes and M3U", "Mac, Android, Android TV", "Powered by mpv", "Picture in Picture"],
+  pick_h="Choose your screen.", pick_p="The file, three steps and what to expect, for each device.",
+  tabs=[("mac", "Mac", "Apple Silicon"), ("android", "Phone and tablet", "Android 8+"), ("tv", "TV", "Android TV, Google TV, Fire TV"), ("ios", "iPhone and iPad", "Coming soon")],
+  alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: live channels with the remote-control focus ring",
+  help_h="Need a hand?", help_p="Step-by-step guides, and a support page that never asks for your login.", help_links=[("Read the guides", "#guides"), ("Support", "support/")],
+)
+DOWNLOAD["he"].update(
+  hero=["הורדת", "IPTVMac", "בחינם."],
+  main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14+"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8+"),
+            tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8+ · שלט")),
+  cue="כל המכשירים",
+  marquee=["חינמי", "קוד פתוח, GPL-3.0", "בלי חשבון", "בלי פרסומות", "בלי מעקב", "31 שפות", "Xtream Codes ו-M3U", "Mac, ‏Android, ‏Android TV", "מבוסס על mpv", "תמונה בתוך תמונה"],
+  pick_h="בוחרים מסך.", pick_p="הקובץ, שלושה שלבים ומה לצפות לו, לכל מכשיר.",
+  tabs=[("mac", "Mac", "Apple Silicon"), ("android", "טלפון וטאבלט", "Android 8+"), ("tv", "טלוויזיה", "Android TV, ‏Google TV, ‏Fire TV"), ("ios", "iPhone ו-iPad", "בקרוב")],
+  alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: ערוצים חיים עם מסגרת הפוקוס של השלט",
+  help_h="צריכים יד?", help_p="מדריכים צעד אחר צעד, ודף תמיכה שלא מבקש לעולם את פרטי הכניסה שלכם.", help_links=[("למדריכים", "#guides"), ("תמיכה", "support/")],
+)
+
+FEATURES["en"].update(
+  hero=["What", "IPTVMac", "does."], cue="See the details",
+  stats=[("100000", "items searched in well under a second", ""), ("31", "languages, including right to left", ""), ("4", "times faster playback, down to a quarter speed", "×"), ("0", "accounts, ads or trackers", "")],
+  chapters=[("Search, and details, in a blink.", "02-search-1800", "IPTVMac search results grouped into live channels, movies and series"),
+            ("A player that does not give up.", "05-player-1800", "The IPTVMac player in full screen with the controls fading in"),
+            ("Your whole library, kept tidy.", "07-downloads", "The IPTVMac downloads screen with progress and time left"),
+            ("Everywhere, and yours.", "tv-categories", "IPTVMac on Android TV: the category screen with the focus ring")],
+)
+FEATURES["he"].update(
+  hero=["מה", "IPTVMac", "עושה."], cue="לפרטים",
+  stats=[("100000", "פריטים בחיפוש, הרבה פחות משנייה", ""), ("31", "שפות, כולל מימין לשמאל", ""), ("4", "פעמים מהר יותר, ועד רבע מהירות", "×"), ("0", "חשבונות, פרסומות או מעקבים", "")],
+  chapters=[("חיפוש ופרטים, בהבזק.", "02-search-1800", "תוצאות חיפוש ב-IPTVMac מקובצות לערוצים חיים, סרטים וסדרות"),
+            ("נגן שלא מוותר.", "05-player-1800", "הנגן של IPTVMac במסך מלא, והפקדים מופיעים בהדרגה"),
+            ("כל הספרייה, מסודרת.", "07-downloads", "מסך ההורדות של IPTVMac עם התקדמות וזמן שנותר"),
+            ("בכל מקום, ושלכם.", "tv-categories", "IPTVMac ב-Android TV: מסך הקטגוריות עם מסגרת הפוקוס")],
+)
+CHANGELOG["en"].update(hero=["What's", "new."], latest="Latest", cue="All releases", get="Download")
+CHANGELOG["he"].update(hero=["מה", "חדש."], latest="העדכנית", cue="כל הגרסאות", get="הורדה")

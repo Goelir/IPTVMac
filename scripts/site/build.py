@@ -38,7 +38,7 @@ e = html.escape
 
 # ---------- assets ----------
 SRC = pathlib.Path(__file__).resolve().parent
-OWN = ("site.css", "site.js")
+OWN = ("site.css", "site.js", "pages.js")
 MODULES = {"demo": ("demo.js", "demo.css"), "fx": ("fx.js", "fx.css")}   # scripts/site/<name>/<file> -> docs/assets/<file>
 VER = {}        # asset file name -> short content hash, for cache busting
 HAS = {}        # module name -> {"js": url, "css": url or None}; only modules whose file exists are wired into the pages
@@ -757,112 +757,146 @@ def legal_page(kind, code):
 
 
 # ---------- product pages: Download, Features, What's new (EN + HE) ----------
+# They reuse the home page's hero (the projector-beam shader, tilt and depth from the fx module) and add pages.js for reveals, counters and the picker.
 def md(t):
     """**bold** and `code` in the page copy -> HTML (the text is escaped first)."""
     t = e(t)
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
     return re.sub(r"`(.+?)`", r"<code>\1</code>", t)
 
-def product_shell(kind, code, title, desc, body, ld_extra=()):
-    c = HOME[code]; he = code == "he"
-    depth = 2 if he else 1; rel = "../"
-    path = f"{'he/' if he else ''}{kind}/"; canon = BASE + path
-    alts = [("en", BASE + f"{kind}/"), ("he", BASE + f"he/{kind}/"), ("x-default", BASE + f"{kind}/")]
-    ui = pages.UI[code]
-    ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE + ("he/" if he else "")},
-            {"@type": "ListItem", "position": 2, "name": title.split(" | ")[0].split(":")[0], "item": canon}]}, *ld_extra]
-    out = head(title, desc, canon, code, depth, alts, extra_ld=ld)
-    out += header_html(c, depth, home=False, home_rel=rel, alt_href=("../../" if he else "../he/") + f"{kind}/")
-    out += f'<main id="main"><div class="wrap pg">{body}</div></main>\n'
-    out += footer_html(c, depth, home=False, home_rel=rel)
-    out += script_tag("../" * depth, c, mods=False)
-    return out, ui
-
 def crumbs(code, label):
-    rel = "../"
-    return f'<nav class="crumbs" aria-label="{e(legal.UI[code]["bc"])}"><a href="{rel}">IPTVMac</a> / {e(label)}</nav>'
+    return f'<nav class="crumbs" aria-label="{e(legal.UI[code]["bc"])}"><a href="../">IPTVMac</a> / {e(label)}</nav>'
 
 def tag_list(code, plats):
     ui = pages.UI[code]
     return "".join(f'<span class="ptag">{e(ui[p])}</span>' for p in plats)
 
+def shot(up, name, alt, cls="", w=1800, h=1130, lazy=True):
+    big = f"{up}screenshots/{name}.webp"
+    return f'<img src="{big}" width="{w}" height="{h}" alt="{e(alt)}"{" loading=lazy" if lazy else ""} decoding="async">'
+
+def devstack(up, alts):
+    # Mac window, TV and phone floating in one pose (the hero object of the product pages)
+    hero_pic = (f'<picture><source type="image/avif" srcset="{up}assets/hero-window-900.avif 900w, {up}assets/hero-window-1400.avif 1400w" sizes="(min-width: 1001px) 58vw, 100vw">'
+                f'<source type="image/webp" srcset="{up}assets/hero-window-900.webp 900w, {up}assets/hero-window-1400.webp 1400w" sizes="(min-width: 1001px) 58vw, 100vw">'
+                f'<img src="{up}assets/hero-window-1400.jpg" width="1800" height="1186" alt="{e(alts[0])}" fetchpriority="high" decoding="async"></picture>')
+    return (f'<div class="devstack"><div class="win hero-win">{hero_pic}</div>'
+            f'<figure class="dv dv-tv" data-depth="1.2"><div class="scr">{shot(up, "tv-live", alts[2], w=1280, h=720)}</div></figure>'
+            f'<figure class="dv dv-phone" data-depth="2.2"><div class="scr">{shot(up, "android-live", alts[1], w=540, h=1210)}</div></figure></div>')
+
+def product_page(kind, code, title, desc, hero_html, body, ld_extra=()):
+    c = HOME[code]; he = code == "he"
+    depth = 2 if he else 1; rel = "../"; up = "../" * depth
+    path = f"{'he/' if he else ''}{kind}/"; canon = BASE + path
+    alts = [("en", BASE + f"{kind}/"), ("he", BASE + f"he/{kind}/"), ("x-default", BASE + f"{kind}/")]
+    ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE + ("he/" if he else "")},
+            {"@type": "ListItem", "position": 2, "name": re.split(r"[:|]", title)[0].strip(), "item": canon}]}, *ld_extra]
+    out = head(title, desc, canon, code, depth, alts, extra_ld=ld)
+    out += header_html(c, depth, home=False, home_rel=rel, alt_href=("../../" if he else "../he/") + f"{kind}/")
+    out += f'<main id="main">{hero_html}{body}</main>\n'
+    out += footer_html(c, depth, home=False, home_rel=rel)
+    only = {k: v for k, v in HAS.items() if k == "fx"}
+    attrs = "".join(f' data-fx-js="{up}{v["js"]}"' + (f' data-fx-css="{up}{v["css"]}"' if v["css"] else "") for v in only.values())
+    out += f'<script src="{av(up, "site.js")}" defer id="site-js" data-lang="{c["lang"]}"{attrs}></script>\n<script src="{av(up, "pages.js")}" defer></script>\n</body></html>\n'
+    d = DOCS / path; d.mkdir(parents=True, exist_ok=True); (d / "index.html").write_text(out)
+
+def pghero(code, lines, lede, crumb, actions, obj, cue_href, cue, slim=False):
+    h1 = "".join(f'<span class="l">{e(x)}</span>' for x in lines)
+    return (f'<section class="hero pghero{" slim" if slim else ""}" id="hero" data-fx-scene aria-labelledby="h1"><canvas class="hero-canvas" data-fx-canvas aria-hidden="true"></canvas>'
+            f'<div class="hero-copy">{crumbs(code, crumb)}<h1 id="h1">{h1}</h1><p class="lede">{e(lede)}</p>{actions}</div>'
+            f'<div class="hero-obj" data-fx-tilt><div class="pose">{obj}</div></div><a class="cue" href="{cue_href}">{e(cue)}</a></section>\n')
+
+def marquee(items):
+    li = "".join(f"<li>{e(x)}</li>" for x in items)
+    return f'<div class="marq" aria-label="{e(items[0])}"><div class="marq-in"><ul>{li}</ul><ul aria-hidden="true">{li}</ul></div></div>\n'
+
 def download_page(code):
-    c = HOME[code]; d = pages.DOWNLOAD[code]; ui = pages.UI[code]; he = code == "he"
-    ol = lambda steps: "<ol class=\"steps\">" + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
+    c = HOME[code]; d = pages.DOWNLOAD[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
     btn = lambda href, label, cls="fill": f'<a class="btn {cls}" href="{href}" rel="noopener">{ICON_DL}{e(label)}</a>'
     mac, an, tv, ios = d["mac"], d["android"], d["tv"], d["ios"]
+    mm = d["main"]
+    fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
+    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])]}
+    recs = "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
+    hero_actions = (f'<div class="hero-big"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
+                    f'<span class="big-meta" id="dl-meta">{e(rec["mac"][2])}</span></div>'
+                    f'<div class="hero-sub"><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
+    hero = pghero(code, d["hero"], d["lede"], d["h1"], hero_actions, devstack(up, (d["alt_mac"], d["alt_phone"], d["alt_tv"])), "#pick", d["cue"])
+    ol = lambda steps: '<ol class="bsteps">' + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
     other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
-    cards = f"""
-<article class="dl" data-os="mac" id="mac"><div class="dl-top"><h2>{e(mac["h"])}</h2><span class="ver">{e(d["mac_ver"])} {VERSION}</span></div>
-<p class="req">{e(mac["req"])}</p><div class="acts">{btn(DOWNLOAD, mac["btn"])}<span class="sz">{MAC_SIZE} MB</span></div>
-<p class="alt">{e(mac["alt"])}</p>{cmd_block(c)}{ol(mac["steps"])}<p class="dl-note">{e(mac["note"])}</p></article>
-<article class="dl" data-os="android" id="android"><div class="dl-top"><h2>{e(an["h"])}</h2><span class="ver">{e(d["mac_ver"])} {AND_VER}</span></div>
-<p class="req">{e(an["req"])}</p><div class="acts">{btn(apk("arm64-v8a"), an["btn"])}<span class="sz">{ANDROID_SIZES["arm64-v8a"]} MB</span></div>
-<p class="alt">{e(an["other"])} {other}</p>{ol(an["steps"])}<p class="dl-note">{e(an["note"])}</p></article>
-<article class="dl" data-os="tv" id="tv"><div class="dl-top"><h2>{e(tv["h"])}</h2><span class="ver">{e(d["mac_ver"])} {AND_VER}</span></div>
-<p class="req">{e(tv["req"])}</p><div class="acts">{btn(apk("tv-32bit"), tv["btn32"])}<span class="sz">{ANDROID_SIZES["tv-32bit"]} MB</span>{btn(apk("tv-64bit"), tv["btn64"], "")}<span class="sz">{ANDROID_SIZES["tv-64bit"]} MB</span></div>
-<p class="alt dl-url" dir="ltr">{e(apk("tv-32bit"))}</p>{ol(tv["steps"])}<p class="dl-note">{e(tv["note"])}</p></article>
-<article class="dl soon" data-os="ios" id="ios"><div class="dl-top"><h2>{e(ios["h"])}</h2><span class="ver">{e(ios["soon"])}</span></div>
-<p class="req">{e(ios["req"])}</p><p>{e(ios["body"])}</p><div class="acts"><a class="btn" href="{REPO}#other-platforms" rel="noopener">{e(ios["btn"])}</a></div></article>"""
+    pic = lambda name, alt, w, h: shot(up, name, alt, w=w, h=h)
+    def panel(pid, h, req, view, acts, extra, steps, note):
+        return (f'<article class="panel" id="{pid}"><div class="view">{view}</div><div><h3>{e(h)}</h3><p class="req">{e(req)}</p>{acts}{extra}{ol(steps)}'
+                + (f'<p class="dl-note">{e(note)}</p>' if note else "") + '</div></article>')
+    panels = (
+      panel("mac", mac["h"], mac["req"], f'<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>{pic("03-movies", d["alt_mac"], 1200, 754)}</div>',
+            f'<div class="acts">{btn(DOWNLOAD, mac["btn"])}<span class="sz">v{VERSION} · {MAC_SIZE} MB</span></div>', f'<p class="alt">{e(mac["alt"])}</p>{cmd_block(c)}', mac["steps"], mac["note"])
+      + panel("android", an["h"], an["req"], f'<div class="phf"><div class="scr">{pic("android-live", d["alt_phone"], 540, 1210)}</div></div>',
+            f'<div class="acts">{btn(apk("arm64-v8a"), an["btn"])}<span class="sz">v{AND_VER} · {ANDROID_SIZES["arm64-v8a"]} MB</span></div>', f'<p class="alt">{e(an["other"])} {other}</p>', an["steps"], an["note"])
+      + panel("tv", tv["h"], tv["req"], f'<div class="tvf"><div class="scr">{pic("tv-live", d["alt_tv"], 1280, 720)}</div></div>',
+            f'<div class="acts">{btn(apk("tv-32bit"), tv["btn32"])}<span class="sz">{ANDROID_SIZES["tv-32bit"]} MB</span>{btn(apk("tv-64bit"), tv["btn64"], "")}<span class="sz">{ANDROID_SIZES["tv-64bit"]} MB</span></div>',
+            f'<p class="dl-url" dir="ltr">{e(apk("tv-32bit"))}</p>', tv["steps"], tv["note"])
+      + panel("ios", ios["h"], ios["req"], f'<div class="soon-card"><img src="{up}logo.png" width="96" height="96" alt=""><span>{e(ios["soon"])}</span></div>',
+            f'<div class="acts"><a class="btn" href="{REPO}#other-platforms" rel="noopener">{ICON_GH}{e(ios["btn"])}</a></div>', f'<p class="alt">{e(ios["body"])}</p>', [], ""))
+    tabs = "".join(f'<li><a href="#{k}"><b>{e(t)}</b><small>{e(sm)}</small></a></li>' for k, t, sm in d["tabs"])
+    pick = (f'<section class="pg-band" id="pick" aria-labelledby="pick-h"><div class="wrap"><h2 class="pg-h" id="pick-h" data-fx-split>{e(d["pick_h"])}</h2><p class="pg-sub">{e(d["pick_p"])}</p>'
+            f'<div class="pick-grid"><ol class="pick-nav" data-rec="{e(ui["rec"])}">{tabs}</ol><div class="pick-panels">{panels}</div></div></div></section>\n')
     cols = d["files_cols"]
     rows = "".join(f'<tr><th scope="row"><a href="{apk(n)}" rel="noopener"><code>{e(n)}</code></a></th><td>{e(t)}</td><td>{ANDROID_SIZES[k]} MB</td></tr>' for n, t, k in d["files"])
     table = f'<div class="tbl"><table><thead><tr><th scope="col">{e(cols[0])}</th><th scope="col">{e(cols[1])}</th><th scope="col">{e(cols[2])}</th></tr></thead><tbody>{rows}</tbody></table></div>'
+    files = f'<section class="pg-band" style="padding-top:0" aria-labelledby="files-h"><div class="wrap"><h2 class="pg-h" id="files-h" data-rv>{e(d["files_h"])}</h2><p class="pg-sub" data-rv>{e(d["files_p"])}</p><div data-rv>{table}</div></div></section>\n'
     verify = "".join(f"<p>{md(x)}</p>" for x in d["verify_p"])
-    body = f"""
-<header class="pg-head">{crumbs(code, d["h1"])}<h1>{e(d["h1"])}</h1><p class="pg-lede">{e(d["lede"])}</p>
-<p class="pg-meta"><span>Mac {VERSION}</span><span>Android {AND_VER}</span><span>{e(ui["free"])}</span></p></header>
-<div class="dl-grid" data-rec="{e(d["js_rec"])}">{cards}</div>
-<section class="pg-sec" aria-labelledby="files-h"><h2 id="files-h">{e(d["files_h"])}</h2><p>{e(d["files_p"])}</p>{table}</section>
-<section class="pg-sec two" aria-labelledby="verify-h"><div><h2 id="verify-h">{e(d["verify_h"])}</h2>{verify}
-<p><a class="link" href="{ANDROID_APK}" rel="noopener">{ICON_GH}{e(d["sums"])}</a></p></div>
-<div><h2 id="older-h">{e(d["older_h"])}</h2><p>{e(d["older_p"])}</p>
-<p class="rowlinks"><a class="link" href="{REPO}/releases" rel="noopener">{ICON_GH}{e(ui["more"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a><a class="link" href="../changelog/">{e(d["changelog"])}</a></p></div></section>
-<p class="pg-fine">{e(d["disclaimer"])}</p>
-<script>(function(){{var u=navigator.userAgent||"",g=document.querySelector(".dl-grid"),k=null;
-if(/Android/i.test(u))k=/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(u)?"tv":"android";else if(/Macintosh|Mac OS X/i.test(u)&&!/iPhone|iPad/i.test(u))k="mac";
-var a=k&&g.querySelector('[data-os="'+k+'"]');if(!a)return;a.classList.add("rec");var b=document.createElement("span");b.className="recbadge";b.textContent=g.dataset.rec;a.insertBefore(b,a.firstChild);g.insertBefore(a,g.firstChild)}})();</script>"""
+    two = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="verify-h"><div class="wrap pg-two"><div data-rv><h2 id="verify-h">{e(d["verify_h"])}</h2>{verify}'
+           f'<p><a class="link" href="{ANDROID_APK}" rel="noopener">{ICON_GH}{e(d["sums"])}</a></p></div>'
+           f'<div data-rv><h2 id="older-h">{e(d["older_h"])}</h2><p>{e(d["older_p"])}</p>'
+           f'<p class="rowlinks"><a class="link" href="{REPO}/releases" rel="noopener">{ICON_GH}{e(ui["more"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a><a class="link" href="../changelog/">{e(d["changelog"])}</a></p></div></div></section>\n')
+    hl = d["help_links"]
+    help_ = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="help-h"><div class="wrap"><div class="help" data-rv><h2 class="pg-h" id="help-h">{e(d["help_h"])}</h2><p>{e(d["help_p"])}</p>'
+             f'<div class="actions"><a class="btn fill" href="../{hl[0][1]}">{e(hl[0][0])}</a><a class="btn" href="../{hl[1][1]}">{e(hl[1][0])}</a></div></div>'
+             f'<p class="pg-fine">{e(d["disclaimer"])}</p></div></section>\n')
     ld = [{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac", "applicationCategory": "MultimediaApplication",
            "operatingSystem": "macOS 14+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
            "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"}]
-    out, _ = product_shell("download", code, d["title"], d["desc"], body, ld)
-    path = DOCS / ("he" if he else "") / "download"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+    product_page("download", code, d["title"], d["desc"], hero, marquee(d["marquee"]) + pick + files + two + help_, ld)
 
 def features_page(code):
     c = HOME[code]; f = pages.FEATURES[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
-    secs = ""
-    for gi, (gh, items) in enumerate(f["groups"]):
-        cards = "".join(f'<li class="feat"><h3>{e(t)}</h3><p>{e(p)}</p>{f"""<p class="plats"><span class="sr">{e(ui["platforms"])}: </span>{tag_list(code, pl)}</p>""" if pl else ""}</li>' for t, p, pl in items)
-        secs += f'<section class="pg-sec" aria-labelledby="g{gi}"><h2 id="g{gi}">{e(gh)}</h2><ul class="feat-grid">{cards}</ul></section>\n'
-    body = f"""
-<header class="pg-head">{crumbs(code, f["h1"])}<h1>{e(f["h1"])}</h1><p class="pg-lede">{e(f["lede"])}</p></header>
-<figure class="pg-shot"><picture><source type="image/webp" srcset="{up}screenshots/03-movies-1800.webp"><img src="{up}screenshots/03-movies.jpg" width="1800" height="1186" alt="{e(f["pic_alt"])}" decoding="async"></picture></figure>
-{secs}<section class="pg-cta" aria-labelledby="cta-h"><h2 id="cta-h">{e(f["cta_h"])}</h2><p>{e(f["cta_p"])}</p><a class="btn fill big" href="{up}{'he/' if he else ''}download/">{ICON_DL}{e(f["cta_btn"])}</a></section>"""
-    out, _ = product_shell("features", code, f["title"], f["desc"], body)
-    path = DOCS / ("he" if he else "") / "features"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+    dl = f"{up}{'he/' if he else ''}download/"
+    alts = (f["pic_alt"], pages.DOWNLOAD[code]["alt_phone"], pages.DOWNLOAD[code]["alt_tv"])
+    actions = f'<div class="actions"><a class="btn fill big" data-fx-magnetic href="{dl}">{ICON_DL}{e(f["cta_btn"])}</a></div>'
+    hero = pghero(code, f["hero"], f["lede"], f["h1"], actions, devstack(up, alts), "#stats", f["cue"])
+    stats = "".join(f'<div class="stat" data-rv><span class="num"><span data-count="{n}">{int(n):,}</span>{e(suf)}</span><span class="t">{e(t)}</span></div>' for n, t, suf in f["stats"])
+    chaps = ""
+    for i, ((gh, items), (title, img, alt)) in enumerate(zip(f["groups"], f["chapters"])):
+        rows = "".join(f'<li class="frow" data-rv><h3>{e(t)}</h3><p>{e(p)}</p>{f"""<p class="plats"><span class="sr">{e(ui["platforms"])}: </span>{tag_list(code, pl)}</p>""" if pl else ""}</li>' for t, p, pl in items)
+        w, h = (1280, 720) if img.startswith("tv-") else ((1200, 754) if img == "07-downloads" else (1800, 1130))
+        chaps += (f'<section class="fchap" id="g{i + 1}" aria-labelledby="g{i + 1}-h"><div class="fchap-side"><span class="fnum">0{i + 1} · {e(gh)}</span>'
+                  f'<h2 id="g{i + 1}-h" data-fx-split>{e(title)}</h2><figure class="fshot" data-rv>{shot(up, img, alt, w=w, h=h)}</figure></div><ul class="frows">{rows}</ul></section>\n')
+    body = (f'<section id="stats" aria-label="{e(f["h1"])}"><div class="wrap"><div class="stats">{stats}</div></div></section>\n<div class="wrap">{chaps}</div>\n'
+            f'<section class="pg-band" style="padding-top:0" aria-labelledby="cta-h"><div class="wrap"><div class="help" data-rv><h2 class="pg-h" id="cta-h">{e(f["cta_h"])}</h2><p>{e(f["cta_p"])}</p>'
+            f'<div class="actions"><a class="btn fill big" href="{dl}">{ICON_DL}{e(f["cta_btn"])}</a></div></div></div></section>\n')
+    product_page("features", code, f["title"], f["desc"], hero, body)
 
 def changelog_page(code):
-    c = HOME[code]; d = pages.CHANGELOG[code]; ui = pages.UI[code]; he = code == "he"
+    c = HOME[code]; d = pages.CHANGELOG[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
     def fmt(iso):
-        y, m, dd = iso.split("-"); mon = pages.MONTHS[code][int(m) - 1]
-        return f"{int(dd)} {mon} {y}" if he else f"{int(dd)} {mon} {y}"
+        y, m, dd = iso.split("-"); return f"{int(dd)} {pages.MONTHS[code][int(m) - 1]} {y}"
+    rows = sorted(pages.CHANGES, key=lambda r: r[0], reverse=True)
+    latest = {p: next(r for r in rows if r[1] == p) for p in ("mac", "android")}
+    dlh = f"{up}{'he/' if he else ''}download/"
+    cards = "".join(f'<div class="lat" data-depth="{k}"><span class="k">{e(d["latest"])} · {e(ui[p])}</span><span class="v">{r[2]}</span><time datetime="{r[0]}">{e(fmt(r[0]))}</time>'
+                    f'<a class="btn{" fill" if p == "mac" else ""}" href="{dlh}#{p}">{ICON_DL}{e(d["get"])}</a></div>' for k, (p, r) in enumerate(latest.items(), 1))
+    hero = pghero(code, d["hero"], d["lede"], d["h1"], "", f'<div class="latest">{cards}</div>', "#all", d["cue"], slim=True)
     items = ""
-    for date, plat, ver, tag, text in sorted(pages.CHANGES, key=lambda r: r[0], reverse=True):
+    for date, plat, ver, tag, text in rows:
         lis = "".join(f"<li>{md(b)}</li>" for b in text[code])
-        items += (f'<article class="rel" data-plat="{plat}"><div class="rel-h"><h2 id="{plat}-{ver.replace(".", "-")}"><span class="ptag p-{plat}">{e(ui[plat])}</span> {ver}</h2>'
-                  f'<time datetime="{date}">{e(fmt(date))}</time></div><ul>{lis}</ul>'
-                  f'<p class="rel-l"><a href="{REPO}/releases/tag/{tag}" rel="noopener">{e(d["notes"])}</a></p></article>\n')
-    # filter (progressive: without JS all releases stay visible)
+        items += (f'<article class="rel" data-plat="{plat}" data-rv><div class="rel-meta"><h2 class="rv" id="{plat}-{ver.replace(".", "-")}">{ver}</h2><span class="ptag p-{plat}">{e(ui[plat])}</span>'
+                  f'<time datetime="{date}">{e(fmt(date))}</time></div><div><ul>{lis}</ul><p class="rel-l"><a class="link" href="{REPO}/releases/tag/{tag}" rel="noopener">{ICON_GH}{e(d["notes"])}</a></p></div></article>\n')
     flt = (f'<div class="flt" role="group" aria-label="{e(ui["platforms"])}" hidden><button type="button" data-f="" aria-pressed="true">{e(d["filter"][0])}</button>'
            f'<button type="button" data-f="mac" aria-pressed="false">{e(d["filter"][1])}</button><button type="button" data-f="android" aria-pressed="false">{e(d["filter"][2])}</button></div>')
-    body = f"""
-<header class="pg-head">{crumbs(code, d["h1"])}<h1>{e(d["h1"])}</h1><p class="pg-lede">{e(d["lede"])}</p></header>
-{flt}<div class="rels">{items}</div><p class="pg-fine"><a href="{REPO}/releases" rel="noopener">{e(d["older"])}</a></p>
-<script>(function(){{var f=document.querySelector(".flt");if(!f)return;f.hidden=false;f.addEventListener("click",function(ev){{var b=ev.target.closest("button");if(!b)return;
-f.querySelectorAll("button").forEach(function(x){{x.setAttribute("aria-pressed",x===b)}});
-document.querySelectorAll(".rel").forEach(function(r){{r.hidden=!!b.dataset.f&&r.dataset.plat!==b.dataset.f}})}})}})();</script>"""
-    out, _ = product_shell("changelog", code, d["title"], d["desc"], body)
-    path = DOCS / ("he" if he else "") / "changelog"; path.mkdir(parents=True, exist_ok=True); (path / "index.html").write_text(out + "</body></html>\n")
+    body = f'<section class="pg-band" id="all" style="padding-top:clamp(24px,4vh,48px)" aria-label="{e(d["h1"])}"><div class="wrap">{flt}<div class="rels">{items}</div><p class="pg-fine"><a href="{REPO}/releases" rel="noopener">{e(d["older"])}</a></p></div></section>\n'
+    product_page("changelog", code, d["title"], d["desc"], hero, body)
 
 # ---------- crawler files ----------
 def crawler_files():
