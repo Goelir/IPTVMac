@@ -55,6 +55,8 @@ struct ChannelRow: View {
         .onTapGesture { model.play(item) }
         .contextMenu { Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) } }
         .task { await model.loadEPGNow(item) }
+        .frame(maxWidth: 820, alignment: .leading)   // the star stays near the name on a wide window; the empty space to the right is not a click target
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

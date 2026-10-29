@@ -44,6 +44,7 @@ e = html.escape
 # ---------- assets ----------
 SRC = pathlib.Path(__file__).resolve().parent
 OWN = ("site.css", "site.js", "pages.js")
+USE_FX = False   # the motion layer (WebGL beam, 3D tilt, magnetic buttons, split text) is off: the HIG look is calm. The module is kept in scripts/site/fx/; set True to bring it back.
 MODULES = {"demo": ("demo.js", "demo.css"), "fx": ("fx.js", "fx.css")}   # scripts/site/<name>/<file> -> docs/assets/<file>
 VER = {}        # asset file name -> short content hash, for cache busting
 HAS = {}        # module name -> {"js": url, "css": url or None}; only modules whose file exists are wired into the pages
@@ -54,6 +55,7 @@ def publish_assets():
     (DOCS / "assets").mkdir(exist_ok=True)
     for n in OWN: _copy(SRC / n, n)
     for mod, (js, css) in MODULES.items():
+        if mod == "fx" and not USE_FX: continue
         if (SRC / mod / js).exists():
             _copy(SRC / mod / js, js)
             if (SRC / mod / css).exists(): _copy(SRC / mod / css, css)
@@ -86,8 +88,7 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
     up = "../" * depth
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in alternates)
     ld = "".join(f'<script type="application/ld+json">{json.dumps(o, ensure_ascii=False)}</script>' for o in extra_ld)
-    fonts = "".join(f'<link rel="preload" href="{up}assets/fonts/{f}.woff2" as="font" type="font/woff2" crossorigin>'
-                    for f in ["instrument-latin", "jetbrainsmono-latin"] + (["heebo-hebrew"] if lang == "he" else []))
+    fonts = ""   # the system font: nothing to download
     return f'''<!doctype html>
 <html lang="{lang}" dir="{'rtl' if lang == 'he' else 'ltr'}">
 <head>
@@ -98,8 +99,8 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <link rel="canonical" href="{canonical}">
 {alts}
 <meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#f6f5fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a0912" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="IPTVMac">
 <meta property="og:locale" content="{'he_IL' if lang == 'he' else 'en_US'}">
@@ -184,7 +185,7 @@ HOME = {
   lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Windows, Android phones and tablets, and Android TV. Free and open source, with no account.",
   cmd_b="Install in one line.", cmd_t="Paste it in Terminal, or use the DMG button below. Either way, the app updates itself afterwards.",
   copy="Copy", copied="Copied", copy_aria="Copy the install command",
-  dl="Download the DMG", src="View the source", tour="Watch the 80-second tour",
+  dl="Download the DMG", all_dl="All downloads", src="View the source", tour="Watch the 80-second tour",
   meta=f"Mac {VERSION}: Apple Silicon, macOS 14 or later. Android 8 or later, and Android TV. GPL-3.0.",
   cue="Scroll to see it work", rail_aria="Chapters",
   hero_alt="The IPTVMac window showing a wall of movie posters, with a small Picture in Picture window floating in front of it",
@@ -270,7 +271,7 @@ HOME = {
   lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, בטלפונים וטאבלטים של Android וב-Android TV. חינם ובקוד פתוח, בלי חשבון.",
   cmd_b="התקנה בשורה אחת.", cmd_t="מדביקים בטרמינל, או מורידים את ה-DMG בכפתור שלמטה. בשני המקרים האפליקציה מתעדכנת לבד.",
   copy="העתק", copied="הועתק", copy_aria="העתקת פקודת ההתקנה",
-  dl="הורדת ה-DMG", src="קוד המקור", tour="לצפות בסיור של 80 שניות",
+  dl="הורדת ה-DMG", all_dl="כל ההורדות", src="קוד המקור", tour="לצפות בסיור של 80 שניות",
   meta=f"Mac {VERSION}: ‏Apple Silicon, macOS 14 ומעלה. ‏Android 8 ומעלה, ו-Android TV. GPL-3.0.",
   cue="גוללים כדי לראות איך זה עובד", rail_aria="פרקים",
   hero_alt="חלון IPTVMac עם קיר כרזות של סרטים, ולפניו חלון קטן של תמונה בתוך תמונה",
@@ -549,11 +550,10 @@ def home(code):
 <section class="hero" id="hero" data-fx-scene aria-labelledby="h1"><canvas class="hero-canvas" data-fx-canvas aria-hidden="true"></canvas>
 <div class="hero-copy"><h1 id="h1">{h1}</h1>
 <p class="lede">{e(c["lede"])}</p>
-<div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div>
-<div class="actions"><a class="btn" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a>
-<a class="link" href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a>
-<a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a></div>
-<p class="meta">{e(c["meta"])}</p></div>
+<div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="link" href="{up}download/">{e(c["all_dl"])}</a>
+<a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a></div>
+<p class="meta">{e(c["meta"])}</p>
+<div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div></div>
 <div class="hero-obj" data-fx-tilt><div class="pose"><div class="win hero-win">{hero_pic}</div>{hero_pip}</div></div>
 <a class="cue" href="#search">{e(c["cue"])}</a></section>
 '''

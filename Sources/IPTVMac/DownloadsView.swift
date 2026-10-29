@@ -19,9 +19,10 @@ struct DownloadsView: View {
             } else {
                 List(d.entries) { e in row(e) }
             }
-            Text(L("downloads.hint")).font(.caption).foregroundStyle(.secondary)
+            Text(L("downloads.hint")).font(.callout).foregroundStyle(.secondary)
         }
-        .padding().frame(minWidth: 560, minHeight: 360)
+        // The sheet fits what it holds: one download does not need a tall, mostly empty window.
+        .padding().frame(minWidth: 560, minHeight: d.entries.isEmpty ? 280 : min(520, max(240, 150 + CGFloat(d.entries.count) * 58)))
     }
 
     @ViewBuilder
@@ -43,15 +44,15 @@ struct DownloadsView: View {
             Spacer()
             switch e.state {
             case .done:
-                Button { d.folder.hold(); model.stopPlayback(); dismiss(); model.startPlayback(PlayRequest(title: e.title, url: e.file, isLive: false, item: nil)) } label: { Image(systemName: "play.fill") }.help(L("downloads.play"))
-                Button { NSWorkspace.shared.activateFileViewerSelecting([e.file]) } label: { Image(systemName: "folder") }.help(L("downloads.reveal"))
-                Button { d.remove(e.id, trashFile: true) } label: { Image(systemName: "trash") }.help(L("downloads.delete"))
+                Button { d.folder.hold(); model.stopPlayback(); dismiss(); model.startPlayback(PlayRequest(title: e.title, url: e.file, isLive: false, item: nil)) } label: { Image(systemName: "play.fill") }.help(L("downloads.play")).accessibilityLabel(L("downloads.play"))
+                Button { NSWorkspace.shared.activateFileViewerSelecting([e.file]) } label: { Image(systemName: "folder") }.help(L("downloads.reveal")).accessibilityLabel(L("downloads.reveal"))
+                Button { d.remove(e.id, trashFile: true) } label: { Image(systemName: "trash") }.help(L("downloads.delete")).accessibilityLabel(L("downloads.delete"))
             case .active, .queued:
-                Button { d.pause(e.id) } label: { Image(systemName: "pause.fill") }.help(L("downloads.pause"))
-                Button { d.remove(e.id) } label: { Image(systemName: "xmark") }.help(L("downloads.cancel"))
+                Button { d.pause(e.id) } label: { Image(systemName: "pause.fill") }.help(L("downloads.pause")).accessibilityLabel(L("downloads.pause"))
+                Button { d.remove(e.id) } label: { Image(systemName: "xmark") }.help(L("downloads.cancel")).accessibilityLabel(L("downloads.cancel"))
             case .paused, .failed:
-                Button { d.resume(e.id) } label: { Image(systemName: "arrow.clockwise") }.help(L("downloads.resume"))
-                Button { d.remove(e.id) } label: { Image(systemName: "xmark") }.help(L("downloads.cancel"))
+                Button { d.resume(e.id) } label: { Image(systemName: "arrow.clockwise") }.help(L("downloads.resume")).accessibilityLabel(L("downloads.resume"))
+                Button { d.remove(e.id) } label: { Image(systemName: "xmark") }.help(L("downloads.cancel")).accessibilityLabel(L("downloads.cancel"))
             }
         }.buttonStyle(IconButtonStyle()).padding(.vertical, 3)
     }

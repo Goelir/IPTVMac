@@ -1,38 +1,28 @@
 /* IPTVMac site. Source: scripts/site/site.css, copied to docs/assets/site.css by scripts/site/build.py.
-   World: "a precision instrument for the screen". One typeface (Instrument Sans, Heebo for Hebrew), JetBrains Mono only for commands and measurements,
-   one violet from the logo, one easing, one duration scale. Logical properties throughout, so the Hebrew page is the same sheet read right to left.
+   The system font of each platform (HIG), neutral surfaces, one violet from the logo for actions, one easing, one duration scale. Logical properties throughout, so the Hebrew page is the same sheet read right to left.
    Every chapter is complete without JavaScript and without the optional demo/fx modules; motion is layered on top. */
-
-@font-face { font-family: "Instrument"; font-weight: 400 700; font-display: swap; src: url(fonts/instrument-latin.woff2) format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2013-2014, U+2018-201E, U+2022, U+2026, U+2122, U+2190-2193, U+20AC, U+2212, U+2215, U+2248, U+2264-2265; }
-@font-face { font-family: "Instrument"; font-weight: 400 700; font-display: swap; src: url(fonts/instrument-latin-ext.woff2) format("woff2");
-  unicode-range: U+0100-024F, U+02BB-02BC, U+1E00-1EFF; }
-@font-face { font-family: "Heebo"; font-weight: 400 700; font-display: swap; src: url(fonts/heebo-hebrew.woff2) format("woff2");
-  unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
-@font-face { font-family: "JetBrains Mono"; font-weight: 450; font-display: swap; src: url(fonts/jetbrainsmono-latin.woff2) format("woff2");
-  unicode-range: U+0020-007E, U+00A0, U+00B7, U+2026, U+2192; }
-@font-face { font-family: "Instrument Fallback"; src: local("Arial"); size-adjust: 95%; ascent-override: 96%; descent-override: 24%; line-gap-override: 0%; }
 
 :root {
   color-scheme: dark light;
-  --bg: #0a0912;            --bg: light-dark(#f6f5fb, #0a0912);
-  --s1: #121020;            --s1: light-dark(#ffffff, #121020);
-  --s2: #1b1832;            --s2: light-dark(#ecebf6, #1b1832);
-  --ink: #f2f0fb;           --ink: light-dark(#14112b, #f2f0fb);
-  --mute: #aaa6c8;          --mute: light-dark(#575474, #aaa6c8);
-  --line: rgb(190 180 255 / .14); --line: light-dark(rgb(24 18 70 / .14), rgb(190 180 255 / .14));
-  --acc: #6f59e6;           /* the logo violet: fills */
-  --acc-ink: #a496ff;       --acc-ink: light-dark(#5a43d3, #a496ff);   /* the logo violet: text and strokes on the page */
+  /* Apple's web palette in spirit: neutral surfaces, one accent. The logo violet is kept for primary actions, links, focus and status only (HIG branding.md). */
+  --bg: #000000;           --bg: light-dark(#fbfbfd, #000000);
+  --s1: #111113;           --s1: light-dark(#ffffff, #111113);
+  --s2: #1c1c1e;           --s2: light-dark(#f5f5f7, #1c1c1e);
+  --ink: #f5f5f7;         --ink: light-dark(#1d1d1f, #f5f5f7);
+  --mute: #a1a1a6;        --mute: light-dark(#6e6e73, #a1a1a6);
+  --line: rgb(255 255 255 / .16); --line: light-dark(rgb(0 0 0 / .12), rgb(255 255 255 / .16));
+  --acc: #6f59e6;           /* the logo violet: fills (white text on it is 4.9:1) */
+  --acc-ink: #a496ff;       --acc-ink: light-dark(#5a43d3, #a496ff);   /* the logo violet: links and strokes on the page (6.4:1 on light, 8.4:1 on dark) */
   --on-acc: #fff;
-  --glow: rgb(111 89 230 / .38); --glow: light-dark(rgb(111 89 230 / .2), rgb(111 89 230 / .38));
-  --win-shadow: 0 0 0 1px rgb(255 255 255 / .1), 0 50px 90px -30px rgb(0 0 0 / .65), 0 22px 44px -22px rgb(0 0 0 / .5);
-  --term: #0d0b18;          /* terminal and app windows stay dark in both themes: they are the product */
-  --sans: "Instrument", "Instrument Fallback", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --glow: rgb(111 89 230 / .0);
+  --win-shadow: 0 0 0 1px rgb(255 255 255 / .1), 0 40px 80px -30px rgb(0 0 0 / .6), 0 18px 36px -18px rgb(0 0 0 / .45);
+  --term: #1c1c1e;          /* terminal and app windows stay dark in both themes: they are the product */
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;   /* the system font of each platform (HIG typography.md); Hebrew and Arabic use the system's own faces */
+  --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, monospace;
   --pad: clamp(20px, 4.2vw, 64px);
   --max: 1480px;
   --gx: max(var(--pad), calc((100vw - var(--max)) / 2));   /* left/right edge of the content column, also for full-bleed bands */
-  --bar: 64px;
+  --bar: 52px;
   --dir: 1;
   /* motion: one easing family, one duration scale */
   --ease: cubic-bezier(.16, 1, .3, 1);
@@ -41,10 +31,10 @@
 }
 :root[data-theme="dark"] { color-scheme: dark; }
 :root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="light"] { --win-shadow: 0 0 0 1px rgb(20 14 60 / .16), 0 50px 90px -30px rgb(40 30 110 / .5), 0 22px 44px -22px rgb(20 14 60 / .4); }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --win-shadow: 0 0 0 1px rgb(20 14 60 / .16), 0 50px 90px -30px rgb(40 30 110 / .5), 0 22px 44px -22px rgb(20 14 60 / .4); } }
+:root[data-theme="light"] { --win-shadow: 0 0 0 1px rgb(0 0 0 / .12), 0 40px 80px -30px rgb(0 0 0 / .35), 0 18px 36px -18px rgb(0 0 0 / .25); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --win-shadow: 0 0 0 1px rgb(0 0 0 / .12), 0 40px 80px -30px rgb(0 0 0 / .35), 0 18px 36px -18px rgb(0 0 0 / .25); } }
 [dir="rtl"] { --dir: -1; }
-html[lang="he"] { --sans: "Instrument", "Heebo", "Instrument Fallback", ui-sans-serif, -apple-system, "Segoe UI", Arial, sans-serif; }
+
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--bar) + 8px); accent-color: var(--acc); scrollbar-color: color-mix(in oklab, var(--mute) 50%, transparent) transparent; background: var(--bg); }
@@ -694,3 +684,103 @@ html[lang="he"] .fchap h2 { line-height: 1.1; letter-spacing: -.01em; font-weigh
   .pg-two { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) { .pick-nav { grid-template-columns: minmax(0, 1fr); } .panel .acts .btn { flex: 1 1 100%; } .tbl th, .tbl td { padding: 12px 14px; } .dv-phone { inset-inline-end: 0; } }
+
+
+/* =====================================================================================================================
+   HIG layer. Apple's principles, applied to the site: the system font, neutral surfaces with one accent, a quiet
+   translucent bar, a centered hero that lets the product speak, pill buttons, tiles without borders. Everything above
+   still works; this layer only changes the look. (Purpose, Familiarity, Simplicity, Craft.)
+   ===================================================================================================================== */
+.prog, .hero::before, .hero-canvas, .cue { display: none !important; }
+body { letter-spacing: -.003em; }
+h1, h2, h3 { font-weight: 650; }
+
+/* the bar: 52 px, translucent, hairline only once the page moves */
+.top { background: color-mix(in srgb, var(--bg) 72%, transparent); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom-color: transparent; }
+.top.scrolled { border-bottom-color: var(--line); }
+.brand { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
+.brand img { width: 26px; height: 26px; border-radius: 6px; }
+.nav { font-size: .8125rem; gap: 2px; }
+.nav a { padding: 6px 12px; border-radius: 999px; }
+.nav a.keep { background: var(--acc); color: var(--on-acc); box-shadow: none; margin-inline-start: 8px; padding-inline: 14px; font-weight: 500; }
+.nav a.keep:hover { background: #6048dd; color: var(--on-acc); }
+.ibtn { width: 34px; height: 34px; border-radius: 999px; }
+.pill { min-height: 30px; padding-inline: 12px; font-size: .8125rem; }
+
+/* buttons: pills; filled = the one primary action; the rest sit on a quiet tile */
+.btn { min-height: 44px; padding-inline: 22px; border-radius: 999px; border: 0; background: var(--s2); font-weight: 500; font-size: 1rem; }
+.btn:hover { background: color-mix(in srgb, var(--s2) 88%, var(--ink)); border: 0; }
+.btn.fill { background: var(--acc); color: var(--on-acc); box-shadow: none; }
+.btn.fill:hover { background: #6048dd; }
+.btn.big { min-height: 52px; padding-inline: 30px; border-radius: 999px; font-size: 1.0625rem; }
+.link { color: var(--acc-ink); font-weight: 500; }
+.link svg { color: currentColor; }
+.link:hover { text-decoration: underline; }
+
+/* the hero: centered, the product below it */
+.hero { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; min-height: 0; gap: clamp(36px, 7vh, 72px);
+  padding: calc(var(--bar) + clamp(48px, 10vh, 112px)) var(--gx) clamp(56px, 10vh, 120px); }
+.hero-copy, .pghero .hero-copy { max-width: 56rem; margin-inline: auto; }
+h1 { font-size: clamp(2.75rem, 1.5rem + 5.2vw, 5.75rem); line-height: 1.05; letter-spacing: -.028em; font-weight: 700; }
+html[lang="he"] h1 { font-size: clamp(2.5rem, 1.5rem + 4.4vw, 4.75rem); font-weight: 700; line-height: 1.1; letter-spacing: -.015em; }
+h1 .l, .pghero h1 .l { display: inline; white-space: normal; }
+h1 .l + .l::before { content: " "; }
+.lede { max-width: 40rem; margin-inline: auto; font-size: clamp(1.1875rem, 1.05rem + .6vw, 1.5rem); line-height: 1.45; color: var(--mute); }
+.install-bar { max-width: 40rem; margin-inline: auto; }
+.actions, .hero-big, .hero-sub { justify-content: center; justify-items: center; }
+.meta { color: var(--mute); }
+.hero-obj, .pghero .hero-obj { margin: 0; width: min(1120px, 100%); }
+.hero-obj .pose { transform: none; }
+.pghero .crumbs { display: none; }
+.pghero.slim .hero-obj { max-width: 34rem; }
+
+/* headings of sections: heavier, tighter, neutral */
+.chap h2, .langs h2, .install h2, .free h2, .faq-sec h2, .guides h2, .pg-h, .fchap h2 { font-weight: 700; letter-spacing: -.035em; line-height: 1.06; }
+html[lang="he"] .chap h2, html[lang="he"] .langs h2, html[lang="he"] .install h2, html[lang="he"] .free h2, html[lang="he"] .faq-sec h2, html[lang="he"] .guides h2, html[lang="he"] .pg-h, html[lang="he"] .fchap h2 { font-weight: 700; line-height: 1.12; letter-spacing: -.01em; }
+.count .num, .stat .num { color: var(--ink); font-weight: 700; }
+.fnum { color: var(--mute); }
+
+/* tiles instead of outlined boxes */
+.dev, .dl, .feat, .help, .lat, .panel .view, .pg-cta, .tbl, .answer { border: 0; background: var(--s2); border-radius: 22px; }
+.dev .shot, .dl .shot { background: var(--s1); }
+.dl.rec { box-shadow: 0 0 0 2px var(--acc); }
+.dl.soon { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.help { background: var(--s2); }
+.panel .view { background: var(--s2); }
+.tbl { background: var(--s2); }
+.tbl tbody tr:hover { background: color-mix(in srgb, var(--s2) 85%, var(--ink)); }
+.feat, .frow, .rel { border-color: var(--line); }
+
+/* the facts ribbon: still, centered, no animation */
+.marq { border: 0; background: transparent; -webkit-mask-image: none; mask-image: none; overflow: visible; direction: inherit; }
+.marq-in { width: auto; flex-wrap: wrap; justify-content: center; animation: none !important; }
+.marq ul[aria-hidden] { display: none; }
+.marq li { padding: 6px 14px; font-size: .9375rem; }
+.marq li::after { display: none; }
+
+/* motion: reveals stay, they are brief; nothing loops */
+@media (prefers-reduced-motion: no-preference) { .hero-win, .dv-tv, .dv-phone { animation-duration: 700ms; } }
+
+/* the install command: a quiet second path under the primary button, not a rival to it */
+.install-bar { margin-top: clamp(20px, 3.5vh, 36px); }
+.install-bar p { font-size: .875rem; }
+.hero .actions { margin-top: clamp(24px, 4vh, 36px); gap: 10px 26px; }
+.hero .meta { margin-top: 18px; font-size: .8125rem; }
+
+/* the devices section speaks at the same size as the other chapters, centered like the hero */
+.devices { text-align: center; }
+.devices h2 { font-size: clamp(2.2rem, 1.4rem + 2.7vw, 4rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.08; }
+.dev-lead { margin-inline: auto; font-size: clamp(1.0625rem, 1rem + .4vw, 1.3125rem); max-width: 46rem; }
+.devices .dev { text-align: start; }
+.dev-ios { text-align: center; }
+
+/* numbers that fit their column; the latest releases side by side */
+.stat .num { font-size: clamp(2.4rem, 1rem + 2.6vw, 3.75rem); letter-spacing: -.03em; overflow-wrap: anywhere; }
+.pghero.slim .hero-obj { max-width: min(1000px, 100%); }
+.latest { grid-template-columns: repeat(3, minmax(0, 1fr)); text-align: start; }
+.lat .v { font-size: clamp(2.4rem, 1rem + 3vw, 4rem); letter-spacing: -.03em; }
+@media (max-width: 800px) { .latest { grid-template-columns: minmax(0, 1fr); } .hero .actions { gap: 2px 18px; } }
+
+/* a button that sits on a tile is lifted off it (white on light gray, the page color on dark), so it still reads as a button */
+.dev .btn:not(.fill), .dl .btn:not(.fill), .panel .btn:not(.fill), .help .btn:not(.fill), .lat .btn:not(.fill), .pg-cta .btn:not(.fill) { background: var(--s1); }
+.dev .btn:not(.fill):hover, .dl .btn:not(.fill):hover, .panel .btn:not(.fill):hover, .help .btn:not(.fill):hover, .lat .btn:not(.fill):hover { background: color-mix(in srgb, var(--s1) 90%, var(--ink)); }

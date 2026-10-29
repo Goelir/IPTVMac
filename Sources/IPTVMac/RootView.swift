@@ -40,7 +40,7 @@ struct RootView: View {
                             }
                         }
                     } else {
-                        Section {
+                        Section(L("cat.title")) {     // a title for the group, so the library shortcuts above are not read as part of it
                             ForEach(cats) { c in Text(c.name).lineLimit(1).tag(model.wrappedValue.categoryTag(c)) }
                         }
                     }
@@ -90,7 +90,7 @@ struct RootView: View {
                         Text(L("tab.live")).tag(ItemType.live)
                         Text(L("tab.movies")).tag(ItemType.movie)
                         Text(L("tab.series")).tag(ItemType.series)
-                    }.pickerStyle(.segmented).frame(width: 240)
+                    }.pickerStyle(.segmented).fixedSize()   // the width follows the labels: 31 languages, none is cut
                 }
                 ToolbarItem {
                     if model.wrappedValue.accounts.count > 1 {
@@ -110,9 +110,12 @@ struct RootView: View {
                             Image(systemName: "arrow.down.circle")
                             if model.wrappedValue.downloads.activeCount > 0 { Text("\(model.wrappedValue.downloads.activeCount)").font(.caption).monospacedDigit() }
                         }
-                    }.help(L("downloads.title"))
+                    }.help(L("downloads.title")).accessibilityLabel(L("downloads.title"))
                 }
-                ToolbarItem { Button { Task { await model.wrappedValue.sync() } } label: { Image(systemName: "arrow.clockwise") }.disabled(model.wrappedValue.syncing) }
+                ToolbarItem {
+                    Button { Task { await model.wrappedValue.sync() } } label: { Label(L("sync.now"), systemImage: "arrow.clockwise") }
+                        .disabled(model.wrappedValue.syncing).help(L("sync.now"))
+                }
             }
         }
         .onChange(of: model.wrappedValue.playerFullscreen) { _, full in columns = full ? .detailOnly : .automatic }

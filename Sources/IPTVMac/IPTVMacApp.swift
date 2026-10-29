@@ -81,6 +81,16 @@ struct IPTVMacApp: App {
         // One window only (a second would fight the first for the single video view): File > Show Window brings it back, even after a close.
         .commands {
             CommandGroup(replacing: .newItem) { Button(L("menu.showWindow")) { model.showMainWindow() }.keyboardShortcut("n") }
+            // Every toolbar item is also a menu command (View menu), so it is there when the toolbar is customized or hidden, and has a shortcut.
+            CommandGroup(before: .sidebar) {
+                Button(L("tab.live")) { model.tab = .live }.keyboardShortcut("1").disabled(model.accounts.isEmpty)
+                Button(L("tab.movies")) { model.tab = .movie }.keyboardShortcut("2").disabled(model.accounts.isEmpty)
+                Button(L("tab.series")) { model.tab = .series }.keyboardShortcut("3").disabled(model.accounts.isEmpty)
+                Divider()
+                Button(L("downloads.title")) { model.showDownloads = true }.keyboardShortcut("l", modifiers: [.command, .option]).disabled(model.accounts.isEmpty)
+                Button(L("sync.now")) { Task { await model.sync() } }.keyboardShortcut("r").disabled(model.accounts.isEmpty || model.syncing)
+                Divider()
+            }
             CommandGroup(replacing: .systemServices) {}   // the app menu's "Services" (no text service applies to a video player)
         }
         Settings { SettingsView().environment(model) }
