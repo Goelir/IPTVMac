@@ -170,6 +170,15 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-10-29", "mac", "0.9.4", "v0.9.4", {
+   "en": ["**Sync progress in percent.** While a playlist syncs, the status line shows how far it is.",
+          "**Every toolbar button is also in the View menu**, with shortcuts: Live, Movies and Series with ⌘1, ⌘2 and ⌘3, Refresh with ⌘R, Downloads with ⌥⌘L.",
+          "**Smaller fixes to the window:** the section control follows the width of its labels in every language, the sidebar categories have a title, a channel's star stays next to its name on a wide window, the Downloads window fits what it holds, and its buttons have names for VoiceOver.",
+          "The welcome screen says to use only sources you are authorized to access."],
+   "he": ["**התקדמות הסנכרון באחוזים.** בזמן סנכרון של רשימה, שורת הסטטוס מראה כמה כבר הושלם.",
+          "**כל כפתור בסרגל הכלים נמצא גם בתפריט View**, עם קיצורים: Live, ‏Movies ו-Series ב-⌘1, ‏⌘2 ו-⌘3, רענון ב-⌘R, והורדות ב-⌥⌘L.",
+          "**תיקונים קטנים בחלון:** בורר הסעיפים מתאים את רוחבו לתוויות בכל שפה, לקטגוריות ב-sidebar יש כותרת, הכוכב של ערוץ נשאר ליד השם בחלון רחב, חלון ההורדות מתאים לתוכן שלו, ולכפתורים שלו יש שמות ל-VoiceOver.",
+          "מסך הפתיחה אומר להשתמש רק במקורות שמותר לך לגשת אליהם."]}),
  ("2026-10-28", "windows", "1.0.1", "windows-v1.0.1", {
    "en": ["**Downloads for offline viewing.** Download movies and episodes (whole seasons on Xtream series) from the details sheet, and watch them without a network. The files go to `Downloads\\IPTVMac` in your user folder, so they are easy to find, copy and keep. A download goes on while the app is open and picks up again the next time you start it.",
           "The download engine is tested on a real Windows machine: a file is fetched from a local server, saved to disk and checked for size."],
