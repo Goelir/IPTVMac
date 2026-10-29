@@ -32,7 +32,7 @@ If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 
 <sub>Demo playlist with invented titles, video from the Blender Foundation's "Sintel" (CC-BY 3.0). [Watch the 80-second demo](https://github.com/Goelir/IPTVMac/releases/download/v0.3.4/IPTVMac-demo-en.mp4).</sub>
 
-<!-- TODO: add a 5-10 s GIF (instant search, then Picture in Picture) as docs/images/demo.gif and show it here, for example: <img src="docs/images/demo.gif" alt="IPTVMac: instant search, then Picture in Picture" width="720"> -->
+<img src="docs/images/demo.gif" alt="IPTVMac: instant search, then Picture in Picture" width="720">
 
 </div>
 

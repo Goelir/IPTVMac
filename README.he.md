@@ -38,7 +38,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 <sub>רשימת הדגמה עם שמות בדויים, וידאו מתוך "Sintel" של Blender Foundation (CC-BY 3.0). [סרטון הדגמה של 80 שניות](https://github.com/Goelir/IPTVMac/releases/download/v0.3.4/IPTVMac-demo-he.mp4).</sub>
 
-<!-- TODO: add a 5-10 s GIF (instant search, then Picture in Picture) as docs/images/demo.gif and show it here, for example: <img src="docs/images/demo.gif" alt="IPTVMac: חיפוש מיידי ואז תמונה בתוך תמונה" width="720"> -->
+<img src="docs/images/demo.gif" alt="IPTVMac: חיפוש מיידי ואז תמונה בתוך תמונה" width="720">
 
 </div>
 
