@@ -18,7 +18,7 @@ Open a feature request and describe what you want to do, and how you do it today
     scripts/swift.sh test
     scripts/swift.sh run IPTVMac
 
-`scripts/swift.sh` is needed only when Xcode is not installed (see the README, "Build from source"). The code is split in four targets: `IPTVCore` (data, search, Xtream and M3U, updater), `IPTVPlayer` (libmpv), `IPTVMac` (the SwiftUI app) and `CLibMPV` (the C headers).
+`scripts/swift.sh` is needed only when Xcode is not installed (see [docs/BUILDING.md](docs/BUILDING.md)). The code is split in four targets: `IPTVCore` (data, search, Xtream and M3U, updater), `IPTVPlayer` (libmpv), `IPTVMac` (the SwiftUI app) and `CLibMPV` (the C headers).
 
 ## Pull requests
 

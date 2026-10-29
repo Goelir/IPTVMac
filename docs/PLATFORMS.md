@@ -1,0 +1,20 @@
+# Platforms
+
+Details for every platform: where to get the app, how to install it, how it is built. The short version is in the [README](../README.md#where-it-runs); how everything is built from source is in [BUILDING.md](BUILDING.md).
+
+## Windows, iPhone, Android and Android TV
+
+IPTVMac has apps for Mac, Windows, Android phones and Android TV that you can download today, and an iPhone and iPad app that is waiting for App Store review. They share the engine and the design, and their source is in this repository:
+
+- **Windows** (`flutter/`, the same Flutter app as Android): download `IPTVMac-Windows-1.0.1-setup.exe` (about 27 MB; installs for your user, no administrator rights) or the portable zip from the [release page](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1). Windows 10 or 11, 64-bit. The app is not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**. Keys: Space pauses, arrows seek, Up and Down and the wheel change the volume, F fills the screen, Esc steps back. The build runs on GitHub Actions (`.github/workflows/windows.yml`: analyze, all tests, build, installer, a start-up check with memory and idle CPU), because Flutter cannot build Windows from a Mac. Downloads for offline viewing go to `Downloads\IPTVMac` and run while the app is open.
+- <a id="iphone-and-ipad"></a>**iPhone and iPad** (`ios/`): submitted to the App Store, waiting for review. Build with `scripts/ios-setup.sh`, then open `ios/IPTVPhone.xcodeproj` (see [ios/README.md](../ios/README.md)).
+- **Android** (`flutter/`): **[download the APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4)** (Android 8 or later; pick the `arm64-v8a` file for almost every phone, the release notes explain the install). Flutter and libmpv, 31 languages generated from the same strings. Touch player with gestures, Picture in Picture, sound that keeps playing with the screen off, a rotate button, and downloads of movies and episodes for offline viewing (the Android app is the one that has downloads next to the Mac app; the iPhone app does not). Build: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; see [flutter/PLAN.md](../flutter/PLAN.md)). Android 8 or later. It tells you when a newer APK is out (a banner with a link to the release page; the install stays manual; it asks github.com at most every six hours, and Settings can switch that off).
+- **Android TV, Google TV and Fire TV** (the same app; first TV version): download **[the 32-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk)** (38 MB; it runs on almost every TV and box, including most Fire TV sticks) or, if the TV says it is not compatible, **[the 64-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk)** (41 MB). On Fire TV or Android TV install it with the Downloader app (type the address of the file) or from a USB stick; there is no store listing yet. Use the remote: arrows move, OK selects, Back goes up one level, **holding Back closes the app**; in the player Left/Right seek, Up/Down change channel, OK pauses. No downloads on TV, and updates are manual (install the new file over the old one). Please report problems.
+
+## Installing on a TV with the Downloader app
+
+Android TV, Google TV and Fire TV:
+
+1. On the TV install the **Downloader** app (Fire TV: search "Downloader"; Android TV and Google TV: Google Play) and open it.
+2. In Downloader type the address of the file: [32-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (try this first, it runs on almost every TV and box) or [64-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (if the TV says the app is not compatible). A USB stick with the file works too.
+3. Allow Downloader to install apps when the TV asks, install, and open IPTVMac. With the remote: arrows move, OK selects, Back goes up one level, **hold Back to close the app**.

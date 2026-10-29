@@ -26,7 +26,11 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 </div>
 
-[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [כל ההורדות](https://goelir.github.io/IPTVMac/he/download/) &nbsp;|&nbsp; [אתר](https://goelir.github.io/IPTVMac/he/) &nbsp;|&nbsp; [מה חדש](https://goelir.github.io/IPTVMac/he/changelog/) &nbsp;|&nbsp; [התקנה](#התקנה) &nbsp;|&nbsp; [יכולות](#יכולות) &nbsp;|&nbsp; [שאלות נפוצות](#שאלות-נפוצות) &nbsp;|&nbsp; [English](README.md)
+[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**הורדה ל-Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [**כל ההורדות**](https://goelir.github.io/IPTVMac/he/download/)
+
+אם IPTVMac מועיל לכם, ⭐ ב-GitHub עוזר לאחרים למצוא אותו.
+
+<sub>[אתר](https://goelir.github.io/IPTVMac/he/) · [מה חדש](https://goelir.github.io/IPTVMac/he/changelog/) · [התקנה](#התקנה) · [יכולות](#יכולות) · [שאלות נפוצות](#שאלות-נפוצות) · [English](README.md)</sub>
 
 <br>
 
@@ -34,17 +38,19 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 <sub>רשימת הדגמה עם שמות בדויים, וידאו מתוך "Sintel" של Blender Foundation (CC-BY 3.0). [סרטון הדגמה של 80 שניות](https://github.com/Goelir/IPTVMac/releases/download/v0.3.4/IPTVMac-demo-he.mp4).</sub>
 
+<!-- TODO: add a 5-10 s GIF (instant search, then Picture in Picture) as docs/images/demo.gif and show it here, for example: <img src="docs/images/demo.gif" alt="IPTVMac: חיפוש מיידי ואז תמונה בתוך תמונה" width="720"> -->
+
 </div>
 
 ## על אילו מכשירים זה רץ
 
-| מכשיר | איפה להשיג | מצב | כתוב ב |
-|---|---|---|---|
-| **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד | Swift + SwiftUI |
-| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד | Dart + Flutter, מעטפת C++ קטנה |
-| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית | Dart + Flutter, שכבת Kotlin |
-| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע | Dart + Flutter, שכבת Kotlin |
-| **iPhone ו-iPad** | ממתין לבדיקה ב-App Store; בינתיים אפשר [לבנות מהמקור](#פלטפורמות-נוספות) | לא יצא | Swift + SwiftUI |
+| מכשיר | הורדה | מצב |
+|---|---|---|
+| **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד |
+| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד |
+| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית |
+| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע |
+| **iPhone ו-iPad** | ממתין לבדיקה ב-App Store; בינתיים אפשר [לבנות מהמקור](#פלטפורמות-נוספות) | לא יצא |
 
 אותו מנוע, 31 שפות ובלי חשבון, בכל מקום.
 
@@ -142,6 +148,8 @@ https://iptv-org.github.io/iptv/index.m3u
 2. ב-Downloader מקלידים את כתובת הקובץ: [32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (מנסים אותו קודם, הוא רץ כמעט על כל טלוויזיה וסטרימר) או [64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (אם הטלוויזיה אומרת שהאפליקציה לא תואמת). גם כונן USB עם הקובץ עובד.
 3. מאשרים ל-Downloader להתקין אפליקציות כשהטלוויזיה שואלת, מתקינים ופותחים את IPTVMac. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**.
 
+עוד על כל פלטפורמה: [docs/PLATFORMS.he.md](docs/PLATFORMS.he.md).
+
 ## יכולות
 
 | | |
@@ -220,37 +228,13 @@ https://iptv-org.github.io/iptv/index.m3u
 
 האפליקציה המותקנת בודקת את GitHub Releases בהפעלה ואחת ל-6 שעות. כשיש גרסה חדשה היא מורידה אותה ומאמתת את **החתימה** של הגרסה (מפתח Ed25519 שאינו שמור ב-GitHub ומוטמע באפליקציה) ואת ה-SHA-256 שמופיע בהערות הגרסה. אחר כך מופיע באנר: **Restart to update** (או שהעדכון מותקן ביציאה הבאה). אפשר לכבות בהגדרות את הבדיקה האוטומטית ואת ההורדה האוטומטית, כל אחת לחוד.
 
-## פרטיות
-
-המקורות שלכם נשמרים ב-`~/Library/Application Support/IPTVMac/` (נגישים רק למשתמש שלכם). סיסמאות החשבונות נשמרות במסד הנתונים הזה כטקסט רגיל, ולא ב-Keychain (ה-Keychain ביקש הרשאה מחדש בכל גרסה). האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub לבדיקת עדכונים. בלי איסוף נתונים ובלי טלמטריה.
-
-## אבטחה
-
-ב-[SECURITY.md](SECURITY.md) (באנגלית): איך העדכונים מוגנים, המגבלות הידועות, ואיך לדווח על פגיעות באופן פרטי.
-
 ## פלטפורמות נוספות
 
-IPTVMac היא אפליקציית Mac שאפשר להוריד כבר היום. אפליקציות נוספות חולקות איתה את הנגן והעיצוב, וקוד המקור שלהן במאגר הזה:
+פירוט על Windows, ‏iPhone ו-iPad, ‏Android ו-Android TV (הורדות, שלבי התקנה, איך כל אפליקציה נבנית) נמצא ב-[docs/PLATFORMS.he.md](docs/PLATFORMS.he.md) (באנגלית: [docs/PLATFORMS.md](docs/PLATFORMS.md)); בנייה מקוד המקור ופרטים טכניים ב-[docs/BUILDING.he.md](docs/BUILDING.he.md) (באנגלית: [docs/BUILDING.md](docs/BUILDING.md)).
 
-- **Windows** (‏`flutter/`, אותה אפליקציית Flutter של Android): מורידים את `IPTVMac-Windows-1.0.1-setup.exe` (בערך 27MB; מתקין למשתמש שלכם, בלי הרשאות מנהל) או את ה-zip הנייד מ[עמוד הגרסה](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1). Windows 10 או 11, ‏64 ביט. האפליקציה עוד לא חתומה בתעודה בתשלום, ולכן SmartScreen עשוי להזהיר: בוחרים **More info** ואז **Run anyway**. מקשים: רווח עוצר, חיצים מדלגים, למעלה ולמטה והגלגלת משנים עוצמת קול, F ממלא את המסך, Esc חוזר אחורה. הבנייה רצה ב-GitHub Actions (‏`.github/workflows/windows.yml`: ניתוח, כל הטסטים, בנייה, מתקין ובדיקת הפעלה עם מדידת זיכרון ומעבד בסרק), כי Flutter לא יכול לבנות Windows מ-Mac. הורדות לצפייה בלי רשת נשמרות ב-`Downloads\IPTVMac` ויורדות כל עוד האפליקציה פתוחה.
-- **iPhone ו-iPad** (`ios/`): הוגשה ל-App Store וממתינה לבדיקה. בנייה: `scripts/ios-setup.sh` ואז פותחים את `ios/IPTVPhone.xcodeproj` (ראו [ios/README.md](ios/README.md)).
-- **Android** (`flutter/`): **[הורדת ה-APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4)** (Android 8 ומעלה; בוחרים בקובץ `arm64-v8a` לכמעט כל טלפון, ובהערות הגרסה ההוראות). Flutter ו-libmpv, 31 שפות שנוצרות מאותן מחרוזות. נגן מגע עם מחוות, תמונה בתוך תמונה, קול שממשיך כשהמסך כבוי, כפתור סיבוב מסך, והורדות של סרטים ופרקים לצפייה בלי רשת (אפליקציית ה-Android היא היחידה, לצד ה-Mac, שיש בה הורדות; באייפון אין). בנייה: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; ראו [flutter/PLAN.md](flutter/PLAN.md)). Android 8 ומעלה. היא מודיעה כשיצא APK חדש (באנר עם קישור לעמוד הגרסה; ההתקנה נשארת ידנית; היא פונה אל github.com לכל היותר אחת לשש שעות, ואפשר לכבות את זה בהגדרות).
-- **Android TV, ‏Google TV ו-Fire TV** (אותה אפליקציה; גרסת הטלוויזיה הראשונה): מורידים את **[קובץ ה-32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk)** (‏38MB; רץ כמעט על כל טלוויזיה וסטרימר, כולל רוב ה-Fire TV Stick) או, אם הטלוויזיה אומרת שהוא לא תואם, את **[קובץ ה-64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk)** (‏41MB). ב-Fire TV או ב-Android TV מתקינים עם האפליקציה Downloader (מקלידים את כתובת הקובץ) או מכונן USB; עדיין אין רישום בחנות. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**; בנגן Left/Right מדלגים, Up/Down מחליפים ערוץ, OK עוצר. אין הורדות בטלוויזיה, והעדכון ידני (מתקינים את הקובץ החדש מעל הישן). מוזמנים לדווח על תקלות.
-
-## בנייה מקוד המקור
-
-<div dir="ltr">
-
-```
-brew install mpv pkgconf     # mpv only supplies the C headers to compile against
-scripts/swift.sh test        # tests
-scripts/swift.sh run IPTVMac # run
-scripts/make-dmg.sh          # builds build/IPTVMac.dmg
-```
-
-</div>
-
-כשמותקנים רק Command Line Tools, השתמשו ב-`scripts/swift.sh` במקום ב-`swift` (הוא בוחר SDK שה-SwiftUI שלו לא צריך את תוסף המאקרו של Xcode). הערות עיצוב: [docs/superpowers/specs](docs/superpowers/specs/2026-10-05-iptvmac-design.md).
+- **Windows:** [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (‏Windows 10 או 11, ‏64 ביט). עוד לא חתום בתעודה בתשלום, ולכן SmartScreen עשוי להזהיר: בוחרים **More info** ואז **Run anyway**.
+- **iPhone ו-iPad:** הוגשה ל-App Store וממתינה לבדיקה. לבנייה בעצמכם ראו [docs/PLATFORMS.he.md](docs/PLATFORMS.he.md).
+- **Android ו-Android TV:** ראו [הסעיף למעלה](#android-ו-android-tv).
 
 ## מדריכים
 
@@ -260,16 +244,24 @@ scripts/make-dmg.sh          # builds build/IPTVMac.dmg
 - [How to play an M3U playlist on a Mac](https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html)
 - [Picture in Picture for IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/picture-in-picture-iptv-mac.html)
 
+## פרטיות
+
+המקורות שלכם נשמרים ב-`~/Library/Application Support/IPTVMac/` (נגישים רק למשתמש שלכם). סיסמאות החשבונות נשמרות במסד הנתונים הזה כטקסט רגיל, ולא ב-Keychain (ה-Keychain ביקש הרשאה מחדש בכל גרסה). האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub לבדיקת עדכונים. בלי איסוף נתונים ובלי טלמטריה.
+
+## אבטחה
+
+ב-[SECURITY.md](SECURITY.md) (באנגלית): איך העדכונים מוגנים, המגבלות הידועות, ואיך לדווח על פגיעות באופן פרטי.
+
 ## תרומה לפרויקט
 
 דיווחי באגים, תרגומים ו-pull requests יתקבלו בברכה: ראו [CONTRIBUTING.md](CONTRIBUTING.md). לעולם אל תדביקו בדיווח כתובת שרת, שם משתמש או סיסמה.
 
-## רכיבים של צד שלישי
-
-הגרסה כוללת libmpv מוכן מראש (mpv 0.36 שנבנה עם `-Dgpl=false` ו-FFmpeg 6 שהוגדר עם `--enable-version3` בלי `--enable-gpl`, ולכן הספריות תחת LGPL) מ-[media-kit/libmpv-darwin-build](https://github.com/media-kit/libmpv-darwin-build) גרסה v0.7.3 (sha256 `9bb168ec908b4801f4231f411e3278a0aea644a2b03ce375c880d2813ab7f949`). `scripts/make-app.sh` מוריד ומאמת אותו; קוד המקור של הרכיבים האלה זמין בפרויקטים שמקושרים כאן. החיפוש והאחסון משתמשים ב-[GRDB.swift](https://github.com/groue/GRDB.swift) (MIT). קטעי ההדגמה: "Sintel" © Blender Foundation, [CC-BY 3.0](https://durian.blender.org).
+לבנייה מקוד המקור ראו [docs/BUILDING.he.md](docs/BUILDING.he.md).
 
 ## רישיון
 
 [GPL-3.0](LICENSE). IPTVMac היא נגן ואינה מספקת תוכן; האחריות לשימוש במקורות מורשים בלבד היא עליכם.
+
+רכיבים של צד שלישי, כולל ה-libmpv שבגרסה: [docs/BUILDING.he.md](docs/BUILDING.he.md#רכיבים-של-צד-שלישי).
 
 </div>

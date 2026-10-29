@@ -20,7 +20,11 @@ Free and open source. No accounts, no analytics.
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
-[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [All downloads](https://goelir.github.io/IPTVMac/download/) &nbsp;|&nbsp; [Website](https://goelir.github.io/IPTVMac/) &nbsp;|&nbsp; [What's new](https://goelir.github.io/IPTVMac/changelog/) &nbsp;|&nbsp; [Install](#install) &nbsp;|&nbsp; [Features](#features) &nbsp;|&nbsp; [FAQ](#faq) &nbsp;|&nbsp; [עברית](README.he.md)
+[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
+
+If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
+
+<sub>[Website](https://goelir.github.io/IPTVMac/) · [What's new](https://goelir.github.io/IPTVMac/changelog/) · [Install](#install) · [Features](#features) · [FAQ](#faq) · [עברית](README.he.md)</sub>
 
 <br>
 
@@ -28,17 +32,19 @@ Free and open source. No accounts, no analytics.
 
 <sub>Demo playlist with invented titles, video from the Blender Foundation's "Sintel" (CC-BY 3.0). [Watch the 80-second demo](https://github.com/Goelir/IPTVMac/releases/download/v0.3.4/IPTVMac-demo-en.mp4).</sub>
 
+<!-- TODO: add a 5-10 s GIF (instant search, then Picture in Picture) as docs/images/demo.gif and show it here, for example: <img src="docs/images/demo.gif" alt="IPTVMac: instant search, then Picture in Picture" width="720"> -->
+
 </div>
 
 ## Where it runs
 
-| Device | Get it | Status | Written in |
-|---|---|---|---|
-| **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself | Swift + SwiftUI |
-| **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor | Dart + Flutter, small C++ shell |
-| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand | Dart + Flutter, Kotlin layer |
-| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen | Dart + Flutter, Kotlin layer |
-| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released | Swift + SwiftUI |
+| Device | Download | Status |
+|---|---|---|
+| **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself |
+| **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand |
+| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen |
+| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released |
 
 The same engine, 31 languages and no-account design everywhere.
 
@@ -128,6 +134,8 @@ It holds about 11,000 entries (loading takes a moment); the project's README als
 2. In Downloader type the address of the file: [32-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (try this first, it runs on almost every TV and box) or [64-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (if the TV says the app is not compatible). A USB stick with the file works too.
 3. Allow Downloader to install apps when the TV asks, install, and open IPTVMac. With the remote: arrows move, OK selects, Back goes up one level, **hold Back to close the app**.
 
+More about every platform: [docs/PLATFORMS.md](docs/PLATFORMS.md).
+
 ## Features
 
 | | |
@@ -206,6 +214,20 @@ Apart from Hebrew, English and Arabic, the translations were written with AI hel
 
 The installed app checks GitHub Releases at launch and every 6 hours. When a newer version exists it downloads it and verifies the release **signature** (an Ed25519 key that is not stored on GitHub and is pinned in the app) and the SHA-256 published in the release notes. Then it shows a banner: **Restart to update** (or it installs on the next quit). Automatic checking and automatic download can each be turned off in Settings.
 
+## Other platforms
+
+Details for Windows, iPhone and iPad, Android and Android TV (downloads, install steps, how each app is built) are in [docs/PLATFORMS.md](docs/PLATFORMS.md); building from source and the technical details are in [docs/BUILDING.md](docs/BUILDING.md).
+
+- **Windows:** [installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (Windows 10 or 11, 64-bit). Not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**.
+- <a id="iphone-and-ipad"></a>**iPhone and iPad:** submitted to the App Store, waiting for review. To build it yourself see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv).
+- **Android and Android TV:** see [the section above](#android-and-android-tv).
+
+## Guides
+
+- [How to watch Xtream Codes IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/xtream-codes-on-mac.html)
+- [How to play an M3U playlist on a Mac](https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html)
+- [Picture in Picture for IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/picture-in-picture-iptv-mac.html)
+
 ## Privacy
 
 Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by your user only). Account passwords are kept in that database in plain text; they are not in the Keychain (the Keychain asked for permission again with every new build). The app only contacts the servers you add, and GitHub for update checks. No analytics, no telemetry.
@@ -214,38 +236,14 @@ Your sources are stored in `~/Library/Application Support/IPTVMac/` (readable by
 
 See [SECURITY.md](SECURITY.md) for how updates are protected, the known limits, and how to report a vulnerability privately.
 
-## Other platforms
-
-IPTVMac is a Mac app you can download today. More apps share its engine and its design, and their source is in this repository:
-
-- **Windows** (`flutter/`, the same Flutter app as Android): download `IPTVMac-Windows-1.0.1-setup.exe` (about 27 MB; installs for your user, no administrator rights) or the portable zip from the [release page](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1). Windows 10 or 11, 64-bit. The app is not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**. Keys: Space pauses, arrows seek, Up and Down and the wheel change the volume, F fills the screen, Esc steps back. The build runs on GitHub Actions (`.github/workflows/windows.yml`: analyze, all tests, build, installer, a start-up check with memory and idle CPU), because Flutter cannot build Windows from a Mac. Downloads for offline viewing go to `Downloads\IPTVMac` and run while the app is open.
-- **iPhone and iPad** (`ios/`): submitted to the App Store, waiting for review. Build with `scripts/ios-setup.sh`, then open `ios/IPTVPhone.xcodeproj` (see [ios/README.md](ios/README.md)).
-- **Android** (`flutter/`): **[download the APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4)** (Android 8 or later; pick the `arm64-v8a` file for almost every phone, the release notes explain the install). Flutter and libmpv, 31 languages generated from the same strings. Touch player with gestures, Picture in Picture, sound that keeps playing with the screen off, a rotate button, and downloads of movies and episodes for offline viewing (the Android app is the one that has downloads next to the Mac app; the iPhone app does not). Build: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; see [flutter/PLAN.md](flutter/PLAN.md)). Android 8 or later. It tells you when a newer APK is out (a banner with a link to the release page; the install stays manual; it asks github.com at most every six hours, and Settings can switch that off).
-- **Android TV, Google TV and Fire TV** (the same app; first TV version): download **[the 32-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk)** (38 MB; it runs on almost every TV and box, including most Fire TV sticks) or, if the TV says it is not compatible, **[the 64-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk)** (41 MB). On Fire TV or Android TV install it with the Downloader app (type the address of the file) or from a USB stick; there is no store listing yet. Use the remote: arrows move, OK selects, Back goes up one level, **holding Back closes the app**; in the player Left/Right seek, Up/Down change channel, OK pauses. No downloads on TV, and updates are manual (install the new file over the old one). Please report problems.
-
-## Build from source
-
-    brew install mpv pkgconf     # mpv only supplies the C headers to compile against
-    scripts/swift.sh test        # tests
-    scripts/swift.sh run IPTVMac # run
-    scripts/make-dmg.sh          # builds build/IPTVMac.dmg
-
-Use `scripts/swift.sh` instead of bare `swift` when only Command Line Tools are installed (it selects an SDK whose SwiftUI does not need Xcode's macro plugin). Design notes are in [docs/superpowers/specs](docs/superpowers/specs/2026-10-05-iptvmac-design.md).
-
-## Guides
-
-- [How to watch Xtream Codes IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/xtream-codes-on-mac.html)
-- [How to play an M3U playlist on a Mac](https://goelir.github.io/IPTVMac/guides/m3u-playlist-on-mac.html)
-- [Picture in Picture for IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/picture-in-picture-iptv-mac.html)
-
 ## Contributing
 
 Bug reports, translations and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Never paste your server address, username or password in an issue.
 
-## Third-party components
-
-The release bundles prebuilt [libmpv](https://mpv.io) (mpv 0.36 built with `-Dgpl=false` and FFmpeg 6 configured with `--enable-version3` but not `--enable-gpl`, so the libraries are LGPL) from [media-kit/libmpv-darwin-build](https://github.com/media-kit/libmpv-darwin-build) v0.7.3 (sha256 `9bb168ec908b4801f4231f411e3278a0aea644a2b03ce375c880d2813ab7f949`). `scripts/make-app.sh` downloads and verifies it; source for those components is available from the projects linked above. Search and storage use [GRDB.swift](https://github.com/groue/GRDB.swift) (MIT). Demo footage: "Sintel" © Blender Foundation, [CC-BY 3.0](https://durian.blender.org).
+To build from source, see [docs/BUILDING.md](docs/BUILDING.md).
 
 ## License
 
 [GPL-3.0](LICENSE). IPTVMac is a media player and provides no content; you are responsible for using only sources you are authorized to access.
+
+Third-party components, including the bundled libmpv: [docs/BUILDING.md](docs/BUILDING.md#third-party-components).
