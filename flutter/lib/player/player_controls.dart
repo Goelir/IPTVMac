@@ -185,7 +185,15 @@ class PlayerBottomPanel extends StatelessWidget {
           if (!model.isLive)
             _Utility(
               label: l.playerSpeed,
-              onTap: (_) => showSpeedSheet(context, model),
+              onTap: (anchor) async {
+                // A phone or a computer: a small menu over the button (like Telegram's), not a sheet that covers half the screen.
+                // A TV keeps the sheet: it is made for the D-pad.
+                if (isTelevision) return showSpeedSheet(context, model);
+                final picked = await _showMenu<double>(anchor, model, [
+                  for (final v in PlaybackSpeed.presets) _check(v, PlaybackSpeed.label(v), (v - core.speed).abs() < 0.001, height: 36),
+                ]);
+                if (picked != null) model.setSpeed(picked);
+              },
               child: Text(PlaybackSpeed.label(core.speed), style: TextStyle(color: core.speed == 1 ? Colors.white : Colors.amber, fontWeight: FontWeight.bold)),
             ),
           _Utility(
@@ -271,8 +279,9 @@ class PlayerBottomPanel extends StatelessWidget {
     );
   }
 
-  static PopupMenuItem<T> _check<T>(T value, String text, bool selected) => PopupMenuItem<T>(
+  static PopupMenuItem<T> _check<T>(T value, String text, bool selected, {double height = kMinInteractiveDimension}) => PopupMenuItem<T>(
         value: value,
+        height: height,
         child: Row(children: [
           SizedBox(width: 28, child: selected ? const Icon(Icons.check, size: 18) : null),
           Flexible(child: Text(text)),

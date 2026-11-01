@@ -345,12 +345,15 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
-  testWidgets('the speed sheet changes the speed', (t) async {
+  testWidgets('the speed menu is small, marks the current speed and changes it', (t) async {
     final (e, _, _) = await open(t, movie());
     playing(e);
     await t.pump(const Duration(milliseconds: 300));
     await t.tap(find.text('1×'));
     await t.pumpAndSettle();
+    expect(find.byType(Slider), findsNothing, reason: 'a menu over the button, not the full sheet');
+    expect(find.byType(BottomSheet), findsNothing);
+    expect(find.byIcon(Icons.check), findsOneWidget); // the current speed
     await t.tap(find.text('1.5×'));
     await t.pump();
     expect(e.commands, contains('speed 1.5'));
