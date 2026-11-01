@@ -189,9 +189,7 @@ class PlayerBottomPanel extends StatelessWidget {
                 // A phone or a computer: a small menu over the button (like Telegram's), not a sheet that covers half the screen.
                 // A TV keeps the sheet: it is made for the D-pad.
                 if (isTelevision) return showSpeedSheet(context, model);
-                final picked = await _showMenu<double>(anchor, model, [
-                  for (final v in PlaybackSpeed.presets) _check(v, PlaybackSpeed.label(v), (v - core.speed).abs() < 0.001, height: 36),
-                ]);
+                final picked = await _showMenu<double>(anchor, model, [_SpeedGrid(current: core.speed)]);
                 if (picked != null) model.setSpeed(picked);
               },
               child: Text(PlaybackSpeed.label(core.speed), style: TextStyle(color: core.speed == 1 ? Colors.white : Colors.amber, fontWeight: FontWeight.bold)),
@@ -286,6 +284,49 @@ class PlayerBottomPanel extends StatelessWidget {
           SizedBox(width: 28, child: selected ? const Icon(Icons.check, size: 18) : null),
           Flexible(child: Text(text)),
         ]),
+      );
+}
+
+/// The speeds as a small grid of buttons in one menu card (four across): about 150 dp tall, so it never covers the picture, in portrait
+/// or on a phone held sideways.
+class _SpeedGrid extends PopupMenuEntry<double> {
+  const _SpeedGrid({required this.current});
+  final double current;
+
+  @override
+  double get height => 156;
+
+  @override
+  bool represents(double? value) => false;
+
+  @override
+  State<_SpeedGrid> createState() => _SpeedGridState();
+}
+
+class _SpeedGridState extends State<_SpeedGrid> {
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(8),
+        child: SizedBox(
+          width: 252,
+          child: Wrap(spacing: 4, runSpacing: 4, children: [
+            for (final v in PlaybackSpeed.presets)
+              SizedBox(
+                width: 58,
+                height: 44,
+                child: TextButton(
+                  autofocus: (v - widget.current).abs() < 0.001,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    backgroundColor: (v - widget.current).abs() < 0.001 ? Theme.of(context).colorScheme.primaryContainer : null,
+                    foregroundColor: (v - widget.current).abs() < 0.001 ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(v),
+                  child: Text(PlaybackSpeed.label(v), style: const TextStyle(fontWeight: FontWeight.w600)),
+                ),
+              ),
+          ]),
+        ),
       );
 }
 

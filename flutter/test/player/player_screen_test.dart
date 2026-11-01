@@ -363,7 +363,7 @@ void main() {
     await t.pumpAndSettle();
     expect(find.byType(Slider), findsNothing, reason: 'a menu over the button, not the full sheet');
     expect(find.byType(BottomSheet), findsNothing);
-    expect(find.byIcon(Icons.check), findsOneWidget); // the current speed
+    expect(t.getSize(find.byType(Material).last).height, lessThan(200), reason: 'about a third of a phone held sideways (420 dp), not the whole screen');
     await t.tap(find.text('1.5×'));
     await t.pump();
     expect(e.commands, contains('speed 1.5'));
