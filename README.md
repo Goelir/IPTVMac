@@ -20,7 +20,7 @@ Free and open source. No accounts, no analytics.
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
-[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
+[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.2) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
 
 If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 
@@ -41,9 +41,9 @@ If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 | Device | Download | Status |
 |---|---|---|
 | **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself |
-| **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor |
-| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (`arm64-v8a` for almost every phone) | Released, install by hand |
-| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen |
+| **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.2) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5) (`arm64-v8a` for almost every phone) | Released, install by hand |
+| **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen |
 | **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released |
 
 The same engine, 31 languages and no-account design everywhere.
@@ -124,14 +124,14 @@ It holds about 11,000 entries (loading takes a moment); the project's README als
 
 **Phone or tablet (Android 8 or later).**
 
-1. Download [IPTVMac-Android-1.0.4-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-arm64-v8a.apk) (it suits almost every phone; the [release page](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) lists the other files).
+1. Download [IPTVMac-Android-1.0.5-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.5/IPTVMac-Android-1.0.5-arm64-v8a.apk) (it suits almost every phone; the [release page](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5) lists the other files).
 2. Open it and allow installs from your browser or Files app when Android asks.
 3. Add your source. A banner tells you when a newer version is out; installing it stays manual.
 
 **Android TV, Google TV and Fire TV.**
 
 1. On the TV install the **Downloader** app (Fire TV: search "Downloader"; Android TV and Google TV: Google Play) and open it.
-2. In Downloader type the address of the file: [32-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-32bit.apk) (try this first, it runs on almost every TV and box) or [64-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.4/IPTVMac-Android-1.0.4-tv-64bit.apk) (if the TV says the app is not compatible). A USB stick with the file works too.
+2. In Downloader type the address of the file: [32-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.5/IPTVMac-Android-1.0.5-tv-32bit.apk) (try this first, it runs on almost every TV and box) or [64-bit](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.5/IPTVMac-Android-1.0.5-tv-64bit.apk) (if the TV says the app is not compatible). A USB stick with the file works too.
 3. Allow Downloader to install apps when the TV asks, install, and open IPTVMac. With the remote: arrows move, OK selects, Back goes up one level, **hold Back to close the app**.
 
 More about every platform: [docs/PLATFORMS.md](docs/PLATFORMS.md).
@@ -149,7 +149,8 @@ More about every platform: [docs/PLATFORMS.md](docs/PLATFORMS.md).
 | **EPG** | Current and next program in the channel list and in the player (Xtream). |
 | **Downloads** | Save movies and episodes (a whole season at once on Xtream series) to a folder you choose, and play them from the Downloads screen. |
 | **Playlists** | Xtream Codes and M3U. With several playlists, switch from the toolbar, or choose **All playlists** to search, favorite and continue watching across all of them, with the playlist name on every item. |
-| **Resume and next episode** | Movies and episodes continue where you stopped. When an episode ends, the next one starts after a 5-second countdown (cancel it, or turn it off). |
+| **Resume and next episode** | Movies and episodes continue where you stopped; the Continue watching page says the episode and the minutes left of each series ("S2 E5 · 23 min left") and a click resumes it. When an episode ends, the next one starts after a 5-second countdown (cancel it, or turn it off). |
+| **Skip intro and credits** | Providers do not publish where an intro ends, so you mark it once per series (player menu "Intro and credits": intro starts here, intro ends here, credits start here). Every episode of the series then shows **Skip intro** and **Skip credits** (the next episode starts); the `S` key takes the button. |
 | **Settings** | System, light or dark appearance, interface language, automatic playlist refresh, hide categories by words, network buffer size, **backup and restore** of playlists (without passwords), favorites and watch history, and clearing history, favorites or the image cache. |
 | **31 languages** | Includes right-to-left layout for Hebrew, Arabic, Persian and Urdu. See [Languages](#languages). |
 | **Signed self-updates** | The app checks for new releases, verifies a signature and a SHA-256, and updates itself. See [Updates](#updates). |
@@ -218,7 +219,7 @@ The installed app checks GitHub Releases at launch and every 6 hours. When a new
 
 Details for Windows, iPhone and iPad, Android and Android TV (downloads, install steps, how each app is built) are in [docs/PLATFORMS.md](docs/PLATFORMS.md); building from source and the technical details are in [docs/BUILDING.md](docs/BUILDING.md).
 
-- **Windows:** [installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (Windows 10 or 11, 64-bit). Not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**.
+- **Windows:** [installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.2) (Windows 10 or 11, 64-bit). Not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**.
 - <a id="iphone-and-ipad"></a>**iPhone and iPad:** submitted to the App Store, waiting for review. To build it yourself see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv).
 - **Android and Android TV:** see [the section above](#android-and-android-tv).
 

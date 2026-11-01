@@ -92,13 +92,14 @@ FEATURES = {
    ("Find it fast", [
      ("Search that keeps up", "Your library lives in a local SQLite database with full-text search, so results appear as you type, in well under a second for 100,000 items. Search inside a category, inside a section or everywhere; Hebrew, Arabic and Latin text all work.", ()),
      ("Details for movies and series", "Poster, year, rating, duration, genre, plot, director, cast and a trailer link, from your Xtream provider. Open them before you play, or while you watch without stopping the picture.", ()),
-     ("Favorites and continue watching", "Favorites, a continue-watching row and every category with its count. The list remembers where you were when you come back.", ()),
+     ("Favorites and continue watching", "Favorites, and a continue-watching page that says the episode and the minutes left of each series and resumes it at the minute you stopped. Every category shows its count, and the list remembers where you were when you come back.", ()),
    ]),
    ("Watch the way you like", [
      ("A player that does not give up", "Playback runs on mpv. It plays the broken TS and HLS streams that trip up system players, reconnects when a stream drops and uses hardware decoding.", ()),
      ("Speed, subtitles, audio tracks", "Speed from 0.25x to 4x on movies, episodes and catch-up, embedded and external subtitles, audio track choice, a sleep timer from 15 minutes to 2 hours and a skip step you set.", ()),
      ("Picture in Picture", "On the Mac, IPTVMac's own floating window stays on top of other apps and follows you across Spaces. On Android, the system Picture in Picture window.", ("mac", "android")),
      ("Catch-up and program guide", "Where your Xtream provider supports them: what is on now and next, and watching a program that already aired. A Live button jumps back to the current broadcast.", ()),
+     ("Skip the intro and the credits", "Mark where a series' intro ends and where its credits start once, and every episode of it offers Skip intro and Skip credits (the credits button starts the next episode).", ()),
      ("A quality tag", "A small 4K, FHD, HD or SD tag next to the title, taken from the real size of the picture being played.", ()),
      ("Next episode, automatically", "When an episode ends, the next one starts after a 5-second countdown. You can turn it off.", ()),
      ("Seek preview", "Hover the progress bar and a small window shows the picture at that moment. It is always on for downloaded files and optional for streams.", ("mac",)),
@@ -133,13 +134,14 @@ FEATURES = {
    ("למצוא מהר", [
      ("חיפוש שעומד בקצב", "הספרייה שלכם יושבת במסד נתונים מקומי עם חיפוש טקסט מלא, ולכן התוצאות מופיעות תוך כדי הקלדה, הרבה פחות משנייה על 100,000 פריטים. מחפשים בתוך קטגוריה, בתוך מדור או בכל מקום; עברית, ערבית ולטינית עובדות כולן.", ()),
      ("פרטים על סרטים וסדרות", "כרזה, שנה, דירוג, אורך, ז'אנר, תקציר, במאי, שחקנים וקישור לטריילר, מהספק של Xtream. פותחים אותם לפני ההפעלה, או תוך כדי צפייה בלי לעצור את התמונה.", ()),
-     ("מועדפים והמשך צפייה", "מועדפים, שורה של המשך צפייה וכל קטגוריה עם הספירה שלה. הרשימה זוכרת איפה הייתם כשחוזרים אליה.", ()),
+     ("מועדפים והמשך צפייה", "מועדפים, ודף המשך צפייה שאומר לכל סדרה את הפרק ואת הדקות שנשארו וממשיך אותה בדקה שבה עצרתם. כל קטגוריה מוצגת עם הספירה שלה, והרשימה זוכרת איפה הייתם כשחוזרים אליה.", ()),
    ]),
    ("לצפות כמו שנוח לכם", [
      ("נגן שלא מוותר", "הניגון רץ על mpv. הוא מנגן את שידורי ה-TS וה-HLS השבורים שמפילים נגנים של המערכת, מתחבר מחדש כששידור נופל ומשתמש בפענוח חומרה.", ()),
      ("מהירות, כתוביות, ערוצי שמע", "מהירות מ-0.25x עד 4x בסרטים, בפרקים ובשידורים מהעבר, כתוביות מובנות וחיצוניות, בחירת ערוץ שמע, טיימר שינה מ-15 דקות עד שעתיים וקפיצה שאתם קובעים.", ()),
      ("תמונה בתוך תמונה", "ב-Mac, חלון צף משלו של IPTVMac נשאר מעל אפליקציות אחרות והולך איתכם בין Spaces. ב-Android, חלון התמונה בתוך תמונה של המערכת.", ("mac", "android")),
      ("צפייה בהיסטוריה ומדריך תוכניות", "איפה שהספק של Xtream תומך בכך: מה משודר עכשיו ומה אחר כך, וצפייה בתוכנית שכבר שודרה. כפתור Live קופץ בחזרה לשידור העכשווי.", ()),
+     ("דילוג על הפתיח ועל הקרדיטים", "מסמנים פעם אחת איפה הפתיח של סדרה נגמר ואיפה הקרדיטים מתחילים, ובכל פרק שלה מופיעים \"דלג על הפתיח\" ו\"דלג על הקרדיטים\" (כפתור הקרדיטים מתחיל את הפרק הבא).", ()),
      ("תג איכות", "תג קטן 4K, ‏FHD, ‏HD או SD ליד הכותרת, לפי הגודל האמיתי של התמונה שמתנגנת.", ()),
      ("הפרק הבא, אוטומטית", "כשפרק נגמר, הפרק הבא מתחיל אחרי ספירה לאחור של 5 שניות. אפשר לכבות את זה.", ()),
      ("תצוגה מקדימה בציר הזמן", "מעבירים את העכבר על פס ההתקדמות וחלון קטן מראה את התמונה באותו רגע. תמיד פועל בקבצים שהורדו, ואופציונלי בשידורים.", ("mac",)),
@@ -170,6 +172,21 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-01", "mac", "0.9.5", "v0.9.5", {
+   "en": ["**Continue watching shows where you are in a series:** the episode and the minutes left, for example \"S2 E5 · 23 min left\", with a progress bar, and one click resumes that episode at the minute you stopped.",
+          "**Skip intro and skip credits.** You mark the intro and the credits once per series, from the new \"Intro and credits\" menu in the player; every episode of the series then shows the buttons. The S key takes the button."],
+   "he": ["**\"המשך לצפות\" מראה איפה אתם בסדרה:** הפרק והדקות שנשארו, למשל \"S2 E5 · 23 min left\", עם פס התקדמות, ולחיצה אחת ממשיכה את אותו פרק בדקה שבה עצרתם.",
+          "**דילוג על הפתיח ועל הקרדיטים.** מסמנים פעם אחת לכל סדרה את הפתיח ואת הקרדיטים, מהתפריט החדש \"פתיח וקרדיטים\" בנגן; מכאן בכל פרק של הסדרה מופיעים הכפתורים. המקש S לוחץ על הכפתור."]}),
+ ("2026-11-01", "windows", "1.0.2", "windows-v1.0.2", {
+   "en": ["**Continue watching shows where you are in a series**, and a click resumes that episode at the minute you stopped.",
+          "**Skip intro and skip credits**, marked once per series from the \"Intro and credits\" menu in the player. The S key takes the button."],
+   "he": ["**\"המשך לצפות\" מראה איפה אתם בסדרה**, ולחיצה ממשיכה את אותו פרק בדקה שבה עצרתם.",
+          "**דילוג על הפתיח ועל הקרדיטים**, מסמנים פעם אחת לכל סדרה מהתפריט \"פתיח וקרדיטים\" בנגן. המקש S לוחץ על הכפתור."]}),
+ ("2026-11-01", "android", "1.0.5", "android-v1.0.5", {
+   "en": ["**Continue watching shows where you are in a series:** the episode and the minutes left, with a progress bar, and a tap resumes that episode at the minute you stopped.",
+          "**Skip intro and skip credits**, marked once per series from the \"Intro and credits\" menu in the player. On a TV, OK takes the button while it is on the screen."],
+   "he": ["**\"המשך לצפות\" מראה איפה אתם בסדרה:** הפרק והדקות שנשארו, עם פס התקדמות, ונגיעה ממשיכה את אותו פרק בדקה שבה עצרתם.",
+          "**דילוג על הפתיח ועל הקרדיטים**, מסמנים פעם אחת לכל סדרה מהתפריט \"פתיח וקרדיטים\" בנגן. בטלוויזיה OK לוחץ על הכפתור כשהוא על המסך."]}),
  ("2026-10-29", "mac", "0.9.4", "v0.9.4", {
    "en": ["**Sync progress in percent.** While a playlist syncs, the status line shows how far it is.",
           "**Every toolbar button is also in the View menu**, with shortcuts: Live, Movies and Series with ⌘1, ⌘2 and ⌘3, Refresh with ⌘R, Downloads with ⌥⌘L.",

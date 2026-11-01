@@ -9,9 +9,9 @@
 | מכשיר | איפה להשיג | מצב | כתוב ב |
 |---|---|---|---|
 | **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](../README.he.md#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד | Swift + SwiftUI |
-| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.1) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד | Dart + Flutter, מעטפת C++ קטנה |
-| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית | Dart + Flutter, שכבת Kotlin |
-| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.4), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע | Dart + Flutter, שכבת Kotlin |
+| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.2) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד | Dart + Flutter, מעטפת C++ קטנה |
+| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5) (‏`arm64-v8a` לכמעט כל טלפון) | יצא, התקנה ידנית | Dart + Flutter, שכבת Kotlin |
+| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע | Dart + Flutter, שכבת Kotlin |
 | **iPhone ו-iPad** | ממתין לבדיקה ב-App Store; בינתיים אפשר [לבנות מהמקור](PLATFORMS.he.md) | לא יצא | Swift + SwiftUI |
 
 אותו מנוע, 31 שפות ובלי חשבון, בכל מקום. בכל פלטפורמה את הווידאו מפענח אותו מנוע libmpv מקומפל.
