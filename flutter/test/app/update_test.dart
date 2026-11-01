@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart' as http;
+
+import 'package:iptvmac/app/apk_installer.dart';
 import 'package:iptvmac/app/library_model.dart';
+import 'package:iptvmac/core/android_update.dart';
 import 'package:iptvmac/ui/widgets.dart';
 
 import 'harness.dart';
@@ -99,4 +106,129 @@ void main() {
     await t.pumpAndSettle();
     expect(h.model.prefs.autoCheckUpdates, false);
   });
+
+  test('the APK of a phone: its processor type picks the file, and only a version and a type that passed the checks make an address', () {
+    expect(apkAbi(['arm64-v8a', 'armeabi-v7a']), 'arm64-v8a');
+    expect(apkAbi(['x86', 'x86_64']), 'x86_64');
+    expect(apkAbi(['mips']), isNull);
+    expect(androidApkUrl('1.0.6', 'armeabi-v7a').toString(),
+        'https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.6/IPTVMac-Android-1.0.6-armeabi-v7a.apk');
+    expect(() => androidApkUrl('1.0.6/../x', 'arm64-v8a'), throwsArgumentError);
+    expect(() => androidApkUrl('1.0.6', 'tv-64bit'), throwsArgumentError);
+  });
+
+  group('the in-app update', () {
+    late Directory dir;
+    late FakeInstaller fake;
+    final oldInstaller = apkInstaller, oldPoll = apkPermissionPoll;
+    setUp(() {
+      dir = Directory.systemTemp.createTempSync('apk_update');
+      fake = FakeInstaller(Directory('${dir.path}/updates'));
+      apkInstaller = fake;
+      apkPermissionPoll = const Duration(milliseconds: 1);
+    });
+    tearDown(() {
+      apkInstaller = oldInstaller;
+      apkPermissionPoll = oldPoll;
+      dir.deleteSync(recursive: true);
+    });
+
+    test('downloads the file of this phone and hands it to the installer', () async {
+      final h = await Harness.createPlain(appVersion: '1.0.2');
+      h.provider.apk = List.filled(5000, 7);
+      final seen = <ApkInstall>[];
+      h.model.addListener(() => seen.add(h.model.apkInstall));
+      await h.model.installUpdate('1.0.3');
+      expect(fake.installed.single, '${dir.path}/updates/update.apk');
+      expect(File(fake.installed.single).lengthSync(), 5000);
+      expect(h.provider.calls.last.path, endsWith('/android-v1.0.3/IPTVMac-Android-1.0.3-arm64-v8a.apk'));
+      expect(h.model.apkInstall, ApkInstall.idle);
+      expect(seen, contains(ApkInstall.downloading));
+    });
+
+    test('when installing is not allowed the system screen opens, and the update goes on once the user allows it', () async {
+      final h = await Harness.createPlain(appVersion: '1.0.2');
+      h.provider.apk = [1, 2, 3];
+      fake.allowed = false;
+      fake.onOpenSettings = () => fake.allowed = true;
+      await h.model.installUpdate('1.0.3');
+      expect(fake.settingsOpened, 1);
+      expect(fake.installed, hasLength(1));
+    });
+
+    test('a failed download, a refusal to allow and an installer that does not start all end as "failed"; nothing is left behind', () async {
+      final h = await Harness.createPlain(appVersion: '1.0.2');
+      await h.model.installUpdate('1.0.3'); // the file is not there (404)
+      expect(h.model.apkInstall, ApkInstall.failed);
+      expect(fake.installed, isEmpty);
+      h.provider.apk = [1, 2, 3];
+      fake.startOk = false;
+      await h.model.installUpdate('1.0.3');
+      expect(h.model.apkInstall, ApkInstall.failed);
+      fake.startOk = true;
+      fake.allowed = false; // the user never switches it on: gives up after the wait
+      await h.model.installUpdate('1.0.3');
+      expect(h.model.apkInstall, ApkInstall.failed);
+    });
+
+    test('a download that is cut short or too large is refused and deleted', () async {
+      final client = http.MockClient.streaming((r, _) async => http.StreamedResponse(Stream.value([1, 2, 3]), 200, contentLength: 10, request: r));
+      final folder = Directory('${dir.path}/x');
+      await expectLater(downloadApk(client, Uri.https('github.com', '/a.apk'), folder), throwsA(isA<HttpException>()));
+      expect(File('${folder.path}/update.apk').existsSync(), isFalse);
+      final big = http.MockClient.streaming((r, _) async => http.StreamedResponse(Stream.value([1, 2, 3]), 200, contentLength: 3, request: r));
+      await expectLater(downloadApk(big, Uri.https('github.com', '/a.apk'), folder, maxBytes: 2), throwsA(isA<HttpException>()));
+    });
+
+    testWidgets('the banner: Update now installs from the app; after a failure it offers the release page', (t) async {
+      final h = await Harness.create(t, withAccount: true, sync: true, appVersion: '1.0.2');
+      h.provider.feed = feed(['android-v1.0.3']);
+      await t.runAsync(h.model.checkForUpdate);
+      final opened = <String>[];
+      final old = openUpdatePage;
+      openUpdatePage = (v) async => opened.add(v);
+      addTearDown(() => openUpdatePage = old);
+      await h.pumpApp(t);
+      await go(t);
+      await t.runAsync(() async {
+        await t.tap(find.byKey(const Key('update-now')));
+        await Future<void>.delayed(const Duration(milliseconds: 200));
+      });
+      await go(t);
+      expect(opened, isEmpty, reason: 'the page is only the fallback');
+      expect(h.model.apkInstall, ApkInstall.failed, reason: 'the fake server has no file');
+      expect(find.text('Update failed'), findsOneWidget);
+      await t.tap(find.text('Download manually'));
+      expect(opened, ['1.0.3']);
+    });
+  });
+}
+
+class FakeInstaller extends ApkInstaller {
+  FakeInstaller(this._folder);
+  final Directory _folder;
+  bool allowed = true, startOk = true;
+  int settingsOpened = 0;
+  void Function()? onOpenSettings;
+  final installed = <String>[];
+
+  @override
+  bool get supported => true;
+  @override
+  Future<Directory> folder() async => _folder;
+  @override
+  Future<List<String>> abis() async => ['arm64-v8a', 'armeabi-v7a'];
+  @override
+  Future<bool> canInstall() async => allowed;
+  @override
+  Future<void> openSettings() async {
+    settingsOpened++;
+    onOpenSettings?.call();
+  }
+
+  @override
+  Future<bool> install(String path) async {
+    if (startOk) installed.add(path);
+    return startOk;
+  }
 }

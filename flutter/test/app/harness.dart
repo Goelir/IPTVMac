@@ -25,6 +25,9 @@ class FakeProvider {
   String? feed;
   int feedCalls = 0;
 
+  /// The APK file github.com would send for an Android release (null = 404).
+  List<int>? apk;
+
   FakeProvider() {
     client = MockClient((r) async {
       calls.add(r.url);
@@ -33,6 +36,7 @@ class FakeProvider {
         feedCalls++;
         return res(feed ?? '<feed></feed>');
       }
+      if (r.url.host == 'github.com' && r.url.path.endsWith('.apk')) return apk == null ? http.Response('', 404) : http.Response.bytes(apk!, 200);
       if (r.url.path.endsWith('.m3u')) return res(m3u);
       final q = r.url.queryParameters;
       if (q['username'] != 'u' || q['password'] != 'p') return res('{"user_info":{"auth":0}}');

@@ -1,3 +1,4 @@
+import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -35,6 +36,11 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // The in-app update installs a downloaded APK, which needs REQUEST_INSTALL_PACKAGES. A store build (--dart-define=STORE_BUILD=true) does not
+        // update itself (Google Play restricts that permission), so there the placeholder is INTERNET, which the manifest already declares.
+        val defines: List<String> = (project.findProperty("dart-defines") as? String)?.split(",")?.map { String(Base64.getDecoder().decode(it)) } ?: emptyList<String>()
+        manifestPlaceholders["installPermission"] =
+            if ("STORE_BUILD=true" in defines) "android.permission.INTERNET" else "android.permission.REQUEST_INSTALL_PACKAGES"
     }
 
     signingConfigs {

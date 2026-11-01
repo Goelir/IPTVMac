@@ -11,16 +11,21 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.drawable.Icon
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.util.Rational
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.ryanheise.audioservice.AudioServiceActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 
 /**
  * Picture in Picture for the Flutter player (lib/player/android_player_system.dart) and the base class audio_service needs.
- * Dart -> native: isSupported, enter {aspect, playing}, update {aspect, playing, autoEnter}, requestNotificationPermission.
+ * Dart -> native: isSupported, enter {aspect, playing}, update {aspect, playing, autoEnter}, requestNotificationPermission,
+ * and for the in-app update (lib/core/apk_update.dart): abis, canInstall, openInstallSettings, installApk {path}.
  * Native -> Dart: pipChanged(bool), pipAction() (the play/pause button of the PiP window).
  */
 class MainActivity : AudioServiceActivity() {
@@ -52,6 +57,13 @@ class MainActivity : AudioServiceActivity() {
                         if (pipSupported()) setPictureInPictureParams(params())
                         result.success(null)
                     }
+                    "abis" -> result.success(Build.SUPPORTED_ABIS.toList())
+                    "canInstall" -> result.success(packageManager.canRequestPackageInstalls())
+                    "openInstallSettings" -> {
+                        startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName")))
+                        result.success(null)
+                    }
+                    "installApk" -> result.success(installApk(call.argument<String>("path")))
                     "requestNotificationPermission" -> {
                         requestNotificationPermission()
                         result.success(null)
@@ -108,6 +120,20 @@ class MainActivity : AudioServiceActivity() {
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         channel?.invokeMethod("pipChanged", isInPictureInPictureMode)
+    }
+
+    /** Hands an APK of the app's own cache (cache/updates) to the system installer, which asks the user to confirm. False when it cannot. */
+    private fun installApk(path: String?): Boolean = try {
+        val file = File(path ?: return false).canonicalFile
+        if (file.parentFile != File(cacheDir, "updates").canonicalFile) return false
+        val uri = FileProvider.getUriForFile(this, "$packageName.updates", file)
+        startActivity(
+            Intent(Intent.ACTION_VIEW).setDataAndType(uri, "application/vnd.android.package-archive")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+        true
+    } catch (e: Exception) {
+        false
     }
 
     private fun requestNotificationPermission() {

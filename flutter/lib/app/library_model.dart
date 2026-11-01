@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:http/http.dart' as http;
+import 'package:iptvmac/app/apk_installer.dart';
 import 'package:iptvmac/app/epg_cache.dart';
 import 'package:iptvmac/app/prefs.dart';
 import 'package:iptvmac/app/sync_worker.dart';
@@ -197,6 +198,39 @@ class LibraryModel extends ChangeNotifier {
       updateCheck = UpdateCheck.done;
     } catch (_) {
       updateCheck = UpdateCheck.failed; // offline, GitHub down: the next automatic check tries again
+    }
+    notifyListeners();
+  }
+
+  /// The in-app update on a phone: allow installs (the system screen opens when the user has not), download the APK of this phone, and hand it
+  /// to the system installer, which asks to confirm. The banner shows [apkInstall] and [apkProgress]; on failure it offers the release page.
+  ApkInstall apkInstall = ApkInstall.idle;
+  double apkProgress = 0;
+
+  Future<void> installUpdate(String version) async {
+    if (apkInstall == ApkInstall.downloading) return;
+    apkInstall = ApkInstall.downloading;
+    apkProgress = 0;
+    notifyListeners();
+    try {
+      final abi = apkAbi(await apkInstaller.abis());
+      if (abi == null) throw StateError('no APK for this phone');
+      if (!await apkInstaller.canInstall()) {
+        await apkInstaller.openSettings();
+        // the user switches "Allow from this source" on and comes back: go on by itself (about two minutes)
+        for (var i = 0; i < 120 && !await apkInstaller.canInstall(); i++) {
+          await Future<void>.delayed(apkPermissionPoll);
+        }
+        if (!await apkInstaller.canInstall()) throw StateError('installing is not allowed');
+      }
+      final file = await downloadApk(_client, androidApkUrl(version, abi), await apkInstaller.folder(), onProgress: (p) {
+        apkProgress = p;
+        notifyListeners();
+      });
+      if (!await apkInstaller.install(file.path)) throw StateError('the installer did not start');
+      apkInstall = ApkInstall.idle;
+    } catch (_) {
+      apkInstall = ApkInstall.failed;
     }
     notifyListeners();
   }
@@ -831,3 +865,6 @@ class LibraryModel extends ChangeNotifier {
 }
 
 enum UpdateCheck { idle, checking, done, failed }
+
+/// The in-app update on a phone: nothing running, downloading (after the install was allowed), or failed (the banner offers the release page).
+enum ApkInstall { idle, downloading, failed }

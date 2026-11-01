@@ -235,7 +235,7 @@ class _UpdatesSection extends StatelessWidget {
         title: Text(l.updateCheckNow),
         subtitle: Text(subtitle),
         trailing: newer != null
-            ? TextButton(onPressed: () => openUpdatePage(newer), child: Text(l.updateNow))
+            ? TextButton(onPressed: () => startUpdate(context, newer), child: Text(l.updateNow))
             : m.updateCheck == UpdateCheck.checking
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                 : null,

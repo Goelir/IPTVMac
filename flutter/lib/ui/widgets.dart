@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:intl/intl.dart';
+import 'package:iptvmac/app/apk_installer.dart';
 import 'package:iptvmac/core/android_update.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:iptvmac/app/library_model.dart';
@@ -154,7 +155,8 @@ String syncStatusText(BuildContext context, double? progress) {
   return '$text $pct';
 }
 
-/// "Version 1.0.3 is available": a new APK is out. The install stays manual: the button opens the release page, where the file is.
+/// "Version 1.0.3 is available": a new APK is out. On a phone the button downloads it and starts the system installer; elsewhere (Windows,
+/// or when the download fails) it opens the release page, where the files are.
 class UpdateBanner extends StatelessWidget {
   const UpdateBanner({super.key});
 
@@ -162,6 +164,7 @@ class UpdateBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final v = context.select<LibraryModel, String?>((m) => m.updateAvailable);
     if (v == null || isTelevision) return const SizedBox.shrink();
+    final (state, progress) = context.select<LibraryModel, (ApkInstall, double)>((m) => (m.apkInstall, m.apkProgress));
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
     return Material(
@@ -173,13 +176,28 @@ class UpdateBanner extends StatelessWidget {
         child: Row(children: [
           Icon(Icons.system_update, size: 20, color: cs.onPrimaryContainer),
           const SizedBox(width: 12),
-          Expanded(child: Text(l.updateAvailable(v), style: TextStyle(color: cs.onPrimaryContainer, fontWeight: FontWeight.w600))),
-          TextButton(onPressed: () => openUpdatePage(v), child: Text(l.updateNow)),
-          IconButton(
-            icon: Icon(Icons.close, color: cs.onPrimaryContainer),
-            tooltip: l.updateLater,
-            onPressed: context.read<LibraryModel>().dismissUpdate,
+          Expanded(
+            child: state == ApkInstall.downloading
+                ? Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(l.updateDownloading, style: TextStyle(color: cs.onPrimaryContainer, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(key: const Key('update-progress'), value: progress > 0 ? progress : null),
+                  ])
+                : Text(state == ApkInstall.failed ? l.updateFailed : l.updateAvailable(v),
+                    style: TextStyle(color: cs.onPrimaryContainer, fontWeight: FontWeight.w600)),
           ),
+          if (state != ApkInstall.downloading)
+            TextButton(
+              key: const Key('update-now'),
+              onPressed: () => startUpdate(context, v, failed: state == ApkInstall.failed),
+              child: Text(state == ApkInstall.failed ? l.updateManual : l.updateNow),
+            ),
+          if (state != ApkInstall.downloading)
+            IconButton(
+              icon: Icon(Icons.close, color: cs.onPrimaryContainer),
+              tooltip: l.updateLater,
+              onPressed: context.read<LibraryModel>().dismissUpdate,
+            ),
         ]),
       ),
     );
@@ -188,3 +206,12 @@ class UpdateBanner extends StatelessWidget {
 
 /// Opens the release page of [version] in the browser (tests replace this).
 Future<void> Function(String version) openUpdatePage = (v) => launchUrl(androidReleasePage(v, channel: releaseChannel), mode: LaunchMode.externalApplication);
+
+/// "Update now": a phone downloads and installs the new version itself; after a failure, and on Windows, the release page opens.
+void startUpdate(BuildContext context, String version, {bool failed = false}) {
+  if (apkInstaller.supported && !failed) {
+    context.read<LibraryModel>().installUpdate(version);
+  } else {
+    openUpdatePage(version);
+  }
+}
