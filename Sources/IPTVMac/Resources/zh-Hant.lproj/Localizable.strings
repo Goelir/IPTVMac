@@ -257,3 +257,4 @@
 "player.skipForget" = "清除片頭與片尾";
 "player.skipSaved" = "已為此影集所有集數儲存";
 "player.skipRefused" = "此處無法設定";
+"continue.remove" = "從「繼續觀看」中移除";

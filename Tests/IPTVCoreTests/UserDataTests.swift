@@ -157,3 +157,29 @@ import GRDB
     #expect(try db.dbQueue.read { try UserData.favoriteKeys($0, accountId: nil) }.isEmpty)
     #expect(try db.dbQueue.read { try Int.fetchOne($0, sql: "SELECT COUNT(*) FROM history") } == 1)
 }
+
+@Test func aTitleRemovedFromContinueWatchingStaysAwayUntilItIsWatchedAgain() throws {
+    let (db, a) = try makeDB()
+    try addItem(db, a, "Film", type: .movie, sid: "10"); try addItem(db, a, "Show", type: .series, sid: "20")
+    try db.dbQueue.write { d in
+        var e = Episode(accountId: a, seriesId: "20", season: 1, number: 1, title: "e", streamId: "101"); try e.insert(d)
+        try UserData.saveProgress(d, accountId: a, type: .movie, streamId: "10", position: 30, duration: 120)
+        try UserData.saveProgress(d, accountId: a, type: .series, streamId: "ep:101", position: 30, duration: 120)
+        try d.execute(sql: "UPDATE history SET updated = datetime('now', '-1 hour')")
+    }
+    func names(_ t: ItemType) throws -> [String] { try db.dbQueue.read { try UserData.continueWatching($0, accountId: a, type: t).map(\.name) } }
+    #expect(try names(.movie) == ["Film"] && names(.series) == ["Show"])
+    try db.dbQueue.write { d in
+        try UserData.hideFromContinue(d, accountId: a, type: .movie, streamId: "10")
+        try UserData.hideFromContinue(d, accountId: a, type: .series, streamId: "20")
+    }
+    #expect(try names(.movie).isEmpty && names(.series).isEmpty)
+    // the resume points stay: the episode is still marked as started
+    #expect(try db.dbQueue.read { try WatchProgress_progressCount($0) } == 2)
+    try db.dbQueue.write { try $0.execute(sql: "UPDATE continue_hidden SET at = datetime('now', '-1 minute')") }   // the removal happened a minute ago
+    // watching it again saves a newer position: it comes back
+    try db.dbQueue.write { d in try UserData.saveProgress(d, accountId: a, type: .series, streamId: "ep:101", position: 60, duration: 120) }
+    #expect(try names(.series) == ["Show"] && names(.movie).isEmpty)
+}
+
+private func WatchProgress_progressCount(_ d: Database) throws -> Int { try Int.fetchOne(d, sql: "SELECT COUNT(*) FROM history") ?? 0 }

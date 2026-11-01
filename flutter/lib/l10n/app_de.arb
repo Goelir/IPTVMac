@@ -258,5 +258,6 @@
   "playerMarkCredits": "Abspann beginnt hier",
   "playerSkipForget": "Intro und Abspann vergessen",
   "playerSkipSaved": "Für alle Folgen dieser Serie gespeichert",
-  "playerSkipRefused": "An dieser Stelle nicht möglich"
+  "playerSkipRefused": "An dieser Stelle nicht möglich",
+  "continueRemove": "Aus „Weiterschauen“ entfernen"
 }

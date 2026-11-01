@@ -150,6 +150,7 @@ struct PosterCell: View {
         .accessibilityLabel([item.name, caption].compactMap { $0 }.joined(separator: ", "))
         .contextMenu {
             if item.type == .movie { Button { model.play(item) } label: { Label(L("info.play"), systemImage: "play.fill") } }
+            if entry != nil { Button(role: .destructive) { Haptics.tap(); model.removeFromContinue(item) } label: { Label(L("continue.remove"), systemImage: "xmark.circle") } }
             if model.hasInfo(item) && item.type == .movie { Button { ui.openInfo = item } label: { Label(L("info.details"), systemImage: "info.circle") } }
             Button { Haptics.tap(); model.toggleFavorite(item) } label: { Label(L(fav ? "fav.remove" : "fav.add"), systemImage: fav ? "star.slash" : "star") }
         }
@@ -193,6 +194,10 @@ private struct ContinueCard: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(PressStyle())
+        .contextMenu {
+            Button(role: .destructive) { Haptics.tap(); model.removeFromContinue(entry.item) } label: { Label(L("continue.remove"), systemImage: "xmark.circle") }
+        }
+        .accessibilityAction(named: Text(L("continue.remove"))) { model.removeFromContinue(entry.item) }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel([entry.item.name, label].compactMap { $0 }.joined(separator: ", "))
         .accessibilityValue(entry.fraction.map { "\(Int($0 * 100))%" } ?? "")

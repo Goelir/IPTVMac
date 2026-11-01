@@ -257,3 +257,4 @@
 "player.skipForget" = "清除片头和片尾";
 "player.skipSaved" = "已为该剧所有剧集保存";
 "player.skipRefused" = "此处无法设置";
+"continue.remove" = "从“继续观看”中移除";

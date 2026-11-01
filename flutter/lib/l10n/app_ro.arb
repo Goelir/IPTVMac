@@ -258,5 +258,6 @@
   "playerMarkCredits": "Finalul începe aici",
   "playerSkipForget": "Uită genericul și finalul",
   "playerSkipSaved": "Salvat pentru toate episoadele acestui serial",
-  "playerSkipRefused": "Nu este posibil în acest punct"
+  "playerSkipRefused": "Nu este posibil în acest punct",
+  "continueRemove": "Elimină din Continuă vizionarea"
 }

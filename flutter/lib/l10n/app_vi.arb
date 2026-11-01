@@ -258,5 +258,6 @@
   "playerMarkCredits": "Phần cuối bắt đầu ở đây",
   "playerSkipForget": "Xóa phần mở đầu và phần cuối",
   "playerSkipSaved": "Đã lưu cho mọi tập của phim này",
-  "playerSkipRefused": "Không thể ở thời điểm này"
+  "playerSkipRefused": "Không thể ở thời điểm này",
+  "continueRemove": "Xóa khỏi Xem tiếp"
 }

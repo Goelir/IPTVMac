@@ -258,5 +258,6 @@
   "playerMarkCredits": "Jenerik burada başlıyor",
   "playerSkipForget": "Giriş ve jeneriği unut",
   "playerSkipSaved": "Bu dizinin tüm bölümleri için kaydedildi",
-  "playerSkipRefused": "Bu noktada mümkün değil"
+  "playerSkipRefused": "Bu noktada mümkün değil",
+  "continueRemove": "İzlemeye devam et listesinden kaldır"
 }

@@ -257,3 +257,4 @@
 "player.skipForget" = "Forget intro and credits";
 "player.skipSaved" = "Saved for every episode of this series";
 "player.skipRefused" = "Not possible at this point";
+"continue.remove" = "Remove from Continue watching";

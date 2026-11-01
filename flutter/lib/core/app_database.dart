@@ -146,6 +146,8 @@ class AppDatabase {
     ('v5-series-marks', _v5),
     // What the user chose while watching a series (speed, subtitle language), kept for its next episodes.
     ('v6-series-prefs', _v6),
+    // Titles the user removed from Continue watching: hidden while their newest resume point is not newer than the removal.
+    ('v7-continue-hidden', _v7),
   ];
 
   static const _v1 = '''
@@ -204,6 +206,13 @@ CREATE TRIGGER "__item_fts_au" AFTER UPDATE OF name ON item WHEN old.name IS NOT
   INSERT INTO item_fts(item_fts, rowid, name) VALUES('delete', old.id, old.name);
   INSERT INTO item_fts(rowid, name) VALUES (new.id, new.name);
 END;
+''';
+
+  static const _v7 = '''
+CREATE TABLE "continue_hidden" (
+  "accountId" INTEGER NOT NULL REFERENCES "account"("id") ON DELETE CASCADE,
+  "type" TEXT NOT NULL, "streamId" TEXT NOT NULL, "at" DATETIME NOT NULL,
+  PRIMARY KEY ("accountId","type","streamId"));
 ''';
 
   static const _v6 = '''

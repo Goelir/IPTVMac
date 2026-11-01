@@ -257,3 +257,4 @@
 "player.skipForget" = "Giriş ve jeneriği unut";
 "player.skipSaved" = "Bu dizinin tüm bölümleri için kaydedildi";
 "player.skipRefused" = "Bu noktada mümkün değil";
+"continue.remove" = "İzlemeye devam et listesinden kaldır";

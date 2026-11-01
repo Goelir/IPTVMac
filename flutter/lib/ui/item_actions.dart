@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 
 /// A long press on a movie: favorite and download. A movie from an M3U playlist plays on a tap and has no details sheet, so this is
 /// where its download button lives (Xtream movies also have one in the sheet).
-Future<void> showItemActions(BuildContext context, Item item) {
+/// The long-press menu of a title. [inContinue]: it was pressed on the Continue watching page or shelf, so it can be removed from there.
+Future<void> showItemActions(BuildContext context, Item item, {bool inContinue = false}) {
   final m = context.read<LibraryModel>();
   final d = context.read<DownloadsModel>();
   final messenger = ScaffoldMessenger.of(context);
@@ -36,6 +37,16 @@ Future<void> showItemActions(BuildContext context, Item item) {
             m.toggleFavorite(item);
           },
         ),
+        if (inContinue)
+          ListTile(
+            key: const Key('action-remove-continue'),
+            leading: const Icon(Icons.highlight_off),
+            title: Text(l.continueRemove),
+            onTap: () {
+              Navigator.pop(sheet);
+              m.removeFromContinue(item);
+            },
+          ),
         if (canDownload)
           ListTile(
             key: const Key('action-download'),

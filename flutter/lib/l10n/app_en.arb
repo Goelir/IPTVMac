@@ -417,5 +417,6 @@
   "playerMarkCredits": "Credits start here",
   "playerSkipForget": "Forget intro and credits",
   "playerSkipSaved": "Saved for every episode of this series",
-  "playerSkipRefused": "Not possible at this point"
+  "playerSkipRefused": "Not possible at this point",
+  "continueRemove": "Remove from Continue watching"
 }

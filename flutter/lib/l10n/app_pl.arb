@@ -258,5 +258,6 @@
   "playerMarkCredits": "Tu zaczynają się napisy końcowe",
   "playerSkipForget": "Zapomnij intro i napisy końcowe",
   "playerSkipSaved": "Zapisano dla wszystkich odcinków tego serialu",
-  "playerSkipRefused": "Nie można w tym miejscu"
+  "playerSkipRefused": "Nie można w tym miejscu",
+  "continueRemove": "Usuń z Kontynuuj oglądanie"
 }

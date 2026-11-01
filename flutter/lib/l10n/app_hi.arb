@@ -258,5 +258,6 @@
   "playerMarkCredits": "क्रेडिट यहाँ से शुरू",
   "playerSkipForget": "इंट्रो और क्रेडिट भूलें",
   "playerSkipSaved": "इस सीरीज़ के सभी एपिसोड के लिए सहेजा गया",
-  "playerSkipRefused": "इस जगह यह संभव नहीं है"
+  "playerSkipRefused": "इस जगह यह संभव नहीं है",
+  "continueRemove": "देखना जारी रखें से हटाएँ"
 }

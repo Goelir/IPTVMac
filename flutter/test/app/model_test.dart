@@ -197,6 +197,24 @@ void main() {
       expect(m.skipMarksOf(m.requestFor(Item(id: 1, accountId: 1, type: ItemType.live, name: 'News 24', streamId: '1', directURL: 'http://h/1.ts'))!), isNull);
     });
 
+    test('removing a title from Continue watching takes it off the page and the shelf', () async {
+      final h = await Harness.createPlain(withAccount: true, sync: true);
+      final m = h.model;
+      final aid = m.accounts.single.id!;
+      h.db.write((d) {
+        UserData.saveProgress(d, accountId: aid, type: ItemType.movie, streamId: '10', position: 600, duration: 6000);
+        d.execute("UPDATE history SET updated = datetime('now','-1 hour')");
+      });
+      m.setTab(ItemType.movie);
+      m.selectCategory('__hist');
+      m.reloadContinue();
+      final movie = m.continueMovies.single;
+      expect(m.continueInfo.length, 1);
+      m.removeFromContinue(movie.item);
+      expect(m.continueMovies, isEmpty);
+      expect(m.continueInfo, isEmpty);
+    });
+
     test('the Continue watching caption says the episode and the minutes left', () {
       final item = Item(id: 1, accountId: 1, type: ItemType.series, name: 'S', streamId: '1');
       String? cap(ContinueEntry e) => WatchProgress.caption(e, episode: (s, n) => 'S$s E$n', left: (t) => '$t left', minutes: (n) => '$n min');

@@ -257,3 +257,4 @@
 "player.skipForget" = "Intro és stáblista elfelejtése";
 "player.skipSaved" = "Mentve a sorozat összes epizódjához";
 "player.skipRefused" = "Ezen a ponton nem lehetséges";
+"continue.remove" = "Eltávolítás a Folytatás listáról";

@@ -258,5 +258,6 @@
   "playerMarkCredits": "Надписите започват тук",
   "playerSkipForget": "Забрави началото и надписите",
   "playerSkipSaved": "Запазено за всички епизоди на сериала",
-  "playerSkipRefused": "Невъзможно в този момент"
+  "playerSkipRefused": "Невъзможно в този момент",
+  "continueRemove": "Премахни от Продължи гледането"
 }

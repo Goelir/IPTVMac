@@ -55,10 +55,20 @@ abstract final class UserData {
   static void clearHistory(Database db) => db.execute('DELETE FROM history');
   static void clearFavorites(Database db) => db.execute('DELETE FROM favorite');
 
+  /// "Remove from Continue watching": the title leaves that list until it is played again. Its resume points and the watched marks of its
+  /// episodes stay (it reappears if it is watched again, because that saves a newer position).
+  static void hideFromContinue(Database db, {required int accountId, required ItemType type, required String streamId}) {
+    db.execute('''
+      INSERT INTO continue_hidden (accountId, type, streamId, at) VALUES (?,?,?,datetime('now'))
+      ON CONFLICT(accountId, type, streamId) DO UPDATE SET at=excluded.at
+      ''', [accountId, type.name, streamId]);
+  }
+
   static List<Item> continueWatching(Database db, {int? accountId, required ItemType type}) {
     var items = Item.fromRows(db.select('''
       SELECT item.* FROM item JOIN history h ON h.accountId=item.accountId AND h.type=item.type AND h.streamId=item.streamId
       WHERE (? IS NULL OR item.accountId=?) AND item.type=? AND (h.duration <= 0 OR h.position / h.duration <= 0.95)
+        AND NOT EXISTS (SELECT 1 FROM continue_hidden x WHERE x.accountId=item.accountId AND x.type=item.type AND x.streamId=item.streamId AND x.at >= h.updated)
       ORDER BY h.updated DESC
       ''', [accountId, accountId, type.name]));
     if (type == ItemType.series) {
@@ -69,7 +79,9 @@ abstract final class UserData {
             JOIN episode e ON e.accountId = h.accountId AND h.streamId = 'ep:' || e.streamId
             WHERE (? IS NULL OR h.accountId = ?) AND h.type = 'series' AND (h.duration <= 0 OR h.position / h.duration <= 0.95)
             GROUP BY e.accountId, e.seriesId) x ON x.aid = item.accountId AND x.sid = item.streamId
-        WHERE item.type = 'series' ORDER BY x.u DESC
+        WHERE item.type = 'series'
+          AND NOT EXISTS (SELECT 1 FROM continue_hidden c WHERE c.accountId=item.accountId AND c.type='series' AND c.streamId=item.streamId AND c.at >= x.u)
+        ORDER BY x.u DESC
         ''', [accountId, accountId]));
       final have = {for (final i in items) i.id};
       items = [...viaEpisodes.where((i) => !have.contains(i.id)), ...items];

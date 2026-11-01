@@ -162,6 +162,16 @@ public final class AppDatabase {
                 t.primaryKey(["accountId", "seriesId"])
             }
         }
+        // Titles the user removed from Continue watching: hidden while their newest resume point is not newer than the removal.
+        m.registerMigration("v7-continue-hidden") { db in
+            try db.create(table: "continue_hidden") { t in
+                t.column("accountId", .integer).notNull().references("account", onDelete: .cascade)
+                t.column("type", .text).notNull()
+                t.column("streamId", .text).notNull()
+                t.column("at", .datetime).notNull()
+                t.primaryKey(["accountId", "type", "streamId"])
+            }
+        }
         return m
     }
 }

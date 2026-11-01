@@ -314,6 +314,19 @@ open class LibraryModel {
                                   start: item.type == .live ? 0 : progress(accountId: item.accountId, type: item.type, streamId: item.streamId)))
     }
 
+    /// "Remove from Continue watching" (a movie, a series): it leaves the list and the shelf until it is watched again.
+    public func removeFromContinue(_ item: Item) {
+        let aid = item.accountId, type = item.type, sid = item.streamId
+        Task {   // async: the writer may be busy with a catalog sync
+            _ = try? await db.dbQueue.write { try UserData.hideFromContinue($0, accountId: aid, type: type, streamId: sid) }
+            if selectedCategory == "__hist" { scheduleSearch() }
+            continueChanged += 1
+        }
+    }
+
+    /// Bumped when the list of titles to continue changed (the platform reloads its shelf).
+    public private(set) var continueChanged = 0
+
     /// Continue watching: a series resumes the episode that was left, at its position (and its next episodes follow); a movie plays as usual.
     /// Without the episode list in the cache the series opens instead.
     public func resume(_ entry: ContinueEntry) {

@@ -32,7 +32,7 @@ struct RootView: View {
             model.searchText = ""
             if let t = ui.section.itemType, t != model.tab { model.tab = t }
         }
-        .task(id: ContinueKey(all: model.allPlaylists, account: model.account?.id, syncing: model.syncing, idle: model.playing == nil, count: model.accounts.count)) {
+        .task(id: ContinueKey(all: model.allPlaylists, account: model.account?.id, syncing: model.syncing, idle: model.playing == nil, count: model.accounts.count, removed: model.continueChanged)) {
             await ui.reloadContinue(model)
         }
         .task {
@@ -42,7 +42,7 @@ struct RootView: View {
         }
     }
 
-    private struct ContinueKey: Hashable { var all: Bool; var account: Int64?; var syncing: Bool; var idle: Bool; var count: Int }
+    private struct ContinueKey: Hashable { var all: Bool; var account: Int64?; var syncing: Bool; var idle: Bool; var count: Int; var removed: Int }
 }
 
 // MARK: iPhone

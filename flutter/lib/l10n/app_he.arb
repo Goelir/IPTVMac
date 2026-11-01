@@ -258,5 +258,6 @@
   "playerMarkCredits": "הקרדיטים מתחילים כאן",
   "playerSkipForget": "שכח פתיח וקרדיטים",
   "playerSkipSaved": "נשמר לכל הפרקים של הסדרה",
-  "playerSkipRefused": "לא אפשרי ברגע הזה"
+  "playerSkipRefused": "לא אפשרי ברגע הזה",
+  "continueRemove": "הסר מהמשך צפייה"
 }

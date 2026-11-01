@@ -257,3 +257,4 @@
 "player.skipForget" = "Xóa phần mở đầu và phần cuối";
 "player.skipSaved" = "Đã lưu cho mọi tập của phim này";
 "player.skipRefused" = "Không thể ở thời điểm này";
+"continue.remove" = "Xóa khỏi Xem tiếp";

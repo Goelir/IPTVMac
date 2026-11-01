@@ -258,5 +258,6 @@
   "playerMarkCredits": "I titoli di coda iniziano qui",
   "playerSkipForget": "Dimentica intro e titoli di coda",
   "playerSkipSaved": "Salvato per tutti gli episodi di questa serie",
-  "playerSkipRefused": "Non possibile in questo punto"
+  "playerSkipRefused": "Non possibile in questo punto",
+  "continueRemove": "Rimuovi da Continua a guardare"
 }

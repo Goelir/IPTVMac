@@ -257,3 +257,4 @@
 "player.skipForget" = "نسيان المقدمة وشارة النهاية";
 "player.skipSaved" = "تم الحفظ لجميع حلقات هذا المسلسل";
 "player.skipRefused" = "غير ممكن في هذه اللحظة";
+"continue.remove" = "إزالة من متابعة المشاهدة";

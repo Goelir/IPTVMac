@@ -257,3 +257,4 @@
 "player.skipForget" = "Oublier l'intro et le générique";
 "player.skipSaved" = "Enregistré pour tous les épisodes de cette série";
 "player.skipRefused" = "Impossible à cet endroit";
+"continue.remove" = "Retirer de Reprendre la lecture";

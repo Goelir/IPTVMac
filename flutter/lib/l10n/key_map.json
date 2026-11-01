@@ -257,5 +257,6 @@
   "playerMarkCredits": "player.markCredits",
   "playerSkipForget": "player.skipForget",
   "playerSkipSaved": "player.skipSaved",
-  "playerSkipRefused": "player.skipRefused"
+  "playerSkipRefused": "player.skipRefused",
+  "continueRemove": "continue.remove"
 }

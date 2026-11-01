@@ -258,5 +258,6 @@
   "playerMarkCredits": "Itt kezdődik a stáblista",
   "playerSkipForget": "Intro és stáblista elfelejtése",
   "playerSkipSaved": "Mentve a sorozat összes epizódjához",
-  "playerSkipRefused": "Ezen a ponton nem lehetséges"
+  "playerSkipRefused": "Ezen a ponton nem lehetséges",
+  "continueRemove": "Eltávolítás a Folytatás listáról"
 }

@@ -257,3 +257,4 @@
 "player.skipForget" = "イントロとクレジットを削除";
 "player.skipSaved" = "このシリーズの全エピソードに保存しました";
 "player.skipRefused" = "この位置では設定できません";
+"continue.remove" = "「続きを見る」から削除";

@@ -257,3 +257,4 @@
 "player.skipForget" = "ইন্ট্রো ও ক্রেডিট ভুলে যান";
 "player.skipSaved" = "এই সিরিজের সব পর্বের জন্য সংরক্ষিত";
 "player.skipRefused" = "এই মুহূর্তে সম্ভব নয়";
+"continue.remove" = "দেখা চালিয়ে যাওয়া থেকে সরান";

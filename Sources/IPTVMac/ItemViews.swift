@@ -112,6 +112,7 @@ struct PosterCell: View {
             if model.hasInfo(item) { Button(L("info.details")) { model.openInfo = item } }
             Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) }
             if item.type == .movie { Button(L("downloads.add")) { model.download(item) } }
+            if entry != nil { Divider(); Button(L("continue.remove"), role: .destructive) { model.removeFromContinue(item) } }
         }
     }
 

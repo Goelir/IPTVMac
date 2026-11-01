@@ -258,5 +258,6 @@
   "playerMarkCredits": "ここからクレジット",
   "playerSkipForget": "イントロとクレジットを削除",
   "playerSkipSaved": "このシリーズの全エピソードに保存しました",
-  "playerSkipRefused": "この位置では設定できません"
+  "playerSkipRefused": "この位置では設定できません",
+  "continueRemove": "「続きを見る」から削除"
 }

@@ -360,6 +360,17 @@ class LibraryModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// "Remove from Continue watching" (a movie, a series): it leaves the page and the shelf until it is watched again.
+  void removeFromContinue(Item item) {
+    try {
+      db.write((d) => UserData.hideFromContinue(d, accountId: item.accountId, type: item.type, streamId: item.streamId));
+    } catch (_) {
+      return; // the database is busy: the entry stays, the user can try again
+    }
+    reloadContinue();
+    if (selectedCategory == '__hist') _runSearch();
+  }
+
   /// While the Continue watching category is shown: where each title was left (by item id).
   Map<int, ContinueEntry> continueInfo = const {};
 

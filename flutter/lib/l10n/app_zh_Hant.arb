@@ -258,5 +258,6 @@
   "playerMarkCredits": "片尾從這裡開始",
   "playerSkipForget": "清除片頭與片尾",
   "playerSkipSaved": "已為此影集所有集數儲存",
-  "playerSkipRefused": "此處無法設定"
+  "playerSkipRefused": "此處無法設定",
+  "continueRemove": "從「繼續觀看」中移除"
 }

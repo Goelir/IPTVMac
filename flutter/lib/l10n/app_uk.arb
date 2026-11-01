@@ -258,5 +258,6 @@
   "playerMarkCredits": "Титри починаються тут",
   "playerSkipForget": "Забути заставку і титри",
   "playerSkipSaved": "Збережено для всіх серій цього серіалу",
-  "playerSkipRefused": "У цьому місці неможливо"
+  "playerSkipRefused": "У цьому місці неможливо",
+  "continueRemove": "Прибрати з «Продовжити перегляд»"
 }

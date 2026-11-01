@@ -257,3 +257,4 @@
 "player.skipForget" = "Забыть заставку и титры";
 "player.skipSaved" = "Сохранено для всех серий этого сериала";
 "player.skipRefused" = "В этом месте нельзя";
+"continue.remove" = "Убрать из «Продолжить просмотр»";

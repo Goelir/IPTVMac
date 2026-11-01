@@ -257,3 +257,4 @@
 "player.skipForget" = "इंट्रो और क्रेडिट भूलें";
 "player.skipSaved" = "इस सीरीज़ के सभी एपिसोड के लिए सहेजा गया";
 "player.skipRefused" = "इस जगह यह संभव नहीं है";
+"continue.remove" = "देखना जारी रखें से हटाएँ";

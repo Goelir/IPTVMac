@@ -258,5 +258,6 @@
   "playerMarkCredits": "เครดิตเริ่มตรงนี้",
   "playerSkipForget": "ลืมอินโทรและเครดิต",
   "playerSkipSaved": "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว",
-  "playerSkipRefused": "ทำไม่ได้ตรงจุดนี้"
+  "playerSkipRefused": "ทำไม่ได้ตรงจุดนี้",
+  "continueRemove": "ลบออกจากดูต่อ"
 }

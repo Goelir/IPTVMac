@@ -230,7 +230,7 @@ class PosterCell extends StatelessWidget {
         autofocus: isTelevision && autofocus,
         borderRadius: BorderRadius.circular(10),
         onTap: () => entry != null ? resumeEntry(context, entry!) : openItem(context, item),
-        onLongPress: () => item.type == ItemType.movie ? showItemActions(context, item) : m.toggleFavorite(item),
+        onLongPress: () => entry != null || item.type == ItemType.movie ? showItemActions(context, item, inContinue: entry != null) : m.toggleFavorite(item),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Stack(children: [
             PosterImage(name: item.name, url: artUri(item.icon)),
@@ -344,6 +344,7 @@ class ContinueCard extends StatelessWidget {
       autofocus: isTelevision && autofocus,
       borderRadius: BorderRadius.circular(10),
       onTap: () => resumeEntry(context, entry),
+      onLongPress: () => showItemActions(context, item, inContinue: true),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Stack(children: [
           PosterImage(name: item.name, url: artUri(item.icon)),

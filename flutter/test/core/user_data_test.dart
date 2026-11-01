@@ -105,6 +105,35 @@ void main() {
     expect(db.read((d) => UserData.continueWatching(d, accountId: a, type: ItemType.movie).map((i) => i.name)), ['New', 'Old']);
   });
 
+  test('a title removed from Continue watching stays out until it is watched again', () {
+    final (db, a) = makeDB();
+    addItem(db, a, 'Movie', type: ItemType.movie, sid: '1');
+    addItem(db, a, 'Other', type: ItemType.movie, sid: '2');
+    addItem(db, a, 'Show', type: ItemType.series, sid: '20');
+    db.write((d) => Episode(accountId: a, seriesId: '20', season: 1, number: 1, title: 'Pilot', streamId: '201').insert(d));
+    List<String> names(ItemType t) => db.read((d) => UserData.continueWatching(d, accountId: a, type: t).map((i) => i.name).toList());
+    db.write((d) {
+      UserData.saveProgress(d, accountId: a, type: ItemType.movie, streamId: '1', position: 10, duration: 100);
+      UserData.saveProgress(d, accountId: a, type: ItemType.movie, streamId: '2', position: 10, duration: 100);
+      UserData.saveProgress(d, accountId: a, type: ItemType.series, streamId: 'ep:201', position: 10, duration: 100);
+      d.execute("UPDATE history SET updated = datetime('now','-1 hour')");
+    });
+    expect(names(ItemType.series), ['Show']);
+    db.write((d) {
+      UserData.hideFromContinue(d, accountId: a, type: ItemType.movie, streamId: '1');
+      UserData.hideFromContinue(d, accountId: a, type: ItemType.series, streamId: '20');
+    });
+    expect(names(ItemType.movie), ['Other']);
+    expect(names(ItemType.series), isEmpty);
+    expect(count(db, 'SELECT COUNT(*) FROM history'), 3); // nothing is deleted: only hidden
+    // watching it again saves a newer resume point, so it comes back
+    db.write((d) {
+      UserData.saveProgress(d, accountId: a, type: ItemType.movie, streamId: '1', position: 20, duration: 100);
+      d.execute("UPDATE history SET updated = datetime('now','+1 hour') WHERE streamId = '1'");
+    });
+    expect(names(ItemType.movie), ['Movie', 'Other']);
+  });
+
   test('saved playlist choice is restored and falls back safely', () {
     final a = Account(id: 1, name: 'A', kind: AccountKind.m3u), b = Account(id: 2, name: 'B', kind: AccountKind.m3u);
     expect(Account.restore('all', [a, b]), (all: true, account: a));
