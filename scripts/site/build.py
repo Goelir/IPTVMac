@@ -20,17 +20,17 @@ NOTARIZED_FROM = "0.9.1"   # first release signed with a Developer ID and notari
 BASE = "https://goelir.github.io/IPTVMac/"
 REPO = "https://github.com/Goelir/IPTVMac"
 DOWNLOAD = REPO + "/releases/latest"
-ANDROID_DL = REPO + "/releases/download/android-v1.0.5"   # direct files of that release (the sed that bumps android-vX.Y.Z updates this too)
+ANDROID_DL = REPO + "/releases/download/android-v1.0.6"   # direct files of that release (the sed that bumps android-vX.Y.Z updates this too)
 AND_VER = ANDROID_DL.rsplit("android-v", 1)[1]
 ANDROID_SIZES = {"arm64-v8a": 41, "armeabi-v7a": 38, "x86_64": 46, "tv-32bit": 38, "tv-64bit": 41}   # MB per file of that release; update with the release bump
 MAC_SIZE = 16   # MB of IPTVMac.dmg
-WIN_DL = REPO + "/releases/download/windows-v1.0.2"   # the Windows release (made by hand from the artifacts of .github/workflows/windows.yml)
+WIN_DL = REPO + "/releases/download/windows-v1.0.3"   # the Windows release (made by hand from the artifacts of .github/workflows/windows.yml)
 WIN_VER = WIN_DL.rsplit("windows-v", 1)[1]
 WIN_SIZES = {"setup": 27, "portable": 39}   # MB of IPTVMac-Windows-<ver>-setup.exe and -portable.zip
 def win_file(kind): return f"{WIN_DL}/IPTVMac-Windows-{WIN_VER}-{kind}.{'exe' if kind == 'setup' else 'zip'}"
 WIN_REL = REPO + "/releases/tag/windows-v" + WIN_VER
 def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
-ANDROID_APK = REPO + "/releases/tag/android-v1.0.5"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
+ANDROID_APK = REPO + "/releases/tag/android-v1.0.6"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
 YT_INSTALL = "https://youtu.be/TgaoFEEMg48"
@@ -237,7 +237,7 @@ HOME = {
    ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
-   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. Android TV, Google TV and Fire TV: the same release has a 32-bit and a 64-bit file for TVs (remote-control friendly, no downloads on TV, first version, installed directly with the Downloader app or from a USB stick; there is no store listing yet). iPhone and iPad: an app has been submitted to the App Store and is waiting for review. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
+   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. Android TV, Google TV and Fire TV: the same release has a 32-bit and a 64-bit file for TVs (remote-control friendly, no downloads on TV, first version, installed directly with the Downloader app or from a USB stick; there is no store listing yet). iPhone and iPad: an app has been submitted to the App Store and is waiting for review. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
    ("Is IPTVMac free?", "Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking."),
    ("Why does macOS block the app, and how do I open it?", f"Versions before {NOTARIZED_FROM} are not notarized by Apple, so macOS blocks a copy that was downloaded in a browser. From version {NOTARIZED_FROM}, releases are signed with an Apple Developer ID and notarized, and the DMG opens with a normal double-click. To fix an older copy, install the latest release (the DMG, or the one-line command above, which works for every version), or open System Settings, Privacy and Security, and choose Open Anyway."),
    ("Does IPTVMac have Picture in Picture?", "Yes. A floating window stays on top of other apps and across Spaces while you browse for something else."),
@@ -322,7 +322,7 @@ HOME = {
    ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל ולא מארח ערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו. אם אין לכם, הפרויקט העצמאי בקוד פתוח iptv-org מפרסם רשימות חינמיות של ערוצים זמינים לציבור; הקישור בעמוד."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
-   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.5); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. Android TV, ‏Google TV ו-Fire TV: באותה גרסה יש קובץ של 32 ביט וקובץ של 64 ביט לטלוויזיות (מותאם לשלט, בלי הורדות בטלוויזיה, גרסה ראשונה, מתקינים ישירות עם האפליקציה Downloader או מכונן USB; עדיין אין רישום בחנות). iPhone ו-iPad: אפליקציה הוגשה ל-App Store וממתינה לבדיקה. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
+   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. Android TV, ‏Google TV ו-Fire TV: באותה גרסה יש קובץ של 32 ביט וקובץ של 64 ביט לטלוויזיות (מותאם לשלט, בלי הורדות בטלוויזיה, גרסה ראשונה, מתקינים ישירות עם האפליקציה Downloader או מכונן USB; עדיין אין רישום בחנות). iPhone ו-iPad: אפליקציה הוגשה ל-App Store וממתינה לבדיקה. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
    ("האם IPTVMac חינמי?", "כן. הוא חינמי ובקוד פתוח ברישיון GPL-3.0, בלי פרסומות ובלי מעקב."),
    ("למה macOS חוסמת את האפליקציה, ואיך פותחים אותה?", f"גרסאות לפני {NOTARIZED_FROM} לא עברו notarization של Apple, ולכן macOS חוסמת עותק שהורד בדפדפן. מגרסה {NOTARIZED_FROM} ואילך הגרסאות חתומות ב-Apple Developer ID ועברו notarization, וה-DMG נפתח בלחיצה כפולה רגילה. כדי לתקן עותק ישן, מתקינים את הגרסה האחרונה (מה-DMG, או בפקודת ההתקנה שלמעלה, שעובדת בכל הגרסאות), או פותחים הגדרות מערכת, פרטיות ואבטחה, ובוחרים Open Anyway."),
    ("האם יש תמונה בתוך תמונה?", "כן. חלון צף נשאר מעל אפליקציות אחרות ובכל שולחן עבודה בזמן שמחפשים משהו אחר."),
@@ -490,7 +490,7 @@ DEVICES = {
        "Download the DMG", "Install on Mac"),
   win=("Windows", "Windows 10 or 11, 64-bit. Written in Dart with Flutter, with a small C++ shell. Light on memory and processor.", ["Download the installer. It installs for your user only, with no administrator rights.", "If Windows SmartScreen warns (the app is not signed with a paid certificate yet), choose More info, then Run anyway.", "Add your source. Space pauses, the arrows seek, F fills the screen."],
        "Download the installer"),
-  phone=("Android phone and tablet", "Android 8 or later. Written in Dart with Flutter, with a Kotlin layer for the Android system features.", ["Download the arm64-v8a file (it suits almost every phone).", "Open it and allow installs from your browser or Files app.", "Add your source. A banner tells you when a new version is out."],
+  phone=("Android phone and tablet", "Android 8 or later. Written in Dart with Flutter, with a Kotlin layer for the Android system features.", ["Download the arm64-v8a file (it suits almost every phone).", "Open it and allow installs from your browser or Files app.", "Add your source. A banner tells you when a new version is out; Update now installs it from the app."],
          "Download the APK"),
   tv=("Android TV, Google TV, Fire TV", "First TV version: remote control, no touch screen. Same Flutter and Kotlin code as the phone, with a layout built for the remote.",
       ["Install the Downloader app on the TV and open it.", "Type the address of the file (below). Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one. A USB stick works too.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up, hold Back to close."],
@@ -505,7 +505,7 @@ DEVICES = {
        "הורדת ה-DMG", "התקנה ב-Mac"),
   win=("Windows", "Windows 10 או 11, ‏64 ביט. כתובה ב-Dart עם Flutter, עם מעטפת C++ קטנה. קלה בזיכרון ובמעבד.", ["מורידים את המתקין. הוא מתקין למשתמש שלכם בלבד, בלי הרשאות מנהל.", "אם Windows SmartScreen מזהיר (האפליקציה עוד לא חתומה בתעודה בתשלום), בוחרים More info ואז Run anyway.", "מוסיפים מקור. רווח עוצר, החיצים מדלגים, F ממלא את המסך."],
        "הורדת המתקין"),
-  phone=("טלפון וטאבלט של Android", "Android 8 ומעלה. כתובה ב-Dart עם Flutter, ועם שכבת Kotlin לתכונות המערכת של Android.", ["מורידים את הקובץ arm64-v8a (מתאים לכמעט כל טלפון).", "פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים.", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה."],
+  phone=("טלפון וטאבלט של Android", "Android 8 ומעלה. כתובה ב-Dart עם Flutter, ועם שכבת Kotlin לתכונות המערכת של Android.", ["מורידים את הקובץ arm64-v8a (מתאים לכמעט כל טלפון).", "פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים.", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה; \"עדכן עכשיו\" מתקין אותה מתוך האפליקציה."],
          "הורדת ה-APK"),
   tv=("Android TV, Google TV, Fire TV", "גרסת טלוויזיה ראשונה: שלט, בלי מסך מגע. אותו קוד Flutter ו-Kotlin כמו בטלפון, עם פריסה שנבנתה לשלט.",
       ["מתקינים את האפליקציה Downloader בטלוויזיה ופותחים אותה.", "מקלידים את כתובת הקובץ (למטה). מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט. גם כונן USB עובד.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה, לחיצה ארוכה על Back סוגרת."],
@@ -524,9 +524,9 @@ def devices_section(c, he, up):
     mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
                f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#install">{e(d["mac"][4])}</a>')
     wincard = card(d["win"][0], d["win"][1], d["win"][2], "windows-welcome.webp", d["alt_win"], f'<a class="btn" href="{win_file("setup")}" rel="noopener">{ICON_DL}{e(d["win"][3])}</a>', "winc")
-    phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.5-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
+    phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.6-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
     tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
-              f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.5-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.5-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
+              f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.6-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.6-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
     return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
             f'<div class="dev-grid">{mac}{wincard}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
 

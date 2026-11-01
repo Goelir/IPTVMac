@@ -26,7 +26,7 @@ DOWNLOAD = {
            steps=["Open IPTVMac.dmg and drag the IPTVMac icon onto Applications.", "Open the app and add your Xtream Codes login or M3U link.", "That is all: the app updates itself."],
            note="Signed with an Apple Developer ID and notarized by Apple, so it opens with a normal double-click. The one-line command works for every version and checks the signature and SHA-256 for you."),
   android=dict(h="Android phone and tablet", req="Android 8 or later.", btn="Download the APK (arm64-v8a)", other="Other files:",
-               steps=["Download the file on the phone and open it.", "Android asks to allow installs from your browser or Files app: allow it. If Play Protect warns about an app from outside the Play Store, choose Install anyway.", "Add your source. A banner tells you when a new version is out; install the new file over the old one and your data stays."],
+               steps=["Download the file on the phone and open it.", "Android asks to allow installs from your browser or Files app: allow it. If Play Protect warns about an app from outside the Play Store, choose Install anyway.", "Add your source. A banner tells you when a new version is out: tap Update now and the app downloads and installs it (Android asks you to confirm), and your data stays."],
                note="Not on the Play Store yet, so the install is a direct file. It is signed with the project's own key."),
   tv=dict(h="Android TV, Google TV, Fire TV", req="Android 8 or later. Works with the remote control; no touch screen needed.", btn32="Download 32-bit", btn64="Download 64-bit",
           steps=["On the TV, install the Downloader app and open it.", "Type the address of the file, or copy the file to a USB stick and open it with a file manager. Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up one level, and holding Back closes the app."],
@@ -56,7 +56,7 @@ DOWNLOAD = {
            steps=["פותחים את IPTVMac.dmg וגוררים את סמל IPTVMac אל Applications.", "פותחים את האפליקציה ומוסיפים כניסת Xtream Codes או קישור M3U.", "זהו: האפליקציה מתעדכנת לבד."],
            note="חתום ב-Apple Developer ID ומאושר על ידי Apple (notarized), ולכן נפתח בלחיצה כפולה רגילה. הפקודה בשורה אחת עובדת לכל גרסה ובודקת בשבילך את החתימה ואת ה-SHA-256."),
   android=dict(h="טלפון וטאבלט של Android", req="Android 8 ומעלה.", btn="הורדת ה-APK (‏arm64-v8a)", other="קבצים אחרים:",
-               steps=["מורידים את הקובץ בטלפון ופותחים אותו.", "Android שואל אם לאשר התקנה מהדפדפן או מאפליקציית הקבצים: מאשרים. אם Play Protect מזהיר על אפליקציה מחוץ ל-Play Store, בוחרים \"התקן בכל זאת\".", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה; מתקינים את הקובץ החדש מעל הישן והנתונים נשארים."],
+               steps=["מורידים את הקובץ בטלפון ופותחים אותו.", "Android שואל אם לאשר התקנה מהדפדפן או מאפליקציית הקבצים: מאשרים. אם Play Protect מזהיר על אפליקציה מחוץ ל-Play Store, בוחרים \"התקן בכל זאת\".", "מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה: לוחצים \"עדכן עכשיו\" והאפליקציה מורידה ומתקינה אותה (Android מבקש אישור), והנתונים נשארים."],
                note="עוד לא ב-Play Store, ולכן ההתקנה היא מקובץ ישיר. הוא חתום במפתח של הפרויקט עצמו."),
   tv=dict(h="Android TV, ‏Google TV, ‏Fire TV", req="Android 8 ומעלה. עובד עם השלט; אין צורך במסך מגע.", btn32="הורדת 32 ביט", btn64="הורדת 64 ביט",
           steps=["בטלוויזיה מתקינים את האפליקציה Downloader ופותחים אותה.", "מקלידים את כתובת הקובץ, או מעתיקים את הקובץ לכונן USB ופותחים אותו במנהל קבצים. מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה רמה אחת, ולחיצה ארוכה על Back סוגרת את האפליקציה."],
@@ -120,7 +120,7 @@ FEATURES = {
      ("Light and dark", "Follows your system or your choice.", ()),
      ("No account, no ads, no tracking", "Nothing is sent to the developer. The app talks only to the servers you add, and to GitHub to check for updates. The source code is public.", ()),
      ("Written for each platform", "Swift and SwiftUI on Mac and iPhone; Dart with Flutter on Windows, Android and Android TV, with a small C++ shell on Windows and a Kotlin layer on Android. The video on every one is decoded by the same compiled libmpv engine.", ()),
-     ("Updates", "The Mac app updates itself, verifying each update with a signature. The Windows and Android apps show a banner when a new version is out and you install it yourself.", ("mac", "windows", "android")),
+     ("Updates", "The Mac app and the Android phone app update from inside the app (the Mac verifies each update with a signature; Android asks you to confirm and only accepts a file signed with the same key). The Windows and Android TV apps show a banner when a new version is out and you install it yourself.", ("mac", "windows", "android")),
    ]),
   ],
   cta_h="Try it", cta_p="Free, open source and without an account.", cta_btn="Go to downloads",
@@ -162,7 +162,7 @@ FEATURES = {
      ("בהיר וכהה", "לפי המערכת או לפי הבחירה שלכם.", ()),
      ("בלי חשבון, בלי פרסומות, בלי מעקב", "שום דבר לא נשלח למפתח. האפליקציה פונה רק לשרתים שהוספתם, ול-GitHub כדי לבדוק עדכונים. קוד המקור פומבי.", ()),
      ("נכתב לכל פלטפורמה", "Swift ו-SwiftUI ב-Mac וב-iPhone; Dart עם Flutter ב-Windows, ב-Android וב-Android TV, עם מעטפת C++ קטנה ב-Windows ושכבת Kotlin ב-Android. את הווידאו בכולן מפענח אותו מנוע libmpv מקומפל.", ()),
-     ("עדכונים", "אפליקציית ה-Mac מתעדכנת לבד ומאמתת כל עדכון בחתימה. אפליקציות ה-Windows וה-Android מציגות באנר כשיוצאת גרסה חדשה, ומתקינים אותה בעצמכם.", ("mac", "windows", "android")),
+     ("עדכונים", "אפליקציית ה-Mac ואפליקציית ה-Android לטלפון מתעדכנות מתוך האפליקציה (ה-Mac מאמת כל עדכון בחתימה; Android מבקש אישור ומקבל רק קובץ שחתום באותו מפתח). אפליקציות ה-Windows וה-Android TV מציגות באנר כשיוצאת גרסה חדשה, ומתקינים אותה בעצמכם.", ("mac", "windows", "android")),
    ]),
   ],
   cta_h="מנסים", cta_p="חינמי, קוד פתוח ובלי חשבון.", cta_btn="לדף ההורדות",
@@ -172,6 +172,25 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-01", "mac", "0.9.6", "v0.9.6", {
+   "en": ["**Remove a title from Continue watching:** right-click it and choose \"Remove from Continue watching\". Nothing is deleted; it comes back if you watch it again.",
+          "**Episode lists show what you watched:** a check mark, a bar with \"N min left\" on the one you stopped halfway, and \"Up next\" on the following episode.",
+          "**Speed and subtitles are kept per series:** the next episode starts with the speed and the subtitle language you chose."],
+   "he": ["**הסרת כותר מ\"המשך לצפות\":** קליק ימני ובחירה ב\"הסר מהמשך צפייה\". שום דבר לא נמחק; הכותר חוזר אם תצפו בו שוב.",
+          "**רשימת הפרקים מראה מה ראיתם:** וי, פס עם \"N min left\" על הפרק שעצרתם באמצעו, ו\"הבא בתור\" על הפרק שאחריו.",
+          "**מהירות וכתוביות נשמרות לכל סדרה:** הפרק הבא מתחיל במהירות ובשפת הכתוביות שבחרתם."]}),
+ ("2026-11-01", "windows", "1.0.3", "windows-v1.0.3", {
+   "en": ["**Remove a title from Continue watching:** right-click it and choose \"Remove from Continue watching\". It comes back if you watch it again.",
+          "**Speed and subtitles are kept per series**, a small speed menu over the speed button, and minutes left on the episode list."],
+   "he": ["**הסרת כותר מ\"המשך לצפות\":** קליק ימני ובחירה ב\"הסר מהמשך צפייה\". הכותר חוזר אם תצפו בו שוב.",
+          "**מהירות וכתוביות נשמרות לכל סדרה**, תפריט מהירות קטן מעל כפתור המהירות, ודקות שנשארו ברשימת הפרקים."]}),
+ ("2026-11-01", "android", "1.0.6", "android-v1.0.6", {
+   "en": ["**The app updates itself (phones and tablets).** \"Update now\" downloads the right file for your phone and starts the Android installer, which asks you to confirm. The next version is the first to update this way; TVs still use the release page.",
+          "**Remove a title from Continue watching:** long-press it and choose \"Remove from Continue watching\". It comes back if you watch it again.",
+          "**Speed and subtitles are kept per series**, a small speed menu instead of a tall list, and minutes left on the episode list."],
+   "he": ["**האפליקציה מתעדכנת מתוך עצמה (טלפונים וטאבלטים).** \"עדכן עכשיו\" מוריד את הקובץ המתאים לטלפון ומפעיל את מתקין Android, שמבקש אישור. הגרסה הבאה היא הראשונה שמתעדכנת כך; בטלוויזיות עדיין משתמשים בעמוד הגרסה.",
+          "**הסרת כותר מ\"המשך לצפות\":** לחיצה ארוכה ובחירה ב\"הסר מהמשך צפייה\". הכותר חוזר אם תצפו בו שוב.",
+          "**מהירות וכתוביות נשמרות לכל סדרה**, תפריט מהירות קטן במקום רשימה גבוהה, ודקות שנשארו ברשימת הפרקים."]}),
  ("2026-11-01", "mac", "0.9.5", "v0.9.5", {
    "en": ["**Continue watching shows where you are in a series:** the episode and the minutes left, for example \"S2 E5 · 23 min left\", with a progress bar, and one click resumes that episode at the minute you stopped.",
           "**Skip intro and skip credits.** You mark the intro and the credits once per series, from the new \"Intro and credits\" menu in the player; every episode of the series then shows the buttons. The S key takes the button."],
