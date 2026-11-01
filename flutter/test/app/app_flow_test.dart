@@ -289,6 +289,7 @@ void main() {
     host!.closePlayer();
     await go(tester);
     expect(find.text('Continue S1 E1'), findsOneWidget);
+    expect(find.text('20 min left'), findsOneWidget); // the episode that was left halfway says how much is left (1500 of 2700 s)
   });
 
   testWidgets('live channel: zapping stays in the list the channel came from', (tester) async {

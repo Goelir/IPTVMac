@@ -317,7 +317,13 @@ struct SeriesScreen: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(e.title).foregroundStyle(.primary).lineLimit(2).multilineTextAlignment(.leading)
                     if isNext { Text(L("next.title")).font(.caption.weight(.semibold)).foregroundStyle(Brand.accentText) }
-                    if let p, !p.isWatched, p.fraction > 0.01 { ProgressBar(value: p.fraction, height: 3, track: Color.primary.opacity(0.12)).frame(maxWidth: 140) }
+                    if let p, !p.isWatched, p.fraction > 0.01 {
+                        HStack(spacing: 8) {
+                            ProgressBar(value: p.fraction, height: 3, track: Color.primary.opacity(0.12)).frame(maxWidth: 140)
+                            Text(String(format: L("downloads.eta"), String(format: L("unit.minutesShort"), max(1, Int(((p.duration - p.position) / 60).rounded(.up))))))
+                                .font(.caption).foregroundStyle(.secondary).monospacedDigit().lineLimit(1)
+                        }
+                    }
                 }
                 Spacer(minLength: 8)
                 if p?.isWatched == true { Image(systemName: "checkmark.circle.fill").foregroundStyle(.secondary).accessibilityLabel(L("series.watched")) }

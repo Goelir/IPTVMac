@@ -1,3 +1,4 @@
+import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/ui/bidi.dart';
@@ -196,7 +197,19 @@ class _SeriesScreenState extends State<SeriesScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(e.title, textDirection: titleDirection(e.title), maxLines: 2, overflow: TextOverflow.ellipsis),
                 if (isNext) Text(l.nextTitle, style: Theme.of(context).textTheme.labelSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w600)),
-                if (p != null && !p.isWatched && p.fraction > 0.01) Padding(padding: const EdgeInsets.only(top: 4), child: SizedBox(width: 140, child: ProgressBar(value: p.fraction, height: 3))),
+                if (p != null && !p.isWatched && p.fraction > 0.01)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Flexible(flex: 3, child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 140), child: ProgressBar(value: p.fraction, height: 3))),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        flex: 2,
+                        child: Text(l.downloadsEta(l.unitMinutesShort(max(1, ((p.duration - p.position) / 60).ceil()))),
+                            maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                      ),
+                    ]),
+                  ),
               ]),
             ),
             if (m.canDownloadEpisode(e))
