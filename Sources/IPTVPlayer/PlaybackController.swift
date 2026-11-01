@@ -63,16 +63,17 @@ public final class PlaybackController {
     // MARK: Loading
 
     /// Starts `url` (the first one, or the next channel/episode: the old position is saved first).
-    public func play(_ url: URL, isLive: Bool, start: Double) { play(url.absoluteString, isLive: isLive, start: start) }
+    public func play(_ url: URL, isLive: Bool, start: Double, speed: Double = 1) { play(url.absoluteString, isLive: isLive, start: start, speed: speed) }
 
-    public func play(_ source: String, isLive: Bool, start: Double) {
+    /// `speed` is the one the new item starts at: 1, or what the user kept for this series.
+    public func play(_ source: String, isLive: Bool, start: Double, speed: Double = 1) {
         guard !closed else { return }
         saveIfLoaded(background: false)
         generation += 1
         self.source = source; self.isLive = isLive
         recovery.reset(); end.newFile(); pauseClock.reset()
         position = 0; duration = 0; atEnd = false; failed = false; failure = nil; retryPending = false; paused = false; buffering = true; tracks = []
-        setSpeed(1)
+        setSpeed(speed)
         mpv.load(source, start: start)
     }
 

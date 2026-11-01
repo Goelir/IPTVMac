@@ -1,3 +1,4 @@
+import 'package:iptvmac/core/series_prefs.dart';
 import 'package:iptvmac/core/skip_marks.dart';
 import 'package:sqlite3/sqlite3.dart';
 
@@ -94,5 +95,23 @@ abstract final class UserData {
       INSERT INTO series_marks (accountId, seriesId, introStart, introEnd, creditsLen) VALUES (?,?,?,?,?)
       ON CONFLICT(accountId, seriesId) DO UPDATE SET introStart=excluded.introStart, introEnd=excluded.introEnd, creditsLen=excluded.creditsLen
       ''', [accountId, seriesId, marks.introStart, marks.introEnd, marks.creditsLen]);
+  }
+
+  static SeriesPrefs seriesPrefs(Database db, {required int accountId, required String seriesId}) {
+    final r = db.select('SELECT speed, subtitle FROM series_prefs WHERE accountId=? AND seriesId=?', [accountId, seriesId]);
+    if (r.isEmpty) return const SeriesPrefs();
+    return SeriesPrefs(speed: (r.first['speed'] as num?)?.toDouble(), subtitle: SubtitleChoice.fromStored(r.first['subtitle'] as String?));
+  }
+
+  /// Empty preferences remove the row.
+  static void saveSeriesPrefs(Database db, {required int accountId, required String seriesId, required SeriesPrefs prefs}) {
+    if (prefs.isEmpty) {
+      db.execute('DELETE FROM series_prefs WHERE accountId=? AND seriesId=?', [accountId, seriesId]);
+      return;
+    }
+    db.execute('''
+      INSERT INTO series_prefs (accountId, seriesId, speed, subtitle) VALUES (?,?,?,?)
+      ON CONFLICT(accountId, seriesId) DO UPDATE SET speed=excluded.speed, subtitle=excluded.subtitle
+      ''', [accountId, seriesId, prefs.speed, prefs.subtitle?.stored]);
   }
 }

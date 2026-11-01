@@ -14,6 +14,7 @@ import 'player_options.dart';
 import 'player_prefs.dart';
 import 'player_system.dart';
 import 'player_tv.dart';
+import 'series_prefs_keeper.dart';
 import 'skip_controls.dart';
 import 'up_next.dart';
 
@@ -56,6 +57,7 @@ class PlayerModel extends ChangeNotifier {
     ];
     _refreshQueues();
     _refreshSkip();
+    _refreshKeeper();
     unawaited(system.isPipSupported().then((v) {
       pipSupported = v;
       notifyListeners();
@@ -87,6 +89,9 @@ class PlayerModel extends ChangeNotifier {
 
   /// The skip intro / skip credits buttons of the episode that plays (null for anything that is not an episode).
   SkipControls? skipControls;
+
+  /// The speed and the subtitle language kept for the series that plays (null for anything that is not an episode).
+  SeriesPrefsKeeper? _keeper;
 
   bool scrubbing = false; // the seek bar or a horizontal drag is active
   bool sheetOpen = false; // a menu or sheet is up
@@ -129,7 +134,7 @@ class PlayerModel extends ChangeNotifier {
 
   // The media session is up (audio focus taken) before the first load: another app's audio stops cleanly, not mid-stream.
   void _start() {
-    if (!_closed) core.play(request.url.toString(), live: request.isLive, start: request.start);
+    if (!_closed) core.play(request.url.toString(), live: request.isLive, start: request.start, speed: _keeper?.speed ?? 1);
   }
 
   bool get closed => _closed;
@@ -172,6 +177,8 @@ class PlayerModel extends ChangeNotifier {
       canPrevious: isLive && canZapPrevious,
     ));
     skipControls?.update(position: core.position, duration: core.duration);
+    final action = _keeper?.subtitleToApply([for (final t in core.tracks) if (t.type == 'sub') (id: t.id, lang: t.lang, title: t.title)]);
+    if (action != null) core.engine.selectSubtitle(action.track ?? 0); // the saved subtitle language, once per episode
     final aspect = core.engine.aspect;
     if (_wasPaused != core.paused || (aspect - _lastAspect).abs() > 0.01) {
       _wasPaused = core.paused;
@@ -304,13 +311,23 @@ class PlayerModel extends ChangeNotifier {
   void replace(PlayRequest r) {
     if (_closed) return;
     upNext.cancel();
-    core.play(r.url.toString(), live: r.isLive, start: r.start); // saves the old position, so `request` must still be the old one
+    _keeper = _keeperFor(r); // the next episode starts at the speed kept for its series
+    core.play(r.url.toString(), live: r.isLive, start: r.start, speed: _keeper?.speed ?? 1); // saves the old position, so `request` must still be the old one
     request = r;
     _programmeAt = DateTime.fromMillisecondsSinceEpoch(0);
     _refreshQueues();
     _refreshSkip();
     touchControls();
   }
+
+  // Speed and subtitles kept for the series
+
+  SeriesPrefsKeeper? _keeperFor(PlayRequest r) {
+    final p = r.isLive ? null : host.seriesPrefs(r);
+    return p == null ? null : SeriesPrefsKeeper(prefs: p, save: (v) => host.saveSeriesPrefs(r, v));
+  }
+
+  void _refreshKeeper() => _keeper = _keeperFor(request);
 
   // Skipping the intro and the credits
 
@@ -389,6 +406,12 @@ class PlayerModel extends ChangeNotifier {
 
   void selectSubtitle(int id) {
     core.engine.selectSubtitle(id);
+    // the next episodes of the series start with the same subtitle language
+    if (id == 0) {
+      _keeper?.subtitleChosen(off: true);
+    } else if (core.tracks.where((t) => t.type == 'sub' && t.id == id).firstOrNull case final t?) {
+      _keeper?.subtitleChosen(lang: t.lang, title: t.title);
+    }
     notifyListeners();
   }
 
@@ -410,7 +433,10 @@ class PlayerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSpeed(double s) => core.setSpeed(s);
+  void setSpeed(double s) {
+    core.setSpeed(s);
+    _keeper?.speedChanged(core.speed);
+  }
   void setSleep(int minutes) => core.setSleep(minutes);
 
   void setVideoScale(VideoScale s) {

@@ -1,4 +1,5 @@
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/series_prefs.dart';
 import 'package:iptvmac/core/skip_marks.dart';
 
 /// What to play: the contract between the app shell (lib/app, lib/ui) and the player (lib/player).
@@ -51,6 +52,13 @@ abstract class PlayerHost {
 
   /// Keeps the marks of that series (empty marks forget them).
   void saveSkipMarks(PlayRequest request, SkipMarks marks) {}
+
+  /// The speed and subtitle language the user kept for the series that [request] (an episode) belongs to, so its next episodes start the
+  /// same way. Null for anything that is not an episode.
+  SeriesPrefs? seriesPrefs(PlayRequest request) => null;
+
+  /// Keeps those choices (empty ones forget them).
+  void saveSeriesPrefs(PlayRequest request, SeriesPrefs prefs) {}
 
   /// The user closed the player (back button / close): the shell pops the screen.
   void closePlayer();

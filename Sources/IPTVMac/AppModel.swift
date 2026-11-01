@@ -204,9 +204,9 @@ final class AppModel: LibraryModel {
         if pip { exitPiP() }
         if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
-        if let p = player { p.replace(with: r); p.skip = skipControls(for: r); playing = r; return }
+        if let p = player { p.replace(with: r, keeper: seriesPrefsKeeper(for: r)); p.skip = skipControls(for: r); playing = r; return }
         playing = r
-        let p = PlayerModel(request: r)
+        let p = PlayerModel(request: r, keeper: seriesPrefsKeeper(for: r))
         p.skip = skipControls(for: r)
         p.onSaveProgress = { [weak self] pos, dur, background in
             guard let self, let cur = self.playing else { return }

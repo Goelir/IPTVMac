@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/series_prefs.dart';
 import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/player/play_request.dart';
@@ -37,6 +38,15 @@ class FakeHost implements PlayerHost {
   PlayRequest? nextEpisode(PlayRequest c) => next;
   @override
   String? liveProgramme(PlayRequest r) => programme;
+  SeriesPrefs? prefs; // null: not an episode; set it to make every request an episode of a series with these choices
+  final savedPrefs = <SeriesPrefs>[];
+  @override
+  SeriesPrefs? seriesPrefs(PlayRequest r) => prefs;
+  @override
+  void saveSeriesPrefs(PlayRequest r, SeriesPrefs p) {
+    prefs = p;
+    savedPrefs.add(p);
+  }
   SkipMarks? marks; // null: not an episode (no skip menu); set it to make every request an episode of a series with these marks
   final savedMarks = <SkipMarks>[];
   @override

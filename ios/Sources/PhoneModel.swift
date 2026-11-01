@@ -22,9 +22,9 @@ final class PhoneModel: LibraryModel {
     override func startPlayback(_ r: PlayRequest) {
         // The next channel or episode goes through the player that is already running: replace() saves the old position through
         // onSaveProgress, which reads `playing`, so that is switched only afterwards.
-        if let p = player { p.replace(with: r); playing = r; return }
+        if let p = player { p.replace(with: r, keeper: seriesPrefsKeeper(for: r)); playing = r; return }
         playing = r
-        let p = PhonePlayer(request: r)
+        let p = PhonePlayer(request: r, keeper: seriesPrefsKeeper(for: r))
         p.onSaveProgress = { [weak self] position, duration in
             guard let self, let cur = self.playing else { return }
             self.saveProgress(cur, position: position, duration: duration)

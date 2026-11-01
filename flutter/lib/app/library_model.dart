@@ -18,6 +18,7 @@ import 'package:iptvmac/core/item_info.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/core/refresh_schedule.dart';
 import 'package:iptvmac/core/search.dart';
+import 'package:iptvmac/core/series_prefs.dart';
 import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/core/secret_store.dart';
 import 'package:iptvmac/core/subscription_info.dart';
@@ -631,6 +632,23 @@ class LibraryModel extends ChangeNotifier {
     final series = r.item;
     if (r.isLive || series == null || series.type != ItemType.series || episodeOf(r) == null) return null;
     return db.read((d) => UserData.skipMarks(d, accountId: series.accountId, seriesId: series.streamId));
+  }
+
+  /// The speed and subtitle language kept for the series of an episode request; null for anything that is not an episode.
+  SeriesPrefs? seriesPrefsOf(PlayRequest r) {
+    final series = r.item;
+    if (r.isLive || series == null || series.type != ItemType.series || episodeOf(r) == null) return null;
+    return db.read((d) => UserData.seriesPrefs(d, accountId: series.accountId, seriesId: series.streamId));
+  }
+
+  void saveSeriesPrefs(PlayRequest r, SeriesPrefs prefs) {
+    final series = r.item;
+    if (series == null) return;
+    try {
+      db.write((d) => UserData.saveSeriesPrefs(d, accountId: series.accountId, seriesId: series.streamId, prefs: prefs));
+    } catch (_) {
+      // the database is busy or full: the choice holds for this episode, the next change saves again
+    }
   }
 
   void saveSkipMarks(PlayRequest r, SkipMarks marks) {

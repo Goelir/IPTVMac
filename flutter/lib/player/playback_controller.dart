@@ -76,7 +76,7 @@ class PlaybackController extends ChangeNotifier {
   // Loading
 
   /// Starts [src] (the first one, or the next channel/episode: the old position is saved first).
-  void play(String src, {required bool live, double start = 0}) {
+  void play(String src, {required bool live, double start = 0, double speed = 1}) {
     if (_closed) return;
     _saveIfLoaded();
     _generation++;
@@ -95,7 +95,7 @@ class PlaybackController extends ChangeNotifier {
     paused = false;
     buffering = true;
     tracks = const [];
-    setSpeed(1);
+    setSpeed(speed); // 1, or what the user kept for this series
     engine.load(src, start: start);
     notifyListeners();
   }

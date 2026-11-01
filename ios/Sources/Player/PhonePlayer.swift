@@ -20,6 +20,8 @@ final class PhonePlayer {
     @ObservationIgnored let upNext = UpNext()
     /// The skip intro / skip credits buttons of the episode that plays (nil for anything that is not an episode).
     var skipControls: SkipControls?
+    /// The speed and the subtitle language kept for the series that plays (nil for anything that is not an episode).
+    @ObservationIgnored private var seriesKeeper: SeriesPrefsKeeper?
     @ObservationIgnored private let system = PlayerSystem()
 
     /// The model hands out the saved position: (position, duration).
@@ -82,8 +84,9 @@ final class PhonePlayer {
         UserDefaults.standard.object(forKey: key) == nil ? fallback : UserDefaults.standard.double(forKey: key)
     }
 
-    init(request: PlayRequest) {
+    init(request: PlayRequest, keeper: SeriesPrefsKeeper? = nil) {
         self.request = request
+        self.seriesKeeper = keeper
         let d = UserDefaults.standard
         core = PlaybackController(subLang: d.string(forKey: "prefSubLang"), audioLang: d.string(forKey: "prefAudioLang"))
         view = MPVVideoView(player: core.mpv)
@@ -99,7 +102,7 @@ final class PhonePlayer {
         core.onSleep = { [weak self] in self?.onClose?() }
         system.activate(commands, seekStep: seekStep) { [weak self] in
             guard let self, !self.closed else { return }
-            self.core.play(self.request.url, isLive: self.request.isLive, start: self.request.start)
+            self.core.play(self.request.url, isLive: self.request.isLive, start: self.request.start, speed: self.seriesKeeper?.speed ?? 1)
         }
         pushRemoteCommands()
         view.pipCommands = (setPlaying: { [weak self] on in self?.setPlaying(on) }, skip: { [weak self] s in self?.skip(by: s) },
@@ -164,13 +167,14 @@ final class PhonePlayer {
     }
 
     /// The next channel or episode on the same player: the old position is saved first (PlaybackController.play).
-    func replace(with r: PlayRequest) {
+    func replace(with r: PlayRequest, keeper: SeriesPrefsKeeper? = nil) {
         guard !closed else { return }
         upNext.cancel()
         request = r
+        seriesKeeper = keeper
         skipControls = model?.skipControls(for: r)
         preview.reset()
-        core.play(r.url, isLive: r.isLive, start: r.start)
+        core.play(r.url, isLive: r.isLive, start: r.start, speed: keeper?.speed ?? 1)   // an episode keeps the series' speed
         touchControls()
         refreshQueues()
         pushRemoteCommands()
@@ -243,7 +247,12 @@ final class PhonePlayer {
 
     var subtitleSelection: Int { tracks.first { $0.type == "sub" && $0.selected }?.id ?? 0 }
     var audioSelection: Int { tracks.first { $0.type == "audio" && $0.selected }?.id ?? 0 }
-    func selectSubtitle(_ id: Int) { core.mpv.setProperty("sid", id == 0 ? "no" : String(id)); interact() }
+    func selectSubtitle(_ id: Int) {
+        core.mpv.setProperty("sid", id == 0 ? "no" : String(id)); interact()
+        // the next episodes of the series start with the same subtitle language
+        if id == 0 { seriesKeeper?.subtitleChosen(lang: nil, title: nil, off: true) }
+        else if let t = tracks.first(where: { $0.type == "sub" && $0.id == id }) { seriesKeeper?.subtitleChosen(lang: t.lang, title: t.title) }
+    }
     func selectAudio(_ id: Int) { core.mpv.setProperty("aid", String(id)); interact() }
     func addSubtitle(_ url: URL) {
         let access = url.startAccessingSecurityScopedResource()
@@ -251,7 +260,7 @@ final class PhonePlayer {
         if access { url.stopAccessingSecurityScopedResource() }
     }
 
-    func setSpeed(_ s: Double) { core.setSpeed(s) }
+    func setSpeed(_ s: Double) { core.setSpeed(s); seriesKeeper?.speedChanged(core.speed) }
     func setSleep(minutes: Int) { core.setSleep(minutes: minutes); interact() }
 
     // MARK: Controls visibility
@@ -275,6 +284,9 @@ final class PhonePlayer {
         controls.hideAfter = barsHide
         controls.tick(now: Date(), holding: holdControls)
         skipControls?.update(position: position, duration: duration)
+        if let keeper = seriesKeeper, let action = keeper.subtitleToApply(tracks: tracks.filter { $0.type == "sub" }.map { ($0.id, $0.lang, $0.title) }) {
+            core.mpv.setProperty("sid", { if case .track(let id) = action { return String(id) } else { return "no" } }())   // the saved subtitle language, once per episode
+        }
         system.setScreenAwake(!paused)
         system.updateNowPlaying(nowPlayingState)
         if view.pipMode == "pip" { view.syncPiP(position: position, duration: duration, paused: paused, speed: speed, live: isLive) }

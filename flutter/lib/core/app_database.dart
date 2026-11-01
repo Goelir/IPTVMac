@@ -144,6 +144,8 @@ class AppDatabase {
     ('v4-item-info', _v4),
     // Where the intro and the credits of a series are, marked by the user once and used for every episode.
     ('v5-series-marks', _v5),
+    // What the user chose while watching a series (speed, subtitle language), kept for its next episodes.
+    ('v6-series-prefs', _v6),
   ];
 
   static const _v1 = '''
@@ -202,6 +204,13 @@ CREATE TRIGGER "__item_fts_au" AFTER UPDATE OF name ON item WHEN old.name IS NOT
   INSERT INTO item_fts(item_fts, rowid, name) VALUES('delete', old.id, old.name);
   INSERT INTO item_fts(rowid, name) VALUES (new.id, new.name);
 END;
+''';
+
+  static const _v6 = '''
+CREATE TABLE "series_prefs" (
+  "accountId" INTEGER NOT NULL REFERENCES "account"("id") ON DELETE CASCADE,
+  "seriesId" TEXT NOT NULL, "speed" DOUBLE, "subtitle" TEXT,
+  PRIMARY KEY ("accountId","seriesId"));
 ''';
 
   static const _v5 = '''

@@ -17,6 +17,8 @@ final class PlayerModel {
     private(set) var request: PlayRequest
     /// The skip intro / skip credits buttons of the episode that plays (nil for anything that is not an episode).
     var skip: SkipControls?
+    /// The speed and the subtitle language kept for the series that plays (nil for anything that is not an episode).
+    var keeper: SeriesPrefsKeeper?
     /// The live channel a catch-up program was started from: the player's Live button returns to it.
     var liveRequest: PlayRequest?
     let preview = SeekPreview()             // thumbnails for the seek bar's hover bubble (its own hidden engine, opened on the first hover)
@@ -37,7 +39,8 @@ final class PlayerModel {
     private var loadGen = 0                      // bumped on every explicit load, so a stale retry timer cannot reload an old item
     private var activity: NSObjectProtocol?       // keeps the display awake while a video plays (vo=libmpv has no window of its own)
 
-    init(request: PlayRequest) {
+    init(request: PlayRequest, keeper: SeriesPrefsKeeper? = nil) {
+        self.keeper = keeper
         let d = UserDefaults.standard
         let mpv = MPVPlayer(subLang: d.string(forKey: "prefSubLang"), audioLang: d.string(forKey: "prefAudioLang"))
         self.mpv = mpv
@@ -50,6 +53,7 @@ final class PlayerModel {
             guard isError else { return }
             Task { @MainActor in self?.handleFailure() }
         }
+        if let s = keeper?.speed, s != 1 { setSpeed(s, remember: false) }      // an episode starts at the speed kept for its series
         mpv.load(request.url, start: request.start)
         activity = ProcessInfo.processInfo.beginActivity(options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled], reason: "Playing video")
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
@@ -58,10 +62,18 @@ final class PlayerModel {
     }
 
     /// Clamped to 0.25...4 and rounded to 0.05. `speed` is set at once (the 0.5 s tick would make a dragged slider jump back).
-    func setSpeed(_ s: Double) {
+    func setSpeed(_ s: Double, remember: Bool = true) {
         let v = PlaybackSpeed.normalized(s)
         speed = v
         mpv.setProperty("speed", String(v))
+        if remember { keeper?.speedChanged(v) }
+    }
+
+    /// The subtitle menu: `id` nil turns the subtitles off. The choice is kept for the next episodes of the series.
+    func chooseSubtitle(_ id: Int?) {
+        mpv.setProperty("sid", id.map(String.init) ?? "no")
+        if let id, let t = tracks.first(where: { $0.type == "sub" && $0.id == id }) { keeper?.subtitleChosen(lang: t.lang, title: t.title) }
+        else if id == nil { keeper?.subtitleChosen(lang: nil, title: nil, off: true) }
     }
     func stepSpeed(up: Bool) { setSpeed(PlaybackSpeed.step(from: speed, up: up)) }
     func toggleDoubleSpeed() { setSpeed(speed == 2 ? 1 : 2) }
@@ -84,7 +96,7 @@ final class PlayerModel {
     /// A position of 0 means "nothing played yet" (file still loading or load failed): saving it would erase the resume point.
     private func saveIfLoaded(background: Bool = false) { if !request.isLive, position > 0 { onSaveProgress?(position, duration, background) } }
 
-    func replace(with new: PlayRequest) {
+    func replace(with new: PlayRequest, keeper k: SeriesPrefsKeeper? = nil) {
         saveIfLoaded()
         loadGen += 1
         wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
@@ -92,7 +104,8 @@ final class PlayerModel {
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
         skip = nil
         preview.reset()
-        setSpeed(1)
+        keeper = k
+        setSpeed(k?.speed ?? 1, remember: false)
         mpv.load(new.url, start: new.start)
     }
 
@@ -153,7 +166,12 @@ final class PlayerModel {
         let q = VideoQuality.label(width: mpv.double("video-params/w") ?? 0, height: mpv.double("video-params/h") ?? 0)
         if q != quality { quality = q }
         ticks += 1
-        if ticks % 4 == 0 { tracks = mpv.tracks() }
+        if ticks % 4 == 0 {
+            tracks = mpv.tracks()
+            if let k = keeper, let a = k.subtitleToApply(tracks: tracks.filter { $0.type == "sub" }.map { ($0.id, $0.lang, $0.title) }) {
+                switch a { case .track(let id): mpv.setProperty("sid", String(id)); case .off: mpv.setProperty("sid", "no") }   // the saved subtitle language, once per episode
+            }
+        }
         if ticks % 20 == 0 { saveIfLoaded(background: true) }   // periodic: must not wait behind a running sync write
     }
 

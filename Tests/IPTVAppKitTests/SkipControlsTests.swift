@@ -63,3 +63,28 @@ final class SavedBox: @unchecked Sendable { var value: [SkipMarks] = [] }
     #expect(m.started?.episodeKey == "ep:102" && m.started?.start == 600 && m.started?.url.pathExtension == "mkv")
     #expect(m.started?.item?.streamId == "20")                       // an episode's request carries its series
 }
+
+@MainActor @Test func theKeeperAppliesTheSavedSpeedAndSubtitleOnceAndSavesTheUsersChanges() {
+    final class Box: @unchecked Sendable { var saved: [SeriesPrefs] = [] }
+    let box = Box()
+    let k = SeriesPrefsKeeper(prefs: SeriesPrefs(speed: 1.5, subtitle: .language("heb"))) { box.saved.append($0) }
+    #expect(k.speed == 1.5)
+    let tracks: [(id: Int, lang: String?, title: String?)] = [(1, "eng", nil), (2, "heb", nil)]
+    #expect(k.subtitleToApply(tracks: []) == nil)                       // the tracks are not there yet: wait
+    #expect(k.subtitleToApply(tracks: tracks) == .track(2))
+    #expect(k.subtitleToApply(tracks: tracks) == nil)                   // only once per episode
+    k.speedChanged(2)
+    #expect(box.saved.last?.speed == 2 && k.speed == 2)
+    k.speedChanged(1)
+    #expect(box.saved.last?.speed == nil && k.speed == 1)               // normal speed is "no choice"
+    k.subtitleChosen(lang: "eng", title: nil)
+    #expect(box.saved.last?.subtitle == .language("eng"))
+    k.subtitleChosen(lang: nil, title: nil, off: true)
+    #expect(box.saved.last?.subtitle == SubtitleChoice.off)
+}
+
+@MainActor @Test func aChoiceMadeByTheUserIsNotOverriddenByTheSavedOne() {
+    let k = SeriesPrefsKeeper(prefs: SeriesPrefs(subtitle: .language("heb"))) { _ in }
+    k.subtitleChosen(lang: "eng", title: nil)                           // the user picked English before the tracks were listed
+    #expect(k.subtitleToApply(tracks: [(1, "eng", nil), (2, "heb", nil)]) == nil)
+}

@@ -2,6 +2,7 @@ import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/watch_progress.dart';
 import 'package:iptvmac/core/episode_queue.dart';
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/series_prefs.dart';
 import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/player/play_request.dart';
 
@@ -55,6 +56,12 @@ class ShellPlayerHost implements PlayerHost {
 
   @override
   void saveSkipMarks(PlayRequest request, SkipMarks marks) => model.saveSkipMarks(request, marks);
+
+  @override
+  SeriesPrefs? seriesPrefs(PlayRequest request) => model.seriesPrefsOf(request);
+
+  @override
+  void saveSeriesPrefs(PlayRequest request, SeriesPrefs prefs) => model.saveSeriesPrefs(request, prefs);
 
   @override
   String? liveProgramme(PlayRequest request) {

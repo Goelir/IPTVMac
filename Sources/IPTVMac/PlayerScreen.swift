@@ -268,7 +268,7 @@ struct PlayerScreen: View {
                 Spacer()
             }
             if !request.isLive {   // a live stream cannot run faster than real time
-                SpeedButton(speed: pm.speed, set: pm.setSpeed, open: $showSpeed)
+                SpeedButton(speed: pm.speed, set: { pm.setSpeed($0) }, open: $showSpeed)
             }
             trackMenu(type: "sub", title: L("player.subtitles"), prop: "sid", icon: "captions.bubble")
             trackMenu(type: "audio", title: L("player.audio"), prop: "aid", icon: "speaker.wave.2")
@@ -317,9 +317,9 @@ struct PlayerScreen: View {
 
     private func trackMenu(type: String, title: String, prop: String, icon: String) -> some View {
         Menu {
-            if type == "sub" { Button(L("player.off")) { pm.mpv.setProperty("sid", "no") } }
+            if type == "sub" { Button(L("player.off")) { pm.chooseSubtitle(nil) } }
             ForEach(pm.tracks.filter { $0.type == type }) { t in
-                Button(label(t)) { pm.mpv.setProperty(prop, String(t.id)) }
+                Button(label(t)) { if type == "sub" { pm.chooseSubtitle(t.id) } else { pm.mpv.setProperty(prop, String(t.id)) } }
             }
             if type == "sub" { Divider(); Button(L("player.addSubtitle")) { importing = true } }
         } label: { Image(systemName: icon) }

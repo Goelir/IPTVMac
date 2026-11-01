@@ -152,6 +152,16 @@ public final class AppDatabase {
                 t.primaryKey(["accountId", "seriesId"])
             }
         }
+        // What the user chose while watching a series (speed, subtitle language), kept for its next episodes.
+        m.registerMigration("v6-series-prefs") { db in
+            try db.create(table: "series_prefs") { t in
+                t.column("accountId", .integer).notNull().references("account", onDelete: .cascade)
+                t.column("seriesId", .text).notNull()
+                t.column("speed", .double)
+                t.column("subtitle", .text)
+                t.primaryKey(["accountId", "seriesId"])
+            }
+        }
         return m
     }
 }

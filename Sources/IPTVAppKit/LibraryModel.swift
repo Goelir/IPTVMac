@@ -339,6 +339,16 @@ open class LibraryModel {
         }
     }
 
+    /// The speed and subtitle language kept for the series of an episode that is about to play (nil for anything else).
+    public func seriesPrefsKeeper(for r: PlayRequest) -> SeriesPrefsKeeper? {
+        guard !r.isLive, r.episodeKey != nil, let series = r.item, series.type == .series else { return nil }
+        let aid = series.accountId, sid = series.streamId
+        let prefs = (try? db.dbQueue.read { try UserData.seriesPrefs($0, accountId: aid, seriesId: sid) }) ?? SeriesPrefs()
+        return SeriesPrefsKeeper(prefs: prefs) { [db] p in
+            db.dbQueue.asyncWrite({ try UserData.saveSeriesPrefs($0, accountId: aid, seriesId: sid, prefs: p) }, completion: { _, _ in })
+        }
+    }
+
     public func episodeRequest(_ e: Episode, of series: Item) -> PlayRequest? {
         guard let url = xtreamURLs(for: series.accountId)?.series(id: e.streamId, ext: e.containerExt) else { return nil }
         return PlayRequest(title: "\(series.name) — \(e.title)", url: url, isLive: false, item: series,
