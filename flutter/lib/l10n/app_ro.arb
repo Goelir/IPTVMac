@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Sari peste generic",
+  "playerSkipCredits": "Sari peste final",
+  "playerSkipMenu": "Generic și final",
+  "playerMarkIntroStart": "Genericul începe aici",
+  "playerMarkIntroEnd": "Genericul se termină aici",
+  "playerMarkCredits": "Finalul începe aici",
+  "playerSkipForget": "Uită genericul și finalul",
+  "playerSkipSaved": "Salvat pentru toate episoadele acestui serial",
+  "playerSkipRefused": "Nu este posibil în acest punct"
 }

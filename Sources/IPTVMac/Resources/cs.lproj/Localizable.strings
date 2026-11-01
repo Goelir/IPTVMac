@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Přeskočit úvod";
+"player.skipCredits" = "Přeskočit titulky";
+"player.skipMenu" = "Úvod a titulky";
+"player.markIntroStart" = "Úvod začíná tady";
+"player.markIntroEnd" = "Úvod končí tady";
+"player.markCredits" = "Titulky začínají tady";
+"player.skipForget" = "Zapomenout úvod a titulky";
+"player.skipSaved" = "Uloženo pro všechny epizody tohoto seriálu";
+"player.skipRefused" = "V tomto místě to nejde";

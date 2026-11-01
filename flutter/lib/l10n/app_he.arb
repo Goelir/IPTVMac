@@ -249,5 +249,14 @@
   "subExpires": "תוקף עד {p1}",
   "subExpired": "פג תוקף ב-{p1}",
   "subDaysLeft": "ימים שנותרו: {p1}",
-  "onbWelcomeRights": "השתמשו רק במקורות שיש לכם הרשאה לגשת אליהם."
+  "onbWelcomeRights": "השתמשו רק במקורות שיש לכם הרשאה לגשת אליהם.",
+  "playerSkipIntro": "דלג על הפתיח",
+  "playerSkipCredits": "דלג על הקרדיטים",
+  "playerSkipMenu": "פתיח וקרדיטים",
+  "playerMarkIntroStart": "הפתיח מתחיל כאן",
+  "playerMarkIntroEnd": "הפתיח נגמר כאן",
+  "playerMarkCredits": "הקרדיטים מתחילים כאן",
+  "playerSkipForget": "שכח פתיח וקרדיטים",
+  "playerSkipSaved": "נשמר לכל הפרקים של הסדרה",
+  "playerSkipRefused": "לא אפשרי ברגע הזה"
 }

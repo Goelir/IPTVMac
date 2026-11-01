@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Hoppa över intro",
+  "playerSkipCredits": "Hoppa över eftertexter",
+  "playerSkipMenu": "Intro och eftertexter",
+  "playerMarkIntroStart": "Introt börjar här",
+  "playerMarkIntroEnd": "Introt slutar här",
+  "playerMarkCredits": "Eftertexterna börjar här",
+  "playerSkipForget": "Glöm intro och eftertexter",
+  "playerSkipSaved": "Sparat för alla avsnitt i serien",
+  "playerSkipRefused": "Inte möjligt på den här punkten"
 }

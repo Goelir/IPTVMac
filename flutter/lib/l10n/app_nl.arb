@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Intro overslaan",
+  "playerSkipCredits": "Aftiteling overslaan",
+  "playerSkipMenu": "Intro en aftiteling",
+  "playerMarkIntroStart": "Intro begint hier",
+  "playerMarkIntroEnd": "Intro eindigt hier",
+  "playerMarkCredits": "Aftiteling begint hier",
+  "playerSkipForget": "Intro en aftiteling vergeten",
+  "playerSkipSaved": "Bewaard voor alle afleveringen van deze serie",
+  "playerSkipRefused": "Niet mogelijk op dit punt"
 }

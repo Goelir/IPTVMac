@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Kapërce hyrjen";
+"player.skipCredits" = "Kapërce titrat e fundit";
+"player.skipMenu" = "Hyrja dhe titrat e fundit";
+"player.markIntroStart" = "Hyrja fillon këtu";
+"player.markIntroEnd" = "Hyrja mbaron këtu";
+"player.markCredits" = "Titrat e fundit fillojnë këtu";
+"player.skipForget" = "Harro hyrjen dhe titrat";
+"player.skipSaved" = "Ruajtur për të gjitha episodet e këtij seriali";
+"player.skipRefused" = "Nuk është e mundur në këtë pikë";

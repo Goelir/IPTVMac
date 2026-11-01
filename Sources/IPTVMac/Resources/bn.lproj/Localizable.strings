@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "ইন্ট্রো এড়িয়ে যান";
+"player.skipCredits" = "ক্রেডিট এড়িয়ে যান";
+"player.skipMenu" = "ইন্ট্রো ও ক্রেডিট";
+"player.markIntroStart" = "ইন্ট্রো এখানে শুরু";
+"player.markIntroEnd" = "ইন্ট্রো এখানে শেষ";
+"player.markCredits" = "ক্রেডিট এখানে শুরু";
+"player.skipForget" = "ইন্ট্রো ও ক্রেডিট ভুলে যান";
+"player.skipSaved" = "এই সিরিজের সব পর্বের জন্য সংরক্ষিত";
+"player.skipRefused" = "এই মুহূর্তে সম্ভব নয়";

@@ -36,8 +36,4 @@ final class PhoneModel: LibraryModel {
         player?.close(); player = nil
         playing = nil
     }
-
-    func playEpisode(_ e: Episode, of series: Item) {
-        if let r = episodeRequest(e, of: series) { startPlayback(r) }
-    }
 }

@@ -60,10 +60,15 @@ struct ChannelRow: View {
     }
 }
 
+/// "S2 E5 · 23 min left": where a title was left, shown on the Continue watching page.
+private func whereLeft(_ e: ContinueEntry) -> String? { e.caption(episode: L("series.epShort"), left: L("downloads.eta"), minutes: L("unit.minutesShort")) }
+
 struct PosterCell: View {
     @Environment(AppModel.self) var model
     @Environment(\.accessibilityReduceMotion) private var reduce
     let item: Item
+    /// Set on the Continue watching page: the episode and the minute the title was left at. A click resumes it.
+    var entry: ContinueEntry? = nil
     @State private var hover = false
     @FocusState private var infoFocused: Bool
     var body: some View {
@@ -81,16 +86,28 @@ struct PosterCell: View {
                 .overlay { if model.lastPlayedID == item.id { shape.strokeBorder(Color.accentColor, lineWidth: 3) } }
                 .overlay(alignment: .topLeading) { PlaylistBadge(item: item, onArtwork: true).padding(5) }
                 .overlay(alignment: .topTrailing) { if model.hasInfo(item) { infoButton } }
+                .overlay(alignment: .bottom) {
+                    if let f = entry?.fraction {
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(.white.opacity(0.35))
+                            GeometryReader { g in Capsule().fill(Color.accentColor).frame(width: g.size.width * f) }
+                        }.frame(height: 4).padding(.horizontal, 8).padding(.bottom, 8).shadow(color: .black.opacity(0.5), radius: 2, y: 1)
+                    }
+                }
                 .shadow(color: .black.opacity(hover ? 0.35 : 0), radius: hover ? 10 : 0, y: hover ? 5 : 0)
                 .scaleEffect(hover && !reduce ? 1.035 : 1)
-            Text(item.name).font(.callout).lineLimit(2, reservesSpace: true)
+            Text(item.name).font(.callout).lineLimit(entry == nil ? 2 : 1, reservesSpace: entry == nil)
                 .multilineTextAlignment(.leading)
+            if let entry, let line = whereLeft(entry) { Text(line).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
         }
         .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel([item.name, entry.flatMap(whereLeft)].compactMap { $0 }.joined(separator: ", "))
         .zIndex(hover ? 1 : 0)
         .onHover { hover = $0 }
         .animation(reduce ? nil : .smooth(duration: 0.18), value: hover)
-        .onTapGesture { model.play(item) }
+        .onTapGesture { if let entry { model.resume(entry) } else { model.play(item) } }
         .contextMenu {
             if model.hasInfo(item) { Button(L("info.details")) { model.openInfo = item } }
             Button(model.isFavorite(item) ? L("fav.remove") : L("fav.add")) { model.toggleFavorite(item) }
@@ -148,7 +165,7 @@ struct ResultsView: View {
                                     ForEach(items) { ChannelRow(item: $0) }
                                 } else {
                                     LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
-                                        ForEach(items) { PosterCell(item: $0) }
+                                        ForEach(items) { PosterCell(item: $0, entry: $0.id.flatMap { model.continueInfo[$0] }) }
                                     }.padding(.horizontal, 12)
                                 }
                             } header: {

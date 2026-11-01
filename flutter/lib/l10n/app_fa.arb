@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "رد کردن تیتراژ ابتدایی",
+  "playerSkipCredits": "رد کردن تیتراژ پایانی",
+  "playerSkipMenu": "تیتراژ ابتدایی و پایانی",
+  "playerMarkIntroStart": "تیتراژ ابتدایی از اینجا شروع می‌شود",
+  "playerMarkIntroEnd": "تیتراژ ابتدایی اینجا تمام می‌شود",
+  "playerMarkCredits": "تیتراژ پایانی از اینجا شروع می‌شود",
+  "playerSkipForget": "فراموش کردن تیتراژها",
+  "playerSkipSaved": "برای همهٔ قسمت‌های این سریال ذخیره شد",
+  "playerSkipRefused": "در این نقطه ممکن نیست"
 }

@@ -7,6 +7,8 @@ import 'player_model.dart';
 import 'player_options.dart';
 import 'player_tv.dart';
 import 'seek_bar_math.dart';
+import 'skip_controls.dart';
+import '../core/skip_marks.dart';
 
 /// The dark translucent panel behind the player's controls (like the iPhone player).
 class PlayerSurface extends StatelessWidget {
@@ -308,4 +310,42 @@ class _TvScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => isTelevision ? FocusScope(child: child) : child;
+}
+
+/// "Skip intro" / "Skip credits", over the picture while the marks of the series say so, and a short message after marking one.
+class PlayerSkipOffer extends StatelessWidget {
+  const PlayerSkipOffer({super.key, required this.model, required this.controlsUp});
+  final PlayerModel model;
+  final bool controlsUp; // the control panel is showing: the button sits above it
+
+  @override
+  Widget build(BuildContext context) {
+    final sc = model.skipControls;
+    if (sc == null) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
+    final offer = sc.offer;
+    final notice = sc.notice;
+    return Align(
+      alignment: AlignmentDirectional.bottomEnd,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(end: 20, bottom: controlsUp ? 150 : 40),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
+          if (notice != null)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.78), borderRadius: BorderRadius.circular(20)),
+              child: Text(notice == SkipNotice.saved ? l.playerSkipSaved : l.playerSkipRefused, style: const TextStyle(color: Colors.white, fontSize: 14)),
+            ),
+          if (offer != null && !model.upNext.isCounting)
+            tvRing(radius: 24, FilledButton.icon(
+              onPressed: () => model.doSkip(offer),
+              style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.black, minimumSize: const Size(48, 48), padding: const EdgeInsets.symmetric(horizontal: 20)),
+              icon: const Icon(Icons.skip_next),
+              label: Text(offer is SkipCredits ? l.playerSkipCredits : l.playerSkipIntro, style: const TextStyle(fontWeight: FontWeight.w600)),
+            )),
+        ]),
+      ),
+    );
+  }
 }

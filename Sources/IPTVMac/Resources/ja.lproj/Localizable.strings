@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "イントロをスキップ";
+"player.skipCredits" = "クレジットをスキップ";
+"player.skipMenu" = "イントロとクレジット";
+"player.markIntroStart" = "ここからイントロ";
+"player.markIntroEnd" = "ここでイントロ終了";
+"player.markCredits" = "ここからクレジット";
+"player.skipForget" = "イントロとクレジットを削除";
+"player.skipSaved" = "このシリーズの全エピソードに保存しました";
+"player.skipRefused" = "この位置では設定できません";

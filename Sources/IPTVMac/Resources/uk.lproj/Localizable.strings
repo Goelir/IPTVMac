@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Пропустити заставку";
+"player.skipCredits" = "Пропустити титри";
+"player.skipMenu" = "Заставка і титри";
+"player.markIntroStart" = "Заставка починається тут";
+"player.markIntroEnd" = "Заставка закінчується тут";
+"player.markCredits" = "Титри починаються тут";
+"player.skipForget" = "Забути заставку і титри";
+"player.skipSaved" = "Збережено для всіх серій цього серіалу";
+"player.skipRefused" = "У цьому місці неможливо";

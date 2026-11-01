@@ -248,3 +248,12 @@
 "sub.expired" = "انتهى في %@";
 "sub.daysLeft" = "الأيام المتبقية: %d";
 "onb.welcome.rights" = "استخدم فقط المصادر المصرّح لك بالوصول إليها.";
+"player.skipIntro" = "تخطي المقدمة";
+"player.skipCredits" = "تخطي شارة النهاية";
+"player.skipMenu" = "المقدمة وشارة النهاية";
+"player.markIntroStart" = "المقدمة تبدأ هنا";
+"player.markIntroEnd" = "المقدمة تنتهي هنا";
+"player.markCredits" = "شارة النهاية تبدأ هنا";
+"player.skipForget" = "نسيان المقدمة وشارة النهاية";
+"player.skipSaved" = "تم الحفظ لجميع حلقات هذا المسلسل";
+"player.skipRefused" = "غير ممكن في هذه اللحظة";

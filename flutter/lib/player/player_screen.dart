@@ -166,6 +166,7 @@ class _PlayerViewState extends State<_PlayerView> {
         ),
       if (!pip) PlayerHud(model: model),
       if (!visible && model.core.buffering && !model.core.paused) const Center(child: CircularProgressIndicator(color: Colors.white)),
+      if (!pip && !failed) PlayerSkipOffer(model: model, controlsUp: transport),
       if (!pip && failed) PlayerErrorCard(model: model),
       if (!pip && model.upNext.isCounting) UpNextCard(model: model),
     ]);

@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "인트로 건너뛰기",
+  "playerSkipCredits": "크레딧 건너뛰기",
+  "playerSkipMenu": "인트로와 크레딧",
+  "playerMarkIntroStart": "여기서 인트로 시작",
+  "playerMarkIntroEnd": "여기서 인트로 끝",
+  "playerMarkCredits": "여기서 크레딧 시작",
+  "playerSkipForget": "인트로와 크레딧 지우기",
+  "playerSkipSaved": "이 시리즈의 모든 에피소드에 저장됨",
+  "playerSkipRefused": "이 위치에서는 할 수 없습니다"
 }

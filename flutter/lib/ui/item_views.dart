@@ -203,10 +203,17 @@ class PosterImage extends StatelessWidget {
       );
 }
 
+/// "S2 E5 · 23 min left": where a title was left, from the localized pieces.
+String? continueCaption(AppLocalizations l, ContinueEntry e) =>
+    WatchProgress.caption(e, episode: l.seriesEpShort, left: l.downloadsEta, minutes: l.unitMinutesShort);
+
 class PosterCell extends StatelessWidget {
-  const PosterCell({super.key, required this.item, this.autofocus = false});
+  const PosterCell({super.key, required this.item, this.autofocus = false, this.entry});
   final Item item;
   final bool autofocus;
+
+  /// Set on the Continue watching page: the episode and the minute the title was left at. A tap resumes it.
+  final ContinueEntry? entry;
 
   @override
   Widget build(BuildContext context) {
@@ -215,13 +222,14 @@ class PosterCell extends StatelessWidget {
     final current = m.lastPlayedId == item.id;
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
+    final caption = entry == null ? null : continueCaption(l, entry!);
     final cell = Semantics(
       customSemanticsActions: {CustomSemanticsAction(label: fav ? l.favRemove : l.favAdd): () => m.toggleFavorite(item)},
       child: TvScale(
         child: InkWell(
         autofocus: isTelevision && autofocus,
         borderRadius: BorderRadius.circular(10),
-        onTap: () => openItem(context, item),
+        onTap: () => entry != null ? resumeEntry(context, entry!) : openItem(context, item),
         onLongPress: () => item.type == ItemType.movie ? showItemActions(context, item) : m.toggleFavorite(item),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Stack(children: [
@@ -239,9 +247,19 @@ class PosterCell extends StatelessWidget {
               ),
             if (current)
               Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: cs.primary, width: 3)))),
+            if (entry?.fraction != null)
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                start: 8,
+                end: 8,
+                bottom: 8,
+                child: ProgressBar(value: entry!.fraction!, track: Colors.white.withValues(alpha: 0.35)),
+              ),
           ]),
           const SizedBox(height: 6),
-          Text(item.name, textDirection: titleDirection(item.name), maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium),
+          Text(item.name, textDirection: titleDirection(item.name), maxLines: entry == null ? 2 : 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium),
+          if (caption != null)
+            Text(caption, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
         ]),
         ),
       ),
@@ -252,9 +270,12 @@ class PosterCell extends StatelessWidget {
 
 /// Posters in a grid whose columns adapt to the width (phone, tablet, landscape) and whose cells grow with the font size.
 class PosterGridSliver extends StatelessWidget {
-  const PosterGridSliver({super.key, required this.items, this.autofocus = false});
+  const PosterGridSliver({super.key, required this.items, this.autofocus = false, this.entries = const {}});
   final List<Item> items;
   final bool autofocus;
+
+  /// On the Continue watching page: where each title was left, by item id.
+  final Map<int, ContinueEntry> entries;
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +290,7 @@ class PosterGridSliver extends StatelessWidget {
         return SliverGrid.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: cols, mainAxisSpacing: 18, crossAxisSpacing: gap, mainAxisExtent: cell * 1.5 + text),
           itemCount: items.length,
-          itemBuilder: (_, i) => PosterCell(key: ValueKey(items[i].id), item: items[i], autofocus: autofocus && i == 0),
+          itemBuilder: (_, i) => PosterCell(key: ValueKey(items[i].id), item: items[i], autofocus: autofocus && i == 0, entry: entries[items[i].id]),
         );
       }),
     );
@@ -316,13 +337,13 @@ class ContinueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final item = entry.item;
     final l = AppLocalizations.of(context);
-    final label = entry.season != null && entry.episode != null ? l.seriesEpShort(entry.season!, entry.episode!) : null;
+    final label = continueCaption(l, entry);
     final t = Theme.of(context).textTheme;
     final card = TvScale(
       child: InkWell(
       autofocus: isTelevision && autofocus,
       borderRadius: BorderRadius.circular(10),
-      onTap: () => item.type == ItemType.movie ? playItem(context, item) : openItem(context, item),
+      onTap: () => resumeEntry(context, entry),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Stack(children: [
           PosterImage(name: item.name, url: artUri(item.icon)),

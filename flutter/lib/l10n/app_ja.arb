@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "イントロをスキップ",
+  "playerSkipCredits": "クレジットをスキップ",
+  "playerSkipMenu": "イントロとクレジット",
+  "playerMarkIntroStart": "ここからイントロ",
+  "playerMarkIntroEnd": "ここでイントロ終了",
+  "playerMarkCredits": "ここからクレジット",
+  "playerSkipForget": "イントロとクレジットを削除",
+  "playerSkipSaved": "このシリーズの全エピソードに保存しました",
+  "playerSkipRefused": "この位置では設定できません"
 }

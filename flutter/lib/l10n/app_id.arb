@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Lewati intro",
+  "playerSkipCredits": "Lewati kredit",
+  "playerSkipMenu": "Intro dan kredit",
+  "playerMarkIntroStart": "Intro mulai di sini",
+  "playerMarkIntroEnd": "Intro berakhir di sini",
+  "playerMarkCredits": "Kredit mulai di sini",
+  "playerSkipForget": "Lupakan intro dan kredit",
+  "playerSkipSaved": "Disimpan untuk semua episode serial ini",
+  "playerSkipRefused": "Tidak bisa di titik ini"
 }

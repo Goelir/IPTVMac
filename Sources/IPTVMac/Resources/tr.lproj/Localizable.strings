@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Girişi atla";
+"player.skipCredits" = "Jeneriği atla";
+"player.skipMenu" = "Giriş ve jenerik";
+"player.markIntroStart" = "Giriş burada başlıyor";
+"player.markIntroEnd" = "Giriş burada bitiyor";
+"player.markCredits" = "Jenerik burada başlıyor";
+"player.skipForget" = "Giriş ve jeneriği unut";
+"player.skipSaved" = "Bu dizinin tüm bölümleri için kaydedildi";
+"player.skipRefused" = "Bu noktada mümkün değil";

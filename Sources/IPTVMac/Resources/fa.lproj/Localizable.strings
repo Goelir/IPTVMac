@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "رد کردن تیتراژ ابتدایی";
+"player.skipCredits" = "رد کردن تیتراژ پایانی";
+"player.skipMenu" = "تیتراژ ابتدایی و پایانی";
+"player.markIntroStart" = "تیتراژ ابتدایی از اینجا شروع می‌شود";
+"player.markIntroEnd" = "تیتراژ ابتدایی اینجا تمام می‌شود";
+"player.markCredits" = "تیتراژ پایانی از اینجا شروع می‌شود";
+"player.skipForget" = "فراموش کردن تیتراژها";
+"player.skipSaved" = "برای همهٔ قسمت‌های این سریال ذخیره شد";
+"player.skipRefused" = "در این نقطه ممکن نیست";

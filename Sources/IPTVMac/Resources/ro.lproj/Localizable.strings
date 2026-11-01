@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Sari peste generic";
+"player.skipCredits" = "Sari peste final";
+"player.skipMenu" = "Generic și final";
+"player.markIntroStart" = "Genericul începe aici";
+"player.markIntroEnd" = "Genericul se termină aici";
+"player.markCredits" = "Finalul începe aici";
+"player.skipForget" = "Uită genericul și finalul";
+"player.skipSaved" = "Salvat pentru toate episoadele acestui serial";
+"player.skipRefused" = "Nu este posibil în acest punct";

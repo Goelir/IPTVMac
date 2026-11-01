@@ -140,6 +140,9 @@ open class LibraryModel {
     /// In All mode a category is tagged "<accountId>|<remoteId>" (remote ids repeat across playlists); otherwise by remote id alone.
     public func categoryTag(_ c: IPTVCore.Category) -> String { allPlaylists ? "\(c.accountId)|\(c.remoteId)" : c.remoteId }
 
+    /// While the Continue watching category is shown: where each title was left (by item id).
+    public private(set) var continueInfo: [Int64: ContinueEntry] = [:]
+
     public func scheduleSearch() {
         searchTask?.cancel()
         guard hasPlaylist else { results = []; return }
@@ -147,10 +150,15 @@ open class LibraryModel {
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(text.isEmpty ? 0 : 100))
             if Task.isCancelled { return }
-            let rows: [Item] = (try? await db.dbQueue.read { d in
+            let (rows, info): ([Item], [Int64: ContinueEntry]) = (try? await db.dbQueue.read { d in
+                var info: [Int64: ContinueEntry] = [:]
                 let found: [Item]
                 if text.isEmpty && cat == "__fav" { found = try UserData.favorites(d, accountId: aid, type: tab) }
-                else if text.isEmpty && cat == "__hist" { found = try UserData.continueWatching(d, accountId: aid, type: tab) }
+                else if text.isEmpty && cat == "__hist" {
+                    let e = try WatchProgress.continueEntries(d, accountId: aid, type: tab, limit: .max)
+                    info = Dictionary(e.compactMap { x in x.item.id.map { ($0, x) } }, uniquingKeysWith: { a, _ in a })
+                    found = e.map(\.item)
+                }
                 else {
                     var owner = aid, catId: String? = nil
                     if scope == .category && !cat.hasPrefix("__") {
@@ -160,9 +168,9 @@ open class LibraryModel {
                     let type: ItemType? = (scope == .everywhere && !text.isEmpty) ? nil : tab
                     found = try Search.run(d, SearchRequest(accountId: owner, text: text, type: type, categoryId: catId))
                 }
-                return try hide.visible(found, in: d)
-            }) ?? []
-            if !Task.isCancelled { results = rows }
+                return (try hide.visible(found, in: d), info)
+            }) ?? ([], [:])
+            if !Task.isCancelled { results = rows; continueInfo = info }
         }
     }
 
@@ -304,6 +312,31 @@ open class LibraryModel {
         guard let url = streamURL(item) else { syncMessage = IPTVError.badConfig.localizedDescription; return }
         startPlayback(PlayRequest(title: item.name, url: url, isLive: item.type == .live, item: item,
                                   start: item.type == .live ? 0 : progress(accountId: item.accountId, type: item.type, streamId: item.streamId)))
+    }
+
+    /// Continue watching: a series resumes the episode that was left, at its position (and its next episodes follow); a movie plays as usual.
+    /// Without the episode list in the cache the series opens instead.
+    public func resume(_ entry: ContinueEntry) {
+        guard entry.item.type == .series, entry.item.directURL == nil, let epId = entry.episodeId else { play(entry.item); return }
+        if let a = playlist(id: entry.item.accountId), !hasPassword(a) { passwordPrompt = a; return }
+        let eps = (try? db.dbQueue.read { try WatchProgress.cachedEpisodes($0, accountId: entry.item.accountId, seriesId: entry.item.streamId) }) ?? []
+        guard let ep = eps.first(where: { $0.streamId == epId }) else { play(entry.item); return }
+        playEpisode(ep, of: entry.item, in: eps)
+    }
+
+    /// Starts an episode of `series`; `all` is the list its next episodes come from, when the caller has it. Platforms keep that list.
+    open func playEpisode(_ e: Episode, of series: Item, in all: [Episode]? = nil) {
+        if let r = episodeRequest(e, of: series) { startPlayback(r) }
+    }
+
+    /// The skip buttons for what is about to play: only for an episode, with the marks its series has (an empty set at first).
+    public func skipControls(for r: PlayRequest) -> SkipControls? {
+        guard !r.isLive, r.episodeKey != nil, let series = r.item, series.type == .series else { return nil }
+        let aid = series.accountId, sid = series.streamId
+        let marks = (try? db.dbQueue.read { try UserData.skipMarks($0, accountId: aid, seriesId: sid) }) ?? SkipMarks()
+        return SkipControls(marks: marks) { [db] m in
+            db.dbQueue.asyncWrite({ try UserData.saveSkipMarks($0, accountId: aid, seriesId: sid, marks: m) }, completion: { _, _ in })
+        }
     }
 
     public func episodeRequest(_ e: Episode, of series: Item) -> PlayRequest? {

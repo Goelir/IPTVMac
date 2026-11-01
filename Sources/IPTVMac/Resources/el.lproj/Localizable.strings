@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Παράλειψη εισαγωγής";
+"player.skipCredits" = "Παράλειψη τίτλων τέλους";
+"player.skipMenu" = "Εισαγωγή και τίτλοι τέλους";
+"player.markIntroStart" = "Η εισαγωγή ξεκινά εδώ";
+"player.markIntroEnd" = "Η εισαγωγή τελειώνει εδώ";
+"player.markCredits" = "Οι τίτλοι τέλους ξεκινούν εδώ";
+"player.skipForget" = "Διαγραφή εισαγωγής και τίτλων τέλους";
+"player.skipSaved" = "Αποθηκεύτηκε για όλα τα επεισόδια της σειράς";
+"player.skipRefused" = "Δεν είναι δυνατό σε αυτό το σημείο";

@@ -248,3 +248,12 @@
 "sub.expired" = "פג תוקף ב-%@";
 "sub.daysLeft" = "ימים שנותרו: %d";
 "onb.welcome.rights" = "השתמשו רק במקורות שיש לכם הרשאה לגשת אליהם.";
+"player.skipIntro" = "דלג על הפתיח";
+"player.skipCredits" = "דלג על הקרדיטים";
+"player.skipMenu" = "פתיח וקרדיטים";
+"player.markIntroStart" = "הפתיח מתחיל כאן";
+"player.markIntroEnd" = "הפתיח נגמר כאן";
+"player.markCredits" = "הקרדיטים מתחילים כאן";
+"player.skipForget" = "שכח פתיח וקרדיטים";
+"player.skipSaved" = "נשמר לכל הפרקים של הסדרה";
+"player.skipRefused" = "לא אפשרי ברגע הזה";

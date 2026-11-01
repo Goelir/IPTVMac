@@ -2,6 +2,7 @@ import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/watch_progress.dart';
 import 'package:iptvmac/core/episode_queue.dart';
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/player/play_request.dart';
 
 /// What the player may ask of the app (the contract in lib/player/play_request.dart) on top of [LibraryModel].
@@ -48,6 +49,12 @@ class ShellPlayerHost implements PlayerHost {
     final next = EpisodeQueue.next(episode.streamId, model.cachedEpisodes(series));
     return next == null ? null : model.episodeRequest(next, series);
   }
+
+  @override
+  SkipMarks? skipMarks(PlayRequest request) => model.skipMarksOf(request);
+
+  @override
+  void saveSkipMarks(PlayRequest request, SkipMarks marks) => model.saveSkipMarks(request, marks);
 
   @override
   String? liveProgramme(PlayRequest request) {

@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Hoppa över intro";
+"player.skipCredits" = "Hoppa över eftertexter";
+"player.skipMenu" = "Intro och eftertexter";
+"player.markIntroStart" = "Introt börjar här";
+"player.markIntroEnd" = "Introt slutar här";
+"player.markCredits" = "Eftertexterna börjar här";
+"player.skipForget" = "Glöm intro och eftertexter";
+"player.skipSaved" = "Sparat för alla avsnitt i serien";
+"player.skipRefused" = "Inte möjligt på den här punkten";

@@ -7,7 +7,7 @@ import 'player_model.dart';
 /// The player with a mouse and a keyboard (Windows). Nothing here runs unless `isDesktop` is set.
 
 /// What a key does. Kept apart from the widget so the map is tested without a screen.
-enum DesktopAction { pause, back, forward, bigBack, bigForward, volumeUp, volumeDown, mute, fullscreen, escape, next, previous, slower, faster, none }
+enum DesktopAction { pause, back, forward, bigBack, bigForward, volumeUp, volumeDown, mute, fullscreen, escape, next, previous, slower, faster, skip, none }
 
 DesktopAction desktopAction(LogicalKeyboardKey k, {bool shift = false}) {
   if (k == LogicalKeyboardKey.space || k == LogicalKeyboardKey.keyK || k == LogicalKeyboardKey.mediaPlayPause) return DesktopAction.pause;
@@ -22,6 +22,7 @@ DesktopAction desktopAction(LogicalKeyboardKey k, {bool shift = false}) {
   if (k == LogicalKeyboardKey.pageDown || k == LogicalKeyboardKey.mediaTrackPrevious) return DesktopAction.previous;
   if (k == LogicalKeyboardKey.bracketLeft) return DesktopAction.slower;
   if (k == LogicalKeyboardKey.bracketRight) return DesktopAction.faster;
+  if (k == LogicalKeyboardKey.keyS) return DesktopAction.skip;
   return DesktopAction.none;
 }
 
@@ -71,6 +72,10 @@ class PlayerDesktopKeys {
         model.isLive ? model.zap(-1) : model.previous();
       case DesktopAction.slower || DesktopAction.faster:
         if (!model.isLive) model.setSpeed(_nextSpeed(model.core.speed, a == DesktopAction.faster));
+      case DesktopAction.skip:
+        final offer = model.skipControls?.offer;
+        if (offer == null) return KeyEventResult.ignored;
+        model.doSkip(offer);
       case DesktopAction.none:
         break;
     }

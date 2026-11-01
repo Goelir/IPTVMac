@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Intro überspringen";
+"player.skipCredits" = "Abspann überspringen";
+"player.skipMenu" = "Intro und Abspann";
+"player.markIntroStart" = "Intro beginnt hier";
+"player.markIntroEnd" = "Intro endet hier";
+"player.markCredits" = "Abspann beginnt hier";
+"player.skipForget" = "Intro und Abspann vergessen";
+"player.skipSaved" = "Für alle Folgen dieser Serie gespeichert";
+"player.skipRefused" = "An dieser Stelle nicht möglich";

@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Intro átugrása";
+"player.skipCredits" = "Stáblista átugrása";
+"player.skipMenu" = "Intro és stáblista";
+"player.markIntroStart" = "Itt kezdődik az intro";
+"player.markIntroEnd" = "Itt ér véget az intro";
+"player.markCredits" = "Itt kezdődik a stáblista";
+"player.skipForget" = "Intro és stáblista elfelejtése";
+"player.skipSaved" = "Mentve a sorozat összes epizódjához";
+"player.skipRefused" = "Ezen a ponton nem lehetséges";

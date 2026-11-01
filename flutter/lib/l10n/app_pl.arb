@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Pomiń intro",
+  "playerSkipCredits": "Pomiń napisy końcowe",
+  "playerSkipMenu": "Intro i napisy końcowe",
+  "playerMarkIntroStart": "Tu zaczyna się intro",
+  "playerMarkIntroEnd": "Tu kończy się intro",
+  "playerMarkCredits": "Tu zaczynają się napisy końcowe",
+  "playerSkipForget": "Zapomnij intro i napisy końcowe",
+  "playerSkipSaved": "Zapisano dla wszystkich odcinków tego serialu",
+  "playerSkipRefused": "Nie można w tym miejscu"
 }

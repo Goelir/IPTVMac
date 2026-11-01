@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iptvmac/app/device.dart';
+import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/player/play_request.dart';
 import 'package:iptvmac/player/player_desktop.dart';
@@ -21,14 +22,14 @@ class DesktopSystem extends PlayerSystem {
   Future<void> setFullscreen(bool on) async => fullscreens.add(on);
 }
 
-Future<(FakeEngine, FakeHost, DesktopSystem)> openDesktop(WidgetTester t, PlayRequest r) async {
+Future<(FakeEngine, FakeHost, DesktopSystem)> openDesktop(WidgetTester t, PlayRequest r, {FakeHost? host}) async {
   isDesktop = true;
   addTearDown(() => isDesktop = false);
   t.view.physicalSize = const Size(1280, 720);
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.reset);
   final e = FakeEngine();
-  final h = FakeHost();
+  final h = host ?? FakeHost();
   final s = DesktopSystem();
   await t.pumpWidget(MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -59,6 +60,7 @@ void main() {
     expect(desktopAction(LogicalKeyboardKey.keyF), DesktopAction.fullscreen);
     expect(desktopAction(LogicalKeyboardKey.f11), DesktopAction.fullscreen);
     expect(desktopAction(LogicalKeyboardKey.escape), DesktopAction.escape);
+    expect(desktopAction(LogicalKeyboardKey.keyS), DesktopAction.skip);
     expect(desktopAction(LogicalKeyboardKey.keyQ), DesktopAction.none);
   });
 
@@ -131,6 +133,21 @@ void main() {
     h.zapTo = live('Next');
     await press(t, LogicalKeyboardKey.pageUp);
     expect(e.loads.last.$1, contains('Next'));
+    await t.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('S takes the skip button that is on the screen, and does nothing when there is none', (t) async {
+    final (e, _, _) = await openDesktop(t, movie(), host: FakeHost()..marks = const SkipMarks(introEnd: 90));
+    playing(e, position: 10);
+    await t.pump(const Duration(milliseconds: 300));
+    e.commands.clear();
+    await press(t, LogicalKeyboardKey.keyS);
+    expect(e.commands, contains('seekTo 90.0'));
+    e.position = 200;
+    await t.pump(const Duration(milliseconds: 400));
+    e.commands.clear();
+    await press(t, LogicalKeyboardKey.keyS);
+    expect(e.commands.any((c) => c.startsWith('seek')), isFalse);
     await t.pumpWidget(const SizedBox());
   });
 }

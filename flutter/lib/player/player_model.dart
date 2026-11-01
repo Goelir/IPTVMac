@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart' show AppLifecycleState, WidgetsBinding;
 
 import '../app/device.dart';
 import 'engine.dart';
+import '../core/skip_marks.dart';
 import 'play_request.dart';
 import 'playback_controller.dart';
 import 'playback_watch.dart';
@@ -13,6 +14,7 @@ import 'player_options.dart';
 import 'player_prefs.dart';
 import 'player_system.dart';
 import 'player_tv.dart';
+import 'skip_controls.dart';
 import 'up_next.dart';
 
 enum LevelKind { brightness, volume }
@@ -53,6 +55,7 @@ class PlayerModel extends ChangeNotifier {
       system.pipActions.stream.listen((_) => togglePause()),
     ];
     _refreshQueues();
+    _refreshSkip();
     unawaited(system.isPipSupported().then((v) {
       pipSupported = v;
       notifyListeners();
@@ -81,6 +84,9 @@ class PlayerModel extends ChangeNotifier {
   final UpNext upNext;
   final ControlsVisibility controls;
   final seekRepeat = SeekRepeat(); // TV remote: a held Left/Right/fast-forward key seeks faster
+
+  /// The skip intro / skip credits buttons of the episode that plays (null for anything that is not an episode).
+  SkipControls? skipControls;
 
   bool scrubbing = false; // the seek bar or a horizontal drag is active
   bool sheetOpen = false; // a menu or sheet is up
@@ -165,6 +171,7 @@ class PlayerModel extends ChangeNotifier {
       canNext: isLive ? canZapNext : hasNextEpisode,
       canPrevious: isLive && canZapPrevious,
     ));
+    skipControls?.update(position: core.position, duration: core.duration);
     final aspect = core.engine.aspect;
     if (_wasPaused != core.paused || (aspect - _lastAspect).abs() > 0.01) {
       _wasPaused = core.paused;
@@ -280,6 +287,7 @@ class PlayerModel extends ChangeNotifier {
     tvExitHooks.remove(close);
     core.close(); // saves the position
     upNext.cancel();
+    skipControls?.dispose();
     _pipTimer?.cancel();
     for (final t in _hudTimers.values) {
       t.cancel();
@@ -300,8 +308,42 @@ class PlayerModel extends ChangeNotifier {
     request = r;
     _programmeAt = DateTime.fromMillisecondsSinceEpoch(0);
     _refreshQueues();
+    _refreshSkip();
     touchControls();
   }
+
+  // Skipping the intro and the credits
+
+  void _refreshSkip() {
+    skipControls?.dispose();
+    final marks = host.skipMarks(request);
+    skipControls = marks == null || isLive
+        ? null
+        : SkipControls(marks: marks, save: (m) => host.saveSkipMarks(request, m), onChange: () {
+            if (!_closed) notifyListeners();
+          });
+  }
+
+  /// The skip button was pressed: the intro is jumped over; after the credits the next episode starts, or the picture goes to the end.
+  void doSkip(SkipOffer offer) {
+    switch (offer) {
+      case SkipIntro(:final to):
+        seekTo(to);
+        touchControls();
+      case SkipCredits():
+        if (hasNextEpisode) {
+          playUpNextNow();
+        } else {
+          seekTo((core.duration - 1).clamp(0.0, double.infinity));
+        }
+    }
+  }
+
+  /// Marks of the series (the menu): where the intro starts and ends and where the credits start.
+  void markIntroStart() => skipControls?.markIntroStart(position: core.position, duration: core.duration);
+  void markIntroEnd() => skipControls?.markIntroEnd(position: core.position, duration: core.duration);
+  void markCredits() => skipControls?.markCredits(position: core.position, duration: core.duration);
+  void forgetSkipMarks() => skipControls?.forget();
 
   // Channels and episodes
 

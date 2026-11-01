@@ -408,5 +408,14 @@
       }
     }
   },
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Skip intro",
+  "playerSkipCredits": "Skip credits",
+  "playerSkipMenu": "Intro and credits",
+  "playerMarkIntroStart": "Intro starts here",
+  "playerMarkIntroEnd": "Intro ends here",
+  "playerMarkCredits": "Credits start here",
+  "playerSkipForget": "Forget intro and credits",
+  "playerSkipSaved": "Saved for every episode of this series",
+  "playerSkipRefused": "Not possible at this point"
 }

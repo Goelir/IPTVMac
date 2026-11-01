@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Пропусни началото",
+  "playerSkipCredits": "Пропусни надписите",
+  "playerSkipMenu": "Начало и надписи",
+  "playerMarkIntroStart": "Началната песен започва тук",
+  "playerMarkIntroEnd": "Началната песен свършва тук",
+  "playerMarkCredits": "Надписите започват тук",
+  "playerSkipForget": "Забрави началото и надписите",
+  "playerSkipSaved": "Запазено за всички епизоди на сериала",
+  "playerSkipRefused": "Невъзможно в този момент"
 }

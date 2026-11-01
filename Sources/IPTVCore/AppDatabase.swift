@@ -141,6 +141,17 @@ public final class AppDatabase {
                 t.primaryKey(["accountId", "type", "streamId"])
             }
         }
+        // Where the intro and the credits of a series are, marked by the user once and used for every episode.
+        m.registerMigration("v5-series-marks") { db in
+            try db.create(table: "series_marks") { t in
+                t.column("accountId", .integer).notNull().references("account", onDelete: .cascade)
+                t.column("seriesId", .text).notNull()
+                t.column("introStart", .double)
+                t.column("introEnd", .double)
+                t.column("creditsLen", .double)
+                t.primaryKey(["accountId", "seriesId"])
+            }
+        }
         return m
     }
 }

@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Saltar intro",
+  "playerSkipCredits": "Saltar créditos",
+  "playerSkipMenu": "Intro y créditos",
+  "playerMarkIntroStart": "La intro empieza aquí",
+  "playerMarkIntroEnd": "La intro termina aquí",
+  "playerMarkCredits": "Los créditos empiezan aquí",
+  "playerSkipForget": "Olvidar intro y créditos",
+  "playerSkipSaved": "Guardado para todos los episodios de esta serie",
+  "playerSkipRefused": "No es posible en este punto"
 }

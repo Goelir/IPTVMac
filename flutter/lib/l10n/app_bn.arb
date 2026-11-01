@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "ইন্ট্রো এড়িয়ে যান",
+  "playerSkipCredits": "ক্রেডিট এড়িয়ে যান",
+  "playerSkipMenu": "ইন্ট্রো ও ক্রেডিট",
+  "playerMarkIntroStart": "ইন্ট্রো এখানে শুরু",
+  "playerMarkIntroEnd": "ইন্ট্রো এখানে শেষ",
+  "playerMarkCredits": "ক্রেডিট এখানে শুরু",
+  "playerSkipForget": "ইন্ট্রো ও ক্রেডিট ভুলে যান",
+  "playerSkipSaved": "এই সিরিজের সব পর্বের জন্য সংরক্ষিত",
+  "playerSkipRefused": "এই মুহূর্তে সম্ভব নয়"
 }

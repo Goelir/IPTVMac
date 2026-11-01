@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "跳过片头";
+"player.skipCredits" = "跳过片尾";
+"player.skipMenu" = "片头和片尾";
+"player.markIntroStart" = "片头从这里开始";
+"player.markIntroEnd" = "片头到这里结束";
+"player.markCredits" = "片尾从这里开始";
+"player.skipForget" = "清除片头和片尾";
+"player.skipSaved" = "已为该剧所有剧集保存";
+"player.skipRefused" = "此处无法设置";

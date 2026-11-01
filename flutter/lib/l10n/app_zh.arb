@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "跳过片头",
+  "playerSkipCredits": "跳过片尾",
+  "playerSkipMenu": "片头和片尾",
+  "playerMarkIntroStart": "片头从这里开始",
+  "playerMarkIntroEnd": "片头到这里结束",
+  "playerMarkCredits": "片尾从这里开始",
+  "playerSkipForget": "清除片头和片尾",
+  "playerSkipSaved": "已为该剧所有剧集保存",
+  "playerSkipRefused": "此处无法设置"
 }

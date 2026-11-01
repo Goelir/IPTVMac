@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "تعارف چھوڑیں";
+"player.skipCredits" = "کریڈٹس چھوڑیں";
+"player.skipMenu" = "تعارف اور کریڈٹس";
+"player.markIntroStart" = "تعارف یہاں سے شروع";
+"player.markIntroEnd" = "تعارف یہاں ختم";
+"player.markCredits" = "کریڈٹس یہاں سے شروع";
+"player.skipForget" = "تعارف اور کریڈٹس بھول جائیں";
+"player.skipSaved" = "اس سیریز کی تمام اقساط کے لیے محفوظ ہو گیا";
+"player.skipRefused" = "اس مقام پر ممکن نہیں";

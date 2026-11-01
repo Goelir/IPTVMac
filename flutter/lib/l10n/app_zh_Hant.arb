@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "跳過片頭",
+  "playerSkipCredits": "跳過片尾",
+  "playerSkipMenu": "片頭與片尾",
+  "playerMarkIntroStart": "片頭從這裡開始",
+  "playerMarkIntroEnd": "片頭到這裡結束",
+  "playerMarkCredits": "片尾從這裡開始",
+  "playerSkipForget": "清除片頭與片尾",
+  "playerSkipSaved": "已為此影集所有集數儲存",
+  "playerSkipRefused": "此處無法設定"
 }

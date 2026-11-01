@@ -118,6 +118,11 @@ class PlayerTvKeys {
     }
     if (model.core.failed || model.upNext.isCounting || !nodes.root.hasPrimaryFocus) return KeyEventResult.ignored; // a card or a control has the focus
     if (_select.contains(k)) {
+      final offer = model.skipControls?.offer;
+      if (offer != null && !model.controlsVisible) { // "Skip intro" is on the screen and the controls are away: OK takes it
+        model.doSkip(offer);
+        return handled;
+      }
       model.togglePause();
       _focus(nodes.play);
       return handled;

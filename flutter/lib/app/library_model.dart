@@ -18,6 +18,7 @@ import 'package:iptvmac/core/item_info.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/core/refresh_schedule.dart';
 import 'package:iptvmac/core/search.dart';
+import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/core/secret_store.dart';
 import 'package:iptvmac/core/subscription_info.dart';
 import 'package:iptvmac/core/sync_service.dart';
@@ -324,12 +325,17 @@ class LibraryModel extends ChangeNotifier {
 
   void _runSearch() {
     final text = searchText, cat = selectedCategory, aid = _scopeAccountId, hide = categoryFilter;
+    final info = <int, ContinueEntry>{};
     results = db.read((d) {
       final List<Item> found;
       if (text.isEmpty && cat == '__fav') {
         found = UserData.favorites(d, accountId: aid, type: tab);
       } else if (text.isEmpty && cat == '__hist') {
-        found = UserData.continueWatching(d, accountId: aid, type: tab);
+        final entries = WatchProgress.continueEntries(d, accountId: aid, type: tab, limit: 1 << 30);
+        for (final e in entries) {
+          if (e.item.id != null) info.putIfAbsent(e.item.id!, () => e);
+        }
+        found = [for (final e in entries) e.item];
       } else {
         var owner = aid;
         String? catId;
@@ -349,8 +355,12 @@ class LibraryModel extends ChangeNotifier {
       }
       return hide.visible(found, d);
     });
+    continueInfo = info;
     notifyListeners();
   }
+
+  /// While the Continue watching category is shown: where each title was left (by item id).
+  Map<int, ContinueEntry> continueInfo = const {};
 
   // ---- favorites, continue watching ----
 
@@ -600,6 +610,38 @@ class LibraryModel extends ChangeNotifier {
   }
 
   Episode? episodeOf(PlayRequest r) => _episodeByUrl[r.url.toString()];
+
+  /// Continue watching: the request that resumes the episode a series was left at (at its minute), or a movie at its minute. Null when
+  /// the episode list is not in the cache (the series screen opens instead) or the request cannot be made.
+  PlayRequest? resumeRequest(ContinueEntry e) {
+    final series = e.item;
+    if (series.type != ItemType.series || series.directURL != null || e.episodeId == null) return requestFor(series);
+    final a = accountById(series.accountId);
+    if (a != null && !hasPassword(a)) {
+      passwordPrompt = a;
+      notifyListeners();
+      return null;
+    }
+    final ep = cachedEpisodes(series).where((x) => x.streamId == e.episodeId).firstOrNull;
+    return ep == null ? null : episodeRequest(ep, series);
+  }
+
+  /// The marks of the series an episode request belongs to; null for anything that is not an episode.
+  SkipMarks? skipMarksOf(PlayRequest r) {
+    final series = r.item;
+    if (r.isLive || series == null || series.type != ItemType.series || episodeOf(r) == null) return null;
+    return db.read((d) => UserData.skipMarks(d, accountId: series.accountId, seriesId: series.streamId));
+  }
+
+  void saveSkipMarks(PlayRequest r, SkipMarks marks) {
+    final series = r.item;
+    if (series == null) return;
+    try {
+      db.write((d) => UserData.saveSkipMarks(d, accountId: series.accountId, seriesId: series.streamId, marks: marks));
+    } catch (_) {
+      // the database is busy or full: the player keeps the marks for this episode, the next marking saves again
+    }
+  }
 
   /// A downloaded file plays under the same progress key as the stream: remember which episode its (file) URL is.
   void rememberEpisode(Uri url, Episode e) => _episodeByUrl[url.toString()] = e;

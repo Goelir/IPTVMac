@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Intro overslaan";
+"player.skipCredits" = "Aftiteling overslaan";
+"player.skipMenu" = "Intro en aftiteling";
+"player.markIntroStart" = "Intro begint hier";
+"player.markIntroEnd" = "Intro eindigt hier";
+"player.markCredits" = "Aftiteling begint hier";
+"player.skipForget" = "Intro en aftiteling vergeten";
+"player.skipSaved" = "Bewaard voor alle afleveringen van deze serie";
+"player.skipRefused" = "Niet mogelijk op dit punt";

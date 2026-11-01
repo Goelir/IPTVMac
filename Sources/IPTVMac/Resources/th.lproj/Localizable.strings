@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "ข้ามช่วงอินโทร";
+"player.skipCredits" = "ข้ามเครดิต";
+"player.skipMenu" = "อินโทรและเครดิต";
+"player.markIntroStart" = "อินโทรเริ่มตรงนี้";
+"player.markIntroEnd" = "อินโทรจบตรงนี้";
+"player.markCredits" = "เครดิตเริ่มตรงนี้";
+"player.skipForget" = "ลืมอินโทรและเครดิต";
+"player.skipSaved" = "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว";
+"player.skipRefused" = "ทำไม่ได้ตรงจุดนี้";

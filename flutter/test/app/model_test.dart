@@ -6,6 +6,7 @@ import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/watch_progress.dart';
 import 'package:iptvmac/core/errors.dart';
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/skip_marks.dart';
 import 'package:iptvmac/core/user_data.dart';
 
 import 'harness.dart';
@@ -172,6 +173,37 @@ void main() {
       expect(m.continueSeries.single.fraction, 0.5);
       expect((m.continueSeries.single.season, m.continueSeries.single.episode), (1, 2));
       expect(m.continueMovies.single.fraction, closeTo(0.1, 1e-9));
+    });
+
+    test('the Continue watching page knows the episode and the minute; resume builds that episode and its marks are kept per series', () async {
+      final h = await Harness.createPlain(withAccount: true, sync: true);
+      final m = h.model;
+      final series = Item(id: 0, accountId: 1, type: ItemType.series, name: 'The Show', streamId: '20');
+      final episodes = await m.loadEpisodes(series);
+      final aid = m.accounts.single.id!;
+      h.db.write((d) => UserData.saveProgress(d, accountId: aid, type: ItemType.series, streamId: 'ep:102', position: 900, duration: 1800));
+      m.setTab(ItemType.series);
+      m.selectCategory('__hist');
+      final entry = m.continueInfo.values.single;
+      expect((entry.episodeId, entry.position, entry.duration, entry.secondsLeft), ('102', 900.0, 1800.0, 900.0));
+      final r = m.resumeRequest(entry)!;
+      expect(r.start, 900);
+      expect(r.subtitle, episodes.firstWhere((e) => e.streamId == '102').title);
+      expect(m.episodeOf(r)!.streamId, '102');
+      // the series' marks: an episode has an (empty) set, a movie has none, and they are saved for the series
+      expect(m.skipMarksOf(r)!.isEmpty, isTrue);
+      m.saveSkipMarks(r, const SkipMarks(introEnd: 75));
+      expect(m.skipMarksOf(m.resumeRequest(entry)!), const SkipMarks(introEnd: 75)); // another episode of the series sees them
+      expect(m.skipMarksOf(m.requestFor(Item(id: 1, accountId: 1, type: ItemType.live, name: 'News 24', streamId: '1', directURL: 'http://h/1.ts'))!), isNull);
+    });
+
+    test('the Continue watching caption says the episode and the minutes left', () {
+      final item = Item(id: 1, accountId: 1, type: ItemType.series, name: 'S', streamId: '1');
+      String? cap(ContinueEntry e) => WatchProgress.caption(e, episode: (s, n) => 'S$s E$n', left: (t) => '$t left', minutes: (n) => '$n min');
+      expect(cap(ContinueEntry(item, season: 2, episode: 5, position: 600, duration: 2400)), 'S2 E5 · 30 min left');
+      expect(cap(ContinueEntry(item, position: 100, duration: 160)), '1 min left'); // under a minute counts as one, never 0
+      expect(cap(ContinueEntry(item, season: 1, episode: 1)), 'S1 E1'); // no length known: only the episode
+      expect(cap(ContinueEntry(item)), isNull);
     });
   });
 }

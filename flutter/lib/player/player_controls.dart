@@ -233,6 +233,26 @@ class PlayerBottomPanel extends StatelessWidget {
               if (picked != null) model.setVideoScale(picked);
             },
           ),
+          if (model.skipControls case final sc?)
+            _Utility(
+              label: l.playerSkipMenu,
+              icon: sc.marks.isEmpty ? Icons.skip_next_outlined : Icons.skip_next,
+              onTap: (anchor) async {
+                final picked = await _showMenu<int>(anchor, model, [
+                  PopupMenuItem(value: 1, child: Text(l.playerMarkIntroStart)),
+                  PopupMenuItem(value: 2, child: Text(l.playerMarkIntroEnd)),
+                  PopupMenuItem(value: 3, child: Text(l.playerMarkCredits)),
+                  const PopupMenuDivider(),
+                  PopupMenuItem(value: 4, enabled: !sc.marks.isEmpty, child: Text(l.playerSkipForget)),
+                ]);
+                switch (picked) {
+                  case 1: model.markIntroStart();
+                  case 2: model.markIntroEnd();
+                  case 3: model.markCredits();
+                  case 4: model.forgetSkipMarks();
+                }
+              },
+            ),
           _Utility(
             label: l.playerSleep,
             icon: left == null ? Icons.bedtime_outlined : Icons.bedtime,

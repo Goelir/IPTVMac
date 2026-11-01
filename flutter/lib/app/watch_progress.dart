@@ -1,3 +1,5 @@
+import 'dart:math' show max;
+
 import 'package:iptvmac/core/episode_queue.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/core/user_data.dart';
@@ -5,10 +7,17 @@ import 'package:sqlite3/sqlite3.dart';
 
 /// A title that can be resumed, with how far along it is (and, for a series, the episode that was last watched).
 class ContinueEntry {
-  const ContinueEntry(this.item, {this.fraction, this.season, this.episode});
+  const ContinueEntry(this.item, {this.fraction, this.season, this.episode, this.episodeId, this.episodeTitle, this.position, this.duration});
   final Item item;
   final double? fraction; // 0...1, null when unknown
   final int? season, episode;
+
+  /// For a series: the episode that was left (stream id and title), so the entry resumes it, and where in it.
+  final String? episodeId, episodeTitle;
+  final double? position, duration;
+
+  /// Seconds still to watch, when the length is known.
+  double? get secondsLeft => position == null || duration == null || duration! <= 0 ? null : (duration! - position!).clamp(0.0, double.infinity);
 }
 
 class EpisodeProgress {
@@ -34,18 +43,38 @@ abstract final class WatchProgress {
   static ContinueEntry _entry(Database db, Item item, ItemType type) {
     if (type == ItemType.series) {
       final r = db.select('''
-        SELECT h.position, h.duration, e.season, e.number FROM history h
+        SELECT h.position, h.duration, e.season, e.number, e.streamId AS epId, e.title AS epTitle FROM history h
         JOIN episode e ON e.accountId = h.accountId AND h.streamId = 'ep:' || e.streamId
         WHERE e.accountId = ? AND e.seriesId = ? AND h.type = 'series' ORDER BY h.updated DESC, h.rowid DESC LIMIT 1
         ''', [item.accountId, item.streamId]);
       if (r.isNotEmpty) {
         final row = r.first;
-        return ContinueEntry(item, fraction: _fraction(row['position'] as num, row['duration'] as num), season: row['season'] as int, episode: row['number'] as int);
+        return ContinueEntry(item,
+            fraction: _fraction(row['position'] as num, row['duration'] as num),
+            season: row['season'] as int,
+            episode: row['number'] as int,
+            episodeId: row['epId'] as String,
+            episodeTitle: row['epTitle'] as String?,
+            position: (row['position'] as num).toDouble(),
+            duration: (row['duration'] as num).toDouble());
       }
     }
     final r = db.select('SELECT position, duration FROM history WHERE accountId = ? AND type = ? AND streamId = ?',
         [item.accountId, item.type.name, item.streamId]);
-    return ContinueEntry(item, fraction: r.isEmpty ? null : _fraction(r.first['position'] as num, r.first['duration'] as num));
+    return ContinueEntry(item,
+        fraction: r.isEmpty ? null : _fraction(r.first['position'] as num, r.first['duration'] as num),
+        position: r.isEmpty ? null : (r.first['position'] as num).toDouble(),
+        duration: r.isEmpty ? null : (r.first['duration'] as num).toDouble());
+  }
+
+  /// "S2 E5 · 23 min left": where the title was left. The three formats are the platform's localized strings ("S%d E%d" and so on,
+  /// as functions). Null when nothing is known.
+  static String? caption(ContinueEntry e, {required String Function(int season, int episode) episode, required String Function(String time) left, required String Function(int minutes) minutes}) {
+    final ep = e.season != null && e.episode != null ? episode(e.season!, e.episode!) : null;
+    final s = e.secondsLeft;
+    final time = s == null ? null : left(minutes(max(1, (s / 60).ceil())));
+    final line = [?ep, ?time].join(' · ');
+    return line.isEmpty ? null : line;
   }
 
   /// Resume points of a series' episodes, keyed by the episode's stream id.

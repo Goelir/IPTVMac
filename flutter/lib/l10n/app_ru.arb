@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Пропустить заставку",
+  "playerSkipCredits": "Пропустить титры",
+  "playerSkipMenu": "Заставка и титры",
+  "playerMarkIntroStart": "Заставка начинается здесь",
+  "playerMarkIntroEnd": "Заставка заканчивается здесь",
+  "playerMarkCredits": "Титры начинаются здесь",
+  "playerSkipForget": "Забыть заставку и титры",
+  "playerSkipSaved": "Сохранено для всех серий этого сериала",
+  "playerSkipRefused": "В этом месте нельзя"
 }

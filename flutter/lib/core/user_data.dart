@@ -1,3 +1,4 @@
+import 'package:iptvmac/core/skip_marks.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'models.dart';
@@ -73,5 +74,25 @@ abstract final class UserData {
       items = [...viaEpisodes.where((i) => !have.contains(i.id)), ...items];
     }
     return items;
+  }
+
+  /// The marks of a series' intro and credits (empty when the user never marked any).
+  static SkipMarks skipMarks(Database db, {required int accountId, required String seriesId}) {
+    final r = db.select('SELECT introStart, introEnd, creditsLen FROM series_marks WHERE accountId=? AND seriesId=?', [accountId, seriesId]);
+    if (r.isEmpty) return const SkipMarks();
+    double? d(Object? v) => (v as num?)?.toDouble();
+    return SkipMarks(introStart: d(r.first['introStart']), introEnd: d(r.first['introEnd']), creditsLen: d(r.first['creditsLen']));
+  }
+
+  /// Empty marks remove the row.
+  static void saveSkipMarks(Database db, {required int accountId, required String seriesId, required SkipMarks marks}) {
+    if (marks.isEmpty) {
+      db.execute('DELETE FROM series_marks WHERE accountId=? AND seriesId=?', [accountId, seriesId]);
+      return;
+    }
+    db.execute('''
+      INSERT INTO series_marks (accountId, seriesId, introStart, introEnd, creditsLen) VALUES (?,?,?,?,?)
+      ON CONFLICT(accountId, seriesId) DO UPDATE SET introStart=excluded.introStart, introEnd=excluded.introEnd, creditsLen=excluded.creditsLen
+      ''', [accountId, seriesId, marks.introStart, marks.introEnd, marks.creditsLen]);
   }
 }

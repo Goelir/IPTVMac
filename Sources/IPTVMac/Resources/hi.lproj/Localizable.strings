@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "इंट्रो छोड़ें";
+"player.skipCredits" = "क्रेडिट छोड़ें";
+"player.skipMenu" = "इंट्रो और क्रेडिट";
+"player.markIntroStart" = "इंट्रो यहाँ से शुरू";
+"player.markIntroEnd" = "इंट्रो यहाँ खत्म";
+"player.markCredits" = "क्रेडिट यहाँ से शुरू";
+"player.skipForget" = "इंट्रो और क्रेडिट भूलें";
+"player.skipSaved" = "इस सीरीज़ के सभी एपिसोड के लिए सहेजा गया";
+"player.skipRefused" = "इस जगह यह संभव नहीं है";

@@ -106,6 +106,19 @@ private final class FakeKeychain: KeychainBacking {
     #expect(movies.count == 1 && movies[0].fraction == 0.25)
     let series = try db.dbQueue.read { try WatchProgress.continueEntries($0, accountId: aid, type: .series) }
     #expect(series.count == 1 && series[0].season == 1 && series[0].episode == 2 && series[0].fraction == 0.1)
+    #expect(series[0].episodeId == "102" && series[0].position == 10 && series[0].duration == 100 && series[0].secondsLeft == 90)   // where it was left
+    #expect(movies[0].episodeId == nil && movies[0].secondsLeft == 90)
+    let eps = try db.dbQueue.read { try WatchProgress.cachedEpisodes($0, accountId: aid, seriesId: "20") }
+    #expect(eps.map(\.streamId) == ["101", "102", "201"])                                                 // watching order
+}
+
+@Test func theCaptionSaysWhereAnEpisodeWasLeft() {
+    let item = Item(accountId: 1, type: .series, name: "S", streamId: "20")
+    func cap(_ e: ContinueEntry) -> String? { e.caption(episode: "S%d E%d", left: "%@ left", minutes: "%d min") }
+    #expect(cap(ContinueEntry(item: item, season: 2, episode: 5, position: 600, duration: 2400)) == "S2 E5 · 30 min left")
+    #expect(cap(ContinueEntry(item: item, position: 100, duration: 160)) == "1 min left")          // under a minute counts as one, never 0
+    #expect(cap(ContinueEntry(item: item, season: 1, episode: 1)) == "S1 E1")                       // no length known: only the episode
+    #expect(cap(ContinueEntry(item: item)) == nil)
 }
 
 @Test func upNextResumesHalfWatchedThenMovesOn() {

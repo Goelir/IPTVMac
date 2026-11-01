@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Pomiń intro";
+"player.skipCredits" = "Pomiń napisy końcowe";
+"player.skipMenu" = "Intro i napisy końcowe";
+"player.markIntroStart" = "Tu zaczyna się intro";
+"player.markIntroEnd" = "Tu kończy się intro";
+"player.markCredits" = "Tu zaczynają się napisy końcowe";
+"player.skipForget" = "Zapomnij intro i napisy końcowe";
+"player.skipSaved" = "Zapisano dla wszystkich odcinków tego serialu";
+"player.skipRefused" = "Nie można w tym miejscu";

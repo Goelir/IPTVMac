@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Пропусни началото";
+"player.skipCredits" = "Пропусни надписите";
+"player.skipMenu" = "Начало и надписи";
+"player.markIntroStart" = "Началната песен започва тук";
+"player.markIntroEnd" = "Началната песен свършва тук";
+"player.markCredits" = "Надписите започват тук";
+"player.skipForget" = "Забрави началото и надписите";
+"player.skipSaved" = "Запазено за всички епизоди на сериала";
+"player.skipRefused" = "Невъзможно в този момент";

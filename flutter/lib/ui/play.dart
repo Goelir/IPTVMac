@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/app/player_host.dart';
+import 'package:iptvmac/app/watch_progress.dart';
 import 'package:iptvmac/core/models.dart';
 import 'package:iptvmac/player/play_request.dart';
 import 'package:iptvmac/player/player_screen.dart';
@@ -24,6 +25,16 @@ Future<void> openItem(BuildContext context, Item item, {List<Item> zapList = con
   // On a TV the sheet is also where a direct-link movie gets its favorite star (a phone uses a long press for that).
   if (item.type == ItemType.movie && (item.directURL == null || isTelevision)) return showItemDetails(context, item);
   return playItem(context, item, zapList: zapList);
+}
+
+/// Continue watching: a series resumes the episode that was left, at its minute (its next episodes follow); a movie resumes at its minute.
+/// Without the episode list in the cache the series screen opens instead.
+Future<void> resumeEntry(BuildContext context, ContinueEntry entry) async {
+  final model = context.read<LibraryModel>();
+  final r = model.resumeRequest(entry);
+  if (r != null) return openPlayer(context, r);
+  if (model.passwordPrompt != null || model.syncMessage != null) return; // the root asks for the password / shows what went wrong
+  return openItem(context, entry.item);
 }
 
 /// Plays a movie or channel. With no stored password the model asks for it instead (the root shows the dialog).

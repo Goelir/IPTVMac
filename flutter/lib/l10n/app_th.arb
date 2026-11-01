@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "ข้ามช่วงอินโทร",
+  "playerSkipCredits": "ข้ามเครดิต",
+  "playerSkipMenu": "อินโทรและเครดิต",
+  "playerMarkIntroStart": "อินโทรเริ่มตรงนี้",
+  "playerMarkIntroEnd": "อินโทรจบตรงนี้",
+  "playerMarkCredits": "เครดิตเริ่มตรงนี้",
+  "playerSkipForget": "ลืมอินโทรและเครดิต",
+  "playerSkipSaved": "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว",
+  "playerSkipRefused": "ทำไม่ได้ตรงจุดนี้"
 }

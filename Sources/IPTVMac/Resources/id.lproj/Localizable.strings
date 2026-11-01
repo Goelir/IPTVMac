@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Lewati intro";
+"player.skipCredits" = "Lewati kredit";
+"player.skipMenu" = "Intro dan kredit";
+"player.markIntroStart" = "Intro mulai di sini";
+"player.markIntroEnd" = "Intro berakhir di sini";
+"player.markCredits" = "Kredit mulai di sini";
+"player.skipForget" = "Lupakan intro dan kredit";
+"player.skipSaved" = "Disimpan untuk semua episode serial ini";
+"player.skipRefused" = "Tidak bisa di titik ini";

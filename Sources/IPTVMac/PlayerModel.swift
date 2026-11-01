@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 import IPTVPlayer
+import IPTVAppKit
 
 @MainActor @Observable
 final class PlayerModel {
@@ -14,6 +15,8 @@ final class PlayerModel {
     var quality: String?                     // "4K", "FHD", "HD", "SD" of the picture being decoded; nil until known
     var error: String?
     private(set) var request: PlayRequest
+    /// The skip intro / skip credits buttons of the episode that plays (nil for anything that is not an episode).
+    var skip: SkipControls?
     /// The live channel a catch-up program was started from: the player's Live button returns to it.
     var liveRequest: PlayRequest?
     let preview = SeekPreview()             // thumbnails for the seek bar's hover bubble (its own hidden engine, opened on the first hover)
@@ -87,6 +90,7 @@ final class PlayerModel {
         wasAtEnd = true   // the old file may still report its end for a tick; only a real false -> true change counts
         if new.isLive { liveRequest = nil }
         request = new; retries = 0; error = nil; position = 0; duration = 0; lastPos = 0; retryPending = false
+        skip = nil
         preview.reset()
         setSpeed(1)
         mpv.load(new.url, start: new.start)
@@ -138,6 +142,7 @@ final class PlayerModel {
             if mpv.isAtEnd && error == nil { handleFailure() }
         }
         duration = mpv.double("duration") ?? 0
+        skip?.update(position: position, duration: duration)
         if !request.isLive {
             // A connection cut early also sets eof-reached: only the real end of the file starts the next episode.
             let atEnd = mpv.isAtEnd && duration > 0 && position >= duration - 15

@@ -2,6 +2,8 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 import IPTVPlayer
+import IPTVAppKit
+import IPTVCore
 
 /// Hosts the player's single video view. The view is moved here (and to the PiP window), never recreated.
 struct PlayerSurface: NSViewRepresentable {
@@ -76,6 +78,26 @@ struct PlayerScreen: View {
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
+            if let offer = pm.skip?.offer, model.upNext == nil {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button { doSkip(offer) } label: {
+                            Label(L(offer == .credits ? "player.skipCredits" : "player.skipIntro"), systemImage: "forward.end.fill").font(.headline)
+                        }.buttonStyle(.borderedProminent).controlSize(.large).help("S")
+                    }.padding(.trailing, 24).padding(.bottom, barsVisible ? 92 : 40)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if let n = pm.skip?.notice {
+                VStack {
+                    Spacer()
+                    Text(L(n == .saved ? "player.skipSaved" : "player.skipRefused")).font(.callout).padding(.horizontal, 14).padding(.vertical, 8)
+                        .background(.black.opacity(0.75), in: Capsule()).foregroundStyle(.white).padding(.bottom, 150)
+                }
+                .transition(.opacity)
+            }
             VStack {
                 HStack {
                     Button { model.stopPlayback() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }
@@ -110,6 +132,8 @@ struct PlayerScreen: View {
             .animation(.easeInOut(duration: 0.25), value: barsVisible)
         }
         .animation(reduceMotion ? nil : .smooth(duration: 0.3), value: model.upNext != nil)
+        .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: pm.skip?.offer)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: pm.skip?.notice)
         .coordinateSpace(name: "player")
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { playerWidth = $0 }
         .onContinuousHover { if case .active = $0 { revealBars() } }
@@ -125,6 +149,7 @@ struct PlayerScreen: View {
         .onKeyPress("[") { if !request.isLive { revealBars(); pm.stepSpeed(up: false) }; return .handled }
         .onKeyPress("]") { if !request.isLive { revealBars(); pm.stepSpeed(up: true) }; return .handled }
         .onKeyPress("a") { videoScale = videoScale.next; return .handled }
+        .onKeyPress("s") { if let o = pm.skip?.offer { doSkip(o); return .handled }; return .ignored }
         .onKeyPress("f") { NSApp.keyWindow?.toggleFullScreen(nil); return .handled }
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             providers.first?.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { data, _ in
@@ -199,6 +224,28 @@ struct PlayerScreen: View {
 
     private func skip(_ direction: Double) { revealBars(); pm.mpv.seek(by: direction * Double(seekStep)) }
 
+    private func doSkip(_ offer: SkipOffer) {
+        switch offer {
+        case .intro(let to): pm.mpv.seek(to: to)
+        case .credits: model.skipCredits()
+        }
+    }
+
+    /// Marks of the series: where its intro starts and ends, where its credits start. Every episode then offers the buttons.
+    @ViewBuilder private var skipMenu: some View {
+        if let sc = pm.skip {
+            Menu {
+                Button(L("player.markIntroStart")) { sc.markIntroStart(position: pm.position, duration: pm.duration) }
+                Button(L("player.markIntroEnd")) { sc.markIntroEnd(position: pm.position, duration: pm.duration) }
+                Button(L("player.markCredits")) { sc.markCredits(position: pm.position, duration: pm.duration) }
+                Divider()
+                Button(L("player.skipForget")) { sc.forget() }.disabled(sc.marks.isEmpty)
+            } label: { Image(systemName: "forward.end") }
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize().frame(width: 28, height: 28)
+            .help(L("player.skipMenu")).accessibilityLabel(L("player.skipMenu"))
+        }
+    }
+
     private var controls: some View {
         HStack(spacing: 16) {
             Button { pm.mpv.togglePause() } label: {
@@ -225,6 +272,7 @@ struct PlayerScreen: View {
             }
             trackMenu(type: "sub", title: L("player.subtitles"), prop: "sid", icon: "captions.bubble")
             trackMenu(type: "audio", title: L("player.audio"), prop: "aid", icon: "speaker.wave.2")
+            skipMenu
             sleepMenu
             if request.item?.tvArchive == true && request.isLive {
                 Button { showCatchup = true } label: { Image(systemName: "clock.arrow.circlepath") }.help(L("player.catchup"))

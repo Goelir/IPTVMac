@@ -18,6 +18,8 @@ final class PhonePlayer {
     let preview = SeekPreview()
     let levels = SystemLevels()
     @ObservationIgnored let upNext = UpNext()
+    /// The skip intro / skip credits buttons of the episode that plays (nil for anything that is not an episode).
+    var skipControls: SkipControls?
     @ObservationIgnored private let system = PlayerSystem()
 
     /// The model hands out the saved position: (position, duration).
@@ -118,6 +120,7 @@ final class PhonePlayer {
     func configure(model: PhoneModel) {
         guard self.model !== model else { return }
         self.model = model
+        skipControls = model.skipControls(for: request)
         onClose = { [weak model] in model?.stopPlayback() }
         refreshQueues()
     }
@@ -165,6 +168,7 @@ final class PhonePlayer {
         guard !closed else { return }
         upNext.cancel()
         request = r
+        skipControls = model?.skipControls(for: r)
         preview.reset()
         core.play(r.url, isLive: r.isLive, start: r.start)
         touchControls()
@@ -186,6 +190,15 @@ final class PhonePlayer {
     }
 
     private func goNext() { if request.isLive { zap(1) } else { playUpNextNow() } }
+
+    /// The skip button was pressed: the intro is jumped over; after the credits the next episode starts, or the picture goes to the end.
+    func doSkip(_ offer: SkipOffer) {
+        switch offer {
+        case .intro(let to): seek(to: to); touchControls()
+        case .credits:
+            if nextEpisode != nil { playUpNextNow() } else { seek(to: max(duration - 1, 0)) }
+        }
+    }
 
     private func refreshQueues() {
         guard let model else { return }
@@ -261,6 +274,7 @@ final class PhonePlayer {
         guard !closed else { return }
         controls.hideAfter = barsHide
         controls.tick(now: Date(), holding: holdControls)
+        skipControls?.update(position: position, duration: duration)
         system.setScreenAwake(!paused)
         system.updateNowPlaying(nowPlayingState)
         if view.pipMode == "pip" { view.syncPiP(position: position, duration: duration, paused: paused, speed: speed, live: isLive) }

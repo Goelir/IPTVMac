@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Bỏ qua phần mở đầu",
+  "playerSkipCredits": "Bỏ qua phần giới thiệu cuối",
+  "playerSkipMenu": "Mở đầu và phần cuối",
+  "playerMarkIntroStart": "Phần mở đầu bắt đầu ở đây",
+  "playerMarkIntroEnd": "Phần mở đầu kết thúc ở đây",
+  "playerMarkCredits": "Phần cuối bắt đầu ở đây",
+  "playerSkipForget": "Xóa phần mở đầu và phần cuối",
+  "playerSkipSaved": "Đã lưu cho mọi tập của phim này",
+  "playerSkipRefused": "Không thể ở thời điểm này"
 }

@@ -324,7 +324,7 @@ struct PosterScroll: View {
                 LazyVStack(alignment: .leading, spacing: 22) {
                     if !shelf.isEmpty { ContinueShelf(entries: shelf) }
                     LazyVGrid(columns: PosterGrid.columns(regular: sizeClass == .regular, scale: min(scale, 1.6)), spacing: 18) {
-                        ForEach(items) { PosterCell(item: $0) }
+                        ForEach(items) { PosterCell(item: $0, entry: $0.id.flatMap { model.continueInfo[$0] }) }
                     }
                     .padding(.horizontal, 16)
                 }

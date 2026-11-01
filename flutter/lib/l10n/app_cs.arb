@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Přeskočit úvod",
+  "playerSkipCredits": "Přeskočit titulky",
+  "playerSkipMenu": "Úvod a titulky",
+  "playerMarkIntroStart": "Úvod začíná tady",
+  "playerMarkIntroEnd": "Úvod končí tady",
+  "playerMarkCredits": "Titulky začínají tady",
+  "playerSkipForget": "Zapomenout úvod a titulky",
+  "playerSkipSaved": "Uloženo pro všechny epizody tohoto seriálu",
+  "playerSkipRefused": "V tomto místě to nejde"
 }

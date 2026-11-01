@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Salta l'intro";
+"player.skipCredits" = "Salta i titoli di coda";
+"player.skipMenu" = "Intro e titoli di coda";
+"player.markIntroStart" = "L'intro inizia qui";
+"player.markIntroEnd" = "L'intro finisce qui";
+"player.markCredits" = "I titoli di coda iniziano qui";
+"player.skipForget" = "Dimentica intro e titoli di coda";
+"player.skipSaved" = "Salvato per tutti gli episodi di questa serie";
+"player.skipRefused" = "Non possibile in questo punto";

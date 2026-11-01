@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Salta l''intro",
+  "playerSkipCredits": "Salta i titoli di coda",
+  "playerSkipMenu": "Intro e titoli di coda",
+  "playerMarkIntroStart": "L''intro inizia qui",
+  "playerMarkIntroEnd": "L''intro finisce qui",
+  "playerMarkCredits": "I titoli di coda iniziano qui",
+  "playerSkipForget": "Dimentica intro e titoli di coda",
+  "playerSkipSaved": "Salvato per tutti gli episodi di questa serie",
+  "playerSkipRefused": "Non possibile in questo punto"
 }

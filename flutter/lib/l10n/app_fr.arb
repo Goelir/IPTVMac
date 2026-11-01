@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Passer l''intro",
+  "playerSkipCredits": "Passer le générique",
+  "playerSkipMenu": "Intro et générique",
+  "playerMarkIntroStart": "L''intro commence ici",
+  "playerMarkIntroEnd": "L''intro se termine ici",
+  "playerMarkCredits": "Le générique commence ici",
+  "playerSkipForget": "Oublier l''intro et le générique",
+  "playerSkipSaved": "Enregistré pour tous les épisodes de cette série",
+  "playerSkipRefused": "Impossible à cet endroit"
 }

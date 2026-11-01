@@ -121,13 +121,16 @@ struct PosterImage: View {
 
 struct PosterCell: View {
     let item: Item
+    /// Set on the Continue watching page: the episode and the minute the title was left at. A tap resumes it.
+    var entry: ContinueEntry? = nil
     @Environment(PhoneModel.self) private var model
     @Environment(UIState.self) private var ui
 
     var body: some View {
         let fav = model.isFavorite(item)
         let current = ui.lastPlayedID == item.id
-        Button { RecentSearches().add(model.searchText); ui.open(item, model: model) } label: {
+        let caption = entry.flatMap { $0.caption(episode: L("series.epShort"), left: L("downloads.eta"), minutes: L("unit.minutesShort")) }
+        Button { RecentSearches().add(model.searchText); if let entry { model.resume(entry) } else { ui.open(item, model: model) } } label: {
             VStack(alignment: .leading, spacing: 6) {
                 PosterImage(item: item)
                     .overlay(alignment: .topLeading) { PlaylistBadge(item: item, onArtwork: true).padding(5) }
@@ -135,11 +138,16 @@ struct PosterCell: View {
                         if fav { Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow).padding(5).background(Color.black.opacity(0.62), in: Circle()).padding(5) }
                     }
                     .overlay { if current { RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(Color.accentColor, lineWidth: 3) } }
-                Text(item.name).font(.subheadline).foregroundStyle(.primary).lineLimit(2, reservesSpace: true).multilineTextAlignment(.leading)
+                    .overlay(alignment: .bottom) {
+                        if let f = entry?.fraction { ProgressBar(value: f).padding(.horizontal, 8).padding(.bottom, 8).shadow(color: .black.opacity(0.4), radius: 2, y: 1) }
+                    }
+                Text(item.name).font(.subheadline).foregroundStyle(.primary).lineLimit(entry == nil ? 2 : 1, reservesSpace: entry == nil).multilineTextAlignment(.leading)
+                if let caption { Text(caption).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(PressStyle())
+        .accessibilityLabel([item.name, caption].compactMap { $0 }.joined(separator: ", "))
         .contextMenu {
             if item.type == .movie { Button { model.play(item) } label: { Label(L("info.play"), systemImage: "play.fill") } }
             if model.hasInfo(item) && item.type == .movie { Button { ui.openInfo = item } label: { Label(L("info.details"), systemImage: "info.circle") } }
@@ -172,8 +180,8 @@ private struct ContinueCard: View {
     @Environment(PhoneModel.self) private var model
 
     var body: some View {
-        let label = entry.season.flatMap { s in entry.episode.map { String(format: L("series.epShort"), s, $0) } }
-        Button { model.play(entry.item) } label: {
+        let label = entry.caption(episode: L("series.epShort"), left: L("downloads.eta"), minutes: L("unit.minutesShort"))
+        Button { model.resume(entry) } label: {
             VStack(alignment: .leading, spacing: 6) {
                 PosterImage(item: entry.item)
                     .overlay(alignment: .bottom) {

@@ -1,4 +1,5 @@
 import 'package:iptvmac/core/models.dart';
+import 'package:iptvmac/core/skip_marks.dart';
 
 /// What to play: the contract between the app shell (lib/app, lib/ui) and the player (lib/player).
 /// The shell builds one and pushes `PlayerScreen(request:, host:)`; the player never touches the database or the network
@@ -43,6 +44,13 @@ abstract class PlayerHost {
 
   /// The programme on now for a live channel (EPG), or null.
   String? liveProgramme(PlayRequest request);
+
+  /// The marks of the series that [request] (an episode) belongs to: where its intro and credits are (empty until the user marks them).
+  /// Null for anything that is not an episode: there is nothing to skip and the skip menu is not shown.
+  SkipMarks? skipMarks(PlayRequest request) => null;
+
+  /// Keeps the marks of that series (empty marks forget them).
+  void saveSkipMarks(PlayRequest request, SkipMarks marks) {}
 
   /// The user closed the player (back button / close): the shell pops the screen.
   void closePlayer();

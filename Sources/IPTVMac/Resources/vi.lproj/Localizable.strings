@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Bỏ qua phần mở đầu";
+"player.skipCredits" = "Bỏ qua phần giới thiệu cuối";
+"player.skipMenu" = "Mở đầu và phần cuối";
+"player.markIntroStart" = "Phần mở đầu bắt đầu ở đây";
+"player.markIntroEnd" = "Phần mở đầu kết thúc ở đây";
+"player.markCredits" = "Phần cuối bắt đầu ở đây";
+"player.skipForget" = "Xóa phần mở đầu và phần cuối";
+"player.skipSaved" = "Đã lưu cho mọi tập của phim này";
+"player.skipRefused" = "Không thể ở thời điểm này";

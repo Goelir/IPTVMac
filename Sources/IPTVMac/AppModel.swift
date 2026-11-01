@@ -159,7 +159,7 @@ final class AppModel: LibraryModel {
         }
     }
 
-    func playEpisode(_ e: Episode, of series: Item, in all: [Episode]? = nil) {
+    override func playEpisode(_ e: Episode, of series: Item, in all: [Episode]? = nil) {
         guard let r = episodeRequest(e, of: series) else { return }
         cancelUpNext()
         if let all { episodeQueue = all }
@@ -190,6 +190,13 @@ final class AppModel: LibraryModel {
 
     func cancelUpNext() { upNextTask?.cancel(); upNextTask = nil; upNext = nil }
 
+    /// "Skip credits": the next episode starts at once; after the last one the picture goes to the end of the file.
+    func skipCredits() {
+        guard let r = playing, let key = r.episodeKey, let series = r.item else { return }
+        if let next = EpisodeQueue.next(after: String(key.dropFirst(3)), in: episodeQueue) { playEpisode(next, of: series, in: episodeQueue) }
+        else if let p = player { p.mpv.seek(to: max(p.duration - 1, 0)) }
+    }
+
     override func startPlayback(_ r: PlayRequest) {
         defer { updateToolbar() }
         cancelUpNext()                                           // a pending "up next" must not replace what the user picked now
@@ -197,9 +204,10 @@ final class AppModel: LibraryModel {
         if pip { exitPiP() }
         if openFullscreen { setFullscreen(true) }
         // replace() saves the old position through onSaveProgress, which reads `playing`: switch only afterwards.
-        if let p = player { p.replace(with: r); playing = r; return }
+        if let p = player { p.replace(with: r); p.skip = skipControls(for: r); playing = r; return }
         playing = r
         let p = PlayerModel(request: r)
+        p.skip = skipControls(for: r)
         p.onSaveProgress = { [weak self] pos, dur, background in
             guard let self, let cur = self.playing else { return }
             self.saveProgress(cur, position: pos, duration: dur, background: background)

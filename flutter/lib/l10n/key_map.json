@@ -248,5 +248,14 @@
   "subExpires": "sub.expires",
   "subExpired": "sub.expired",
   "subDaysLeft": "sub.daysLeft",
-  "onbWelcomeRights": "onb.welcome.rights"
+  "onbWelcomeRights": "onb.welcome.rights",
+  "playerSkipIntro": "player.skipIntro",
+  "playerSkipCredits": "player.skipCredits",
+  "playerSkipMenu": "player.skipMenu",
+  "playerMarkIntroStart": "player.markIntroStart",
+  "playerMarkIntroEnd": "player.markIntroEnd",
+  "playerMarkCredits": "player.markCredits",
+  "playerSkipForget": "player.skipForget",
+  "playerSkipSaved": "player.skipSaved",
+  "playerSkipRefused": "player.skipRefused"
 }

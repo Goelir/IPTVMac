@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'core/models.dart';
+import 'core/skip_marks.dart';
 import 'l10n/app_localizations.dart';
 import 'player/play_request.dart';
 import 'player/player_screen.dart';
@@ -82,6 +83,12 @@ class FakeHost implements PlayerHost {
 
   @override
   Future<void> toggleFavorite(Item item) async => favorites.contains(item.name) ? favorites.remove(item.name) : favorites.add(item.name);
+
+  @override
+  SkipMarks? skipMarks(PlayRequest request) => null;
+
+  @override
+  void saveSkipMarks(PlayRequest request, SkipMarks marks) {}
 
   @override
   PlayRequest? zap(PlayRequest current, int step) {

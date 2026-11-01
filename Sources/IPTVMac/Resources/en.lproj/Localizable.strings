@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Skip intro";
+"player.skipCredits" = "Skip credits";
+"player.skipMenu" = "Intro and credits";
+"player.markIntroStart" = "Intro starts here";
+"player.markIntroEnd" = "Intro ends here";
+"player.markCredits" = "Credits start here";
+"player.skipForget" = "Forget intro and credits";
+"player.skipSaved" = "Saved for every episode of this series";
+"player.skipRefused" = "Not possible at this point";

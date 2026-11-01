@@ -272,7 +272,7 @@ class ResultsView extends StatelessWidget {
           else ...[
             if (shelf.isNotEmpty) SliverPadding(padding: const EdgeInsets.only(top: 12, bottom: 20), sliver: SliverToBoxAdapter(child: ContinueShelf(entries: shelf, autofocus: true))),
             if (shelf.isEmpty) const SliverToBoxAdapter(child: SizedBox(height: 12)),
-            PosterGridSliver(items: results, autofocus: shelf.isEmpty),
+            PosterGridSliver(items: results, autofocus: shelf.isEmpty, entries: m.continueInfo),
           ],
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],

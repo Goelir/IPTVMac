@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "인트로 건너뛰기";
+"player.skipCredits" = "크레딧 건너뛰기";
+"player.skipMenu" = "인트로와 크레딧";
+"player.markIntroStart" = "여기서 인트로 시작";
+"player.markIntroEnd" = "여기서 인트로 끝";
+"player.markCredits" = "여기서 크레딧 시작";
+"player.skipForget" = "인트로와 크레딧 지우기";
+"player.skipSaved" = "이 시리즈의 모든 에피소드에 저장됨";
+"player.skipRefused" = "이 위치에서는 할 수 없습니다";

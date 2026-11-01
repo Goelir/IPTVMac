@@ -93,6 +93,7 @@ struct PlayerScreen: View {
                 Spacer(minLength: 0)
                 VStack(spacing: 8) {
                     UpNextCard(player: player).frame(maxWidth: .infinity, alignment: .trailing)
+                    SkipOfferButton(player: player)
                     bottomPanel
                         .offset(y: transportVisible || reduceMotion ? 0 : 8)
                         .opacity(transportVisible ? 1 : 0).allowsHitTesting(transportVisible)
@@ -154,6 +155,7 @@ struct PlayerScreen: View {
                     .opacity(visible ? 1 : 0).allowsHitTesting(visible)
                     TransportCluster(player: player, compact: true).opacity(clusterVisible ? 1 : 0).allowsHitTesting(clusterVisible)
                     VStack { Spacer(); UpNextCard(player: player).padding(.horizontal, 8).padding(.bottom, 44) }
+                    VStack { Spacer(); SkipOfferButton(player: player).padding(.horizontal, 10).padding(.bottom, 52) }
                     ErrorCard(player: player).scaleEffect(0.85)
                 }
                 .frame(height: g.size.width * 9 / 16)

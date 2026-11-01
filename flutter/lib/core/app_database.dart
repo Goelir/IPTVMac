@@ -142,6 +142,8 @@ class AppDatabase {
     ('v3-fts-trigger', _v3),
     // What the provider says about a movie or series (parsed JSON, no credentials), kept for 14 days; goes with its playlist.
     ('v4-item-info', _v4),
+    // Where the intro and the credits of a series are, marked by the user once and used for every episode.
+    ('v5-series-marks', _v5),
   ];
 
   static const _v1 = '''
@@ -200,6 +202,13 @@ CREATE TRIGGER "__item_fts_au" AFTER UPDATE OF name ON item WHEN old.name IS NOT
   INSERT INTO item_fts(item_fts, rowid, name) VALUES('delete', old.id, old.name);
   INSERT INTO item_fts(rowid, name) VALUES (new.id, new.name);
 END;
+''';
+
+  static const _v5 = '''
+CREATE TABLE "series_marks" (
+  "accountId" INTEGER NOT NULL REFERENCES "account"("id") ON DELETE CASCADE,
+  "seriesId" TEXT NOT NULL, "introStart" DOUBLE, "introEnd" DOUBLE, "creditsLen" DOUBLE,
+  PRIMARY KEY ("accountId","seriesId"));
 ''';
 
   static const _v4 = '''

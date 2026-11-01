@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Saltar intro";
+"player.skipCredits" = "Saltar créditos";
+"player.skipMenu" = "Intro y créditos";
+"player.markIntroStart" = "La intro empieza aquí";
+"player.markIntroEnd" = "La intro termina aquí";
+"player.markCredits" = "Los créditos empiezan aquí";
+"player.skipForget" = "Olvidar intro y créditos";
+"player.skipSaved" = "Guardado para todos los episodios de esta serie";
+"player.skipRefused" = "No es posible en este punto";

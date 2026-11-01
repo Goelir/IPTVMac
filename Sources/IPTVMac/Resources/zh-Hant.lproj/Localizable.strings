@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "跳過片頭";
+"player.skipCredits" = "跳過片尾";
+"player.skipMenu" = "片頭與片尾";
+"player.markIntroStart" = "片頭從這裡開始";
+"player.markIntroEnd" = "片頭到這裡結束";
+"player.markCredits" = "片尾從這裡開始";
+"player.skipForget" = "清除片頭與片尾";
+"player.skipSaved" = "已為此影集所有集數儲存";
+"player.skipRefused" = "此處無法設定";

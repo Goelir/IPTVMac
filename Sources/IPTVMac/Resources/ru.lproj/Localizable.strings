@@ -248,3 +248,12 @@
 "sub.expired" = "Expired %@";
 "sub.daysLeft" = "Days left: %d";
 "onb.welcome.rights" = "Use only sources you are authorized to access.";
+"player.skipIntro" = "Пропустить заставку";
+"player.skipCredits" = "Пропустить титры";
+"player.skipMenu" = "Заставка и титры";
+"player.markIntroStart" = "Заставка начинается здесь";
+"player.markIntroEnd" = "Заставка заканчивается здесь";
+"player.markCredits" = "Титры начинаются здесь";
+"player.skipForget" = "Забыть заставку и титры";
+"player.skipSaved" = "Сохранено для всех серий этого сериала";
+"player.skipRefused" = "В этом месте нельзя";

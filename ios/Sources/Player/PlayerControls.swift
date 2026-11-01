@@ -163,6 +163,55 @@ struct ScaleMenu: View {
     }
 }
 
+/// Marks of the series: where its intro starts and ends and where its credits start. Every episode then offers the skip buttons.
+struct SkipMenu: View {
+    let player: PhonePlayer
+    let labeled: Bool
+    var body: some View {
+        if let sc = player.skipControls {
+            Menu {
+                Button(L("player.markIntroStart")) { sc.markIntroStart(position: player.position, duration: player.duration) }
+                Button(L("player.markIntroEnd")) { sc.markIntroEnd(position: player.position, duration: player.duration) }
+                Button(L("player.markCredits")) { sc.markCredits(position: player.position, duration: player.duration) }
+                Divider()
+                Button(L("player.skipForget"), role: .destructive) { sc.forget() }.disabled(sc.marks.isEmpty)
+            } label: {
+                UtilityLabel(symbol: sc.marks.isEmpty ? "forward.end" : "forward.end.fill", title: L("player.skipMenu"), labeled: labeled)
+            }
+            .menuOrder(.fixed)
+            .accessibilityLabel(L("player.skipMenu"))
+        }
+    }
+}
+
+/// "Skip intro" / "Skip credits", over the picture while the marks of the series say so (and a short message after marking).
+struct SkipOfferButton: View {
+    let player: PhonePlayer
+    var body: some View {
+        if let sc = player.skipControls {
+            VStack(alignment: .trailing, spacing: 8) {
+                if let n = sc.notice {
+                    Text(L(n == .saved ? "player.skipSaved" : "player.skipRefused")).font(.footnote).foregroundStyle(.white)
+                        .padding(.horizontal, 12).padding(.vertical, 7).background(.black.opacity(0.75), in: Capsule())
+                        .transition(.opacity)
+                }
+                if let offer = sc.offer, !player.upNext.isCounting {
+                    Button { player.doSkip(offer) } label: {
+                        Label(L(offer == .credits ? "player.skipCredits" : "player.skipIntro"), systemImage: "forward.end.fill")
+                            .font(.subheadline.weight(.semibold)).foregroundStyle(.black)
+                            .padding(.horizontal, 16).padding(.vertical, 11).background(.white, in: Capsule())
+                    }
+                    .buttonStyle(PlayerPressStyle())
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                }
+            }
+            .animation(.easeInOut(duration: 0.22), value: sc.offer)
+            .animation(.easeInOut(duration: 0.2), value: sc.notice)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+}
+
 struct SleepMenu: View {
     let player: PhonePlayer
     let labeled: Bool
@@ -197,6 +246,7 @@ struct UtilityRow: View {
             SubtitleMenu(player: player, labeled: labeled, importing: $importing, adjusting: $adjusting).frame(maxWidth: .infinity)
             AudioMenu(player: player, labeled: labeled).frame(maxWidth: .infinity)
             ScaleMenu(player: player, labeled: labeled).frame(maxWidth: .infinity)
+            SkipMenu(player: player, labeled: labeled).frame(maxWidth: .infinity)
             SleepMenu(player: player, labeled: labeled).frame(maxWidth: .infinity)
         }
     }

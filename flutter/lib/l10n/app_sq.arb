@@ -249,5 +249,14 @@
   "subExpires": "Expires {p1}",
   "subExpired": "Expired {p1}",
   "subDaysLeft": "Days left: {p1}",
-  "onbWelcomeRights": "Use only sources you are authorized to access."
+  "onbWelcomeRights": "Use only sources you are authorized to access.",
+  "playerSkipIntro": "Kapërce hyrjen",
+  "playerSkipCredits": "Kapërce titrat e fundit",
+  "playerSkipMenu": "Hyrja dhe titrat e fundit",
+  "playerMarkIntroStart": "Hyrja fillon këtu",
+  "playerMarkIntroEnd": "Hyrja mbaron këtu",
+  "playerMarkCredits": "Titrat e fundit fillojnë këtu",
+  "playerSkipForget": "Harro hyrjen dhe titrat",
+  "playerSkipSaved": "Ruajtur për të gjitha episodet e këtij seriali",
+  "playerSkipRefused": "Nuk është e mundur në këtë pikë"
 }
