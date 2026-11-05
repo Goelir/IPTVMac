@@ -290,7 +290,7 @@ CHANGELOG = {
 DOWNLOAD["en"].update(
   hero=["Download", "IPTVMac", "for free."],
   main=dict(mac=("Download for Mac", "Version {v} · {s} MB · Apple Silicon, macOS 14+"), windows=("Download for Windows", "Version {v} · {s} MB installer · Windows 10 and 11, 64-bit"), android=("Download for Android", "Version {v} · {s} MB · Android 8+"),
-            tv=("Download for Android TV", "32-bit file · {s} MB · Android 8+ · remote control")),
+            tv=("Download for Android TV", "32-bit file · {s} MB · Android 8+ · remote control"), ios=("Download on the App Store", "Free · iOS 17 or later · iPhone and iPad")),
   cue="Every device",
   marquee=["Free", "Open source, GPL-3.0", "No account", "No ads", "No tracking", "31 languages", "Xtream Codes and M3U", "Mac, Windows, Android, Android TV", "Powered by mpv", "Picture in Picture"],
   pick_h="Choose your screen.", pick_p="The file, three steps and what to expect, for each device.",
@@ -301,7 +301,7 @@ DOWNLOAD["en"].update(
 DOWNLOAD["he"].update(
   hero=["הורדת", "IPTVMac", "בחינם."],
   main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14+"), windows=("הורדה ל-Windows", "גרסה {v} · מתקין {s}MB · Windows 10 ו-11, ‏64 ביט"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8+"),
-            tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8+ · שלט")),
+            tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8+ · שלט"), ios=("הורדה מ-App Store", "חינמית · iOS 17 ומעלה · iPhone ו-iPad")),
   cue="כל המכשירים",
   marquee=["חינמי", "קוד פתוח, GPL-3.0", "בלי חשבון", "בלי פרסומות", "בלי מעקב", "31 שפות", "Xtream Codes ו-M3U", "Mac, ‏Windows, ‏Android, ‏Android TV", "מבוסס על mpv", "תמונה בתוך תמונה"],
   pick_h="בוחרים מסך.", pick_p="הקובץ, שלושה שלבים ומה לצפות לו, לכל מכשיר.",

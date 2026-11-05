@@ -2,7 +2,7 @@
 # One command from a clean checkout to ios/IPTVPhone.xcodeproj (git-ignored; ios/project.yml is the source):
 #   1. iOS libmpv (scripts/fetch-ios-mpv.sh)   2. CA bundle (scripts/make-ca-bundle.sh)
 #   3. XcodeGen, pinned and hash-checked, into build/tools (never installed system-wide)   4. generate the project.
-# Optional environment: IOS_TEAM_ID=<Apple Team ID> (signing team, so it survives regeneration), IPTV_BUILD=<build number> (default 1).
+# Optional environment: IOS_TEAM_ID=<Apple Team ID> (signing team, so it survives regeneration), IPTV_BUILD=<build number> (default 1), IPTV_VERSION=<version> (default: the VERSION file).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -31,7 +31,8 @@ fi
   printf '        CFBundleLocalizations: [%s]\n' "$(cd Sources/IPTVMac/Resources && ls -d *.lproj | sed 's/\.lproj$//' | paste -sd, - | sed 's/,/, /g')"
 } > ios/Generated/generated.yml
 
-export IPTV_VERSION="$(cat VERSION)" IPTV_BUILD="${IPTV_BUILD:-1}"
+# IPTV_VERSION: the app version of the iPhone app when it differs from the Mac's VERSION file (App Store Connect has its own version records).
+export IPTV_VERSION="${IPTV_VERSION:-$(cat VERSION)}" IPTV_BUILD="${IPTV_BUILD:-1}"
 "$XG_DIR/xcodegen/bin/xcodegen" generate --spec ios/project.yml --project ios --quiet
 # ios/Resources/Info-extra.plist (the resources work: launch screen, document types, local-network text...) wins over the keys of project.yml.
 EXTRA=ios/Resources/Info-extra.plist

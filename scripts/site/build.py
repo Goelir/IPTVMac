@@ -250,7 +250,7 @@ HOME = {
           ("guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "Add a playlist link and get Live, Movies and Series."),
           ("guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "Keep a stream in a floating window while you do something else.")],
   cta_l=["Free.", "Open source."], cta_p="GPL-3.0. No account, no ads, no tracking.", cta_dl="Download for Mac", cta_src="Source on GitHub",
-  android_h="Android and Android TV", android_dl="Android (APK)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
+  android_h="Android and Android TV", android_dl="Android (APK)", ios_dl="iPhone and iPad (App Store)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
   foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
@@ -335,7 +335,7 @@ HOME = {
           ("../guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "מוסיפים קישור לרשימה ומקבלים ערוצים, סרטים וסדרות."),
           ("../guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "משאירים סטרים בחלון צף ועושים משהו אחר.")],
   cta_l=["חינם.", "קוד פתוח."], cta_p="GPL-3.0. בלי חשבון, בלי פרסומות ובלי מעקב.", cta_dl="הורדה ל-Mac", cta_src="קוד המקור ב-GitHub",
-  android_h="Android ו-Android TV", android_dl="Android (APK)", android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
+  android_h="Android ו-Android TV", android_dl="Android (APK)", ios_dl="iPhone ו-iPad (App Store)", android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
@@ -601,7 +601,7 @@ def home(code):
 '''
     # closing
     out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
-<p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a><a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
+<p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a><a class="btn big" data-fx-magnetic href="{APP_STORE}" rel="noopener">{ICON_DL}{e(c["ios_dl"])}</a><a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
 <p class="disc">{e(c["foot"])}</p></div></section>
 </main>
 '''
@@ -828,11 +828,11 @@ def download_page(code):
     mac, wn, an, tv, ios = d["mac"], d["win"], d["android"], d["tv"], d["ios"]
     mm = d["main"]
     fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
-    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])]}
+    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])], "ios": [APP_STORE, *fill("ios", "", 0)]}
     recs = "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
     hero_actions = (f'<div class="hero-big"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
                     f'<span class="big-meta" id="dl-meta">{e(rec["mac"][2])}</span></div>'
-                    f'<div class="hero-sub"><a class="link" href="#windows">{e(ui["windows"])}</a><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
+                    f'<div class="hero-sub"><a class="link" href="#windows">{e(ui["windows"])}</a><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="#ios">{e(ui["ios"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
     hero = pghero(code, d["hero"], d["lede"], d["h1"], hero_actions, devstack(up, (d["alt_mac"], d["alt_phone"], d["alt_tv"])), "#pick", d["cue"])
     ol = lambda steps: '<ol class="bsteps">' + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
     other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
