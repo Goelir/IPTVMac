@@ -20,7 +20,7 @@ Free and open source. No accounts, no analytics.
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
 
-[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
+[**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) &nbsp;|&nbsp; [**iPhone and iPad (App Store)**](https://apps.apple.com/app/id6821761790) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
 
 If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 
@@ -42,9 +42,9 @@ If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 |---|---|---|
 | **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](#install) | Released, signed and notarized, updates itself |
 | **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor |
-| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) (`arm64-v8a` for almost every phone) | Released, install by hand |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) (`arm64-v8a` for almost every phone) | Released; updates from inside the app |
 | **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen |
-| **iPhone and iPad** | Waiting for App Store review; [build from source](#other-platforms) meanwhile | Not released |
+| **iPhone and iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), or [build from source](#other-platforms) | Released (version 1.0); an update with the newest features is next |
 
 The same engine, 31 languages and no-account design everywhere.
 
@@ -220,7 +220,7 @@ The installed app checks GitHub Releases at launch and every 6 hours. When a new
 Details for Windows, iPhone and iPad, Android and Android TV (downloads, install steps, how each app is built) are in [docs/PLATFORMS.md](docs/PLATFORMS.md); building from source and the technical details are in [docs/BUILDING.md](docs/BUILDING.md).
 
 - **Windows:** [installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) (Windows 10 or 11, 64-bit). Not signed with a paid certificate yet, so SmartScreen may warn: choose **More info**, then **Run anyway**.
-- <a id="iphone-and-ipad"></a>**iPhone and iPad:** submitted to the App Store, waiting for review. To build it yourself see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv).
+- <a id="iphone-and-ipad"></a>**iPhone and iPad:** [on the App Store](https://apps.apple.com/app/id6821761790). To build it yourself see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv).
 - **Android and Android TV:** see [the section above](#android-and-android-tv).
 
 ## Guides

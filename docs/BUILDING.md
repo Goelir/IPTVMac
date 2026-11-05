@@ -8,9 +8,9 @@ How IPTVMac is built on each platform, what it is written in, and which third-pa
 |---|---|---|---|
 | **Mac** (Apple Silicon, macOS 14+) | [DMG or one-line install](../README.md#install) | Released, signed and notarized, updates itself | Swift + SwiftUI |
 | **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor | Dart + Flutter, small C++ shell |
-| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) (`arm64-v8a` for almost every phone) | Released, install by hand | Dart + Flutter, Kotlin layer |
+| **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) (`arm64-v8a` for almost every phone) | Released; updates from inside the app | Dart + Flutter, Kotlin layer |
 | **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6), installed with the Downloader app or a USB stick (see [Other platforms](PLATFORMS.md)) | First version: remote control, no touch screen | Dart + Flutter, Kotlin layer |
-| **iPhone and iPad** | Waiting for App Store review; [build from source](PLATFORMS.md) meanwhile | Not released | Swift + SwiftUI |
+| **iPhone and iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), or [build from source](PLATFORMS.md) | Released (version 1.0) | Swift + SwiftUI |
 
 The same engine, 31 languages and no-account design everywhere. On every platform the video is decoded by the same compiled libmpv engine.
 
@@ -25,7 +25,7 @@ Use `scripts/swift.sh` instead of bare `swift` when only Command Line Tools are 
 
 ## iPhone and iPad (Swift and SwiftUI)
 
-Build with `scripts/ios-setup.sh`, then open `ios/IPTVPhone.xcodeproj` (see [ios/README.md](../ios/README.md)). The app is submitted to the App Store and waiting for review.
+Build with `scripts/ios-setup.sh`, then open `ios/IPTVPhone.xcodeproj` (see [ios/README.md](../ios/README.md)). The app is [on the App Store](https://apps.apple.com/app/id6821761790).
 
 ## Android and Android TV (Dart and Flutter, with a Kotlin layer)
 
