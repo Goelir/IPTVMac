@@ -3,6 +3,7 @@ import 'package:iptvmac/core/skip_marks.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'models.dart';
+import 'natural_sort.dart';
 
 /// Favorites and watch history. `accountId: null` = every playlist (here and in the queries below).
 abstract final class UserData {
@@ -27,10 +28,14 @@ abstract final class UserData {
           favoriteKey(accountId: r['accountId'] as int, type: ItemType.parse(r['type']) ?? ItemType.live, streamId: r['streamId'] as String)
       };
 
-  static List<Item> favorites(Database db, {int? accountId, required ItemType type}) => Item.fromRows(db.select('''
+  /// The favorites in the provider's order, or by name ([sortedByName]: A to Z, see [compareNames]).
+  static List<Item> favorites(Database db, {int? accountId, required ItemType type, bool sortedByName = false}) {
+    final items = Item.fromRows(db.select('''
       SELECT item.* FROM item JOIN favorite f ON f.accountId=item.accountId AND f.type=item.type AND f.streamId=item.streamId
       WHERE (? IS NULL OR item.accountId=?) AND item.type=? ORDER BY item.id
       ''', [accountId, accountId, type.name]));
+    return sortedByName ? (items..sort((a, b) => compareNames(a.name, b.name))) : items;
+  }
 
   static void saveProgress(Database db,
       {required int accountId, required ItemType type, required String streamId, required double position, required double duration}) {

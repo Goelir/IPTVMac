@@ -258,3 +258,4 @@
 "player.skipSaved" = "এই সিরিজের সব পর্বের জন্য সংরক্ষিত";
 "player.skipRefused" = "এই মুহূর্তে সম্ভব নয়";
 "continue.remove" = "দেখা চালিয়ে যাওয়া থেকে সরান";
+"settings.favoritesAZ" = "পছন্দের তালিকা নামের ক্রমে সাজান (A–Z)";

@@ -259,5 +259,6 @@
   "playerSkipForget": "Забути заставку і титри",
   "playerSkipSaved": "Збережено для всіх серій цього серіалу",
   "playerSkipRefused": "У цьому місці неможливо",
-  "continueRemove": "Прибрати з «Продовжити перегляд»"
+  "continueRemove": "Прибрати з «Продовжити перегляд»",
+  "settingsFavoritesAZ": "Сортувати обране за назвою (А–Я)"
 }

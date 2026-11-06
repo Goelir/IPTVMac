@@ -259,5 +259,6 @@
   "playerSkipForget": "清除片头和片尾",
   "playerSkipSaved": "已为该剧所有剧集保存",
   "playerSkipRefused": "此处无法设置",
-  "continueRemove": "从“继续观看”中移除"
+  "continueRemove": "从“继续观看”中移除",
+  "settingsFavoritesAZ": "按名称排序收藏 (A–Z)"
 }

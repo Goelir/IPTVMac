@@ -259,5 +259,6 @@
   "playerSkipForget": "Intro und Abspann vergessen",
   "playerSkipSaved": "Für alle Folgen dieser Serie gespeichert",
   "playerSkipRefused": "An dieser Stelle nicht möglich",
-  "continueRemove": "Aus „Weiterschauen“ entfernen"
+  "continueRemove": "Aus „Weiterschauen“ entfernen",
+  "settingsFavoritesAZ": "Favoriten nach Name sortieren (A–Z)"
 }

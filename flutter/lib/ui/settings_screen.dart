@@ -198,6 +198,12 @@ class _PreferencesSection extends StatelessWidget {
             ),
           ),
         ),
+        SwitchListTile(
+          key: const Key('favorites-az-switch'),
+          title: Text(l.settingsFavoritesAZ),
+          value: m.prefs.favoritesSortAZ,
+          onChanged: m.setFavoritesSortAZ,
+        ),
       ]),
       _Section(title: null, note: Text(Missing.languageNote), children: [
         ListTile(title: Text(l.settingsInterfaceLanguage), trailing: Text(languageName(Localizations.localeOf(context)))),

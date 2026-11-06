@@ -259,5 +259,6 @@
   "playerSkipForget": "清除片頭與片尾",
   "playerSkipSaved": "已為此影集所有集數儲存",
   "playerSkipRefused": "此處無法設定",
-  "continueRemove": "從「繼續觀看」中移除"
+  "continueRemove": "從「繼續觀看」中移除",
+  "settingsFavoritesAZ": "依名稱排序我的最愛 (A–Z)"
 }

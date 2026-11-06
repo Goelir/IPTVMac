@@ -258,3 +258,4 @@
 "player.skipSaved" = "تم الحفظ لجميع حلقات هذا المسلسل";
 "player.skipRefused" = "غير ممكن في هذه اللحظة";
 "continue.remove" = "إزالة من متابعة المشاهدة";
+"settings.favoritesAZ" = "ترتيب المفضلة حسب الاسم (أ–ي)";

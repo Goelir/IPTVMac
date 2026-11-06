@@ -259,5 +259,6 @@
   "playerSkipForget": "Xóa phần mở đầu và phần cuối",
   "playerSkipSaved": "Đã lưu cho mọi tập của phim này",
   "playerSkipRefused": "Không thể ở thời điểm này",
-  "continueRemove": "Xóa khỏi Xem tiếp"
+  "continueRemove": "Xóa khỏi Xem tiếp",
+  "settingsFavoritesAZ": "Sắp xếp mục yêu thích theo tên (A–Z)"
 }

@@ -197,6 +197,25 @@ void main() {
       expect(m.skipMarksOf(m.requestFor(Item(id: 1, accountId: 1, type: ItemType.live, name: 'News 24', streamId: '1', directURL: 'http://h/1.ts'))!), isNull);
     });
 
+    test('the Favorites page follows the "sort by name" setting at once', () async {
+      final h = await Harness.createPlain(withAccount: true, sync: true);
+      final m = h.model;
+      m.setTab(ItemType.movie);
+      h.db.write((d) => Item(accountId: m.accounts.single.id!, type: ItemType.movie, name: 'Aardvark', streamId: '99').insert(d)); // last from the provider, first by name
+      final movies = h.db.read((d) => Item.all(d).where((i) => i.type == ItemType.movie).toList());
+      for (final i in movies.reversed) {
+        m.toggleFavorite(i);
+      }
+      m.selectCategory('__fav');
+      final provider = [for (final i in m.results) i.name];
+      expect(provider, ['Big Movie', 'Other Film', 'Aardvark']);
+      m.setFavoritesSortAZ(true);
+      expect([for (final i in m.results) i.name], ['Aardvark', 'Big Movie', 'Other Film'], reason: 'A to Z');
+      expect(m.prefs.favoritesSortAZ, true);
+      m.setFavoritesSortAZ(false);
+      expect([for (final i in m.results) i.name], provider);
+    });
+
     test('removing a title from Continue watching takes it off the page and the shelf', () async {
       final h = await Harness.createPlain(withAccount: true, sync: true);
       final m = h.model;

@@ -418,5 +418,6 @@
   "playerSkipForget": "Forget intro and credits",
   "playerSkipSaved": "Saved for every episode of this series",
   "playerSkipRefused": "Not possible at this point",
-  "continueRemove": "Remove from Continue watching"
+  "continueRemove": "Remove from Continue watching",
+  "settingsFavoritesAZ": "Sort favorites by name (A–Z)"
 }

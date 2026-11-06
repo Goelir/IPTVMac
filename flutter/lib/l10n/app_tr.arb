@@ -259,5 +259,6 @@
   "playerSkipForget": "Giriş ve jeneriği unut",
   "playerSkipSaved": "Bu dizinin tüm bölümleri için kaydedildi",
   "playerSkipRefused": "Bu noktada mümkün değil",
-  "continueRemove": "İzlemeye devam et listesinden kaldır"
+  "continueRemove": "İzlemeye devam et listesinden kaldır",
+  "settingsFavoritesAZ": "Favorileri ada göre sırala (A–Z)"
 }

@@ -258,3 +258,4 @@
 "player.skipSaved" = "이 시리즈의 모든 에피소드에 저장됨";
 "player.skipRefused" = "이 위치에서는 할 수 없습니다";
 "continue.remove" = "계속 시청에서 삭제";
+"settings.favoritesAZ" = "즐겨찾기를 이름순으로 정렬 (가–힣)";

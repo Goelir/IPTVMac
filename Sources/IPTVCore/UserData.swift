@@ -19,11 +19,13 @@ public enum UserData {
             .map { favoriteKey(accountId: $0["accountId"], type: ItemType(rawValue: $0["type"]) ?? .live, streamId: $0["streamId"]) })
     }
 
-    public static func favorites(_ db: Database, accountId: Int64?, type: ItemType) throws -> [Item] {
-        try Item.fetchAll(db, sql: """
+    /// The favorites in the provider's order, or by name (`sortedByName`: A to Z in the user's language, numbers in order: "Channel 2" before "Channel 10").
+    public static func favorites(_ db: Database, accountId: Int64?, type: ItemType, sortedByName: Bool = false) throws -> [Item] {
+        let items = try Item.fetchAll(db, sql: """
             SELECT item.* FROM item JOIN favorite f ON f.accountId=item.accountId AND f.type=item.type AND f.streamId=item.streamId
             WHERE (? IS NULL OR item.accountId=?) AND item.type=? ORDER BY item.id
             """, arguments: [accountId, accountId, type.rawValue])
+        return sortedByName ? items.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending } : items
     }
 
     public static func saveProgress(_ db: Database, accountId: Int64, type: ItemType, streamId: String,

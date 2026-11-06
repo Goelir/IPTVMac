@@ -259,5 +259,6 @@
   "playerSkipForget": "Harro hyrjen dhe titrat",
   "playerSkipSaved": "Ruajtur për të gjitha episodet e këtij seriali",
   "playerSkipRefused": "Nuk është e mundur në këtë pikë",
-  "continueRemove": "Hiqe nga Vazhdo shikimin"
+  "continueRemove": "Hiqe nga Vazhdo shikimin",
+  "settingsFavoritesAZ": "Rendit të preferuarat sipas emrit (A–Zh)"
 }

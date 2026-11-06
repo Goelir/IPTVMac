@@ -259,5 +259,6 @@
   "playerSkipForget": "نسيان المقدمة وشارة النهاية",
   "playerSkipSaved": "تم الحفظ لجميع حلقات هذا المسلسل",
   "playerSkipRefused": "غير ممكن في هذه اللحظة",
-  "continueRemove": "إزالة من متابعة المشاهدة"
+  "continueRemove": "إزالة من متابعة المشاهدة",
+  "settingsFavoritesAZ": "ترتيب المفضلة حسب الاسم (أ–ي)"
 }

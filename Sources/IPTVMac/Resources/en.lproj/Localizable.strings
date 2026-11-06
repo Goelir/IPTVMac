@@ -258,3 +258,4 @@
 "player.skipSaved" = "Saved for every episode of this series";
 "player.skipRefused" = "Not possible at this point";
 "continue.remove" = "Remove from Continue watching";
+"settings.favoritesAZ" = "Sort favorites by name (A–Z)";

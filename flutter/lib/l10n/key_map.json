@@ -258,5 +258,6 @@
   "playerSkipForget": "player.skipForget",
   "playerSkipSaved": "player.skipSaved",
   "playerSkipRefused": "player.skipRefused",
-  "continueRemove": "continue.remove"
+  "continueRemove": "continue.remove",
+  "settingsFavoritesAZ": "settings.favoritesAZ"
 }

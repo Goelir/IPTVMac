@@ -15,6 +15,17 @@ import GRDB
     #expect(try db.dbQueue.read { try UserData.favorites($0, accountId: a, type: .live) }.isEmpty)
 }
 
+@Test func favoritesCanBeSortedByNameIgnoringCaseAndKeepingNumbersInOrder() throws {
+    let (db, a) = try makeDB()
+    for (i, n) in ["sport 10", "Zeta", "Sport 2", "alpha", "בבב", "אאא"].enumerated() { try addItem(db, a, n, sid: "\(i)") }
+    try db.dbQueue.write { d in for i in 0..<6 { _ = try UserData.toggleFavorite(d, accountId: a, type: .live, streamId: "\(i)") } }
+    func names(_ sorted: Bool) throws -> [String] { try db.dbQueue.read { try UserData.favorites($0, accountId: a, type: .live, sortedByName: sorted).map(\.name) } }
+    #expect(try names(false) == ["sport 10", "Zeta", "Sport 2", "alpha", "בבב", "אאא"])     // the provider's order is the default
+    let sorted = try names(true)
+    #expect(Array(sorted.prefix(4)) == ["alpha", "Sport 2", "sport 10", "Zeta"])              // case-insensitive, "2" before "10"
+    #expect(Array(sorted.suffix(2)) == ["אאא", "בבב"])                                         // other scripts follow in their own order
+}
+
 @Test func favoriteKeysAreAccountScopedSoPlaylistsReusingAStreamIdDoNotCollide() throws {
     let (db, a) = try makeDB()
     let b = try addAccount(db, "second")

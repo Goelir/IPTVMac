@@ -259,5 +259,6 @@
   "playerSkipForget": "Uită genericul și finalul",
   "playerSkipSaved": "Salvat pentru toate episoadele acestui serial",
   "playerSkipRefused": "Nu este posibil în acest punct",
-  "continueRemove": "Elimină din Continuă vizionarea"
+  "continueRemove": "Elimină din Continuă vizionarea",
+  "settingsFavoritesAZ": "Sortează favoritele după nume (A–Z)"
 }

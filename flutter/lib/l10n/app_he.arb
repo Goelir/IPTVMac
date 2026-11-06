@@ -259,5 +259,6 @@
   "playerSkipForget": "שכח פתיח וקרדיטים",
   "playerSkipSaved": "נשמר לכל הפרקים של הסדרה",
   "playerSkipRefused": "לא אפשרי ברגע הזה",
-  "continueRemove": "הסר מהמשך צפייה"
+  "continueRemove": "הסר מהמשך צפייה",
+  "settingsFavoritesAZ": "מיון המועדפים לפי שם (א–ת)"
 }

@@ -259,5 +259,6 @@
   "playerSkipForget": "فراموش کردن تیتراژها",
   "playerSkipSaved": "برای همهٔ قسمت‌های این سریال ذخیره شد",
   "playerSkipRefused": "در این نقطه ممکن نیست",
-  "continueRemove": "حذف از ادامهٔ تماشا"
+  "continueRemove": "حذف از ادامهٔ تماشا",
+  "settingsFavoritesAZ": "مرتب‌سازی علاقه‌مندی‌ها بر اساس نام (الف–ی)"
 }

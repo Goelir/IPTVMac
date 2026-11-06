@@ -258,3 +258,4 @@
 "player.skipSaved" = "Salvo para todos os episódios desta série";
 "player.skipRefused" = "Não é possível neste ponto";
 "continue.remove" = "Remover de Continuar assistindo";
+"settings.favoritesAZ" = "Ordenar favoritos por nome (A–Z)";

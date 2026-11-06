@@ -23,6 +23,7 @@ struct GeneralSettings: View {
     #endif
     @AppStorage("appearance") private var appearance = "system"
     @AppStorage("hiddenCategoryWords") private var hiddenWords = ""
+    @AppStorage("favoritesSortAZ") private var favoritesAZ = false
     @State private var language = InterfaceLanguage.current
 
     var body: some View {
@@ -38,6 +39,9 @@ struct GeneralSettings: View {
                     ForEach(InterfaceLanguage.all, id: \.code) { Text($0.name).tag($0.code) }
                 }.onChange(of: language) { _, v in InterfaceLanguage.set(v) }
                 Text(L("settings.languageRestart")).font(.caption).foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle(L("settings.favoritesAZ"), isOn: $favoritesAZ).onChange(of: favoritesAZ) { model.favoritesOrderChanged() }
             }
             Section(L("settings.hideCategories")) {
                 TextField(L("settings.hideCategories.words"), text: $hiddenWords, prompt: Text("xxx, adult"))

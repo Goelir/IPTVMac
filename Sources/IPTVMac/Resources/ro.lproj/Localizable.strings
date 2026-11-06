@@ -258,3 +258,4 @@
 "player.skipSaved" = "Salvat pentru toate episoadele acestui serial";
 "player.skipRefused" = "Nu este posibil în acest punct";
 "continue.remove" = "Elimină din Continuă vizionarea";
+"settings.favoritesAZ" = "Sortează favoritele după nume (A–Z)";

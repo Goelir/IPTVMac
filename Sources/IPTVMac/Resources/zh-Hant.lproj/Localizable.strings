@@ -258,3 +258,4 @@
 "player.skipSaved" = "已為此影集所有集數儲存";
 "player.skipRefused" = "此處無法設定";
 "continue.remove" = "從「繼續觀看」中移除";
+"settings.favoritesAZ" = "依名稱排序我的最愛 (A–Z)";

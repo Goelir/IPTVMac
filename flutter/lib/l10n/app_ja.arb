@@ -259,5 +259,6 @@
   "playerSkipForget": "イントロとクレジットを削除",
   "playerSkipSaved": "このシリーズの全エピソードに保存しました",
   "playerSkipRefused": "この位置では設定できません",
-  "continueRemove": "「続きを見る」から削除"
+  "continueRemove": "「続きを見る」から削除",
+  "settingsFavoritesAZ": "お気に入りを名前順に並べる (A–Z)"
 }

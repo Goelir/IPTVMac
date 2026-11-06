@@ -332,6 +332,8 @@ void main() {
     expect(find.text('Home'), findsOneWidget);
 
     await tester.scrollUntilVisible(find.byKey(const Key('clear-history')), 300, scrollable: find.byType(Scrollable).first);
+    await tester.ensureVisible(find.byKey(const Key('clear-history')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('clear-history')));
     await go(tester);
     expect(find.textContaining('cannot be undone'), findsOneWidget);

@@ -259,5 +259,6 @@
   "playerSkipForget": "Zapomnij intro i napisy końcowe",
   "playerSkipSaved": "Zapisano dla wszystkich odcinków tego serialu",
   "playerSkipRefused": "Nie można w tym miejscu",
-  "continueRemove": "Usuń z Kontynuuj oglądanie"
+  "continueRemove": "Usuń z Kontynuuj oglądanie",
+  "settingsFavoritesAZ": "Sortuj ulubione według nazwy (A–Z)"
 }

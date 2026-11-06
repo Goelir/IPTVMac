@@ -259,5 +259,6 @@
   "playerSkipForget": "Glöm intro och eftertexter",
   "playerSkipSaved": "Sparat för alla avsnitt i serien",
   "playerSkipRefused": "Inte möjligt på den här punkten",
-  "continueRemove": "Ta bort från Fortsätt titta"
+  "continueRemove": "Ta bort från Fortsätt titta",
+  "settingsFavoritesAZ": "Sortera favoriter efter namn (A–Ö)"
 }

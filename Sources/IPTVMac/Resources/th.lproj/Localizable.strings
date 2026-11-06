@@ -258,3 +258,4 @@
 "player.skipSaved" = "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว";
 "player.skipRefused" = "ทำไม่ได้ตรงจุดนี้";
 "continue.remove" = "ลบออกจากดูต่อ";
+"settings.favoritesAZ" = "เรียงรายการโปรดตามชื่อ (A–Z)";

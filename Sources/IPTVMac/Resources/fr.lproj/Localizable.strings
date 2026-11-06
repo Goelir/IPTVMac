@@ -258,3 +258,4 @@
 "player.skipSaved" = "Enregistré pour tous les épisodes de cette série";
 "player.skipRefused" = "Impossible à cet endroit";
 "continue.remove" = "Retirer de Reprendre la lecture";
+"settings.favoritesAZ" = "Trier les favoris par nom (A–Z)";

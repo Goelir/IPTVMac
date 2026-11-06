@@ -259,5 +259,6 @@
   "playerSkipForget": "ইন্ট্রো ও ক্রেডিট ভুলে যান",
   "playerSkipSaved": "এই সিরিজের সব পর্বের জন্য সংরক্ষিত",
   "playerSkipRefused": "এই মুহূর্তে সম্ভব নয়",
-  "continueRemove": "দেখা চালিয়ে যাওয়া থেকে সরান"
+  "continueRemove": "দেখা চালিয়ে যাওয়া থেকে সরান",
+  "settingsFavoritesAZ": "পছন্দের তালিকা নামের ক্রমে সাজান (A–Z)"
 }

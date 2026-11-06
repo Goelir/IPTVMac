@@ -147,13 +147,14 @@ open class LibraryModel {
         searchTask?.cancel()
         guard hasPlaylist else { results = []; return }
         let text = searchText, tab = tab, cat = selectedCategory, scope = scope, all = allPlaylists, aid = scopeAccountId, hide = categoryFilter
+        let favAZ = UserDefaults.standard.bool(forKey: "favoritesSortAZ")
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(text.isEmpty ? 0 : 100))
             if Task.isCancelled { return }
             let (rows, info): ([Item], [Int64: ContinueEntry]) = (try? await db.dbQueue.read { d in
                 var info: [Int64: ContinueEntry] = [:]
                 let found: [Item]
-                if text.isEmpty && cat == "__fav" { found = try UserData.favorites(d, accountId: aid, type: tab) }
+                if text.isEmpty && cat == "__fav" { found = try UserData.favorites(d, accountId: aid, type: tab, sortedByName: favAZ) }
                 else if text.isEmpty && cat == "__hist" {
                     let e = try WatchProgress.continueEntries(d, accountId: aid, type: tab, limit: .max)
                     info = Dictionary(e.compactMap { x in x.item.id.map { ($0, x) } }, uniquingKeysWith: { a, _ in a })
@@ -436,6 +437,9 @@ open class LibraryModel {
     }
 
     /// The hidden words changed: the sidebar and the lists are filtered again (a selected category that is now hidden is left).
+    /// Settings > "Sort favorites A to Z" changed: the Favorites list is read again in the new order.
+    public func favoritesOrderChanged() { if selectedCategory == "__fav" { scheduleSearch() } }
+
     public func hiddenCategoriesChanged() {
         loadCategories()
         if !selectedCategory.hasPrefix("__"), !categories.contains(where: { categoryTag($0) == selectedCategory }) { selectedCategory = "__all" }

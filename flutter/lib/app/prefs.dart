@@ -49,6 +49,9 @@ class AppPrefs {
   String get hiddenWords => _p.getString('hiddenCategoryWords') ?? '';
   set hiddenWords(String v) => _p.setString('hiddenCategoryWords', v);
 
+  bool get favoritesSortAZ => _p.getBool('favoritesSortAZ') ?? false;
+  set favoritesSortAZ(bool v) => _p.setBool('favoritesSortAZ', v);
+
   String get appearance => _p.getString('appearance') ?? 'system';
   set appearance(String v) => _p.setString('appearance', v);
 

@@ -105,6 +105,19 @@ void main() {
     expect(db.read((d) => UserData.continueWatching(d, accountId: a, type: ItemType.movie).map((i) => i.name)), ['New', 'Old']);
   });
 
+  test('favorites can be sorted by name: case does not matter, numbers count by value, other scripts follow in letter order', () {
+    final (db, a) = makeDB();
+    final names = ['sport 10', 'Zeta', 'Sport 2', 'alpha', 'בבב', 'אאא'];
+    for (var i = 0; i < names.length; i++) {
+      addItem(db, a, names[i], sid: '$i');
+      db.write((d) => UserData.toggleFavorite(d, accountId: a, type: ItemType.live, streamId: '$i'));
+    }
+    List<String> favs({required bool sorted}) =>
+        db.read((d) => UserData.favorites(d, accountId: a, type: ItemType.live, sortedByName: sorted).map((i) => i.name).toList());
+    expect(favs(sorted: false), names, reason: 'the provider order is the default');
+    expect(favs(sorted: true), ['alpha', 'Sport 2', 'sport 10', 'Zeta', 'אאא', 'בבב']);
+  });
+
   test('a title removed from Continue watching stays out until it is watched again', () {
     final (db, a) = makeDB();
     addItem(db, a, 'Movie', type: ItemType.movie, sid: '1');

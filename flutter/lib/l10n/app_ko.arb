@@ -259,5 +259,6 @@
   "playerSkipForget": "인트로와 크레딧 지우기",
   "playerSkipSaved": "이 시리즈의 모든 에피소드에 저장됨",
   "playerSkipRefused": "이 위치에서는 할 수 없습니다",
-  "continueRemove": "계속 시청에서 삭제"
+  "continueRemove": "계속 시청에서 삭제",
+  "settingsFavoritesAZ": "즐겨찾기를 이름순으로 정렬 (가–힣)"
 }

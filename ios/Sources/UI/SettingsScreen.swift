@@ -91,6 +91,7 @@ private struct PreferencesSection: View {
     @AppStorage("appearance") private var appearance = "system"
     @AppStorage("refreshHours") private var refreshHours = 0
     @AppStorage("hiddenCategoryWords") private var hiddenWords = ""
+    @AppStorage("favoritesSortAZ") private var favoritesAZ = false
 
     private var languageName: String {
         let code = Bundle.main.preferredLocalizations.first ?? "en"
@@ -107,6 +108,7 @@ private struct PreferencesSection: View {
                 Text(L("appearance.light")).tag("light")
                 Text(L("appearance.dark")).tag("dark")
             }
+            Toggle(L("settings.favoritesAZ"), isOn: $favoritesAZ).onChange(of: favoritesAZ) { model.favoritesOrderChanged() }
         }.brandRows()
         Section {
             LabeledContent(L("settings.interfaceLanguage")) { Text(languageName) }

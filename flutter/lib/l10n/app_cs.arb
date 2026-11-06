@@ -259,5 +259,6 @@
   "playerSkipForget": "Zapomenout úvod a titulky",
   "playerSkipSaved": "Uloženo pro všechny epizody tohoto seriálu",
   "playerSkipRefused": "V tomto místě to nejde",
-  "continueRemove": "Odebrat z Pokračovat ve sledování"
+  "continueRemove": "Odebrat z Pokračovat ve sledování",
+  "settingsFavoritesAZ": "Řadit oblíbené podle názvu (A–Z)"
 }

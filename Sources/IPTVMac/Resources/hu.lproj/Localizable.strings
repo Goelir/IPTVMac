@@ -258,3 +258,4 @@
 "player.skipSaved" = "Mentve a sorozat összes epizódjához";
 "player.skipRefused" = "Ezen a ponton nem lehetséges";
 "continue.remove" = "Eltávolítás a Folytatás listáról";
+"settings.favoritesAZ" = "Kedvencek rendezése név szerint (A–Z)";

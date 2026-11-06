@@ -258,3 +258,4 @@
 "player.skipSaved" = "Sparat för alla avsnitt i serien";
 "player.skipRefused" = "Inte möjligt på den här punkten";
 "continue.remove" = "Ta bort från Fortsätt titta";
+"settings.favoritesAZ" = "Sortera favoriter efter namn (A–Ö)";

@@ -259,5 +259,6 @@
   "playerSkipForget": "ลืมอินโทรและเครดิต",
   "playerSkipSaved": "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว",
   "playerSkipRefused": "ทำไม่ได้ตรงจุดนี้",
-  "continueRemove": "ลบออกจากดูต่อ"
+  "continueRemove": "ลบออกจากดูต่อ",
+  "settingsFavoritesAZ": "เรียงรายการโปรดตามชื่อ (A–Z)"
 }

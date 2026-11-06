@@ -259,5 +259,6 @@
   "playerSkipForget": "Oublier l''intro et le générique",
   "playerSkipSaved": "Enregistré pour tous les épisodes de cette série",
   "playerSkipRefused": "Impossible à cet endroit",
-  "continueRemove": "Retirer de Reprendre la lecture"
+  "continueRemove": "Retirer de Reprendre la lecture",
+  "settingsFavoritesAZ": "Trier les favoris par nom (A–Z)"
 }

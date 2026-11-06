@@ -259,5 +259,6 @@
   "playerSkipForget": "Intro és stáblista elfelejtése",
   "playerSkipSaved": "Mentve a sorozat összes epizódjához",
   "playerSkipRefused": "Ezen a ponton nem lehetséges",
-  "continueRemove": "Eltávolítás a Folytatás listáról"
+  "continueRemove": "Eltávolítás a Folytatás listáról",
+  "settingsFavoritesAZ": "Kedvencek rendezése név szerint (A–Z)"
 }

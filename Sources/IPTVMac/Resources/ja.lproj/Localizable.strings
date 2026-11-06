@@ -258,3 +258,4 @@
 "player.skipSaved" = "このシリーズの全エピソードに保存しました";
 "player.skipRefused" = "この位置では設定できません";
 "continue.remove" = "「続きを見る」から削除";
+"settings.favoritesAZ" = "お気に入りを名前順に並べる (A–Z)";

@@ -259,5 +259,6 @@
   "playerSkipForget": "Забрави началото и надписите",
   "playerSkipSaved": "Запазено за всички епизоди на сериала",
   "playerSkipRefused": "Невъзможно в този момент",
-  "continueRemove": "Премахни от Продължи гледането"
+  "continueRemove": "Премахни от Продължи гледането",
+  "settingsFavoritesAZ": "Подреждане на любимите по име (А–Я)"
 }

@@ -364,7 +364,7 @@ class LibraryModel extends ChangeNotifier {
     results = db.read((d) {
       final List<Item> found;
       if (text.isEmpty && cat == '__fav') {
-        found = UserData.favorites(d, accountId: aid, type: tab);
+        found = UserData.favorites(d, accountId: aid, type: tab, sortedByName: prefs.favoritesSortAZ);
       } else if (text.isEmpty && cat == '__hist') {
         final entries = WatchProgress.continueEntries(d, accountId: aid, type: tab, limit: 1 << 30);
         for (final e in entries) {
@@ -777,6 +777,13 @@ class LibraryModel extends ChangeNotifier {
 
   void setAppearance(String v) {
     prefs.appearance = v;
+    notifyListeners();
+  }
+
+  /// Settings > "Sort favorites by name": the Favorites list is read again in the new order.
+  void setFavoritesSortAZ(bool v) {
+    prefs.favoritesSortAZ = v;
+    if (selectedCategory == '__fav') scheduleSearch(immediate: true);
     notifyListeners();
   }
 
