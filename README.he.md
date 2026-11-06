@@ -26,7 +26,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 </div>
 
-[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**הורדה ל-Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) &nbsp;|&nbsp; [**iPhone ו-iPad (App Store)**](https://apps.apple.com/app/id6821761790) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) &nbsp;|&nbsp; [**כל ההורדות**](https://goelir.github.io/IPTVMac/he/download/)
+[**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**הורדה ל-Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.4) &nbsp;|&nbsp; [**iPhone ו-iPad (App Store)**](https://apps.apple.com/app/id6821761790) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7) &nbsp;|&nbsp; [**כל ההורדות**](https://goelir.github.io/IPTVMac/he/download/)
 
 אם IPTVMac מועיל לכם, ⭐ ב-GitHub עוזר לאחרים למצוא אותו.
 
@@ -47,9 +47,9 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 | מכשיר | הורדה | מצב |
 |---|---|---|
 | **Mac** (‏Apple Silicon, ‏macOS 14 ומעלה) | [DMG או התקנה בשורה אחת](#התקנה) | יצא, חתום ומאושר על ידי אפל, מתעדכן לבד |
-| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד |
-| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) (‏`arm64-v8a` לכמעט כל טלפון) | יצאה; מתעדכנת מתוך האפליקציה |
-| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע |
+| **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.4) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד |
+| **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7) (‏`arm64-v8a` לכמעט כל טלפון) | יצאה; מתעדכנת מתוך האפליקציה |
+| **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע |
 | **iPhone ו-iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), או [בנייה מהמקור](#פלטפורמות-נוספות) | יצאה (גרסה 1.0); עדכון עם התכונות החדשות ביותר בדרך |
 
 אותו מנוע, 31 שפות ובלי חשבון, בכל מקום.
@@ -138,14 +138,14 @@ https://iptv-org.github.io/iptv/index.m3u
 
 **טלפון או טאבלט (Android 8 ומעלה).**
 
-1. מורידים את [IPTVMac-Android-1.0.6-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.6/IPTVMac-Android-1.0.6-arm64-v8a.apk) (מתאים לכמעט כל טלפון; ב[עמוד הגרסה](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.6) יש את שאר הקבצים).
+1. מורידים את [IPTVMac-Android-1.0.7-arm64-v8a.apk](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-arm64-v8a.apk) (מתאים לכמעט כל טלפון; ב[עמוד הגרסה](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7) יש את שאר הקבצים).
 2. פותחים אותו ומאשרים התקנה מהדפדפן או מאפליקציית הקבצים כש-Android שואל.
 3. מוסיפים מקור. באנר מודיע כשיוצאת גרסה חדשה; בטלפון "עדכן עכשיו" מוריד ומתקין אותה מתוך האפליקציה (Android מבקש אישור). בטלוויזיה ההתקנה נשארת ידנית.
 
 **Android TV, ‏Google TV ו-Fire TV.**
 
 1. בטלוויזיה מתקינים את האפליקציה **Downloader** (ב-Fire TV מחפשים "Downloader"; ב-Android TV וב-Google TV ב-Google Play) ופותחים אותה.
-2. ב-Downloader מקלידים את כתובת הקובץ: [32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.6/IPTVMac-Android-1.0.6-tv-32bit.apk) (מנסים אותו קודם, הוא רץ כמעט על כל טלוויזיה וסטרימר) או [64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.6/IPTVMac-Android-1.0.6-tv-64bit.apk) (אם הטלוויזיה אומרת שהאפליקציה לא תואמת). גם כונן USB עם הקובץ עובד.
+2. ב-Downloader מקלידים את כתובת הקובץ: [32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-32bit.apk) (מנסים אותו קודם, הוא רץ כמעט על כל טלוויזיה וסטרימר) או [64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-64bit.apk) (אם הטלוויזיה אומרת שהאפליקציה לא תואמת). גם כונן USB עם הקובץ עובד.
 3. מאשרים ל-Downloader להתקין אפליקציות כשהטלוויזיה שואלת, מתקינים ופותחים את IPTVMac. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**.
 
 עוד על כל פלטפורמה: [docs/PLATFORMS.he.md](docs/PLATFORMS.he.md).
@@ -233,7 +233,7 @@ https://iptv-org.github.io/iptv/index.m3u
 
 פירוט על Windows, ‏iPhone ו-iPad, ‏Android ו-Android TV (הורדות, שלבי התקנה, איך כל אפליקציה נבנית) נמצא ב-[docs/PLATFORMS.he.md](docs/PLATFORMS.he.md) (באנגלית: [docs/PLATFORMS.md](docs/PLATFORMS.md)); בנייה מקוד המקור ופרטים טכניים ב-[docs/BUILDING.he.md](docs/BUILDING.he.md) (באנגלית: [docs/BUILDING.md](docs/BUILDING.md)).
 
-- **Windows:** [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.3) (‏Windows 10 או 11, ‏64 ביט). עוד לא חתום בתעודה בתשלום, ולכן SmartScreen עשוי להזהיר: בוחרים **More info** ואז **Run anyway**.
+- **Windows:** [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.4) (‏Windows 10 או 11, ‏64 ביט). עוד לא חתום בתעודה בתשלום, ולכן SmartScreen עשוי להזהיר: בוחרים **More info** ואז **Run anyway**.
 - **iPhone ו-iPad:** [ב-App Store](https://apps.apple.com/app/id6821761790). לבנייה בעצמכם ראו [docs/PLATFORMS.he.md](docs/PLATFORMS.he.md).
 - **Android ו-Android TV:** ראו [הסעיף למעלה](#android-ו-android-tv).
 

@@ -172,6 +172,19 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-06", "mac", "0.9.7", "v0.9.7", {
+   "en": ["**Sort favorites by name:** Settings > General > \"Sort favorites by name (A–Z)\". Case does not matter and numbers count by value; it is off by default.",
+          "**Full screen in Light Mode:** the window is dark while a video plays in full screen, so a thin white line no longer shows above the picture."],
+   "he": ["**מיון המועדפים לפי שם:** הגדרות > כללי > \"מיון המועדפים לפי שם (א–ת)\". לא משנה אות גדולה או קטנה, ומספרים נספרים לפי ערכם; כבוי כברירת מחדל.",
+          "**מסך מלא ב-Light Mode:** החלון כהה בזמן ניגון במסך מלא, ולכן קו לבן דק כבר לא נחשף מעל התמונה."]}),
+ ("2026-11-06", "windows", "1.0.4", "windows-v1.0.4", {
+   "en": ["**Sort favorites by name:** Settings > \"Sort favorites by name (A–Z)\". It is off by default."],
+   "he": ["**מיון המועדפים לפי שם:** הגדרות > \"מיון המועדפים לפי שם (א–ת)\". כבוי כברירת מחדל."]}),
+ ("2026-11-06", "android", "1.0.7", "android-v1.0.7", {
+   "en": ["**Sort favorites by name:** Settings > \"Sort favorites by name (A–Z)\". It is off by default.",
+          "Phones and tablets with 1.0.6 update to this version from inside the app (Update now)."],
+   "he": ["**מיון המועדפים לפי שם:** הגדרות > \"מיון המועדפים לפי שם (א–ת)\". כבוי כברירת מחדל.",
+          "טלפונים וטאבלטים עם 1.0.6 מתעדכנים לגרסה הזאת מתוך האפליקציה (עדכן עכשיו)."]}),
  ("2026-11-01", "mac", "0.9.6", "v0.9.6", {
    "en": ["**Remove a title from Continue watching:** right-click it and choose \"Remove from Continue watching\". Nothing is deleted; it comes back if you watch it again.",
           "**Episode lists show what you watched:** a check mark, a bar with \"N min left\" on the one you stopped halfway, and \"Up next\" on the following episode.",
