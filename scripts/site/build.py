@@ -31,6 +31,8 @@ def win_file(kind): return f"{WIN_DL}/IPTVMac-Windows-{WIN_VER}-{kind}.{'exe' if
 WIN_REL = REPO + "/releases/tag/windows-v" + WIN_VER
 def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
 APP_STORE = "https://apps.apple.com/app/id6821761790"   # the iPhone and iPad app (released 2026-11-05)
+APP_STORE_ID = "6821761790"
+IOS_VERSION = "1.0.1"   # the version on the App Store (bump when an iPhone update goes live)
 ANDROID_APK = REPO + "/releases/tag/android-v1.0.7"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
@@ -99,6 +101,7 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{canonical}">
 {alts}
+<meta name="apple-itunes-app" content="app-id={APP_STORE_ID}">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -122,6 +125,19 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 </head>
 <body>
 '''
+
+def ios_ld(desc, url):
+    """The iPhone and iPad app on its own (schema.org MobileApplication): the App Store address, the price and the iOS requirement."""
+    return {
+        "@context": "https://schema.org", "@type": "MobileApplication", "name": "IPTVMac: IPTV Player",
+        "applicationCategory": "MultimediaApplication", "operatingSystem": "iOS 17.0 or later (iPhone and iPad)",
+        "softwareVersion": IOS_VERSION, "description": desc, "url": url, "installUrl": APP_STORE, "downloadUrl": APP_STORE,
+        "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock"},
+        "image": BASE + "social-preview.png", "screenshot": [BASE + f"screenshots/{n}.webp" for n in ("ios-movies", "ios-live", "ios-details")],
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html", "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"},
+        "sameAs": [REPO, APP_STORE],
+    }
+
 
 def software_ld(desc, lang):
     return {
@@ -177,8 +193,8 @@ def app_strings(code):
 HOME = {
  "en": dict(
   lang="en", prefix="", up="",
-  title="IPTVMac: IPTV Player for Mac, Windows, Android and Android TV (Xtream Codes and M3U)",
-  desc="IPTVMac is a free, open source IPTV player for Mac, Windows, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
+  title="IPTVMac: IPTV Player for Mac, Windows, iPhone, Android and Android TV (Xtream Codes and M3U)",
+  desc="IPTVMac is a free, open source IPTV player for Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
   nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
@@ -268,8 +284,8 @@ HOME = {
   lic="Open source under GPL-3.0."),
  "he": dict(
   lang="he", prefix="he/", up="../",
-  title="IPTVMac: נגן IPTV ל-Mac, ל-Windows, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
-  desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
+  title="IPTVMac: נגן IPTV ל-Mac, ל-Windows, ל-iPhone, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
+  desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, ל-Windows, ל-iPhone ול-iPad, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
   nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
   gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
@@ -562,7 +578,7 @@ def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
     canon = BASE + c["prefix"]
     alts = [("en", BASE), ("he", BASE + "he/"), ("x-default", BASE)]
-    ld = [software_ld(c["desc"], c["lang"]), faq_ld(c["faq"]), video_ld("IPTVMac demo", c["tour_note"])]
+    ld = [software_ld(c["desc"], c["lang"]), ios_ld(c["ios_p"], BASE + c["prefix"]), faq_ld(c["faq"]), video_ld("IPTVMac demo", c["tour_note"])]
     srcs = lambda ext: ", ".join(f"{up}assets/hero-window-{w}.{ext} {w}w" for w in (900, 1400, 1800))
     sizes = "(min-width: 1001px) 58vw, 100vw"
     preload = f'<link rel="preload" as="image" type="image/avif" imagesrcset="{srcs("avif")}" imagesizes="{sizes}" fetchpriority="high">\n'
@@ -900,7 +916,8 @@ def download_page(code):
              f'<p class="pg-fine">{e(d["disclaimer"])}</p></div></section>\n')
     ld = [{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac", "applicationCategory": "MultimediaApplication",
            "operatingSystem": "macOS 14+, Windows 10+, iOS 17+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
-           "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"}]
+           "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"},
+          ios_ld(d["ios"]["body"], BASE + ("he/" if he else "") + "download/#ios")]
     product_page("download", code, d["title"], d["desc"], hero, marquee(d["marquee"]) + pick + files + two + help_, ld)
 
 def features_page(code):
@@ -965,14 +982,15 @@ Sitemap: {BASE}sitemap.xml
     d = HOME["en"]
     facts = f"""# IPTVMac
 
-> IPTVMac is a free, open source IPTV player for Mac, Windows, Android phones and tablets, and Android TV, Google TV and Fire TV. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Mac: Apple Silicon, macOS 14 or later. Android: 8 or later (APK on GitHub Releases, including TV files). GPL-3.0. It is a player only and includes no channels or content.
+> IPTVMac is a free, open source IPTV player for Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV, Google TV and Fire TV. It plays Xtream Codes and M3U sources with a built-in mpv player, instant search, subtitles, Picture in Picture, catch-up, downloads and an interface in 31 languages. Mac: Apple Silicon, macOS 14 or later. Android: 8 or later (APK on GitHub Releases, including TV files). GPL-3.0. It is a player only and includes no channels or content.
 
 Latest version: {VERSION}. Download: {DOWNLOAD}
 Install in Terminal: `{INSTALL_CMD}`
 Install video (95 seconds, English): {YT_INSTALL}
 Source code: {REPO}
 Privacy policy: {BASE}privacy/ (no account, no analytics, no ads, no tracking; nothing is sent to the developer)
-Downloads (Mac, Android, Android TV): {BASE}download/
+iPhone and iPad app (completely free: no ads, no subscription, no in-app purchases; iOS 17 or later): {APP_STORE}
+Downloads (Mac, Windows, Android, Android TV, iPhone and iPad): {BASE}download/
 Features: {BASE}features/
 Release notes: {BASE}changelog/
 Support: {BASE}support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
