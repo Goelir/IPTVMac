@@ -44,7 +44,7 @@ If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 | **Windows** (Windows 10 and 11, 64-bit) | [Installer or portable zip](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.4) (about 27 MB), unsigned: SmartScreen asks for More info, Run anyway | Keyboard and mouse player, downloads for offline viewing, light on memory and processor |
 | **Android phones and tablets** (Android 8+) | [APK on GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7) (`arm64-v8a` for almost every phone) | Released; updates from inside the app |
 | **Android TV, Google TV, Fire TV** | [32-bit or 64-bit APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7), installed with the Downloader app or a USB stick (see [Other platforms](#other-platforms)) | First version: remote control, no touch screen |
-| **iPhone and iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), or [build from source](#other-platforms) | Released (version 1.0); an update with the newest features is next |
+| **iPhone and iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), or [build from source](#other-platforms) | Released (version 1.0.1) |
 
 The same engine, 31 languages and no-account design everywhere.
 

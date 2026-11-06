@@ -50,7 +50,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 | **Windows** (‏Windows 10 ו-11, ‏64 ביט) | [מתקין או zip נייד](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.4) (בערך 27MB), לא חתום: SmartScreen מבקש More info ואז Run anyway | נגן למקלדת ולעכבר, הורדות לצפייה בלי רשת, קל בזיכרון ובמעבד |
 | **טלפונים וטאבלטים של Android** (‏Android 8 ומעלה) | [APK ב-GitHub Releases](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7) (‏`arm64-v8a` לכמעט כל טלפון) | יצאה; מתעדכנת מתוך האפליקציה |
 | **Android TV, ‏Google TV, ‏Fire TV** | [APK של 32 או 64 ביט](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7), מתקינים עם האפליקציה Downloader או מכונן USB | גרסה ראשונה: שלט, בלי מסך מגע |
-| **iPhone ו-iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), או [בנייה מהמקור](#פלטפורמות-נוספות) | יצאה (גרסה 1.0); עדכון עם התכונות החדשות ביותר בדרך |
+| **iPhone ו-iPad** (iOS 17+) | [App Store](https://apps.apple.com/app/id6821761790), או [בנייה מהמקור](#פלטפורמות-נוספות) | יצאה (גרסה 1.0.1) |
 
 אותו מנוע, 31 שפות ובלי חשבון, בכל מקום.
 
