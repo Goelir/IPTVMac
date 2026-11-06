@@ -6,9 +6,12 @@
 
 # IPTVMac
 
-**נגן IPTV מקורי ל-Mac, ל-Windows, לטלפונים של Android ול-Android TV.**<br>
+**נגן IPTV מקורי ל-Mac, ל-Windows, ל-iPhone ול-iPad, לטלפונים של Android ול-Android TV.**<br>
 Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביות, תמונה בתוך תמונה, צפייה בהיסטוריה (catch-up) והורדות.<br>
-חינמי ובקוד פתוח. בלי חשבונות ובלי איסוף נתונים.
+חינמי לגמרי ובקוד פתוח. בלי חשבונות, בלי פרסומות ובלי איסוף נתונים.
+
+<a href="https://apps.apple.com/app/id6821761790"><img src="docs/assets/app-store-badge-he.svg" alt="הורדה מה-App Store" height="56"></a><br>
+**iPhone ו-iPad: ב-App Store, חינמיות לגמרי.** בלי פרסומות, בלי מנוי ובלי רכישות בתוך האפליקציה.
 
 <br>
 

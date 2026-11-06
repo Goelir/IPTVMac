@@ -183,11 +183,11 @@ HOME = {
   nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
   gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
   h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
-  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Windows, Android phones and tablets, and Android TV. Free and open source, with no account.",
+  lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV. Completely free and open source, with no account.",
   cmd_b="Install in one line.", cmd_t="Paste it in Terminal, or use the DMG button below. Either way, the app updates itself afterwards.",
   copy="Copy", copied="Copied", copy_aria="Copy the install command",
   dl="Download the DMG", all_dl="All downloads", src="View the source", tour="Watch the 80-second tour",
-  meta=f"Mac {VERSION}: Apple Silicon, macOS 14 or later. Android 8 or later, and Android TV. GPL-3.0.",
+  meta=f"Mac {VERSION}: Apple Silicon, macOS 14 or later. iPhone and iPad (App Store): iOS 17 or later. Android 8 or later, and Android TV. GPL-3.0.",
   cue="Scroll to see it work", rail_aria="Chapters",
   hero_alt="The IPTVMac window showing a wall of movie posters, with a small Picture in Picture window floating in front of it",
   # chapters
@@ -238,7 +238,7 @@ HOME = {
    ("Does IPTVMac include channels or a subscription?", "No. IPTVMac is only a player. It does not include or host any channels, movies or series. You add a source from a provider you are authorized to use. If you have none, the independent open source project iptv-org publishes free playlists of publicly available channels; see the link on this page."),
    ("Does it work with Xtream Codes and M3U?", "Yes. For Xtream Codes you enter the server address, username and password from your provider. For M3U you enter a name and the playlist link."),
    ("Which Macs are supported?", "Apple Silicon Macs (M1 or later) with macOS 14 or later. Intel Macs are not supported."),
-   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. Android TV, Google TV and Fire TV: the same release has a 32-bit and a 64-bit file for TVs (remote-control friendly, no downloads on TV, first version, installed directly with the Downloader app or from a USB stick; there is no store listing yet). iPhone and iPad: yes, the app is on the App Store (https://apps.apple.com/app/id6821761790); it is free, needs iOS 17 or later and has the same 31 languages and the same no-account, no-tracking design. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
+   ("Is there an iPhone, iPad or Android version?", "Android: yes. Download the APK from GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7); it has a touch player, Picture in Picture, sound with the screen off and downloads for offline viewing, and needs Android 8 or later. Android TV, Google TV and Fire TV: the same release has a 32-bit and a 64-bit file for TVs (remote-control friendly, no downloads on TV, first version, installed directly with the Downloader app or from a USB stick; there is no store listing yet). iPhone and iPad: yes, the app is on the App Store (https://apps.apple.com/app/id6821761790) and it is completely free: no ads, no subscription, no in-app purchases. It needs iOS 17 or later and has the same 31 languages and the same no-account, no-tracking design. All share the engine, the 31 languages and the no-account, no-tracking design of the Mac app, and the source is in the same GitHub repository."),
    ("Is IPTVMac free?", "Yes. It is free and open source under the GPL-3.0 license, with no ads and no tracking."),
    ("Why does macOS block the app, and how do I open it?", f"Versions before {NOTARIZED_FROM} are not notarized by Apple, so macOS blocks a copy that was downloaded in a browser. From version {NOTARIZED_FROM}, releases are signed with an Apple Developer ID and notarized, and the DMG opens with a normal double-click. To fix an older copy, install the latest release (the DMG, or the one-line command above, which works for every version), or open System Settings, Privacy and Security, and choose Open Anyway."),
    ("Does IPTVMac have Picture in Picture?", "Yes. A floating window stays on top of other apps and across Spaces while you browse for something else."),
@@ -250,7 +250,12 @@ HOME = {
           ("guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "Add a playlist link and get Live, Movies and Series."),
           ("guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "Keep a stream in a floating window while you do something else.")],
   cta_l=["Free.", "Open source."], cta_p="GPL-3.0. No account, no ads, no tracking.", cta_dl="Download for Mac", cta_src="Source on GitHub",
-  android_h="Android and Android TV", android_dl="Android (APK)", ios_dl="iPhone and iPad (App Store)", android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
+  android_h="Android and Android TV", android_dl="Android (APK)", ios_dl="iPhone and iPad (App Store)",
+  ios_kicker="New on the App Store", ios_h="IPTVMac for iPhone and iPad.<br><em>Completely free.</em>",
+  ios_p="The same player, search and 31 languages as on the Mac, made for the iPhone and the iPad. Download it from the App Store and add your source.",
+  ios_pts=["Free to download and free to use", "No ads, no subscription, no in-app purchases", "No account, no analytics: nothing is sent to us", "Picture in Picture, subtitles, catch-up and downloads"],
+  ios_free="Free", ios_note="iOS 17 or later · iPhone and iPad", ios_badge_alt="Download on the App Store",
+  ios_alt=("IPTVMac on the iPhone: movies", "IPTVMac on the iPhone: live channels", "IPTVMac on the iPhone: movie details"), android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
   foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
@@ -269,11 +274,11 @@ HOME = {
   nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
   gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
   h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">לכל מסך.</span>',
-  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, בטלפונים וטאבלטים של Android וב-Android TV. חינם ובקוד פתוח, בלי חשבון.",
+  lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, ב-Windows, ב-iPhone וב-iPad, בטלפונים וטאבלטים של Android וב-Android TV. חינמי לגמרי ובקוד פתוח, בלי חשבון.",
   cmd_b="התקנה בשורה אחת.", cmd_t="מדביקים בטרמינל, או מורידים את ה-DMG בכפתור שלמטה. בשני המקרים האפליקציה מתעדכנת לבד.",
   copy="העתק", copied="הועתק", copy_aria="העתקת פקודת ההתקנה",
   dl="הורדת ה-DMG", all_dl="כל ההורדות", src="קוד המקור", tour="לצפות בסיור של 80 שניות",
-  meta=f"Mac {VERSION}: ‏Apple Silicon, macOS 14 ומעלה. ‏Android 8 ומעלה, ו-Android TV. GPL-3.0.",
+  meta=f"Mac {VERSION}: ‏Apple Silicon, macOS 14 ומעלה. ‏iPhone ו-iPad (App Store): ‏iOS 17 ומעלה. ‏Android 8 ומעלה, ו-Android TV. GPL-3.0.",
   cue="גוללים כדי לראות איך זה עובד", rail_aria="פרקים",
   hero_alt="חלון IPTVMac עם קיר כרזות של סרטים, ולפניו חלון קטן של תמונה בתוך תמונה",
   search_h="חיפוש שעומד בקצב של 100,000 פריטים.",
@@ -323,7 +328,7 @@ HOME = {
    ("האם IPTVMac כולל ערוצים או מנוי?", "לא. IPTVMac הוא נגן בלבד. הוא לא כולל ולא מארח ערוצים, סרטים או סדרות. מוסיפים מקור מספק שמותר לכם להשתמש בו. אם אין לכם, הפרויקט העצמאי בקוד פתוח iptv-org מפרסם רשימות חינמיות של ערוצים זמינים לציבור; הקישור בעמוד."),
    ("האם זה עובד עם Xtream Codes ו-M3U?", "כן. ב-Xtream Codes מזינים כתובת שרת, שם משתמש וסיסמה מהספק. ב-M3U מזינים שם וקישור לרשימה."),
    ("אילו מחשבי Mac נתמכים?", "מחשבי Mac עם Apple Silicon (M1 ומעלה) ו-macOS 14 ומעלה. מחשבי Intel לא נתמכים."),
-   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. Android TV, ‏Google TV ו-Fire TV: באותה גרסה יש קובץ של 32 ביט וקובץ של 64 ביט לטלוויזיות (מותאם לשלט, בלי הורדות בטלוויזיה, גרסה ראשונה, מתקינים ישירות עם האפליקציה Downloader או מכונן USB; עדיין אין רישום בחנות). iPhone ו-iPad: כן, האפליקציה ב-App Store (https://apps.apple.com/app/id6821761790); היא חינמית, דורשת iOS 17 ומעלה, ובה אותן 31 שפות ואותו עיצוב בלי חשבון ובלי מעקב. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
+   ("יש גרסה ל-iPhone, ל-iPad או ל-Android?", "Android: כן. מורידים את ה-APK מ-GitHub Releases (https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7); יש בה נגן מגע, תמונה בתוך תמונה, קול כשהמסך כבוי והורדות לצפייה בלי רשת, והיא דורשת Android 8 ומעלה. Android TV, ‏Google TV ו-Fire TV: באותה גרסה יש קובץ של 32 ביט וקובץ של 64 ביט לטלוויזיות (מותאם לשלט, בלי הורדות בטלוויזיה, גרסה ראשונה, מתקינים ישירות עם האפליקציה Downloader או מכונן USB; עדיין אין רישום בחנות). iPhone ו-iPad: כן, האפליקציה ב-App Store (https://apps.apple.com/app/id6821761790); היא חינמית לגמרי: בלי פרסומות, בלי מנוי ובלי רכישות בתוך האפליקציה. היא דורשת iOS 17 ומעלה, ובה אותן 31 שפות ואותו עיצוב בלי חשבון ובלי מעקב. כולן חולקות את אותו נגן, את 31 השפות ואת העיצוב בלי חשבון ובלי מעקב, וקוד המקור באותו מאגר ב-GitHub."),
    ("האם IPTVMac חינמי?", "כן. הוא חינמי ובקוד פתוח ברישיון GPL-3.0, בלי פרסומות ובלי מעקב."),
    ("למה macOS חוסמת את האפליקציה, ואיך פותחים אותה?", f"גרסאות לפני {NOTARIZED_FROM} לא עברו notarization של Apple, ולכן macOS חוסמת עותק שהורד בדפדפן. מגרסה {NOTARIZED_FROM} ואילך הגרסאות חתומות ב-Apple Developer ID ועברו notarization, וה-DMG נפתח בלחיצה כפולה רגילה. כדי לתקן עותק ישן, מתקינים את הגרסה האחרונה (מה-DMG, או בפקודת ההתקנה שלמעלה, שעובדת בכל הגרסאות), או פותחים הגדרות מערכת, פרטיות ואבטחה, ובוחרים Open Anyway."),
    ("האם יש תמונה בתוך תמונה?", "כן. חלון צף נשאר מעל אפליקציות אחרות ובכל שולחן עבודה בזמן שמחפשים משהו אחר."),
@@ -335,7 +340,12 @@ HOME = {
           ("../guides/m3u-playlist-on-mac.html", "How to play an M3U playlist on a Mac", "מוסיפים קישור לרשימה ומקבלים ערוצים, סרטים וסדרות."),
           ("../guides/picture-in-picture-iptv-mac.html", "Picture in Picture for IPTV on a Mac", "משאירים סטרים בחלון צף ועושים משהו אחר.")],
   cta_l=["חינם.", "קוד פתוח."], cta_p="GPL-3.0. בלי חשבון, בלי פרסומות ובלי מעקב.", cta_dl="הורדה ל-Mac", cta_src="קוד המקור ב-GitHub",
-  android_h="Android ו-Android TV", android_dl="Android (APK)", ios_dl="iPhone ו-iPad (App Store)", android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
+  android_h="Android ו-Android TV", android_dl="Android (APK)", ios_dl="iPhone ו-iPad (App Store)",
+  ios_kicker="חדש ב-App Store", ios_h="IPTVMac ל-iPhone ול-iPad.<br><em>חינמית לגמרי.</em>",
+  ios_p="אותו נגן, אותו חיפוש ואותן 31 שפות כמו ב-Mac, מותאמים ל-iPhone ול-iPad. מורידים מה-App Store ומוסיפים את המקור שלכם.",
+  ios_pts=["חינם להורדה וחינם לשימוש", "בלי פרסומות, בלי מנוי ובלי רכישות בתוך האפליקציה", "בלי חשבון ובלי מעקב: שום דבר לא נשלח אלינו", "תמונה בתוך תמונה, כתוביות, צפייה בהיסטוריה והורדות"],
+  ios_free="חינם", ios_note="iOS 17 ומעלה · iPhone ו-iPad", ios_badge_alt="הורדה מה-App Store",
+  ios_alt=("IPTVMac ב-iPhone: סרטים", "IPTVMac ב-iPhone: ערוצים חיים", "IPTVMac ב-iPhone: פרטי סרט"), android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
@@ -496,7 +506,7 @@ DEVICES = {
   tv=("Android TV, Google TV, Fire TV", "First TV version: remote control, no touch screen. Same Flutter and Kotlin code as the phone, with a layout built for the remote.",
       ["Install the Downloader app on the TV and open it.", "Type the address of the file (below). Try the 32-bit file first; if the TV says it is not compatible, use the 64-bit one. A USB stick works too.", "Allow Downloader to install apps, then install and open IPTVMac. OK selects, Back goes up, hold Back to close."],
       "32-bit file", "64-bit file"),
-  ios="iPhone and iPad (also Swift and SwiftUI): on the App Store.", all="All downloads and file choices",
+  ios="iPhone and iPad (also Swift and SwiftUI): on the App Store, completely free.", all="All downloads and file choices",
   alt_mac="IPTVMac on a Mac: a wall of movie posters", alt_win="IPTVMac on Windows 11: the welcome screen", alt_phone="IPTVMac on an Android phone: live channels with the program now and next", alt_tv="IPTVMac on Android TV: the channel list with the remote-control focus ring",
  ),
  "he": dict(
@@ -511,10 +521,27 @@ DEVICES = {
   tv=("Android TV, Google TV, Fire TV", "גרסת טלוויזיה ראשונה: שלט, בלי מסך מגע. אותו קוד Flutter ו-Kotlin כמו בטלפון, עם פריסה שנבנתה לשלט.",
       ["מתקינים את האפליקציה Downloader בטלוויזיה ופותחים אותה.", "מקלידים את כתובת הקובץ (למטה). מנסים קודם את קובץ ה-32 ביט; אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט. גם כונן USB עובד.", "מאשרים ל-Downloader להתקין אפליקציות, ואז מתקינים ופותחים את IPTVMac. OK בוחר, Back עולה, לחיצה ארוכה על Back סוגרת."],
       "קובץ 32 ביט", "קובץ 64 ביט"),
-  ios="iPhone ו-iPad (גם הם ב-Swift וב-SwiftUI): ב-App Store.", all="כל ההורדות ובחירת הקובץ",
+  ios="iPhone ו-iPad (גם הם ב-Swift וב-SwiftUI): ב-App Store, חינמיות לגמרי.", all="כל ההורדות ובחירת הקובץ",
   alt_mac="IPTVMac ב-Mac: קיר של פוסטרים של סרטים", alt_win="IPTVMac ב-Windows 11: מסך הפתיחה", alt_phone="IPTVMac בטלפון Android: ערוצים חיים עם התוכנית עכשיו והבאה", alt_tv="IPTVMac ב-Android TV: רשימת הערוצים עם מסגרת הפוקוס של השלט",
  ),
 }
+
+def appstore_badge(c, he, up, h=56):
+    """Apple's own "Download on the App Store" badge (black, SVG from Apple's marketing tools), unaltered, as Apple's guidelines ask."""
+    f, w = ("app-store-badge-he.svg", round(h * 121.664 / 42)) if he else ("app-store-badge-en.svg", round(h * 119.664 / 40))
+    return (f'<a class="appstore" href="{APP_STORE}" rel="noopener" aria-label="{e(c["ios_badge_alt"])}">'
+            f'<img src="{up}assets/{f}" width="{w}" height="{h}" alt="{e(c["ios_badge_alt"])}"></a>')
+
+
+def ios_section(c, he, up):
+    pts = "".join(f"<li>{e(x)}</li>" for x in c["ios_pts"])
+    phones = "".join(f'<img src="{up}screenshots/{n}.webp" width="560" height="1217" alt="{e(a)}" loading="lazy" decoding="async">'
+                     for n, a in zip(("ios-movies", "ios-live", "ios-details"), c["ios_alt"]))
+    return (f'<section class="ios" id="iphone" aria-labelledby="ios-h"><div class="wrap ios-grid"><div class="ios-copy">'
+            f'<p class="ios-kicker">{e(c["ios_kicker"])}</p><h2 id="ios-h">{c["ios_h"]}</h2><p class="ios-lead">{e(c["ios_p"])}</p>'
+            f'<ul class="ios-pts">{pts}</ul><div class="ios-act">{appstore_badge(c, he, up, 60)}<span class="ios-free">{e(c["ios_free"])}</span></div>'
+            f'<p class="ios-note">{e(c["ios_note"])}</p></div><div class="ios-phones" aria-hidden="false">{phones}</div></div></section>\n')
+
 
 def devices_section(c, he, up):
     d = DEVICES["he" if he else "en"]
@@ -551,13 +578,14 @@ def home(code):
 <section class="hero" id="hero" data-fx-scene aria-labelledby="h1"><canvas class="hero-canvas" data-fx-canvas aria-hidden="true"></canvas>
 <div class="hero-copy"><h1 id="h1">{h1}</h1>
 <p class="lede">{e(c["lede"])}</p>
-<div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a><a class="link" href="{up}download/">{e(c["all_dl"])}</a>
+<div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a>{appstore_badge(c, he, up, 64)}<a class="link" href="{up}download/">{e(c["all_dl"])}</a>
 <a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a></div>
 <p class="meta">{e(c["meta"])}</p>
 <div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div></div>
 <div class="hero-obj" data-fx-tilt><div class="pose"><div class="win hero-win">{hero_pic}</div>{hero_pip}</div></div>
 <a class="cue" href="#search">{e(c["cue"])}</a></section>
 '''
+    out += ios_section(c, he, up)
     # 1 search
     out += chapter("search", c, False,
         ctext("search", c["search_h"], c["search_p"], [e(f) for f in c["search_f"]],
@@ -601,7 +629,7 @@ def home(code):
 '''
     # closing
     out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
-<p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a><a class="btn big" data-fx-magnetic href="{APP_STORE}" rel="noopener">{ICON_DL}{e(c["ios_dl"])}</a><a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
+<p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a>{appstore_badge(c, he, up, 64)}<a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
 <p class="disc">{e(c["foot"])}</p></div></section>
 </main>
 '''
@@ -830,7 +858,8 @@ def download_page(code):
     fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
     rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])], "ios": [APP_STORE, *fill("ios", "", 0)]}
     recs = "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
-    hero_actions = (f'<div class="hero-big"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
+    hero_actions = (f'<div class="hero-big"><div class="big-row"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
+                    f'<span id="hero-store">{appstore_badge({"ios_badge_alt": ios["btn"]}, he, up, 64)}</span></div>'
                     f'<span class="big-meta" id="dl-meta">{e(rec["mac"][2])}</span></div>'
                     f'<div class="hero-sub"><a class="link" href="#windows">{e(ui["windows"])}</a><a class="link" href="#android">{e(ui["android"])}</a><a class="link" href="#tv">{e(ui["tv"])}</a><a class="link" href="#ios">{e(ui["ios"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(ui["src"])}</a></div>')
     hero = pghero(code, d["hero"], d["lede"], d["h1"], hero_actions, devstack(up, (d["alt_mac"], d["alt_phone"], d["alt_tv"])), "#pick", d["cue"])
@@ -852,7 +881,7 @@ def download_page(code):
             f'<div class="acts">{btn(apk("tv-32bit"), tv["btn32"])}<span class="sz">{ANDROID_SIZES["tv-32bit"]} MB</span>{btn(apk("tv-64bit"), tv["btn64"], "")}<span class="sz">{ANDROID_SIZES["tv-64bit"]} MB</span></div>',
             f'<p class="dl-url" dir="ltr">{e(apk("tv-32bit"))}</p>', tv["steps"], tv["note"])
       + panel("ios", ios["h"], ios["req"], f'<div class="soon-card"><img src="{up}logo.png" width="96" height="96" alt=""><span>{e(ios["soon"])}</span></div>',
-            f'<div class="acts"><a class="btn" href="{APP_STORE}" rel="noopener">{ICON_DL}{e(ios["btn"])}</a></div>', f'<p class="alt">{e(ios["body"])}</p>', [], ""))
+            f'<div class="acts">{appstore_badge({"ios_badge_alt": ios["btn"]}, he, up, 56)}<span class="ios-free">{e(ui["free_word"])}</span></div>', f'<p class="alt">{e(ios["body"])}</p>', [], ""))
     tabs = "".join(f'<li><a href="#{k}"><b>{e(t)}</b><small>{e(sm)}</small></a></li>' for k, t, sm in d["tabs"])
     pick = (f'<section class="pg-band" id="pick" aria-labelledby="pick-h"><div class="wrap"><h2 class="pg-h" id="pick-h" data-fx-split>{e(d["pick_h"])}</h2><p class="pg-sub">{e(d["pick_p"])}</p>'
             f'<div class="pick-grid"><ol class="pick-nav" data-rec="{e(ui["rec"])}">{tabs}</ol><div class="pick-panels">{panels}</div></div></div></section>\n')

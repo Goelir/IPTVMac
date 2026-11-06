@@ -33,6 +33,7 @@
   const iOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);   // iPadOS pretends to be a Mac
   const rec = iOS ? "ios" : /Android/i.test(ua) ? (/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(ua) ? "tv" : "android") : /Windows NT/i.test(ua) ? "windows" : (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? "mac" : null);
   const main = $("#dl-main");
+  if (rec === "ios") { const s = $("#hero-store"); if (s) s.hidden = true; }   // the main button already is the App Store
   if (main && rec && main.dataset[rec]) { const [href, label, meta] = JSON.parse(main.dataset[rec]); main.href = href; $(".lbl", main).textContent = label; const m = $("#dl-meta"); if (m) m.textContent = meta; }
 
   const nav = $(".pick-nav");

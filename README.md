@@ -4,9 +4,12 @@
 
 # IPTVMac
 
-**A native IPTV player for Mac, Windows, Android phones and Android TV.**<br>
+**A native IPTV player for Mac, Windows, iPhone and iPad, Android phones and Android TV.**<br>
 Xtream Codes and M3U, instant search, a built-in player with subtitles, Picture in Picture, catch-up and downloads.<br>
-Free and open source. No accounts, no analytics.
+Completely free and open source. No accounts, no ads, no analytics.
+
+<a href="https://apps.apple.com/app/id6821761790"><img src="docs/assets/app-store-badge-en.svg" alt="Download on the App Store" height="56"></a><br>
+**iPhone and iPad: on the App Store, completely free.** No ads, no subscription, no in-app purchases.
 
 <br>
 

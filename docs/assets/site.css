@@ -755,6 +755,7 @@ html[lang="he"] .chap h2, html[lang="he"] .langs h2, html[lang="he"] .install h2
 .marq { border: 0; background: transparent; -webkit-mask-image: none; mask-image: none; overflow: visible; direction: inherit; }
 .marq-in { width: auto; flex-wrap: wrap; justify-content: center; animation: none !important; }
 .marq ul[aria-hidden] { display: none; }
+.marq ul { flex: 1 1 100%; min-width: 0; flex-wrap: wrap; justify-content: center; }   /* the facts ribbon wraps: without this the list ran 500 px off a phone screen */
 .marq li { padding: 6px 14px; font-size: .9375rem; }
 .marq li::after { display: none; }
 
@@ -784,3 +785,30 @@ html[lang="he"] .chap h2, html[lang="he"] .langs h2, html[lang="he"] .install h2
 /* a button that sits on a tile is lifted off it (white on light gray, the page color on dark), so it still reads as a button */
 .dev .btn:not(.fill), .dl .btn:not(.fill), .panel .btn:not(.fill), .help .btn:not(.fill), .lat .btn:not(.fill), .pg-cta .btn:not(.fill) { background: var(--s1); }
 .dev .btn:not(.fill):hover, .dl .btn:not(.fill):hover, .panel .btn:not(.fill):hover, .help .btn:not(.fill):hover, .lat .btn:not(.fill):hover { background: color-mix(in srgb, var(--s1) 90%, var(--ink)); }
+
+/* ---- the iPhone and iPad app: a section of its own right under the hero, and Apple's badge wherever the store is linked ---- */
+.appstore { display: inline-block; line-height: 0; border-radius: 12px; transition: transform var(--d2) var(--ease), filter var(--d2) var(--ease); }
+.appstore img { display: block; height: auto; max-width: 100%; }
+.appstore:hover { transform: translateY(-2px); filter: brightness(1.12); }
+.appstore:active { transform: translateY(1px) scale(.99); }
+.appstore:focus-visible { outline: 3px solid var(--acc-ink); outline-offset: 4px; }
+.ios { padding-block: clamp(56px, 10vh, 128px); background: var(--s2); border-block: 1px solid var(--line); }
+.ios-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.ios-kicker { margin: 0 0 14px; font-size: .8125rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--acc-ink); }
+.ios h2 { margin: 0 0 18px; font-size: clamp(2.1rem, 4.6vw, 3.75rem); line-height: 1.04; letter-spacing: -.03em; font-weight: 700; text-wrap: balance; }
+.ios h2 em { font-style: normal; color: var(--acc-ink); }
+.ios-lead { margin: 0 0 22px; max-width: 34rem; font-size: 1.125rem; color: var(--mute); }
+.ios-pts { list-style: none; margin: 0 0 30px; padding: 0; display: grid; gap: 12px; font-size: 1.0625rem; }
+.ios-pts li { position: relative; padding-inline-start: 32px; }
+.ios-pts li::before { content: ""; position: absolute; inset-inline-start: 4px; top: .3em; width: 16px; height: 9px; border: 0 solid var(--acc-ink); border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg); }
+.ios-act { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.ios-free { display: inline-flex; align-items: center; min-height: 40px; padding-inline: 18px; border-radius: 999px; background: var(--acc); color: var(--on-acc); font-weight: 700; font-size: 1.0625rem; letter-spacing: -.005em; }
+.ios-note { margin: 16px 0 0; font-size: .875rem; color: var(--mute); }
+.ios-phones { direction: ltr; display: flex; justify-content: center; align-items: center; gap: clamp(10px, 1.8vw, 26px); }
+.ios-phones img { width: min(31%, 230px); height: auto; border-radius: clamp(18px, 2.4vw, 30px); box-shadow: var(--win-shadow); background: var(--bg); }
+.ios-phones img:nth-child(2) { transform: translateY(-5%) scale(1.05); }
+.actions .appstore { margin-inline-start: 2px; }
+@media (max-width: 900px) { .ios-grid { grid-template-columns: 1fr; } .ios-phones { order: -1; } }
+@media (prefers-reduced-motion: reduce) { .appstore { transition: none; } }
+.big-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: inherit; gap: 14px 20px; }
+.big-row[hidden], #hero-store[hidden] { display: none; }

@@ -9,10 +9,10 @@ MONTHS = {
 
 UI = {
  "en": dict(crumb="IPTVMac", free="Free · GPL-3.0 · no account", rec="Recommended for your device", more="All releases on GitHub", src="Source code",
-            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone and iPad", size="size", platforms="Platforms",
+            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone and iPad", free_word="Free", size="size", platforms="Platforms",
             home_aria="IPTVMac home", on="On"),
  "he": dict(crumb="IPTVMac", free="חינמי · GPL-3.0 · בלי חשבון", rec="מומלץ למכשיר שלך", more="כל הגרסאות ב-GitHub", src="קוד המקור",
-            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone ו-iPad", size="גודל", platforms="פלטפורמות",
+            mac="Mac", windows="Windows", android="Android", tv="Android TV", ios="iPhone ו-iPad", free_word="חינם", size="גודל", platforms="פלטפורמות",
             home_aria="IPTVMac, דף הבית", on="ב-"),
 }
 
@@ -34,7 +34,7 @@ DOWNLOAD = {
   win=dict(h="Windows", req="Windows 10 or 11, 64-bit.", btn="Download the installer", portable="Or the portable zip (no install, unzip and run):",
            steps=["Open IPTVMac-Windows-setup.exe. It installs for your user only and needs no administrator rights.", "Windows may say it protected your PC: the app is not signed with a paid certificate yet. Choose More info, then Run anyway.", "Open IPTVMac and add your Xtream Codes login or M3U link. Space pauses, the arrows seek, F fills the screen."],
            note="Light by design: about {s} MB to download, and while it just sits open it uses almost no processor. Updates are manual for now: the app tells you when a new version is out, and you run the new installer over the old one."),
-  ios=dict(h="iPhone and iPad", req="iOS 17 or later.", soon="On the App Store", body="Free, in 31 languages, with no account and no analytics. Needs iOS 17 or later. The source is also here if you want to build it yourself.", btn="Open the App Store"),
+  ios=dict(h="iPhone and iPad", req="iOS 17 or later.", soon="On the App Store", body="Completely free: no ads, no subscription, no in-app purchases and no account. 31 languages. Needs iOS 17 or later. The source is also here if you want to build it yourself.", btn="Download on the App Store"),
   files_h="Which Android file?", files_p="Phones and tablets use one of the first three. TVs use the TV files. If unsure, take the one marked as the usual choice.",
   files_cols=("File", "For", "Size"),
   files=[("arm64-v8a", "Almost every phone and tablet made since 2017. The usual choice.", "arm64-v8a"), ("armeabi-v7a", "Older 32-bit phones and tablets.", "armeabi-v7a"),
@@ -64,7 +64,7 @@ DOWNLOAD = {
   win=dict(h="Windows", req="Windows 10 או 11, ‏64 ביט.", btn="הורדת המתקין", portable="או קובץ ה-zip הנייד (בלי התקנה, פותחים ומפעילים):",
            steps=["פותחים את IPTVMac-Windows-setup.exe. הוא מתקין למשתמש שלכם בלבד ולא צריך הרשאות מנהל.", "ייתכן ש-Windows יגיד שהגן על המחשב: האפליקציה עוד לא חתומה בתעודה בתשלום. בוחרים More info ואז Run anyway.", "פותחים את IPTVMac ומוסיפים כניסת Xtream Codes או קישור M3U. רווח עוצר, החיצים מדלגים, F ממלא את המסך."],
            note="קלה בכוונה: בערך {s}MB להורדה, ובזמן שהיא רק פתוחה היא כמעט לא צורכת מעבד. העדכונים ידניים בינתיים: האפליקציה מודיעה כשיצאה גרסה חדשה, ומריצים את המתקין החדש מעל הישן."),
-  ios=dict(h="iPhone ו-iPad", req="iOS 17 ומעלה.", soon="ב-App Store", body="חינמית, ב-31 שפות, בלי חשבון ובלי מעקב. נדרש iOS 17 ומעלה. קוד המקור גם הוא כאן, למי שרוצה לבנות בעצמו.", btn="פתיחה ב-App Store"),
+  ios=dict(h="iPhone ו-iPad", req="iOS 17 ומעלה.", soon="ב-App Store", body="חינמית לגמרי: בלי פרסומות, בלי מנוי, בלי רכישות בתוך האפליקציה ובלי חשבון. 31 שפות. נדרש iOS 17 ומעלה. קוד המקור גם הוא כאן, למי שרוצה לבנות בעצמו.", btn="הורדה מה-App Store"),
   files_h="איזה קובץ Android?", files_p="טלפונים וטאבלטים משתמשים באחד משלושת הראשונים. טלוויזיות משתמשות בקבצי הטלוויזיה. אם לא בטוחים, לוקחים את הקובץ שמסומן כבחירה הרגילה.",
   files_cols=("קובץ", "למי", "גודל"),
   files=[("arm64-v8a", "כמעט כל טלפון וטאבלט מ-2017 ואילך. הבחירה הרגילה.", "arm64-v8a"), ("armeabi-v7a", "טלפונים וטאבלטים ישנים של 32 ביט.", "armeabi-v7a"),
