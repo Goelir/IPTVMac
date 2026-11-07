@@ -172,6 +172,9 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-07", "mac", "0.9.8", "v0.9.8", {
+   "en": ["**Full screen in Light Mode, second fix:** a panel could flash on and off during full-screen playback. The window is now set up for full-screen video once, when full screen starts, instead of on every window update."],
+   "he": ["**מסך מלא ב-Light Mode, תיקון שני:** פאנל יכול היה להבהב בזמן ניגון במסך מלא. עכשיו החלון מוכן לווידאו במסך מלא פעם אחת, כשהמסך המלא מתחיל, ולא בכל עדכון של החלון."]}),
  ("2026-11-06", "mac", "0.9.7", "v0.9.7", {
    "en": ["**Sort favorites by name:** Settings > General > \"Sort favorites by name (A–Z)\". Case does not matter and numbers count by value; it is off by default.",
           "**Full screen in Light Mode:** the window is dark while a video plays in full screen, so a thin white line no longer shows above the picture."],
