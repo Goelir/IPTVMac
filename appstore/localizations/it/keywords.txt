@@ -1,1 +1,0 @@
-m3u8,hls,diretta,televisione,canali,epg,guida,pip,video,film,serie,vod,sottotitoli

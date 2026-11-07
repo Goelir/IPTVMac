@@ -1,6 +1,6 @@
 # Builds the Windows app on a real Windows machine (Flutter cannot build Windows from a Mac), runs the whole test suite there,
 # starts the app once as a smoke test (a screenshot and the memory it uses are saved), and uploads the portable zip, the installer and
-# the SHA-256 list as artifacts. A release is made by hand from these artifacts (see PROJECT_STATUS.md), tagged "windows-vX.Y.Z".
+# the SHA-256 list as artifacts. A release is made by hand from these artifacts, tagged "windows-vX.Y.Z".
 name: Windows
 
 on:

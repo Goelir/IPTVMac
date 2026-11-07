@@ -1,1 +1,0 @@
-m3u8,hls,vivo,televisão,canais,epg,guia,pip,vídeo,filmes,séries,vod,legendas

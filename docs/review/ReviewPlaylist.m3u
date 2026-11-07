@@ -6,7 +6,7 @@
 # IPTVMac sorts entries by URL path (/movie/, /series/), then by group-title, then by file ending (.mp4 .mkv .avi). Everything else is Live.
 # Here the group-title decides: "Live demo" (HLS streams) -> Live, "Open Movies" and "Movie Trailers" -> Movies, "Series (demo)" -> Series.
 # The Live entries are on-demand HLS streams: IPTVMac lists them as Live because nothing in the link says otherwise.
-# Source: https://github.com/Goelir/IPTVMac (docs/review/ReviewPlaylist.m3u). Checked with scripts in appstore/ on 2026-10-11.
+# Source: https://github.com/Goelir/IPTVMac (docs/review/ReviewPlaylist.m3u).
 #EXTINF:-1 group-title="Live demo",Big Buck Bunny (HLS stream)
 https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 #EXTINF:-1 group-title="Live demo",Tears of Steel (HLS stream)

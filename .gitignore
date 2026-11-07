@@ -12,3 +12,8 @@ build-appstore/
 
 __pycache__/
 *.pyc
+
+# Not software: owner notes, store-submission material, AI instructions (kept locally, not published)
+PROJECT_STATUS.md
+CLAUDE.md
+appstore/

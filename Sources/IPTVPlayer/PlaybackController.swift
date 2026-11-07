@@ -4,7 +4,7 @@ import Observation
 /// One libmpv playback and the state a player UI shows (position, pause, speed, tracks, buffering, failure), polled twice a second.
 /// It also carries the rules the Mac player model has: a dropped live stream is reloaded a few times, a paused live stream that went
 /// stale is reloaded on resume, "the movie ended" is reported once, the sleep timer, and progress saving that never writes a 0 position.
-/// The iOS player is built on it; the Mac `PlayerModel` keeps its own copy of the same rules (see PROJECT_STATUS / ios/README follow-ups).
+/// The iOS player is built on it; the Mac `PlayerModel` keeps its own copy of the same rules.
 /// No UI and no localization in here: `failure` is mpv's reason, the app words the message.
 @MainActor @Observable
 public final class PlaybackController {

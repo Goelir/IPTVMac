@@ -1,1 +1,0 @@
-m3u8,hls,direct,télévision,chaînes,epg,guide,pip,vidéo,films,séries,vod,sous-titres,streaming

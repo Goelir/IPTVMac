@@ -1,1 +1,0 @@
-m3u8,hls,canlı,televizyon,kanallar,epg,rehber,pip,video,filmler,diziler,vod,altyazı

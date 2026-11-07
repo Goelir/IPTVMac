@@ -1,7 +1,7 @@
 """Copy for the privacy policy and the support page (English and Hebrew). Imported by build.py, which renders it in the site's article layout.
 Tokens replaced by build.py: @EMAIL@ (a sentence with the CONTACT_EMAIL set in build.py, empty while that is unset), @ISSUES@ (GitHub issues), @REPO@, @PRIVACY@ and @SUPPORT@ (the other page, same language), @DEMO@ (open-licence demo playlist),
 @GUIDES@ (the English guides folder), @FAQ@ (the page's faq list as headings and answers).
-Facts here are checked against the code: see the report in appstore/CHECKLIST.md ("Facts behind the privacy policy"). Change the code, change this text."""
+Facts here are checked against the code. Change the code, change this text."""
 
 EFFECTIVE = "2026-10-25"
 EFFECTIVE_LABEL = {"en": "25 October 2026", "he": "25 באוקטובר 2026"}
