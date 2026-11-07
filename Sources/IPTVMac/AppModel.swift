@@ -39,7 +39,7 @@ final class AppModel: LibraryModel {
     /// again after a close joins the playback that is still running.
     func attach(_ w: NSWindow) {
         guard window !== w else { return }
-        window = w; reopening = false
+        window = w; reopening = false; videoChrome = false
         applyFullscreen(); updateToolbar()
     }
 
@@ -54,16 +54,21 @@ final class AppModel: LibraryModel {
     }
 
     /// While the video is full screen the window toolbar (tabs, search) is hidden too; it is back as soon as either ends.
-    /// The window is also dark and black then: in Light Mode a thin strip of the light title bar / window background showed above the video
-    /// (a white line that flickered whenever the toolbar was re-applied); in Dark Mode and in a window it never showed.
+    /// The window is also dressed for video then, once per change and not on every call (this runs every 300 ms and on window events):
+    /// dark, black and without the title bar line. In Light Mode a thin white line showed at the top of the screen; in Dark Mode it never did.
     func updateToolbar() {
         guard let w = window else { return }
         let hide = playerFullscreen && w.styleMask.contains(.fullScreen)
-        let dark = hide ? NSAppearance(named: .darkAqua) : nil
-        if w.appearance?.name != dark?.name { w.appearance = dark }       // nil = follow the app (Settings > Appearance)
-        let background: NSColor = hide ? .black : .windowBackgroundColor
-        if w.backgroundColor != background { w.backgroundColor = background }
+        if videoChrome != hide { videoChrome = hide; dress(w, forVideo: hide) }
         if let tb = w.toolbar, tb.isVisible == hide { tb.isVisible = !hide }
+    }
+
+    @ObservationIgnored private var videoChrome = false    // the window is dressed for full-screen video
+
+    private func dress(_ w: NSWindow, forVideo on: Bool) {
+        w.appearance = on ? NSAppearance(named: .darkAqua) : nil       // nil = follow the app (Settings > Appearance)
+        w.backgroundColor = on ? .black : .windowBackgroundColor
+        w.titlebarSeparatorStyle = on ? .none : .automatic
     }
 
     /// Full screen only for the main window. AppKit drops a toggle issued mid-transition, with a sheet closing or while
@@ -87,10 +92,6 @@ final class AppModel: LibraryModel {
         switch n.name {
         case NSWindow.willEnterFullScreenNotification, NSWindow.willExitFullScreenNotification: fullscreen.transitionStarted()
         case NSWindow.didEnterFullScreenNotification, NSWindow.didExitFullScreenNotification: fullscreenEnded()
-        // Posted after every pass of event handling: when SwiftUI re-applies the toolbar (it does so whenever the player view changes, e.g. every
-        // few seconds on a live channel) it is hidden again before the next frame is drawn. The 300 ms timer in PlayerScreen alone left the
-        // toolbar, and the thin line it draws at the top, visible for up to 300 ms each time: a flicker.
-        case NSWindow.didUpdateNotification: if playerFullscreen { updateToolbar() }
         case NSWindow.willCloseNotification:
             guard let w = window else { return }
             Task {   // a close during a full-screen transition posts this and is then refused: only a window that is really gone counts
@@ -124,7 +125,7 @@ final class AppModel: LibraryModel {
         super.init(db: opened.db, dbMovedAside: opened.movedAside)
         for n in [NSWindow.willEnterFullScreenNotification, NSWindow.willExitFullScreenNotification, NSWindow.didEnterFullScreenNotification,
                   NSWindow.didExitFullScreenNotification, NSWindow.didEndSheetNotification, NSWindow.didDeminiaturizeNotification,
-                  NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification, NSApplication.didUnhideNotification, NSWindow.didUpdateNotification] {
+                  NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification, NSApplication.didUnhideNotification] {
             NotificationCenter.default.addObserver(forName: n, object: nil, queue: .main) { [weak self] n in
                 MainActor.assumeIsolated { self?.windowEvent(n) }
             }
