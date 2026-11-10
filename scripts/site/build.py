@@ -278,6 +278,7 @@ HOME = {
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
   foot_cols=[("Explore", [("#why", "Why IPTVMac"), ("#search", "Search"), ("#iphone", "iPhone and iPad"), ("#devices", "Devices"), ("#guides", "Guides")]),
+             ("Platforms", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone and iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
              ("Product", [("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
   alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Windows, iPhone and iPad, Android and Android TV. If you need Linux or something different:",
@@ -369,6 +370,7 @@ HOME = {
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#why", "למה IPTVMac"), ("#search", "חיפוש"), ("#iphone", "iPhone ו-iPad"), ("#devices", "מכשירים"), ("#guides", "מדריכים")]),
+             ("פלטפורמות", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone ו-iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
              ("המוצר", [("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
   alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Windows, ב-iPhone וב-iPad, ב-Android וב-Android TV. אם אתם צריכים Linux או משהו אחר:",
@@ -571,13 +573,13 @@ def devices_section(c, he, up):
         return (f'<article class="dev {cls}"><div class="shot"><img src="{up}screenshots/{shot}" width="{w}" height="{hh}" alt="{e(alt)}" loading="lazy" decoding="async"></div>'
                 f'<h3><bdi dir="{"rtl" if any(ord(ch) > 0x590 and ord(ch) < 0x600 for ch in h) else "ltr"}">{e(h)}</bdi></h3><p class="req">{e(req)}</p><ol class="steps">{li}</ol><div class="acts">{acts}</div></article>')
     mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
-               f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#hero">{e(d["mac"][4])}</a>')
-    wincard = card(d["win"][0], d["win"][1], d["win"][2], "windows-welcome.webp", d["alt_win"], f'<a class="btn" href="{win_file("setup")}" rel="noopener">{ICON_DL}{e(d["win"][3])}</a>', "winc")
-    phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
+               f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="mac/">{e(pages.PLATFORMS["he" if he else "en"]["mac"]["name"])}</a>')
+    wincard = card(d["win"][0], d["win"][1], d["win"][2], "windows-welcome.webp", d["alt_win"], f'<a class="btn" href="{win_file("setup")}" rel="noopener">{ICON_DL}{e(d["win"][3])}</a><a class="link" href="windows/">{e(pages.PLATFORMS["he" if he else "en"]["windows"]["name"])}</a>', "winc")
+    phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a><a class="link" href="android/">{e(pages.PLATFORMS["he" if he else "en"]["android"]["name"])}</a>', "phone")
     tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
-              f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a>')
+              f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-tv-32bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][3])}</a><a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-tv-64bit.apk" rel="noopener">{ICON_DL}{e(d["tv"][4])}</a><a class="link" href="tv/">{e(pages.PLATFORMS["he" if he else "en"]["tv"]["name"])}</a>')
     return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
-            f'<div class="dev-grid">{mac}{wincard}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{APP_STORE}" rel="noopener">App Store</a> · <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
+            f'<div class="dev-grid">{mac}{wincard}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{APP_STORE}" rel="noopener">App Store</a> · <a href="iphone/">{e(pages.PLATFORMS["he" if he else "en"]["iphone"]["name"])}</a> · <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
 
 TEST_CARD = ('<svg class="tv-card" viewBox="0 0 320 180" aria-hidden="true" focusable="false">'
   '<rect width="320" height="180" fill="#0B1B3A"/>'
@@ -890,7 +892,9 @@ def download_page(code):
     other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
     pic = lambda name, alt, w, h: shot(up, name, alt, w=w, h=h)
     def panel(pid, h, req, view, acts, extra, steps, note):
-        return (f'<section class="panel" id="{pid}"><div class="view">{view}</div><div><h3>{e(h)}</h3><p class="req">{e(req)}</p>{acts}{extra}{ol(steps)}'
+        key = "iphone" if pid == "ios" else pid
+        more = f'<p class="alt"><a class="link" href="../{key}/">{e(pages.PLATFORMS[code][key]["name"])}</a></p>'
+        return (f'<section class="panel" id="{pid}"><div class="view">{view}</div><div><h3>{e(h)}</h3><p class="req">{e(req)}</p>{acts}{extra}{more}{ol(steps)}'
                 + (f'<p class="dl-note">{e(note)}</p>' if note else "") + '</div></section>')
     panels = (
       panel("mac", mac["h"], mac["req"], f'<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>{pic("03-movies", d["alt_mac"], 1200, 754)}</div>',
@@ -931,6 +935,67 @@ def download_page(code):
            "license": "https://www.gnu.org/licenses/gpl-3.0.html", "url": BASE + ("he/" if he else "") + "download/"},
           ios_ld(d["ios"]["body"], BASE + ("he/" if he else "") + "download/#ios")]
     product_page("download", code, d["title"], d["desc"], hero, marquee(d["marquee"]) + pick + files + store + two + help_, ld)
+
+PLATFORM_KEYS = ("mac", "windows", "iphone", "android", "tv")   # URL /<key>/ and /he/<key>/
+SHOT_SIZES = {"ios-": (560, 1217), "android-": (540, 1210), "tv-": (1280, 720)}   # pixel sizes by file prefix; everything else is a 1200x754 Mac screenshot
+
+def shot_size(name):
+    return next((v for k, v in SHOT_SIZES.items() if name.startswith(k)), (1200, 754))
+
+def platform_page(key, code):
+    """One page per device: its own title, description and H1, the download, the install steps, three features with real screenshots, questions, links."""
+    c = HOME[code]; P = pages.PLATFORMS[code]; p = P[key]; d = pages.DOWNLOAD[code]; he = code == "he"; up = "../" * (2 if he else 1)
+    rec, _ = device_recs(code)
+    dkey = {"mac": "mac", "windows": "windows", "iphone": "ios", "android": "android", "tv": "tv"}[key]
+    href, label, meta = rec[dkey]
+    if key == "iphone":
+        actions = f'<div class="actions">{appstore_badge(c, he, up, 64)}</div><p class="meta">{e(meta)}</p>'
+    else:
+        actions = f'<div class="actions"><a class="btn fill big" href="{href}"{" rel=noopener" if href.startswith("http") else ""}><span class="lbl">{e(label)}</span></a></div><p class="meta">{e(meta)}</p>'
+    actions += f'<p class="hero-links"><a class="link" href="{up}{"he/" if he else ""}download/">{e(P["all"])}</a></p>'
+    first = p["feats"][0][2] or {"windows": "windows-welcome"}.get(key, "")
+    if key == "windows":
+        obj = f'<div class="win hero-win">{shot(up, "windows-welcome", d["alt_win"], w=1006, h=712, lazy=False)}</div>'
+    elif key in ("iphone", "android"):
+        frame = lambda n, a: f'<div class="phf"><div class="scr">{shot(up, n, a, w=shot_size(n)[0], h=shot_size(n)[1], lazy=False)}</div></div>'
+        obj = f'<div class="phones">{"".join(frame(n, a) for _, _, n, a in p["feats"][:2])}</div>'
+    elif key == "tv":
+        obj = f'<div class="tvf"><div class="scr">{shot(up, first, p["feats"][0][3], w=1280, h=720, lazy=False)}</div></div>'
+    else:
+        obj = f'<div class="win hero-win"><div class="win-bar"><i></i><i></i><i></i></div>{shot(up, "03-movies", pages.DOWNLOAD[code]["alt_mac"], w=1200, h=754, lazy=False)}</div>'
+    hero = pghero(code, p["h1"], p["lede"].format(size=WIN_SIZES["setup"]), P["crumb"], actions, obj, "#install", P["install_h"], slim=True)
+    dd = d[{"mac": "mac", "windows": "win", "iphone": "ios", "android": "android", "tv": "tv"}[key]]
+    if key == "iphone":
+        steps = (["Open the App Store page and tap Get.", "Open IPTVMac and add your Xtream Codes login or M3U link.", "That is all: the App Store keeps it up to date."] if not he else
+                 ["פותחים את העמוד ב-App Store ולוחצים \"קבלה\".", "פותחים את IPTVMac ומוסיפים כניסת Xtream Codes או קישור M3U.", "זהו: ה-App Store דואג לעדכונים."])
+        note = dd["body"]
+    else:
+        steps = dd["steps"]; note = dd["note"].format(s=WIN_SIZES["setup"]) if "{s}" in dd["note"] else dd["note"]
+    ol = '<ol class="bsteps">' + "".join(f"<li>{e(x)}</li>" for x in steps) + "</ol>"
+    extra = cmd_block(c) if key == "mac" else ""
+    install = (f'<section class="pg-band" id="install" aria-labelledby="install-h"><div class="wrap pg-two"><div><h2 class="pg-h" id="install-h">{e(P["install_h"])}</h2>'
+               f'<p class="pg-sub">{e(dd["req"])}</p></div><div>{ol}{extra}<p class="dl-note">{e(note)}</p></div></div></section>\n')
+    rows = ""
+    for t, txt, img, alt in p["feats"]:
+        fig = ""
+        if img:
+            w, h = shot_size(img)
+            fig = f'<figure class="pf-shot{" tall" if h > w else ""}">{shot(up, img, alt, w=w, h=h)}</figure>'
+        rows += f'<li class="pf"><div class="pf-text"><h3>{e(t)}</h3><p>{e(txt)}</p></div>{fig}</li>'
+    feats = f'<section class="pg-band" style="padding-top:0" aria-labelledby="feats-h"><div class="wrap"><h2 class="pg-h" id="feats-h">{e(P["features_h"])}</h2><ul class="pfs">{rows}</ul></div></section>\n'
+    faq = (f'<section class="faq-sec" aria-labelledby="pfaq-h"><div class="wrap faq-grid"><h2 id="pfaq-h">{e(P["faq_h"])}</h2>'
+           f'<div class="faqs">{"".join(f"<details name=pfaq><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in p["faq"])}</div></div></section>\n')
+    gl = [(f'{up}guides/{g["slug"]}.html', g["h1"]) for g in GUIDES if g["slug"] in p["guides"]]
+    links = [(f'{up}{"he/" if he else ""}#why', P["why"]), (f'{up}{"he/" if he else ""}download/', P["all"])] + gl
+    nxt = (f'<section class="guides" aria-labelledby="next-h"><div class="wrap"><h2 id="next-h">{e(P["next_h"])}</h2><div class="glist">'
+           + "".join(f'<a href="{u}"><strong>{e(t)}</strong><span></span>{ICON_CHEV}</a>' for u, t in links) + '</div></div></section>\n')
+    oses = {"mac": "macOS 14+", "windows": "Windows 10, Windows 11", "iphone": "iOS 17+, iPadOS 17+", "android": "Android 8+", "tv": "Android TV, Google TV, Fire TV (Android 8+)"}
+    vers = {"mac": VERSION, "windows": WIN_VER, "iphone": IOS_VERSION, "android": AND_VER, "tv": AND_VER}
+    ld = {"@context": "https://schema.org", "@type": "MobileApplication" if key in ("iphone", "android") else "SoftwareApplication", "name": p["name"],
+          "applicationCategory": "MultimediaApplication", "operatingSystem": oses[key], "softwareVersion": vers[key], "isAccessibleForFree": True,
+          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": href, "description": p["desc"],
+          "url": BASE + ("he/" if he else "") + f"{key}/", "license": "https://www.gnu.org/licenses/gpl-3.0.html", "inLanguage": code}
+    product_page(key, code, p["title"], p["desc"], hero, install + feats + faq + nxt, (ld,))
 
 def features_page(code):
     c = HOME[code]; f = pages.FEATURES[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
@@ -974,10 +1039,10 @@ def changelog_page(code):
 def crawler_files():
     en_of = {BASE: BASE, BASE + "he/": BASE}              # page url -> its English url; every entry lists both language versions
     urls = [BASE, BASE + "he/"] + [BASE + f"guides/{g['slug']}.html" for g in GUIDES]
-    for k in list(legal.LEGAL) + ["download", "features", "changelog"]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
+    for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for u in urls:
-        sm += f"<url><loc>{u}</loc><lastmod>{"2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
+        sm += f"<url><loc>{u}</loc><lastmod>{"2026-11-11" if any(f"/{k}/" in u for k in PLATFORM_KEYS) else "2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
         if u in en_of:
             en = en_of[u]; he = en.replace(BASE, BASE + "he/", 1) if en != BASE else BASE + "he/"
             sm += f'<xhtml:link rel="alternate" hreflang="en" href="{en}"/><xhtml:link rel="alternate" hreflang="he" href="{he}"/>'
@@ -1003,6 +1068,7 @@ Source code: {REPO}
 Privacy policy: {BASE}privacy/ (no account, no analytics, no ads, no tracking; nothing is sent to the developer)
 iPhone and iPad app (completely free: no ads, no subscription, no in-app purchases; iOS 17 or later): {APP_STORE}
 Downloads (Mac, Windows, Android, Android TV, iPhone and iPad): {BASE}download/
+Platform pages: Mac {BASE}mac/ , Windows {BASE}windows/ , iPhone and iPad {BASE}iphone/ , Android {BASE}android/ , Android TV / Google TV / Fire TV {BASE}tv/
 Features: {BASE}features/
 Release notes: {BASE}changelog/
 Support: {BASE}support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
@@ -1041,5 +1107,7 @@ if __name__ == "__main__":
     for k in legal.LEGAL:
         for code in ("en", "he"): legal_page(k, code)
     for code in ("en", "he"): download_page(code); features_page(code); changelog_page(code)
+    for code in ("en", "he"):
+        for key in PLATFORM_KEYS: platform_page(key, code)
     crawler_files()
     print("site built:", ", ".join(sorted(p.name for p in DOCS.rglob("*.html"))))

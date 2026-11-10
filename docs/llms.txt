@@ -9,6 +9,7 @@ Source code: https://github.com/Goelir/IPTVMac
 Privacy policy: https://goelir.github.io/IPTVMac/privacy/ (no account, no analytics, no ads, no tracking; nothing is sent to the developer)
 iPhone and iPad app (completely free: no ads, no subscription, no in-app purchases; iOS 17 or later): https://apps.apple.com/app/id6821761790
 Downloads (Mac, Windows, Android, Android TV, iPhone and iPad): https://goelir.github.io/IPTVMac/download/
+Platform pages: Mac https://goelir.github.io/IPTVMac/mac/ , Windows https://goelir.github.io/IPTVMac/windows/ , iPhone and iPad https://goelir.github.io/IPTVMac/iphone/ , Android https://goelir.github.io/IPTVMac/android/ , Android TV / Google TV / Fire TV https://goelir.github.io/IPTVMac/tv/
 Features: https://goelir.github.io/IPTVMac/features/
 Release notes: https://goelir.github.io/IPTVMac/changelog/
 Support: https://goelir.github.io/IPTVMac/support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
