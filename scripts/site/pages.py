@@ -388,6 +388,7 @@ ONAIR = {
    ("23:00", "In your language.", "31 languages, each in its own script, right to left included."),
   ],
   guide_more="Every feature",
+  guide_why="Each reason, with the proof",
   sign="IPTVMac",
  ),
  "he": dict(
@@ -409,6 +410,7 @@ ONAIR = {
    ("23:00", "בשפה שלכם.", "31 שפות, כל אחת בכתב שלה, כולל מימין לשמאל."),
   ],
   guide_more="כל התכונות",
+  guide_why="כל סיבה, עם ההוכחה",
   sign="IPTVMac",
  ),
 }
@@ -532,5 +534,58 @@ PLATFORMS = {
          ("32 ביט או 64 ביט?", "מנסים קודם את קובץ ה-32 ביט: הוא רץ כמעט על כל טלוויזיה וממיר. אם הטלוויזיה אומרת שהוא לא תואם, משתמשים בקובץ ה-64 ביט."),
          ("איך מתעדכנים?", "בינתיים ידנית: מתקינים את הקובץ החדש מעל הישן.")],
     guides=[]),
+ ),
+}
+
+
+# ---- /why/ (phase 4): the full argument, each reason with the place to check it, and an honest list of what it does not do ----
+WHY = {
+ "en": dict(
+  title="Why IPTVMac: a free IPTV player with no ads or tracking",
+  desc="Why IPTVMac is a better IPTV player: free with no ads, no account and no tracking, fast search on huge playlists, the mpv engine, native apps on every platform.",
+  h1=["Why IPTVMac."], crumb="Why IPTVMac",
+  lede="Seven reasons, each with the place where you can check it yourself. And, just as plainly, what it does not do yet.",
+  check="How to check",
+  reasons=[
+   ("Free. Really.", "There is nothing to buy: no subscription, no premium tier, no in-app purchases, no ads. You do not create an account with us; you only add the login your provider gave you. The code is open source under the GPL-3.0, so anyone can read it and build it.", "LICENSE", "The license in the repository"),
+   ("Nothing phones home.", "There are no analytics and no tracking libraries. The app talks to the servers you add and to GitHub, to check for updates. Passwords are stored on your device, never sent anywhere else.", "PRIVACY", "The privacy policy"),
+   ("Found as you type.", "Your library lives in a local SQLite database with full-text search. Our automated tests fill it with 100,000 titles and check that each search returns in under a quarter of a second.", "Tests/IPTVCoreTests/SearchTests.swift", "The search speed test"),
+   ("Plays the streams others drop.", "Playback runs on mpv, the engine behind many video players. It plays broken TS and HLS streams, reconnects by itself when a live channel drops, and decodes video in hardware.", "Sources/IPTVPlayer/PlaybackWatch.swift", "The live reconnect logic"),
+   ("Made for each screen.", "Swift and SwiftUI on Mac, iPhone and iPad. Flutter with a Kotlin layer on Android and Android TV, and with a small C++ shell on Windows. No Electron and no web view, so it starts fast and stays light.", "", ""),
+   ("Everything a viewer needs.", "Catch-up on channels whose provider supports it, continue watching at the right episode and minute, skip intro and credits, Picture in Picture, downloads for offline viewing, several playlists in one library.", "FEATURES", "The full feature list"),
+   ("In your language.", "31 languages, each in its own script, including Hebrew, Arabic, Persian and Urdu from right to left.", "Sources/IPTVMac/Resources", "The 31 translations"),
+  ],
+  limits_h="What it does not do (yet)",
+  limits=["It does not import XMLTV guide files: the program guide comes from Xtream Codes logins.",
+          "On the Mac it needs Apple Silicon (M1 or later); Intel Macs are not supported. A local .m3u file cannot be opened yet, only a playlist link.",
+          "The Windows app is not signed with a paid certificate yet, so SmartScreen asks once before it runs.",
+          "The Android and TV apps are not on the Play Store yet; the TV app updates by installing the new file.",
+          "Downloads are for movies and episodes that are direct files; live channels cannot be recorded.",
+          "There is no Apple TV app."],
+  compare_h="Compared with other players", compare_p="Fact-by-fact comparisons, with the sources and the date they were checked.",
+ ),
+ "he": dict(
+  title="למה IPTVMac: נגן IPTV חינמי בלי פרסומות ובלי מעקב",
+  desc="למה IPTVMac הוא נגן IPTV טוב יותר: חינם, בלי פרסומות, בלי חשבון ובלי מעקב, חיפוש מהיר ברשימות ענקיות, מנוע mpv, ואפליקציות מקוריות לכל פלטפורמה.",
+  h1=["למה IPTVMac."], crumb="למה IPTVMac",
+  lede="שבע סיבות, כל אחת עם המקום שבו אפשר לבדוק אותה בעצמכם. ובאותה פשטות, מה הוא עוד לא עושה.",
+  check="איך בודקים",
+  reasons=[
+   ("חינם. באמת.", "אין מה לקנות: בלי מנוי, בלי גרסת פרימיום, בלי רכישות בתוך האפליקציה ובלי פרסומות. לא פותחים אצלנו חשבון; רק מוסיפים את פרטי הכניסה שקיבלתם מהספק. הקוד פתוח ברישיון GPL‑3.0, כך שכל אחד יכול לקרוא ולבנות אותו.", "LICENSE", "הרישיון במאגר"),
+   ("שום דבר לא מדווח הביתה.", "אין אנליטיקה ואין ספריות מעקב. האפליקציה מדברת עם השרתים שהוספתם ועם GitHub, כדי לבדוק עדכונים. הסיסמאות נשמרות במכשיר ולא נשלחות לשום מקום אחר.", "PRIVACY", "מדיניות הפרטיות"),
+   ("נמצא תוך כדי הקלדה.", "הספרייה שלכם שמורה במסד SQLite מקומי עם חיפוש טקסט מלא. הבדיקות האוטומטיות שלנו ממלאות אותו ב-100,000 כותרים ובודקות שכל חיפוש חוזר בפחות מרבע שנייה.", "Tests/IPTVCoreTests/SearchTests.swift", "בדיקת מהירות החיפוש"),
+   ("מנגן את מה שנגנים אחרים מפילים.", "הניגון רץ על mpv, המנוע שמאחורי נגני וידאו רבים. הוא מנגן שידורי TS ו-HLS שבורים, מתחבר מחדש לבד כשערוץ חי נופל, ומפענח וידאו בחומרה.", "Sources/IPTVPlayer/PlaybackWatch.swift", "לוגיקת החיבור מחדש"),
+   ("נבנה לכל מסך.", "Swift ו-SwiftUI ב-Mac, ב-iPhone וב-iPad. ‏Flutter עם שכבת Kotlin ב-Android וב-Android TV, ועם מעטפת C++ קטנה ב-Windows. בלי Electron ובלי דפדפן מוסתר, ולכן הוא נפתח מהר ונשאר קל.", "", ""),
+   ("כל מה שצופה צריך.", "צפייה בהיסטוריה בערוצים שהספק תומך בהם, המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה, הורדות לצפייה בלי רשת, וכמה רשימות בספרייה אחת.", "FEATURES", "רשימת התכונות המלאה"),
+   ("בשפה שלכם.", "31 שפות, כל אחת בכתב שלה, כולל עברית, ערבית, פרסית ואורדו מימין לשמאל.", "Sources/IPTVMac/Resources", "31 התרגומים"),
+  ],
+  limits_h="מה הוא עוד לא עושה",
+  limits=["הוא לא מייבא קובצי לוח שידורים XMLTV: לוח השידורים מגיע מחשבונות Xtream Codes.",
+          "ב-Mac נדרש Apple Silicon ‏(M1 ומעלה); מחשבי Intel לא נתמכים. עדיין אי אפשר לפתוח קובץ .m3u מקומי, רק קישור לרשימה.",
+          "אפליקציית Windows עוד לא חתומה בתעודה בתשלום, ולכן SmartScreen שואל פעם אחת לפני שהיא רצה.",
+          "אפליקציות ה-Android והטלוויזיה עוד לא ב-Play Store; אפליקציית הטלוויזיה מתעדכנת בהתקנת הקובץ החדש.",
+          "ההורדות הן לסרטים ופרקים שהם קבצים ישירים; אי אפשר להקליט ערוצים חיים.",
+          "אין אפליקציה ל-Apple TV."],
+  compare_h="בהשוואה לנגנים אחרים", compare_p="השוואות עובדה מול עובדה, עם המקורות והתאריך שבו נבדקו.",
  ),
 }

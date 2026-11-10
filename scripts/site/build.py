@@ -618,7 +618,7 @@ def guide_section(code, up):
     items = "".join(f'<li class="slot"><time aria-hidden="true">{t}</time><h3>{e(h)}</h3><p>{e(p)}</p></li>' for t, h, p in o["guide"])
     return (f'<section class="guide" id="why" aria-labelledby="why-h"><div class="guide-pin"><div class="wrap guide-head"><h2 id="why-h">{e(o["guide_h"])}</h2><p>{e(o["guide_p"])}</p></div>'
             f'<div class="epg" data-epg><span class="epg-now" aria-hidden="true">{e(o["guide_now"])}</span><ol class="epg-track">{items}</ol></div>'
-            f'<p class="wrap guide-more"><a class="link" href="{up}{"he/" if code == "he" else ""}features/">{e(o["guide_more"])}</a></p></div></section>\n')
+            f'<p class="wrap guide-more"><a class="link" href="why/">{e(o["guide_why"])}</a><a class="link" href="features/">{e(o["guide_more"])}</a></p></div></section>\n')
 
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
@@ -997,6 +997,32 @@ def platform_page(key, code):
           "url": BASE + ("he/" if he else "") + f"{key}/", "license": "https://www.gnu.org/licenses/gpl-3.0.html", "inLanguage": code}
     product_page(key, code, p["title"], p["desc"], hero, install + feats + faq + nxt, (ld,))
 
+def why_page(code):
+    """The full argument: each reason with a link to where it can be checked, the honest limits, and the comparisons."""
+    c = HOME[code]; w = pages.WHY[code]; he = code == "he"; up = "../" * (2 if he else 1); lp = "he/" if he else ""
+    rec, recs = device_recs(code)
+    def proof(ref):
+        if ref == "PRIVACY": return f"{up}{lp}privacy/"
+        if ref == "FEATURES": return f"{up}{lp}features/"
+        return f"{REPO}/{'tree' if '.' not in ref.split('/')[-1] else 'blob'}/main/{ref}"
+    rows = ""
+    for i, (h, txt, ref, label) in enumerate(w["reasons"]):
+        chk = f'<p class="why-chk"><span>{e(w["check"])}:</span> <a href="{proof(ref)}"{" rel=noopener" if ref not in ("PRIVACY", "FEATURES") else ""}>{e(label)}</a></p>' if ref else ""
+        rows += f'<li class="pf why-r"><div class="pf-text"><time aria-hidden="true">{pages.ONAIR[code]["guide"][i][0]}</time><h2>{e(h)}</h2><p>{e(txt)}</p>{chk}</div></li>'
+    lim = "".join(f"<li>{e(x)}</li>" for x in w["limits"])
+    comps = getattr(pages, "COMPARE", {}).get(code, {}).get("pages", [])
+    comp = ""
+    if comps:
+        comp = (f'<section class="guides" aria-labelledby="cmp-h"><div class="wrap"><h2 id="cmp-h">{e(w["compare_h"])}</h2><p class="pg-sub">{e(w["compare_p"])}</p><div class="glist">'
+                + "".join(f'<a href="{up}{lp}compare/{k}/"><strong>{e(x["h1"][0])}</strong><span>{e(x["lede"])}</span>{ICON_CHEV}</a>' for k, x in comps) + '</div></div></section>\n')
+    actions = (f'<div class="actions"><a class="btn fill big" id="dl-main" href="{DOWNLOAD}"{recs}><span class="lbl">{e(rec["mac"][1])}</span></a><span id="hero-store">{appstore_badge(c, he, up, 64)}</span></div>'
+               f'<p class="meta" id="dl-meta">{e(rec["mac"][2])}</p>')
+    hero = (f'<section class="hero pghero slim" id="hero" aria-labelledby="h1"><div class="hero-copy">{crumbs(code, w["crumb"])}<h1 id="h1">{"".join(f"<span class=l>{e(x)}</span>" for x in w["h1"])}</h1>'
+            f'<p class="lede">{e(w["lede"])}</p>{actions}</div></section>\n')
+    body = (f'<section class="pg-band" style="padding-top:0"><div class="wrap"><ol class="pfs why-list">{rows}</ol></div></section>\n'
+            f'<section class="pg-band" style="padding-top:0" aria-labelledby="lim-h"><div class="wrap pg-two"><h2 class="pg-h" id="lim-h">{e(w["limits_h"])}</h2><ul class="limits">{lim}</ul></div></section>\n' + comp)
+    product_page("why", code, w["title"], w["desc"], hero, body)
+
 def features_page(code):
     c = HOME[code]; f = pages.FEATURES[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
     dl = f"{up}{'he/' if he else ''}download/"
@@ -1039,10 +1065,10 @@ def changelog_page(code):
 def crawler_files():
     en_of = {BASE: BASE, BASE + "he/": BASE}              # page url -> its English url; every entry lists both language versions
     urls = [BASE, BASE + "he/"] + [BASE + f"guides/{g['slug']}.html" for g in GUIDES]
-    for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
+    for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS, "why"]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for u in urls:
-        sm += f"<url><loc>{u}</loc><lastmod>{"2026-11-11" if any(f"/{k}/" in u for k in PLATFORM_KEYS) else "2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
+        sm += f"<url><loc>{u}</loc><lastmod>{"2026-11-11" if any(f"/{k}/" in u for k in (*PLATFORM_KEYS, "why")) else "2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
         if u in en_of:
             en = en_of[u]; he = en.replace(BASE, BASE + "he/", 1) if en != BASE else BASE + "he/"
             sm += f'<xhtml:link rel="alternate" hreflang="en" href="{en}"/><xhtml:link rel="alternate" hreflang="he" href="{he}"/>'
@@ -1109,5 +1135,6 @@ if __name__ == "__main__":
     for code in ("en", "he"): download_page(code); features_page(code); changelog_page(code)
     for code in ("en", "he"):
         for key in PLATFORM_KEYS: platform_page(key, code)
+        why_page(code)
     crawler_files()
     print("site built:", ", ".join(sorted(p.name for p in DOCS.rglob("*.html"))))

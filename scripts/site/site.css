@@ -1038,3 +1038,13 @@ html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem
 @media (max-width: 900px) { .pf { grid-template-columns: minmax(0, 1fr); } .pf:nth-child(even) .pf-shot { order: 0; } }
 .guides .glist a span:empty { display: none; }
 .hero-win > img { aspect-ratio: auto; height: auto; }   /* a plain screenshot keeps its own proportions (the 1800x1186 rule is for the hero window picture) */
+/* /why/ */
+.why-list { counter-reset: none; }
+.why-r .pf-text { max-width: 46rem; }
+.why-r time { display: block; margin-bottom: 10px; font: 800 1.2rem/1 var(--display); color: var(--mute); unicode-bidi: isolate; }
+.why-r h2 { font: 800 clamp(2rem, 1.3rem + 2.6vw, 3.6rem)/.98 var(--display); }
+.why-chk { margin-top: 16px !important; font-size: .9375rem; }
+.why-chk span { color: var(--mute); }
+.limits { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 14px; color: var(--mute); line-height: 1.6; }
+.limits li::marker { color: var(--tally); }
+.guide-more { display: flex; flex-wrap: wrap; gap: 4px 26px; }
