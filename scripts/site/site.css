@@ -1037,3 +1037,4 @@ html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem
 .pf:nth-child(even) .pf-shot { order: -1; }
 @media (max-width: 900px) { .pf { grid-template-columns: minmax(0, 1fr); } .pf:nth-child(even) .pf-shot { order: 0; } }
 .guides .glist a span:empty { display: none; }
+.hero-win > img { aspect-ratio: auto; height: auto; }   /* a plain screenshot keeps its own proportions (the 1800x1186 rule is for the hero window picture) */
