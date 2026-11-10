@@ -1,6 +1,6 @@
 /* IPTVMac site. Source: scripts/site/site.js, copied to docs/assets/site.js by scripts/site/build.py. No dependencies.
    Everything here is an enhancement: the page reads and works without it. Responsibilities:
-   theme toggle, copy buttons, chapter scroll progress (CSS variables, plus IPTVDemo.setProgress), the static-fallback interactions
+   copy buttons, chapter scroll progress (CSS variables, plus IPTVDemo.setProgress), the static-fallback interactions
    (speed dial, draggable Picture in Picture window, counter, terminal), the tour dialog, and loading the optional fx/demo modules. */
 (() => {
   "use strict";
@@ -10,13 +10,6 @@
   const $ = (s, r) => (r || d).querySelector(s), $$ = (s, r) => [...(r || d).querySelectorAll(s)];
   const clamp = v => (v < 0 ? 0 : v > 1 ? 1 : v);
   const out3 = t => 1 - Math.pow(1 - t, 3);
-  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
-
-  // ---- theme: follows the system until the visitor chooses ----
-  const tb = $(".theme"), light = matchMedia("(prefers-color-scheme: light)");
-  const mode = () => root.dataset.theme || (light.matches ? "light" : "dark");
-  const syncTheme = () => { if (tb) tb.dataset.mode = mode(); };
-  if (tb) { syncTheme(); light.addEventListener("change", syncTheme); tb.addEventListener("click", () => { const n = mode() === "light" ? "dark" : "light"; root.dataset.theme = n; store.set("iptvmac-theme", n); syncTheme(); }); }
 
   // ---- copy buttons (install command, free playlist link) ----
   $$(".copy").forEach(b => {

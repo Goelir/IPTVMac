@@ -45,7 +45,7 @@
     };
     nav.setAttribute("role", "tablist");
     tabs.forEach((a, i) => {
-      a.setAttribute("role", "tab"); a.id = "tab-" + panels[i].id; a.setAttribute("aria-controls", panels[i].id); panels[i].setAttribute("role", "tabpanel"); panels[i].setAttribute("aria-labelledby", a.id);
+      a.setAttribute("role", "tab"); if (a.parentElement.tagName === "LI") a.parentElement.setAttribute("role", "presentation"); a.id = "tab-" + panels[i].id; a.setAttribute("aria-controls", panels[i].id); panels[i].setAttribute("role", "tabpanel"); panels[i].setAttribute("aria-labelledby", a.id);
       a.addEventListener("click", ev => { ev.preventDefault(); show(i); });
       a.addEventListener("keydown", ev => {
         const k = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[ev.key]; if (!k) return;

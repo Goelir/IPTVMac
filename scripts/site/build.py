@@ -57,6 +57,9 @@ def _copy(src, name):
 def publish_assets():
     (DOCS / "assets").mkdir(exist_ok=True)
     for n in OWN: _copy(SRC / n, n)
+    (DOCS / "assets" / "fonts").mkdir(exist_ok=True)
+    for f in sorted((SRC / "fonts").iterdir()):   # self-hosted fonts (OFL, licenses beside them); site.css refers to them as fonts/<file>
+        if f.suffix in (".woff2", ".txt"): shutil.copyfile(f, DOCS / "assets" / "fonts" / f.name)
     for mod, (js, css) in MODULES.items():
         if mod == "fx" and not USE_FX: continue
         if (SRC / mod / js).exists():
@@ -77,8 +80,6 @@ ICON_PLAY = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><pa
 ICON_PAUSE = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="3.6" height="12" rx="1.2"/><rect x="11.4" y="4" width="3.6" height="12" rx="1.2"/></svg>'
 ICON_SEARCH = svg('<circle cx="9" cy="9" r="5.5"/><path d="M13.2 13.2L17 17"/>')
 ICON_MOON = svg('<path d="M16.5 11.6A6.8 6.8 0 0 1 8.4 3.5a6.8 6.8 0 1 0 8.1 8.1z"/>')
-ICON_MOON_T = svg('<path d="M16.5 11.6A6.8 6.8 0 0 1 8.4 3.5a6.8 6.8 0 1 0 8.1 8.1z"/>', cls="moon")
-ICON_SUN = svg('<circle cx="10" cy="10" r="3.4"/><path d="M10 2.2v1.6M10 16.2v1.6M2.2 10h1.6M16.2 10h1.6M4.5 4.5l1.1 1.1M14.4 14.4l1.1 1.1M15.5 4.5l-1.1 1.1M5.6 14.4l-1.1 1.1"/>', cls="sun")
 ICON_PIP = svg('<rect x="2.5" y="4" width="15" height="12" rx="2.2"/><rect x="9.5" y="9.5" width="6" height="4.2" rx="1" fill="currentColor" stroke="none"/>')
 ICON_FS = svg('<path d="M3.5 7.5v-4h4M16.5 7.5v-4h-4M3.5 12.5v4h4M16.5 12.5v4h-4"/>')
 ICON_BACK = svg('<path d="M4.2 10a5.8 5.8 0 1 0 1.8-4.2M4 3.2v3.6h3.6"/>')
@@ -91,7 +92,9 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
     up = "../" * depth
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in alternates)
     ld = "".join(f'<script type="application/ld+json">{json.dumps(o, ensure_ascii=False)}</script>' for o in extra_ld)
-    fonts = ""   # the system font: nothing to download
+    disp = "karantina-hebrew-700-normal.woff2" if lang == "he" else "big-shoulders-display-800-latin.woff2"
+    text = ("ibm-plex-sans-hebrew-hebrew-400-normal.woff2",) if lang == "he" else ("ibm-plex-sans-latin-400-normal.woff2",)
+    fonts = "".join(f'<link rel="preload" as="font" type="font/woff2" href="{up}assets/fonts/{f}" crossorigin>\n' for f in (disp, *text))   # the headline face and the body text of the page's script (text uses font-display: optional, so it never swaps late)
     return f'''<!doctype html>
 <html lang="{lang}" dir="{'rtl' if lang == 'he' else 'ltr'}">
 <head>
@@ -102,9 +105,8 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <link rel="canonical" href="{canonical}">
 {alts}
 <meta name="apple-itunes-app" content="app-id={APP_STORE_ID}">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B1B3A">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="IPTVMac">
 <meta property="og:locale" content="{'he_IL' if lang == 'he' else 'en_US'}">
@@ -120,7 +122,7 @@ def head(title, desc, canonical, lang, depth, alternates=(), og_type="website", 
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 {fonts}{preload}
 <link rel="stylesheet" href="{av(up, 'site.css')}">
-<script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("iptvmac-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}}catch(e){{}}</script>
+<script>document.documentElement.classList.add("js")</script>
 {ld}
 </head>
 <body>
@@ -197,7 +199,7 @@ HOME = {
   desc="IPTVMac is a free, open source IPTV player for Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
   nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
-  gh="GitHub", theme="Switch between light and dark", other_lang=("he/", "עברית", "he"),
+  gh="GitHub", other_lang=("he/", "עברית", "he"),
   h1='<span class="l">A {m}</span> <span class="l">IPTV player</span> <span class="l">everywhere.</span>',
   lede="Xtream Codes and M3U sources, instant search, Picture in Picture, catch-up and subtitles. On Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV. Completely free and open source, with no account.",
   cmd_b="Install in one line.", cmd_t="Paste it in Terminal, or use the DMG button below. Either way, the app updates itself afterwards.",
@@ -289,7 +291,7 @@ HOME = {
   desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, ל-Windows, ל-iPhone ול-iPad, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
   nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
-  gh="GitHub", theme="מעבר בין מראה בהיר לכהה", other_lang=("../", "English", "en"),
+  gh="GitHub", other_lang=("../", "English", "en"),
   h1='<span class="l">נגן IPTV</span> <span class="l">{m}</span> <span class="l">לכל מסך.</span>',
   lede="מקורות Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות. ב-Mac, ב-Windows, ב-iPhone וב-iPad, בטלפונים וטאבלטים של Android וב-Android TV. חינמי לגמרי ובקוד פתוח, בלי חשבון.",
   cmd_b="התקנה בשורה אחת.", cmd_t="מדביקים בטרמינל, או מורידים את ה-DMG בכפתור שלמטה. בשני המקרים האפליקציה מתעדכנת לבד.",
@@ -415,7 +417,6 @@ def header_html(c, depth, home=True, home_rel=None, alt_href=None):
 <header class="top" id="top"><a class="brand" href="{(rel if home_rel is not None else up) or './'}" aria-label="{e(c["home_aria"])}"><img src="{up}logo.png" width="30" height="30" alt=""><span class="brand-t">IPTVMac</span></a>
 <nav class="nav" aria-label="{e(c["nav_aria"])}">{links}</nav>
 <div class="tools"><a class="ibtn" href="{REPO}" aria-label="{e(c["gh"])}" rel="noopener">{ICON_GH}</a>
-<button class="ibtn theme" type="button" aria-label="{e(c["theme"])}">{ICON_SUN}{ICON_MOON_T}</button>
 <a class="pill" href="{href}" hreflang="{ol[2]}" lang="{ol[2]}">{e(ol[1])}</a></div></header>
 '''
 
@@ -563,9 +564,11 @@ def ios_section(c, he, up):
 
 def devices_section(c, he, up):
     d = DEVICES["he" if he else "en"]
+    SIZES = {"03-movies.webp": (1200, 754), "windows-welcome.webp": (1006, 712), "android-live.webp": (540, 1210), "tv-live.webp": (1280, 720)}   # pixel sizes of the files, so the browser reserves the space
     def card(h, req, steps, shot, alt, acts, cls=""):
         li = "".join(f"<li>{e(x)}</li>" for x in steps)
-        return (f'<article class="dev {cls}"><div class="shot"><img src="{up}screenshots/{shot}" alt="{e(alt)}" loading="lazy" decoding="async"></div>'
+        w, hh = SIZES[shot]
+        return (f'<article class="dev {cls}"><div class="shot"><img src="{up}screenshots/{shot}" width="{w}" height="{hh}" alt="{e(alt)}" loading="lazy" decoding="async"></div>'
                 f'<h3><bdi dir="{"rtl" if any(ord(ch) > 0x590 and ord(ch) < 0x600 for ch in h) else "ltr"}">{e(h)}</bdi></h3><p class="req">{e(req)}</p><ol class="steps">{li}</ol><div class="acts">{acts}</div></article>')
     mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
                f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#install">{e(d["mac"][4])}</a>')
@@ -885,8 +888,8 @@ def download_page(code):
     other = " · ".join(f'<a href="{apk(n)}" rel="noopener">{n} ({ANDROID_SIZES[n]} MB)</a>' for n in ("armeabi-v7a", "x86_64"))
     pic = lambda name, alt, w, h: shot(up, name, alt, w=w, h=h)
     def panel(pid, h, req, view, acts, extra, steps, note):
-        return (f'<article class="panel" id="{pid}"><div class="view">{view}</div><div><h3>{e(h)}</h3><p class="req">{e(req)}</p>{acts}{extra}{ol(steps)}'
-                + (f'<p class="dl-note">{e(note)}</p>' if note else "") + '</div></article>')
+        return (f'<section class="panel" id="{pid}"><div class="view">{view}</div><div><h3>{e(h)}</h3><p class="req">{e(req)}</p>{acts}{extra}{ol(steps)}'
+                + (f'<p class="dl-note">{e(note)}</p>' if note else "") + '</div></section>')
     panels = (
       panel("mac", mac["h"], mac["req"], f'<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>{pic("03-movies", d["alt_mac"], 1200, 754)}</div>',
             f'<div class="acts">{btn(DOWNLOAD, mac["btn"])}<span class="sz">v{VERSION} · {MAC_SIZE} MB</span></div>', f'<p class="alt">{e(mac["alt"])}</p>{cmd_block(c)}', mac["steps"], mac["note"])

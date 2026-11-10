@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Checks the generated site in docs/: every internal href/src/srcset exists, in-page anchors and aria-labelledby resolve,
-JSON-LD parses, one h1 per page, no skipped heading levels, no duplicate ids, every img has alt.
+JSON-LD parses, one h1 per page, no skipped heading levels, no duplicate ids, every img has alt, width and height,
+every page has a title, a description and its hreflang alternates. Warnings (not failures): title over 60 characters,
+description outside 120-165 characters (Google truncates them in results).
 Run after build:  python3 scripts/site/build.py && python3 scripts/site/check.py   (exit code 1 on any issue)"""
 import json, pathlib, re, sys
 from html.parser import HTMLParser
@@ -9,7 +11,7 @@ DOCS = pathlib.Path(__file__).resolve().parents[2] / "docs"
 
 class Page(HTMLParser):
     def __init__(s):
-        super().__init__(); s.refs = []; s.heads = []; s.ids = []; s.ld = []; s.labelled = []; s.noalt = []; s._ld = False; s._h = None
+        super().__init__(); s.refs = []; s.heads = []; s.ids = []; s.ld = []; s.labelled = []; s.noalt = []; s.nosize = []; s.title = ''; s.desc = None; s.hreflang = []; s._ld = False; s._t = False; s._h = None
     def handle_starttag(s, t, a):
         a = dict(a)
         for k in ("href", "src", "poster", "data-poster"):
@@ -19,13 +21,19 @@ class Page(HTMLParser):
         if "id" in a: s.ids.append(a["id"])
         if "aria-labelledby" in a: s.labelled += a["aria-labelledby"].split()
         if t == "img" and "alt" not in a: s.noalt.append(a.get("src"))
+        if t == "img" and not ("width" in a and "height" in a): s.nosize.append(a.get("src"))
+        if t == "title": s._t = True
+        if t == "meta" and a.get("name") == "description": s.desc = a.get("content", "")
+        if t == "link" and a.get("rel") == "alternate" and a.get("hreflang"): s.hreflang.append(a["hreflang"])
         if t in ("h1", "h2", "h3", "h4"): s._h = [int(t[1]), ""]
         if t == "script" and a.get("type") == "application/ld+json": s._ld = True; s.ld.append("")
     def handle_endtag(s, t):
         if s._h and t in ("h1", "h2", "h3", "h4"): s.heads.append(tuple(s._h)); s._h = None
         if t == "script": s._ld = False
+        if t == "title": s._t = False
     def handle_data(s, d):
         if s._ld: s.ld[-1] += d
+        if s._t: s.title += d
         if s._h is not None: s._h[1] += d
 
 def check(path):
@@ -48,12 +56,21 @@ def check(path):
         try: json.loads(raw)
         except ValueError as e: errs.append(f"JSON-LD does not parse: {e}")
     errs += [f"img without alt: {s}" for s in p.noalt]
-    return errs
+    errs += [f"img without width/height (layout shift): {s}" for s in p.nosize]
+    if not p.title.strip(): errs.append("no <title>")
+    if not p.desc: errs.append("no meta description")
+    warns = []
+    if not p.hreflang: warns.append("no hreflang alternates (a page in one language only)")
+    elif not {"en", "he", "x-default"} <= set(p.hreflang): errs.append(f"hreflang alternates incomplete: {sorted(set(p.hreflang))}")
+    if len(p.title) > 60: warns.append(f"title is {len(p.title)} characters (aim for 60 or fewer)")
+    if p.desc and not 120 <= len(p.desc) <= 165: warns.append(f"description is {len(p.desc)} characters (aim for 120-165)")
+    return errs, warns
 
 bad = 0
 for page in [DOCS / "index.html", DOCS / "he/index.html", *sorted((DOCS / "guides").glob("*.html")),
              *(DOCS / d / n / "index.html" for d in ("", "he") for n in ("privacy", "support", "download", "features", "changelog"))]:
-    errs = check(page); bad += len(errs)
+    errs, warns = check(page); bad += len(errs)
     print(("ok     " if not errs else "ISSUES ") + str(page.relative_to(DOCS)))
     for e in errs: print("   ", e)
+    for w in warns: print("    warning:", w)
 sys.exit(1 if bad else 0)

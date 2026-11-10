@@ -812,3 +812,112 @@ html[lang="he"] .chap h2, html[lang="he"] .langs h2, html[lang="he"] .install h2
 @media (prefers-reduced-motion: reduce) { .appstore { transition: none; } }
 .big-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: inherit; gap: 14px 20px; }
 .big-row[hidden], #hero-store[hidden] { display: none; }
+
+
+/* =====================================================================================================================
+   ON AIR layer (2026-11 redesign, phase 1). The identity comes from television itself: the deep blue of a screen with no
+   signal, the red tally light of a camera that is live, condensed signage type for headlines. Dark only: the site is a stage.
+   This layer restyles everything above without changing the markup; later phases replace sections one by one.
+   ===================================================================================================================== */
+@font-face { font-family: "IPTVMac Display"; src: url("fonts/big-shoulders-display-800-latin.woff2") format("woff2"); font-weight: 600 900;   /* one static 800 instance, subset to Latin-1 and punctuation (11 KB) */ font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IPTVMac Display"; src: url("fonts/karantina-hebrew-700-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap;
+  unicode-range: U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }
+@font-face { font-family: "IPTVMac Text"; src: url("fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: optional;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IPTVMac Text"; src: url("fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); font-weight: 500 700; font-display: optional;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IPTVMac Text"; src: url("fonts/ibm-plex-sans-hebrew-hebrew-400-normal.woff2") format("woff2"); font-weight: 400; font-display: optional;
+  unicode-range: U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }
+@font-face { font-family: "IPTVMac Text"; src: url("fonts/ibm-plex-sans-hebrew-hebrew-600-normal.woff2") format("woff2"); font-weight: 500 700; font-display: optional;
+  unicode-range: U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F; }
+
+:root, :root[data-theme] {
+  color-scheme: dark;
+  /* contrast on --bg: ink 15.2:1, mute 7.0:1, link 10.6:1; white on --acc 5.1:1 */
+  --bg: #0B1B3A;           /* signal: the blue of a screen with no input */
+  --s1: #13284F;           /* studio: raised surfaces */
+  --s2: #1A3360;
+  --ink: #EEF2FF;          /* phosphor */
+  --mute: #8FA6D6;         /* scan lines, secondary text */
+  --line: rgb(143 166 214 / .24);
+  --acc: #D62418;          /* tally red, deep enough for white text: the one primary action per screen */
+  --tally: #FF3B2F;        /* the light itself: decoration only, never behind text */
+  --bars: #F2D22E;         /* test-card yellow: signal motifs only */
+  --acc-ink: #B9CCF7;      /* links and strokes: calm, so the red stays rare */
+  --on-acc: #FFFFFF;
+  --term: #10131c;
+  --sans: "IPTVMac Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "IPTVMac Display", "IPTVMac Text", system-ui, sans-serif;
+  --win-shadow: 0 0 0 1px rgb(185 204 247 / .14), 0 40px 80px -30px rgb(0 0 0 / .7), 0 18px 36px -18px rgb(0 0 0 / .5);
+  --r: 6px;                /* one small radius for controls; surfaces use --r2 */
+  --r2: 14px;
+}
+html { background: var(--bg); }
+body { font-family: var(--sans); letter-spacing: 0; font-feature-settings: "tnum" 0; }
+::selection { background: var(--tally); color: #fff; }
+.theme { display: none !important; }
+
+/* headlines: condensed signage, heavy, upright; no negative tracking (the face is already tight) */
+h1, .pg-h, .chap h2, .langs h2, .install h2, .free h2, .faq-sec h2, .guides h2, .fchap h2, .devices h2, .ios h2, .finale h2, .panel h3, .glist strong, .pick-nav b, .rel .rv, .lat .v, .stat .num, .count .num {
+  font-family: var(--display); font-weight: 800; letter-spacing: 0; text-transform: none; }
+h1 { font-size: clamp(3.4rem, 1.8rem + 6.8vw, 8.5rem); line-height: .92; }
+.pghero h1 { font-size: clamp(3.2rem, 1.8rem + 5.6vw, 7.4rem); }
+.g-main h1 { font-size: clamp(2.8rem, 1.6rem + 4.6vw, 6rem); line-height: .95; }
+.chap h2, .langs h2, .install h2, .free h2, .faq-sec h2, .guides h2, .pg-h, .fchap h2, .devices h2, .ios h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5.6rem); line-height: .95; }
+.finale h2 { font-size: clamp(3.2rem, 14vw, 16rem); line-height: .86; }
+.stat .num, .count .num, .lat .v, .rel .rv { font-weight: 700; }
+html[lang="he"] h1, html[lang="he"] .pg-h, html[lang="he"] .chap h2, html[lang="he"] .langs h2, html[lang="he"] .install h2, html[lang="he"] .free h2,
+html[lang="he"] .faq-sec h2, html[lang="he"] .guides h2, html[lang="he"] .fchap h2, html[lang="he"] .devices h2, html[lang="he"] .ios h2, html[lang="he"] .finale h2 {
+  font-weight: 700; letter-spacing: 0; line-height: 1; }
+html[lang="he"] h1 { font-size: clamp(3.4rem, 1.8rem + 7vw, 8.8rem); }
+h3, .faqs summary, .frow h3 { font-family: var(--sans); font-weight: 600; letter-spacing: 0; }
+
+/* the bar */
+.top { background: color-mix(in srgb, var(--bg) 80%, transparent); }
+.brand { font-family: var(--display); font-weight: 800; font-size: 1.35rem; letter-spacing: .01em; }
+.nav a { border-radius: var(--r); }
+.nav a.keep { border-radius: var(--r); background: var(--acc); }
+.nav a.keep:hover { background: #b81e14; }
+.ibtn { border-radius: var(--r); }
+.pill { border-radius: var(--r); }
+
+/* controls: small radius, never pills */
+.btn, .btn.big { border-radius: var(--r); font-weight: 600; }
+.btn { background: var(--s2); }
+.btn:hover { background: color-mix(in srgb, var(--s2) 82%, var(--ink)); }
+.btn.fill, .copy { background: var(--acc); color: var(--on-acc); }
+.btn.fill:hover, .copy:hover { background: #b81e14; }
+.flt button, .ptag, .recbadge, .ios-free { border-radius: var(--r); }
+.appstore { border-radius: 10px; }
+.link { color: var(--acc-ink); }
+
+/* surfaces: one radius, no borders, no shared drop shadow */
+.dev, .dl, .feat, .help, .lat, .panel .view, .pg-cta, .tbl, .answer, .prose .warn { border-radius: var(--r2); }
+.lat { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--s1); }
+.panel .view { background: var(--s1); }
+.ios { background: var(--s1); }
+
+/* labels: plain text in the text face; no monospace, no tracked capitals */
+.tbl thead th, .lat .k { font: 600 .875rem/1.4 var(--sans); text-transform: none; letter-spacing: 0; color: var(--mute); }
+.tbl tbody td:last-child { font-family: var(--sans); font-variant-numeric: tabular-nums; }
+.ios-kicker { text-transform: none; letter-spacing: 0; font-size: .9375rem; color: var(--mute); }
+.ios h2 em { color: inherit; }
+.fnum { display: none; }
+.pick-nav a { grid-template-columns: 1fr; }
+.pick-nav a::before { content: none; }
+.pick-nav small, .recbadge { grid-column: 1; }
+.bsteps li::before { font: 700 1rem/1.5 var(--display); color: var(--mute); content: counter(st); }
+.dial output, .dial-ticks { font-family: var(--sans); font-variant-numeric: tabular-nums; }
+.dl-url { font-family: var(--sans); }
+
+/* the one red light: the primary action keeps a small tally dot in front of its label */
+.btn.fill::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgb(255 255 255 / .18); }
+.btn.fill svg { display: none; }
+/* red stays rare: the copy buttons and the "recommended" badge are secondary */
+.copy { background: var(--s2); color: var(--ink); }
+.copy:hover { background: color-mix(in srgb, var(--s2) 82%, var(--ink)); }
+.copy.done { background: #1f7a4a; }
+.recbadge { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; gap: 7px; }
+.recbadge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--tally); }
+.bsteps li::before { font-size: 1.35rem; line-height: 1.2; min-width: 1ch; }
