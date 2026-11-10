@@ -11,6 +11,20 @@ IPTVMac has apps for Mac, Windows, Android phones and Android TV that you can do
 - **Android** (`flutter/`): **[download the APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7)** (Android 8 or later; pick the `arm64-v8a` file for almost every phone, the release notes explain the install). Flutter and libmpv, 31 languages generated from the same strings. Touch player with gestures, Picture in Picture, sound that keeps playing with the screen off, a rotate button, and downloads of movies and episodes for offline viewing (the Android app is the one that has downloads next to the Mac app; the iPhone app does not). Build: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; see [flutter/PLAN.md](../flutter/PLAN.md)). Android 8 or later. It tells you when a newer APK is out (a banner with a link to the release page; the install stays manual; it asks github.com at most every six hours, and Settings can switch that off).
 - **Android TV, Google TV and Fire TV** (the same app; first TV version): download **[the 32-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-32bit.apk)** (38 MB; it runs on almost every TV and box, including most Fire TV sticks) or, if the TV says it is not compatible, **[the 64-bit file](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-64bit.apk)** (41 MB). On Fire TV or Android TV install it with the Downloader app (type the address of the file) or from a USB stick; there is no store listing yet. Use the remote: arrows move, OK selects, Back goes up one level, **holding Back closes the app**; in the player Left/Right seek, Up/Down change channel, OK pauses. No downloads on TV, and updates are manual (install the new file over the old one). Please report problems.
 
+## App Store or GitHub?
+
+The iPhone and iPad app is on the App Store, and its full source code is here on GitHub. It is the same app and the same code; these are the differences:
+
+| | App Store | Built from GitHub |
+|---|---|---|
+| **Install** | One tap in the App Store. | You build it: a Mac with Xcode, then `scripts/ios-setup.sh`, then run it on your iPhone or iPad (see [the iPhone and iPad entry above](#iphone-and-ipad)). |
+| **Updates** | Automatic, through the App Store, after Apple has reviewed each version. | When you choose: pull the newest source and build again. GitHub is usually a little ahead of the App Store. |
+| **Signing** | The project's own Apple developer account. | Your own Apple ID. With a free Apple account the app runs for 7 days and you install it again; a paid account lasts a year. |
+| **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
+| **Price** | Free. | Free (GPL-3.0). |
+
+Mac, Windows, Android and Android TV are not in an app store: the files on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases) are the only versions. The Mac and Android apps update themselves from GitHub.
+
 ## Installing on a TV with the Downloader app
 
 Android TV, Google TV and Fire TV:

@@ -13,6 +13,20 @@
 - **Android** (`flutter/`): **[הורדת ה-APK](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.7)** (Android 8 ומעלה; בוחרים בקובץ `arm64-v8a` לכמעט כל טלפון, ובהערות הגרסה ההוראות). Flutter ו-libmpv, 31 שפות שנוצרות מאותן מחרוזות. נגן מגע עם מחוות, תמונה בתוך תמונה, קול שממשיך כשהמסך כבוי, כפתור סיבוב מסך, והורדות של סרטים ופרקים לצפייה בלי רשת (אפליקציית ה-Android היא היחידה, לצד ה-Mac, שיש בה הורדות; באייפון אין). בנייה: `cd flutter && flutter pub get && flutter test && flutter build apk` (Flutter 3.47, JDK 17, Android SDK 36; ראו [flutter/PLAN.md](../flutter/PLAN.md)). Android 8 ומעלה. היא מודיעה כשיצא APK חדש (באנר עם קישור לעמוד הגרסה; ההתקנה נשארת ידנית; היא פונה אל github.com לכל היותר אחת לשש שעות, ואפשר לכבות את זה בהגדרות).
 - **Android TV, ‏Google TV ו-Fire TV** (אותה אפליקציה; גרסת הטלוויזיה הראשונה): מורידים את **[קובץ ה-32 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-32bit.apk)** (‏38MB; רץ כמעט על כל טלוויזיה וסטרימר, כולל רוב ה-Fire TV Stick) או, אם הטלוויזיה אומרת שהוא לא תואם, את **[קובץ ה-64 ביט](https://github.com/Goelir/IPTVMac/releases/download/android-v1.0.7/IPTVMac-Android-1.0.7-tv-64bit.apk)** (‏41MB). ב-Fire TV או ב-Android TV מתקינים עם האפליקציה Downloader (מקלידים את כתובת הקובץ) או מכונן USB; עדיין אין רישום בחנות. עם השלט: החיצים מזיזים, OK בוחר, Back עולה רמה אחת, **לחיצה ארוכה על Back סוגרת את האפליקציה**; בנגן Left/Right מדלגים, Up/Down מחליפים ערוץ, OK עוצר. אין הורדות בטלוויזיה, והעדכון ידני (מתקינים את הקובץ החדש מעל הישן). מוזמנים לדווח על תקלות.
 
+## App Store או GitHub?
+
+אפליקציית ה-iPhone וה-iPad נמצאת ב-App Store, וקוד המקור המלא שלה כאן ב-GitHub. זו אותה אפליקציה ואותו קוד; אלה ההבדלים:
+
+| | App Store | בנייה מ-GitHub |
+|---|---|---|
+| **התקנה** | לחיצה אחת ב-App Store. | בונים בעצמכם: Mac עם Xcode, אחר כך `scripts/ios-setup.sh`, ומריצים על ה-iPhone או ה-iPad. |
+| **עדכונים** | אוטומטיים דרך ה-App Store, אחרי ש-Apple בדקה כל גרסה. | מתי שתרצו: מורידים את קוד המקור החדש ובונים שוב. ב-GitHub בדרך כלל יש קצת יותר מאשר ב-App Store. |
+| **חתימה** | חשבון המפתחים של Apple של הפרויקט. | ה-Apple ID שלכם. עם חשבון Apple חינמי האפליקציה רצה 7 ימים ואז מתקינים שוב; חשבון בתשלום מחזיק שנה. |
+| **מה בפנים** | אותו קוד. בלי פרסומות, בלי מעקב ובלי רכישות. | אותו קוד. בלי פרסומות, בלי מעקב ובלי רכישות. |
+| **מחיר** | חינם. | חינם (GPL-3.0). |
+
+Mac, Windows, Android ו-Android TV לא נמצאות בחנות אפליקציות: הקבצים ב-[GitHub Releases](https://github.com/Goelir/IPTVMac/releases) הם הגרסאות היחידות. אפליקציות ה-Mac וה-Android מתעדכנות מעצמן מ-GitHub.
+
 ## התקנה בטלוויזיה עם האפליקציה Downloader
 
 Android TV, ‏Google TV ו-Fire TV:

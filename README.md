@@ -51,6 +51,20 @@ If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
 
 The same engine, 31 languages and no-account design everywhere.
 
+## App Store or GitHub?
+
+The iPhone and iPad app is on the App Store, and its full source code is here on GitHub. It is the same app and the same code; these are the differences:
+
+| | App Store | Built from GitHub |
+|---|---|---|
+| **Install** | One tap in the App Store. | You build it: a Mac with Xcode, then `scripts/ios-setup.sh`, then run it on your iPhone or iPad (see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv)). |
+| **Updates** | Automatic, through the App Store, after Apple has reviewed each version. | When you choose: pull the newest source and build again. GitHub is usually a little ahead of the App Store. |
+| **Signing** | The project's own Apple developer account. | Your own Apple ID. With a free Apple account the app runs for 7 days and you install it again; a paid account lasts a year. |
+| **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
+| **Price** | Free. | Free (GPL-3.0). |
+
+Mac, Windows, Android and Android TV are not in an app store: the files on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases) are the only versions. The Mac and Android apps update themselves from GitHub.
+
 ## Why IPTVMac
 
 - **Fast.** Your whole library lives in a local SQLite database with full-text search. Typing finds a channel among 100,000 items in well under a second, in a category, in a section, or everywhere.
