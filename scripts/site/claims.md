@@ -11,6 +11,11 @@ Pages are written from this file. Recheck the rows about other apps every 6 mont
 | Mac app signed and notarized | "Signed with an Apple Developer ID and notarized by Apple" | `scripts/NOTARIZE.md`; releases from v0.9.1 on (`NOTARIZED_FROM` in `scripts/site/build.py`) | 2026-11-11 |
 | iPhone and iPad app on the App Store, free | "on the App Store, completely free" | App Store id 6821761790 (`APP_STORE_ID` in `scripts/site/build.py`); version in `IOS_VERSION` | 2026-11-11 |
 | Platforms | Mac, Windows, iPhone and iPad, Android, Android TV / Google TV / Fire TV | release tags `v*`, `windows-v*`, `android-v*`; App Store listing | 2026-11-11 |
+| Reconnects when a live channel drops | "reconnects when a live channel drops" / "מתחבר מחדש כשערוץ חי נופל" | `Sources/IPTVPlayer/PlaybackWatch.swift` (`LiveRecovery`), `flutter/lib/player/playback_watch.dart` | 2026-11-11 |
+| Hardware video decoding | "decodes video in hardware" / "מפענח וידאו בחומרה" | `Sources/IPTVPlayer/MPVPlayer.swift:31` (`hwdec=videotoolbox`); `flutter/lib/player/player_options.dart:33` (`mediacodec-copy,auto-safe`, `auto-safe`) | 2026-11-11 |
+| Native code per platform, no Electron or web view | "Swift on Mac, iPhone and iPad. Flutter and Kotlin on Android, Android TV and Windows." | `Sources/`, `ios/` (Swift); `flutter/` (Dart, Kotlin in `flutter/android`, C++ runner in `flutter/windows`) | 2026-11-11 |
+| Catch-up, continue watching, skip intro/credits, PiP, downloads | the guide block "Everything a viewer needs" | `Sources/IPTVCore/SkipMarks.swift`, `Sources/IPTVMac/CatchupView.swift`, `Downloads.swift`, the features page | 2026-11-11 |
+| Search under a quarter of a second on 100,000 titles | "under a quarter of a second on a library of 100,000 titles, in our own tests" | same as the first row (the tests assert < 250 ms) | 2026-11-11 |
 
 ## Other apps (phase 4)
 

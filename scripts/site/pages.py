@@ -336,8 +336,8 @@ DOWNLOAD["en"].update(
 )
 DOWNLOAD["he"].update(
   hero=["הורדת", "IPTVMac", "בחינם."],
-  main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14+"), windows=("הורדה ל-Windows", "גרסה {v} · מתקין {s}MB · Windows 10 ו-11, ‏64 ביט"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8+"),
-            tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8+ · שלט"), ios=("הורדה מ-App Store", "חינמית · iOS 17 ומעלה · iPhone ו-iPad")),
+  main=dict(mac=("הורדה ל-Mac", "גרסה {v} · {s}MB · Apple Silicon, ‏macOS 14 ומעלה"), windows=("הורדה ל-Windows", "גרסה {v} · מתקין {s}MB · Windows 10 ו-11, ‏64 ביט"), android=("הורדה ל-Android", "גרסה {v} · {s}MB · Android 8 ומעלה"),
+            tv=("הורדה ל-Android TV", "קובץ 32 ביט · {s}MB · Android 8 ומעלה · שלט"), ios=("הורדה מ-App Store", "חינמית · iOS 17 ומעלה · iPhone ו-iPad")),
   cue="כל המכשירים",
   marquee=["חינמי", "קוד פתוח, GPL-3.0", "בלי חשבון", "בלי פרסומות", "בלי מעקב", "31 שפות", "Xtream Codes ו-M3U", "Mac, ‏Windows, ‏Android, ‏Android TV", "מבוסס על mpv", "תמונה בתוך תמונה"],
   pick_h="בוחרים מסך.", pick_p="הקובץ, שלושה שלבים ומה לצפות לו, לכל מכשיר.",
@@ -364,3 +364,51 @@ FEATURES["he"].update(
 )
 CHANGELOG["en"].update(hero=["What's", "new."], latest="Latest", cue="All releases", get="Download")
 CHANGELOG["he"].update(hero=["מה", "חדש."], latest="העדכנית", cue="כל הגרסאות", get="הורדה")
+
+
+# ---- home page, "On air" redesign (phase 2): the zapping hero, the programme guide of reasons, the ON AIR sign ----
+# Every claim below has a row in scripts/site/claims.md.
+ONAIR = {
+ "en": dict(
+  channels=[("1", "Movies"), ("2", "Live"), ("3", "Series"), ("4", "Search")],
+  on_air="On air",
+  alt_live="IPTVMac on a Mac: the live channel list with the program now and next",
+  alt_series="IPTVMac on a Mac: a series with its seasons and episodes",
+  zap_hint="Scroll to change the channel",
+  guide_h="Tonight on IPTVMac.",
+  guide_p="Seven reasons it beats the player you have now. Each one is something you can check.",
+  guide_now="Now",
+  guide=[
+   ("20:00", "Free. Really.", "No ads, no subscription, no in-app purchases and no account. Open source under the GPL-3.0."),
+   ("20:30", "Nothing phones home.", "No analytics. The app talks only to the servers you add, and to GitHub for updates. Your passwords stay on your device."),
+   ("21:00", "Found as you type.", "Each search stays under a quarter of a second on a library of 100,000 titles, in our own tests."),
+   ("21:30", "Plays the streams others drop.", "The mpv engine plays broken TS and HLS streams, reconnects when a live channel drops, and decodes video in hardware."),
+   ("22:00", "Made for each screen.", "Swift on Mac, iPhone and iPad. Flutter and Kotlin on Android, Android TV and Windows. No Electron, no web view."),
+   ("22:30", "Everything a viewer needs.", "Catch-up, continue watching at the right episode and minute, skip intro and credits, Picture in Picture and downloads."),
+   ("23:00", "In your language.", "31 languages, each in its own script, right to left included."),
+  ],
+  guide_more="Every feature",
+  sign="IPTVMac",
+ ),
+ "he": dict(
+  channels=[("1", "סרטים"), ("2", "שידור חי"), ("3", "סדרות"), ("4", "חיפוש")],
+  on_air="משדר",
+  alt_live="IPTVMac ב-Mac: רשימת הערוצים החיים עם התוכנית עכשיו והבאה",
+  alt_series="IPTVMac ב-Mac: סדרה עם העונות והפרקים שלה",
+  zap_hint="גוללים כדי להחליף ערוץ",
+  guide_h="הערב ב-IPTVMac.",
+  guide_p="שבע סיבות שבגללן הוא עדיף על הנגן שיש לכם עכשיו. כל אחת מהן אפשר לבדוק.",
+  guide_now="עכשיו",
+  guide=[
+   ("20:00", "חינם. באמת.", "בלי פרסומות, בלי מנוי, בלי רכישות בתוך האפליקציה ובלי חשבון. קוד פתוח ברישיון GPL‑3.0."),
+   ("20:30", "שום דבר לא מדווח הביתה.", "בלי מעקב ובלי אנליטיקה. האפליקציה מדברת רק עם השרתים שהוספתם, ועם GitHub לעדכונים. הסיסמאות נשארות במכשיר."),
+   ("21:00", "נמצא תוך כדי הקלדה.", "כל חיפוש לוקח פחות מרבע שנייה בספרייה של 100,000 כותרים, בבדיקות שלנו."),
+   ("21:30", "מנגן את מה שנגנים אחרים מפילים.", "מנוע mpv מנגן שידורי TS ו-HLS שבורים, מתחבר מחדש כשערוץ חי נופל, ומפענח וידאו בחומרה."),
+   ("22:00", "נבנה לכל מסך.", "Swift ב-Mac, ב-iPhone וב-iPad. ‏Flutter ו-Kotlin ב-Android, ב-Android TV וב-Windows. בלי Electron ובלי דפדפן מוסתר."),
+   ("22:30", "כל מה שצופה צריך.", "צפייה בהיסטוריה, המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה והורדות."),
+   ("23:00", "בשפה שלכם.", "31 שפות, כל אחת בכתב שלה, כולל מימין לשמאל."),
+  ],
+  guide_more="כל התכונות",
+  sign="IPTVMac",
+ ),
+}

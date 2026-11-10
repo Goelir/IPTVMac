@@ -921,3 +921,99 @@ h3, .faqs summary, .frow h3 { font-family: var(--sans); font-weight: 600; letter
 .recbadge { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); display: inline-flex; align-items: center; gap: 7px; }
 .recbadge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--tally); }
 .bsteps li::before { font-size: 1.35rem; line-height: 1.2; min-width: 1ch; }
+
+/* ---------- ON AIR home page (phase 2) ---------- */
+/* the hero: copy and the "TV" side by side on large screens, pinned while scrolling zaps the channels */
+.hero.onair { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; text-align: start; gap: clamp(28px, 5vh, 56px);
+  padding: calc(var(--bar) + clamp(36px, 8vh, 96px)) var(--gx) clamp(48px, 8vh, 96px); min-height: 0; overflow: clip; isolation: isolate; }
+.hero.onair .hero-copy { max-width: 46rem; margin: 0; }
+.hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.4vw, 9.6rem); line-height: .9; }
+html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem); line-height: .95; }
+.hero.onair .lede { margin-inline: 0; max-width: 36rem; }
+.hero.onair .actions { justify-content: flex-start; margin-top: clamp(24px, 4vh, 36px); }
+.hero.onair .meta { margin-top: 12px; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 2px 24px; margin-top: 10px; }
+.hero.onair .install-bar { margin-inline: 0; max-width: 36rem; }
+.snow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: 0; image-rendering: pixelated; pointer-events: none; }
+.tv { width: 100%; position: relative; }
+.tv .hero-win { position: relative; border-radius: var(--r2); overflow: hidden; background: #000; }
+.tv-screen { position: relative; aspect-ratio: 1200 / 754; background: #000; }
+.tv-screen .ch { position: absolute; inset: 0; opacity: 0; }
+.tv-screen .ch.on { opacity: 1; }
+.tv-screen img, .tv-screen picture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.tv-card, .tv-snow { position: absolute; inset-inline: 0; bottom: 0; top: clamp(18px, 3cqw, 30px); width: 100%; height: calc(100% - clamp(18px, 3cqw, 30px)); opacity: 0; pointer-events: none; }
+.tv .win-bar { height: 28px; }
+.tv-card, .tv-snow { top: 28px; height: calc(100% - 28px); }
+.tv-snow { image-rendering: pixelated; mix-blend-mode: normal; }
+.tv-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-top: 14px; }
+.tv-air { display: inline-flex; align-items: center; gap: 9px; font: 800 1.15rem/1 var(--display); color: var(--ink); }
+.tv-air i { width: 11px; height: 11px; border-radius: 50%; background: var(--tally); box-shadow: 0 0 0 4px rgb(255 59 47 / .18), 0 0 18px rgb(255 59 47 / .55); }
+.tv-remote { display: flex; gap: 6px; flex-wrap: wrap; }
+.tv-btn { display: inline-flex; align-items: baseline; gap: 8px; min-height: 40px; padding: 8px 12px; border: 0; border-radius: var(--r); background: var(--s1); color: var(--mute); font: 500 .875rem/1 var(--sans); cursor: pointer; transition: color var(--d1), background-color var(--d1); }
+.tv-btn b { font: 800 1.1rem/1 var(--display); color: var(--ink); }
+.tv-btn:hover { color: var(--ink); background: var(--s2); }
+.tv-btn[aria-pressed="true"] { color: var(--ink); background: var(--s2); box-shadow: inset 0 -2px 0 var(--tally); }
+@media (min-width: 1100px) {
+  .hero.onair { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; column-gap: clamp(32px, 4vw, 72px); }
+}
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  .js .zap { height: 240svh; }
+  .js .zap .hero.onair { position: sticky; top: 0; height: 100svh; padding-block: calc(var(--bar) + 24px) 32px; }
+  .js .hero.onair .install-bar { display: none; }   /* the one-line command stays in the download section and on the download page */
+}
+
+/* the programme guide */
+.guide { position: relative; padding-block: clamp(72px, 12vh, 140px); border-block-start: 1px solid var(--line); }
+.guide-head { display: grid; gap: 16px; }
+.guide-head p { color: var(--mute); max-width: 40rem; font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); }
+.guide h2 { font-family: var(--display); font-weight: 800; font-size: clamp(2.8rem, 1.6rem + 4.6vw, 6.4rem); line-height: .92; }
+.epg { position: relative; margin-top: clamp(32px, 6vh, 56px); }
+.epg-track { list-style: none; margin: 0; padding: 0 var(--gx); display: grid; gap: 0; }
+.slot { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 4px 20px; padding-block: 22px; border-block-start: 1px solid var(--line); }
+.slot time { grid-row: 1 / 3; font: 800 1.5rem/1 var(--display); color: var(--mute); font-variant-numeric: tabular-nums; direction: ltr; }
+.slot h3 { font: 800 clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem)/1 var(--display); }
+.slot p { color: var(--mute); max-width: 34rem; }
+.epg-now { display: none; }
+.guide-more { margin-top: 24px; }
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  .js .guide { height: 320svh; padding-block: 0; }
+  .js .guide-pin { position: sticky; top: 0; height: 100svh; display: grid; align-content: center; gap: 0; overflow: hidden; padding-top: var(--bar); }
+  .js .epg { overflow: visible; }
+  .js .epg-track { display: flex; width: max-content; padding-inline: var(--gx) 40vw; transform: translate3d(calc(var(--x, 0px) * var(--dir) * -1), 0, 0); will-change: transform; }
+  .js .slot { width: clamp(300px, 28vw, 440px); flex: none; grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; align-content: start; gap: 14px; padding: 20px 28px 28px; min-height: 300px;
+    border-block-start: 0; border-inline-start: 1px solid var(--line); background: linear-gradient(var(--line), var(--line)) top / 100% 1px no-repeat; }
+  .js .slot time { grid-row: auto; font-size: 1.1rem; }
+  .js .slot.live { background: linear-gradient(var(--tally), var(--tally)) top / 100% 3px no-repeat, var(--s1); }
+  .js .slot.live time { color: var(--tally); }
+  .js .epg-now { display: block; position: absolute; z-index: 2; inset-inline-start: calc(var(--gx) + clamp(300px, 28vw, 440px) * .5); top: -34px; bottom: -12px; width: 2px; background: var(--tally); pointer-events: none;
+    font: 800 .95rem/1 var(--display); color: var(--tally); }
+  .js .epg-now::before { content: ""; position: absolute; top: 0; inset-inline-start: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--tally); }
+  .js .epg-now { text-indent: 16px; white-space: nowrap; }
+}
+
+/* the ON AIR sign at the end of the page */
+.sign { display: inline-flex; align-items: center; gap: 14px; margin-bottom: clamp(20px, 4vh, 36px); padding: 12px 22px; border-radius: var(--r); border: 2px solid color-mix(in srgb, var(--tally) 40%, transparent);
+  font: 800 clamp(1.4rem, 1rem + 1.4vw, 2.2rem)/1 var(--display); color: color-mix(in srgb, var(--tally) 45%, var(--bg)); transition: color .6s var(--ease), border-color .6s var(--ease), box-shadow .6s var(--ease), text-shadow .6s var(--ease); }
+.sign i { width: 14px; height: 14px; border-radius: 50%; background: currentColor; }
+.sign.live, :root:not(.js) .sign { color: var(--tally); border-color: var(--tally); box-shadow: 0 0 36px rgb(255 59 47 / .35), inset 0 0 18px rgb(255 59 47 / .18); text-shadow: 0 0 14px rgb(255 59 47 / .6); }
+@media (prefers-reduced-motion: reduce) { .sign { transition: none; } }
+/* the headline shares the row with the screen on large displays: size it to its column */
+@media (min-width: 1100px) { .hero.onair h1 { font-size: clamp(3.6rem, .6rem + 5.4vw, 8.4rem); } html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, .6rem + 5.8vw, 8.8rem); } }
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  .js .guide-pin { grid-template-columns: minmax(0, 1fr); }
+  .js .epg-now { inset-inline-start: calc(var(--gx) - 1px); }   /* "now" sits on the start edge: the programme that has just begun is the live one */
+}
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  /* programmes that have already passed fade out before the "now" line */
+  .js .epg { -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--gx) * .2), #000 calc(var(--gx) + 24px)); mask-image: linear-gradient(90deg, transparent calc(var(--gx) * .2), #000 calc(var(--gx) + 24px)); }
+  [dir="rtl"].js .epg, .js [dir="rtl"] .epg { -webkit-mask-image: linear-gradient(270deg, transparent calc(var(--gx) * .2), #000 calc(var(--gx) + 24px)); mask-image: linear-gradient(270deg, transparent calc(var(--gx) * .2), #000 calc(var(--gx) + 24px)); }
+  .js .epg-now { z-index: 3; }
+}
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  .js .epg { padding-top: 40px; margin-top: clamp(0px, 3vh, 24px); }   /* room inside the mask for the "now" label */
+  .js .epg-now { top: 6px; }
+}
+@media (min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference) {
+  .js .epg-now { bottom: auto; height: 46px; }   /* a marker on the time ruler, not a line through the text; the live programme carries the red edge */
+}
+.in-guide .rail { opacity: 0 !important; visibility: hidden !important; }

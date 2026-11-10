@@ -11,6 +11,15 @@
   const clamp = v => (v < 0 ? 0 : v > 1 ? 1 : v);
   const out3 = t => 1 - Math.pow(1 - t, 3);
 
+  // ---- the main download button follows the visitor's device (home and download pages); pages.js reads html[data-device] ----
+  const ua = navigator.userAgent || "";
+  const iOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);   // iPadOS pretends to be a Mac
+  const rec = iOS ? "ios" : /Android/i.test(ua) ? (/TV|AFT[A-Z]|BRAVIA|SHIELD|Fire/i.test(ua) ? "tv" : "android") : /Windows NT/i.test(ua) ? "windows" : (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua) ? "mac" : null);
+  if (rec) root.dataset.device = rec;
+  const main = $("#dl-main");
+  if (rec === "ios") { const s = $("#hero-store"); if (s) s.hidden = true; }   // the main button already is the App Store
+  if (main && rec && main.dataset[rec]) { const [href, label, meta] = JSON.parse(main.dataset[rec]); main.href = href; $(".lbl", main).textContent = label; const m = $("#dl-meta"); if (m) m.textContent = meta; }
+
   // ---- copy buttons (install command, free playlist link) ----
   $$(".copy").forEach(b => {
     const box = b.closest(".cmd, .term, .m3u"), code = $("code", box), say = $("[role=status]", box), lbl = $(".lbl", b), orig = lbl.textContent;

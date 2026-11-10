@@ -46,7 +46,7 @@ e = html.escape
 
 # ---------- assets ----------
 SRC = pathlib.Path(__file__).resolve().parent
-OWN = ("site.css", "site.js", "pages.js")
+OWN = ("site.css", "site.js", "pages.js", "onair.js")
 USE_FX = False   # the motion layer (WebGL beam, 3D tilt, magnetic buttons, split text) is off: the HIG look is calm. The module is kept in scripts/site/fx/; set True to bring it back.
 MODULES = {"demo": ("demo.js", "demo.css"), "fx": ("fx.js", "fx.css")}   # scripts/site/<name>/<file> -> docs/assets/<file>
 VER = {}        # asset file name -> short content hash, for cache busting
@@ -277,7 +277,7 @@ HOME = {
   ios_alt=("IPTVMac on the iPhone: movies", "IPTVMac on the iPhone: live channels", "IPTVMac on the iPhone: movie details"), android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
   foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
-  foot_cols=[("Explore", [("#search", "Search"), ("#player", "Player"), ("#pip", "Picture in Picture"), ("#playlists", "Playlists"), ("#languages", "Languages"), ("#install", "Install")]),
+  foot_cols=[("Explore", [("#why", "Why IPTVMac"), ("#search", "Search"), ("#iphone", "iPhone and iPad"), ("#devices", "Devices"), ("#guides", "Guides")]),
              ("Product", [("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
   alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Windows, iPhone and iPad, Android and Android TV. If you need Linux or something different:",
@@ -368,7 +368,7 @@ HOME = {
   ios_alt=("IPTVMac ב-iPhone: סרטים", "IPTVMac ב-iPhone: ערוצים חיים", "IPTVMac ב-iPhone: פרטי סרט"), android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
-  foot_cols=[("בעמוד", [("#search", "חיפוש"), ("#player", "נגן"), ("#pip", "תמונה בתוך תמונה"), ("#playlists", "רשימות"), ("#languages", "שפות"), ("#install", "התקנה")]),
+  foot_cols=[("בעמוד", [("#why", "למה IPTVMac"), ("#search", "חיפוש"), ("#iphone", "iPhone ו-iPad"), ("#devices", "מכשירים"), ("#guides", "מדריכים")]),
              ("המוצר", [("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
   alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Windows, ב-iPhone וב-iPad, ב-Android וב-Android TV. אם אתם צריכים Linux או משהו אחר:",
@@ -571,7 +571,7 @@ def devices_section(c, he, up):
         return (f'<article class="dev {cls}"><div class="shot"><img src="{up}screenshots/{shot}" width="{w}" height="{hh}" alt="{e(alt)}" loading="lazy" decoding="async"></div>'
                 f'<h3><bdi dir="{"rtl" if any(ord(ch) > 0x590 and ord(ch) < 0x600 for ch in h) else "ltr"}">{e(h)}</bdi></h3><p class="req">{e(req)}</p><ol class="steps">{li}</ol><div class="acts">{acts}</div></article>')
     mac = card(d["mac"][0], d["mac"][1], d["mac"][2], "03-movies.webp", d["alt_mac"],
-               f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#install">{e(d["mac"][4])}</a>')
+               f'<a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(d["mac"][3])}</a><a class="link" href="#hero">{e(d["mac"][4])}</a>')
     wincard = card(d["win"][0], d["win"][1], d["win"][2], "windows-welcome.webp", d["alt_win"], f'<a class="btn" href="{win_file("setup")}" rel="noopener">{ICON_DL}{e(d["win"][3])}</a>', "winc")
     phone = card(d["phone"][0], d["phone"][1], d["phone"][2], "android-live.webp", d["alt_phone"], f'<a class="btn" href="{ANDROID_DL}/IPTVMac-Android-1.0.7-arm64-v8a.apk" rel="noopener">{ICON_DL}{e(d["phone"][3])}</a>', "phone")
     tv = card(d["tv"][0], d["tv"][1], d["tv"][2], "tv-live.webp", d["alt_tv"],
@@ -579,66 +579,64 @@ def devices_section(c, he, up):
     return (f'<section class="devices" id="devices" aria-labelledby="devices-h"><div class="wrap"><h2 id="devices-h">{e(d["h"])}</h2><p class="dev-lead">{e(d["p"])}</p>'
             f'<div class="dev-grid">{mac}{wincard}{phone}{tv}</div><p class="dev-ios">{e(d["ios"])} <a href="{APP_STORE}" rel="noopener">App Store</a> · <a href="{up}download/">{e(d["all"])}</a></p></div></section>\n')
 
+TEST_CARD = ('<svg class="tv-card" viewBox="0 0 320 180" aria-hidden="true" focusable="false">'
+  '<rect width="320" height="180" fill="#0B1B3A"/>'
+  + "".join(f'<rect x="{x}" y="0" width="40" height="118" fill="{c}"/>' for x, c in zip(range(20, 300, 40), ("#EEF2FF", "#F2D22E", "#8FA6D6", "#3F6FD8", "#FF3B2F", "#13284F", "#EEF2FF")))
+  + '<rect x="20" y="118" width="280" height="20" fill="#13284F"/>'
+  + "".join(f'<rect x="{20 + i * 35}" y="138" width="35" height="22" fill="{"#EEF2FF" if i % 2 else "#0B1B3A"}"/>' for i in range(8))
+  + '<circle cx="160" cy="80" r="44" fill="none" stroke="#EEF2FF" stroke-width="3"/><circle cx="160" cy="80" r="6" fill="#FF3B2F"/>'
+  '<text x="160" y="152" text-anchor="middle" font-family="IPTVMac Display, sans-serif" font-weight="800" font-size="15" fill="#FF3B2F">IPTVMac</text></svg>')
+
+def hero_onair(c, code, he, up, h1):
+    """The hero: analog snow tunes in, a test card shows for a beat, then the picture locks onto the app. Scrolling (or the
+    channel buttons) zaps between four real screens of the app. The headline and buttons are plain HTML from the first paint."""
+    o = pages.ONAIR[code]
+    rec, recs = device_recs(code)
+    names = {"1": ("03-movies", c["pl_alt"]), "2": ("01-live", o["alt_live"]), "3": ("04-series", o["alt_series"]), "4": ("02-search", c["search_alt"])}
+    screens = f'<div class="ch on" data-ch="1">{pic(up, "03-movies", c["pl_alt"], eager=True, sizes="(min-width: 1100px) 56vw, 100vw")}</div>'
+    for n, _ in o["channels"][1:]:
+        name, alt = names[n]
+        screens += f'<div class="ch" data-ch="{n}"><img data-src="{up}screenshots/{name}.webp" width="1200" height="754" alt="{e(alt)}" decoding="async"></div>'
+    remote = "".join(f'<button type="button" class="tv-btn" data-go="{n}" aria-pressed="{str(n == "1").lower()}"><b>{n}</b><span>{e(t)}</span></button>' for n, t in o["channels"])
+    return f'''<div class="zap" id="hero-zap"><section class="hero onair" id="hero" aria-labelledby="h1"><canvas class="snow" data-snow aria-hidden="true"></canvas>
+<div class="hero-copy"><h1 id="h1">{h1}</h1>
+<p class="lede">{e(c["lede"])}</p>
+<div class="actions"><a class="btn fill big" id="dl-main" href="{DOWNLOAD}"{recs}><span class="lbl">{e(rec["mac"][1])}</span></a><span id="hero-store">{appstore_badge(c, he, up, 64)}</span></div>
+<p class="meta" id="dl-meta">{e(rec["mac"][2])}</p>
+<p class="hero-links"><a class="link" href="{up}download/">{e(c["all_dl"])}</a><a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a></p>
+<div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div></div>
+<div class="tv" data-screen><div class="win hero-win"><div class="win-bar"><i></i><i></i><i></i></div><div class="tv-screen">{screens}</div>{TEST_CARD}<canvas class="tv-snow" data-tv-snow aria-hidden="true"></canvas></div>
+<div class="tv-bar"><span class="tv-air" aria-hidden="true"><i></i>{e(o["on_air"])}</span><div class="tv-remote" role="group" aria-label="{e(o["zap_hint"])}">{remote}</div></div></div>
+</section></div>
+'''
+
+def guide_section(code, up):
+    """The programme guide: seven reasons as the evening's line-up. Pinned and scrolled sideways on large screens; a plain list elsewhere."""
+    o = pages.ONAIR[code]
+    items = "".join(f'<li class="slot"><time aria-hidden="true">{t}</time><h3>{e(h)}</h3><p>{e(p)}</p></li>' for t, h, p in o["guide"])
+    return (f'<section class="guide" id="why" aria-labelledby="why-h"><div class="guide-pin"><div class="wrap guide-head"><h2 id="why-h">{e(o["guide_h"])}</h2><p>{e(o["guide_p"])}</p></div>'
+            f'<div class="epg" data-epg><span class="epg-now" aria-hidden="true">{e(o["guide_now"])}</span><ol class="epg-track">{items}</ol></div>'
+            f'<p class="wrap guide-more"><a class="link" href="{up}{"he/" if code == "he" else ""}features/">{e(o["guide_more"])}</a></p></div></section>\n')
+
 def home(code):
     c = HOME[code]; up = c["up"]; he = code == "he"
     canon = BASE + c["prefix"]
     alts = [("en", BASE), ("he", BASE + "he/"), ("x-default", BASE)]
     ld = [software_ld(c["desc"], c["lang"]), ios_ld(c["ios_p"], BASE + c["prefix"]), faq_ld(c["faq"]), video_ld("IPTVMac demo", c["tour_note"])]
-    srcs = lambda ext: ", ".join(f"{up}assets/hero-window-{w}.{ext} {w}w" for w in (900, 1400, 1800))
-    sizes = "(min-width: 1001px) 58vw, 100vw"
-    preload = f'<link rel="preload" as="image" type="image/avif" imagesrcset="{srcs("avif")}" imagesizes="{sizes}" fetchpriority="high">\n'
+    preload = f'<link rel="preload" as="image" type="image/webp" imagesrcset="{up}screenshots/03-movies.webp 1200w, {up}screenshots/03-movies-1800.webp 1800w" imagesizes="(min-width: 1100px) 56vw, 100vw" fetchpriority="high">\n'
     out = head(c["title"], c["desc"], canon, c["lang"], 1 if he else 0, alts, extra_ld=ld, preload=preload)
     out += header_html(c, 1 if he else 0)
     words = json.dumps(native_words(code), ensure_ascii=False)
     morph = f"<span class=\"morph\" data-fx-morph data-words='{words}'>{e(NATIVE[code])}</span>"
     h1 = c["h1"].replace("{m}", morph)
-    hero_pic = (f'<picture><source type="image/avif" srcset="{srcs("avif")}" sizes="{sizes}"><source type="image/webp" srcset="{srcs("webp")}" sizes="{sizes}">'
-                f'<img src="{up}assets/hero-window-1400.jpg" srcset="{srcs("jpg")}" sizes="{sizes}" width="1800" height="1186" alt="{e(c["hero_alt"])}" fetchpriority="high" decoding="async"></picture>')
-    hero_pip = (f'<picture class="pip hero-pip"><source type="image/webp" srcset="{up}assets/pip-window.webp"><img src="{up}assets/pip-window.jpg" width="588" height="330" alt="" decoding="async"></picture>')
-    out += f'''<main id="main">
-<section class="hero" id="hero" data-fx-scene aria-labelledby="h1"><canvas class="hero-canvas" data-fx-canvas aria-hidden="true"></canvas>
-<div class="hero-copy"><h1 id="h1">{h1}</h1>
-<p class="lede">{e(c["lede"])}</p>
-<div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a>{appstore_badge(c, he, up, 64)}<a class="link" href="{up}download/">{e(c["all_dl"])}</a>
-<a class="link tour-link" href="{up}assets/demo.mp4">{ICON_PLAY}{e(c["tour"])}</a><a class="link" href="{REPO}" rel="noopener">{ICON_GH}{e(c["src"])}</a></div>
-<p class="meta">{e(c["meta"])}</p>
-<div class="install-bar"><p><b>{e(c["cmd_b"])}</b> {e(c["cmd_t"])}</p>{cmd_block(c)}</div></div>
-<div class="hero-obj" data-fx-tilt><div class="pose"><div class="win hero-win">{hero_pic}</div>{hero_pip}</div></div>
-<a class="cue" href="#search">{e(c["cue"])}</a></section>
-'''
+    out += '<main id="main">\n' + hero_onair(c, code, he, up, h1)
     out += ios_section(c, he, up)
-    # 1 search
+    out += guide_section(code, up)
+    # the proof of speed: the interactive search demo
     out += chapter("search", c, False,
         ctext("search", c["search_h"], c["search_p"], [e(f) for f in c["search_f"]],
               f'<div class="count"><span class="num" data-count="100000">100,000</span><span>{e(c["search_count"])}</span></div>'),
         stage_search(c, up))
-    # 2 player
-    dial = (f'<div class="dial fallback-only"><div class="dial-head"><label for="spd">{e(c["dial"])}</label><output id="spd-out" for="spd">1x</output></div>'
-            f'<input id="spd" type="range" min="0.25" max="4" step="0.05" value="1"><div class="dial-ticks" aria-hidden="true"><span>0.25x</span><span>1x</span><span>2x</span><span>4x</span></div></div>')
-    keys = '<div class="keys">' + "".join(f"<span><kbd>{e(k)}</kbd>{e(t)}</span>" for k, t in c["keys"]) + "</div>"
-    out += chapter("player", c, True, ctext("player", c["player_h"], c["player_p"], [e(f) for f in c["player_f"]], dial + keys), stage_player(c, up))
-    # 3 pip
-    out += chapter("pip", c, False, ctext("pip", c["pip_h"], c["pip_p"], [e(f) for f in c["pip_f"]], f'<p class="hint" hidden>{e(c["pip_hint"])}</p>'), stage_pip(c, up))
-    # 4 playlists
-    out += chapter("playlists", c, True, ctext("playlists", c["pl_h"], c["pl_p"], [e(f) for f in c["pl_f"]]), stage_playlists(c, up))
-    # 5 languages
-    out += f'''<section class="langs" id="languages" data-fx-scene aria-labelledby="languages-h"><div class="wrap">
-<div class="langs-head"><h2 id="languages-h" data-fx-split>{e(c["langs_h"])}</h2><p>{e(c["langs_p"])}</p></div>
-<div class="langs-body">{lang_wall(c)}
-<div class="langs-side"><div class="stage"><div class="trio fallback-only"><p class="hint">{e(c["trio_h"])}</p>{minis()}</div>
-<div class="win-wrap demo-only">{slot("languages")}</div></div>
-<p class="langs-note">{e(c["langs_note"])} <a href="{c["langs_href"]}" rel="noopener">{e(c["langs_link"])}</a></p></div></div></div></section>
-'''
-    # 6 install
-    steps = "".join(f"<li>{s}</li>" for s in c["dmg_steps"])
-    out += f'''<section class="install" id="install" data-fx-scene aria-labelledby="install-h"><div class="wrap"><div class="install-grid">
-<div class="install-text"><h2 id="install-h" data-fx-split>{e(c["install_h"])}</h2><p>{e(c["install_p"])}</p><p class="reqs">{e(c["reqs"])}</p>
-<p style="margin-top:14px"><a class="link" href="{YT_INSTALL}" rel="noopener">{ICON_PLAY}{e(c["video"])}</a></p></div>
-{term(c)}</div>
-<div class="note"><div><h3>{e(c["why_h"])}</h3><p>{e(c["why"])}</p></div>
-<div><h3>{e(c["dmg_h"])}</h3><ol class="steps">{steps}</ol><p class="old">{c["dmg_old"]}</p><a class="btn" href="{DOWNLOAD}">{ICON_DL}{e(c["dl"])}</a></div></div>
-</div></section>
-'''
     out += devices_section(c, he, up)
     # free playlists, faq, guides
     out += f'''<section class="free" id="free" aria-labelledby="free-h"><div class="wrap free-grid"><h2 id="free-h">{e(c["free_h"])}</h2><div><p>{e(c["free_p"])}</p>
@@ -649,7 +647,7 @@ def home(code):
 <section class="guides" id="guides" aria-labelledby="guides-h"><div class="wrap"><h2 id="guides-h">{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong lang="en" dir="ltr">{e(t)}</strong><span>{e(s)}</span>{ICON_CHEV}<span class="sr">{e(c["guide_go"])}</span></a>' for u, t, s in c["guides"])}</div></div></section>
 '''
     # closing
-    out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
+    out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><p class="sign" aria-hidden="true"><i></i>{e(pages.ONAIR[code]["on_air"])}</p><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
 <p>{e(c["cta_p"])}</p><div class="actions"><a class="btn fill big" data-fx-magnetic href="{DOWNLOAD}">{ICON_DL}{e(c["cta_dl"])}</a><a class="btn big" data-fx-magnetic href="{ANDROID_APK}" rel="noopener">{ICON_DL}{e(c["android_dl"])}</a>{appstore_badge(c, he, up, 64)}<a class="btn big" data-fx-magnetic href="{REPO}">{ICON_GH}{e(c["cta_src"])}</a></div>
 <p class="disc">{e(c["foot"])}</p></div></section>
 </main>
@@ -659,7 +657,7 @@ def home(code):
     out += f'<nav class="rail" aria-label="{e(c["rail_aria"])}"><ul>{rail}</ul></nav>\n'
     out += (f'<dialog class="tour" id="tour" aria-label="{e(c["tour"])}"><button class="x" type="button" aria-label="{e(c["tour_close"])}">{ICON_X}</button>'
             f'<video controls preload="none" playsinline width="1280" height="720" data-poster="{up}assets/demo-poster.webp"><source src="{up}assets/demo.mp4" type="video/mp4"></video><p>{e(c["tour_note"])}</p></dialog>\n')
-    out += script_tag(up, c) + '</body></html>\n'
+    out += script_tag(up, c) + f'<script src="{av(up, "onair.js")}" defer></script>\n</body></html>\n'
     path = DOCS / (c["prefix"] + "index.html"); path.parent.mkdir(parents=True, exist_ok=True); path.write_text(out)
 
 
@@ -871,14 +869,18 @@ def marquee(items):
     li = "".join(f"<li>{e(x)}</li>" for x in items)
     return f'<div class="marq" aria-label="{e(items[0])}"><div class="marq-in"><ul>{li}</ul><ul aria-hidden="true">{li}</ul></div></div>\n'
 
+def device_recs(code):
+    """The main download button for each kind of device: [href, label, details]. site.js swaps the Mac default for the visitor's device."""
+    mm = pages.DOWNLOAD[code]["main"]
+    fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
+    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])], "ios": [APP_STORE, *fill("ios", "", 0)]}
+    return rec, "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
+
 def download_page(code):
     c = HOME[code]; d = pages.DOWNLOAD[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
     btn = lambda href, label, cls="fill": f'<a class="btn {cls}" href="{href}" rel="noopener">{ICON_DL}{e(label)}</a>'
     mac, wn, an, tv, ios = d["mac"], d["win"], d["android"], d["tv"], d["ios"]
-    mm = d["main"]
-    fill = lambda k, v, s: (mm[k][0], mm[k][1].format(v=v, s=s))
-    rec = {"mac": [DOWNLOAD, *fill("mac", VERSION, MAC_SIZE)], "windows": [win_file("setup"), *fill("windows", WIN_VER, WIN_SIZES["setup"])], "android": [apk("arm64-v8a"), *fill("android", AND_VER, ANDROID_SIZES["arm64-v8a"])], "tv": [apk("tv-32bit"), *fill("tv", AND_VER, ANDROID_SIZES["tv-32bit"])], "ios": [APP_STORE, *fill("ios", "", 0)]}
-    recs = "".join(f" data-{k}='{json.dumps(v, ensure_ascii=False)}'" for k, v in rec.items() if k != "mac")
+    rec, recs = device_recs(code)
     hero_actions = (f'<div class="hero-big"><div class="big-row"><a class="btn fill big" id="dl-main" data-fx-magnetic href="{DOWNLOAD}"{recs}>{ICON_DL}<span class="lbl">{e(rec["mac"][1])}</span></a>'
                     f'<span id="hero-store">{appstore_badge({"ios_badge_alt": ios["btn"]}, he, up, 64)}</span></div>'
                     f'<span class="big-meta" id="dl-meta">{e(rec["mac"][2])}</span></div>'
