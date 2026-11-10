@@ -1017,3 +1017,4 @@ html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem
   .js .epg-now { bottom: auto; height: 46px; }   /* a marker on the time ruler, not a line through the text; the live programme carries the red edge */
 }
 .in-guide .rail { opacity: 0 !important; visibility: hidden !important; }
+.hero.onair h1 .l { display: block; }   /* one short sentence per line */
