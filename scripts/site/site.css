@@ -1048,3 +1048,4 @@ html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem
 .limits { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 14px; color: var(--mute); line-height: 1.6; }
 .limits li::marker { color: var(--tally); }
 .guide-more { display: flex; flex-wrap: wrap; gap: 4px 26px; }
+html .g-main h1, html[lang="he"] .g-main h1 { font-size: clamp(2.4rem, 1.4rem + 3vw, 4.4rem); line-height: 1; }   /* a guide title is a sentence: smaller than a page headline */
