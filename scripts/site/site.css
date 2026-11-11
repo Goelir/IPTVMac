@@ -1057,3 +1057,5 @@ html .g-main h1, html[lang="he"] .g-main h1 { font-size: clamp(2.4rem, 1.4rem + 
 .cmp-short h2 { font: 800 clamp(1.6rem, 1.2rem + 1.2vw, 2.4rem)/1 var(--display); margin-bottom: 16px; }
 .src a { color: var(--acc-ink); overflow-wrap: anywhere; }
 .pghero.slim .hero-copy:only-child { grid-column: 1 / -1; }
+.cmp thead th:nth-child(2) { color: var(--ink); }   /* tally red on the table surface is 3.5:1: the column gets the red light instead */
+.cmp thead th:nth-child(2)::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-inline-end: 8px; border-radius: 50%; background: var(--tally); vertical-align: .05em; }

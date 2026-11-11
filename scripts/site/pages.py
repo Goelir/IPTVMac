@@ -19,8 +19,8 @@ UI = {
 # ---------- Download ----------
 DOWNLOAD = {
  "en": dict(
-  title="Download IPTVMac: Mac, Windows, Android and Android TV | Free IPTV player",
-  desc="Download IPTVMac for free: the DMG for Mac (Apple Silicon, macOS 14+), the installer for Windows 10 and 11, the APK for Android phones and tablets, and the TV files for Android TV, Google TV and Fire TV. Checksummed, no account.",
+  title="Download IPTVMac: the free IPTV player for every device",
+  desc="Download IPTVMac free: the DMG for Mac, the installer for Windows 10 and 11, the APK for Android phones and TVs, and the iPhone and iPad app.",
   h1="Download IPTVMac", lede="One free player for your Mac, your PC, your phone and your TV. Pick your device; the app contains no ads and no tracking.",
   mac=dict(h="Mac", req="Apple Silicon (M1 or later), macOS 14 or later.", btn="Download the DMG", alt="Or install from Terminal in one line:",
            steps=["Open IPTVMac.dmg and drag the IPTVMac icon onto Applications.", "Open the app and add your Xtream Codes login or M3U link.", "That is all: the app updates itself."],
@@ -59,8 +59,8 @@ DOWNLOAD = {
   js_rec="Recommended for your device",
  ),
  "he": dict(
-  title="הורדת IPTVMac: Mac, ‏Windows, ‏Android ו-Android TV | נגן IPTV חינמי",
-  desc="הורדה חינמית של IPTVMac: קובץ DMG ל-Mac (‏Apple Silicon, ‏macOS 14 ומעלה), מתקין ל-Windows 10 ו-11, קובץ APK לטלפונים וטאבלטים של Android, וקבצי טלוויזיה ל-Android TV, ל-Google TV ול-Fire TV. עם סכומי בדיקה, בלי חשבון.",
+  title="הורדת IPTVMac: נגן ה-IPTV החינמי לכל מכשיר",
+  desc="הורדה חינמית של IPTVMac: ‏DMG ל-Mac, מתקין ל-Windows 10 ו-11, ‏APK לטלפונים ולטלוויזיות Android, והאפליקציה ל-iPhone ול-iPad.",
   h1="הורדת IPTVMac", lede="נגן חינמי אחד ל-Mac, למחשב Windows, לטלפון ולטלוויזיה. בוחרים מכשיר; באפליקציה אין פרסומות ואין מעקב.",
   mac=dict(h="Mac", req="Apple Silicon (‏M1 ומעלה), ‏macOS 14 ומעלה.", btn="הורדת ה-DMG", alt="או התקנה מהטרמינל בשורה אחת:",
            steps=["פותחים את IPTVMac.dmg וגוררים את סמל IPTVMac אל Applications.", "פותחים את האפליקציה ומוסיפים כניסת Xtream Codes או קישור M3U.", "זהו: האפליקציה מתעדכנת לבד."],
@@ -104,8 +104,8 @@ DOWNLOAD = {
 # groups of (title, text, platforms); platforms is a tuple of keys from UI ("mac", "android", "tv") shown as small tags, or () when it holds everywhere
 FEATURES = {
  "en": dict(
-  title="IPTVMac features: search, player, Picture in Picture, catch-up and more",
-  desc="Everything IPTVMac does: instant search over 100,000 items, a stable mpv player, Picture in Picture, catch-up, subtitles, several playlists, downloads, 31 languages. Mac, Windows, Android and Android TV.",
+  title="IPTVMac features: search, player, Picture in Picture",
+  desc="Everything IPTVMac does: instant search over 100,000 items, a stable mpv player, Picture in Picture, catch-up, subtitles, several playlists and downloads.",
   h1="What IPTVMac does", lede="A player for your own Xtream Codes and M3U sources, built to be fast, stable and out of your way.",
   pic_alt="The IPTVMac window showing a wall of movie posters",
   groups=[
@@ -146,8 +146,8 @@ FEATURES = {
   cta_h="Try it", cta_p="Free, open source and without an account.", cta_btn="Go to downloads",
  ),
  "he": dict(
-  title="התכונות של IPTVMac: חיפוש, נגן, תמונה בתוך תמונה, צפייה בהיסטוריה ועוד",
-  desc="כל מה ש-IPTVMac עושה: חיפוש מיידי על פני 100,000 פריטים, נגן mpv יציב, תמונה בתוך תמונה, צפייה בהיסטוריה, כתוביות, כמה רשימות, הורדות ו-31 שפות. Mac, ‏Windows, ‏Android ו-Android TV.",
+  title="התכונות של IPTVMac: חיפוש, נגן, תמונה בתוך תמונה",
+  desc="כל מה ש-IPTVMac עושה: חיפוש מיידי ב-100,000 פריטים, נגן mpv יציב, תמונה בתוך תמונה, צפייה בהיסטוריה, כתוביות, כמה רשימות והורדות.",
   h1="מה IPTVMac עושה", lede="נגן למקורות Xtream Codes ו-M3U שלכם, שנבנה להיות מהיר, יציב ולא להפריע.",
   pic_alt="חלון IPTVMac עם קיר של פוסטרים של סרטים",
   groups=[
@@ -314,10 +314,10 @@ CHANGES = [
 ]
 
 CHANGELOG = {
- "en": dict(title="What's new in IPTVMac: release notes for Mac and Android", desc="Release notes for every IPTVMac version on Mac and Android, newest first: new features, fixes and changes.",
+ "en": dict(title="What's new in IPTVMac: release notes for Mac and Android", desc="Release notes for every IPTVMac version on Mac, Windows and Android, newest first: the new features, the fixes and the changes, with the date of each release.",
             h1="What's new", lede="Release notes for every version, newest first. The Mac and Android apps have their own version numbers.",
             filter=("All", "Mac", "Windows", "Android"), notes="Release notes on GitHub", older="Earlier releases (0.1 to 0.7) are listed on GitHub."),
- "he": dict(title="מה חדש ב-IPTVMac: הערות גרסה ל-Mac ול-Android", desc="הערות הגרסה של כל גרסת IPTVMac ב-Mac וב-Android, מהחדשה לישנה: תכונות חדשות, תיקונים ושינויים.",
+ "he": dict(title="מה חדש ב-IPTVMac: הערות גרסה ל-Mac ול-Android", desc="הערות הגרסה של כל גרסת IPTVMac ב-Mac, ב-Windows וב-Android, מהחדשה לישנה: התכונות החדשות, התיקונים והשינויים, עם התאריך של כל גרסה.",
             h1="מה חדש", lede="הערות גרסה לכל גרסה, מהחדשה לישנה. לאפליקציות ה-Mac וה-Android יש מספרי גרסה משלהן.",
             filter=("הכול", "Mac", "Windows", "Android"), notes="הערות הגרסה ב-GitHub", older="גרסאות מוקדמות (0.1 עד 0.7) מופיעות ב-GitHub."),
 }

@@ -195,8 +195,8 @@ def app_strings(code):
 HOME = {
  "en": dict(
   lang="en", prefix="", up="",
-  title="IPTVMac: IPTV Player for Mac, Windows, iPhone, Android and Android TV (Xtream Codes and M3U)",
-  desc="IPTVMac is a free, open source IPTV player for Mac, Windows, iPhone and iPad, Android phones and tablets, and Android TV, Google TV and Fire TV. Xtream Codes and M3U, instant search, Picture in Picture, catch-up and subtitles.",
+  title="Free IPTV Player for Mac, iPhone, Android, Windows | IPTVMac",
+  desc="A free, open source IPTV player for Mac, Windows, iPhone, iPad, Android and Android TV: Xtream Codes and M3U, instant search, Picture in Picture. No ads.",
   skip="Skip to content", nav_aria="Main", home_aria="IPTVMac home",
   nav=[("features/", "Features"), ("changelog/", "What's new"), ("#guides", "Guides"), ("support/", "Support"), ("download/", "Download")],
   gh="GitHub", other_lang=("he/", "עברית", "he"),
@@ -288,8 +288,8 @@ HOME = {
   lic="Open source under GPL-3.0."),
  "he": dict(
   lang="he", prefix="he/", up="../",
-  title="IPTVMac: נגן IPTV ל-Mac, ל-Windows, ל-iPhone, ל-Android ול-Android TV (Xtream Codes ו-M3U)",
-  desc="IPTVMac הוא נגן IPTV חינמי בקוד פתוח ל-Mac, ל-Windows, ל-iPhone ול-iPad, לטלפונים וטאבלטים של Android, ול-Android TV, Google TV ו-Fire TV. Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה, צפייה בהיסטוריה וכתוביות.",
+  title="נגן IPTV חינמי ל-Mac, ל-iPhone, ל-Android ועוד | IPTVMac",
+  desc="נגן IPTV חינמי בקוד פתוח ל-Mac, ל-Windows, ל-iPhone, ל-iPad, ל-Android ול-Android TV: ‏Xtream Codes ו-M3U, חיפוש מיידי, תמונה בתוך תמונה. בלי פרסומות.",
   skip="דלג לתוכן", nav_aria="ראשי", home_aria="IPTVMac, דף הבית",
   nav=[("features/", "תכונות"), ("changelog/", "מה חדש"), ("#guides", "מדריכים"), ("support/", "תמיכה"), ("download/", "הורדה")],
   gh="GitHub", other_lang=("../", "English", "en"),
