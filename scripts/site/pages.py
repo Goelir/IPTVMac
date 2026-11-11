@@ -384,7 +384,7 @@ ONAIR = {
    ("21:00", "Found as you type.", "Each search stays under a quarter of a second on a library of 100,000 titles, in our own tests."),
    ("21:30", "Plays the streams others drop.", "The mpv engine plays broken TS and HLS streams, reconnects when a live channel drops, and decodes video in hardware."),
    ("22:00", "Made for each screen.", "Swift on Mac, iPhone and iPad. Flutter and Kotlin on Android, Android TV and Windows. No Electron, no web view."),
-   ("22:30", "Everything a viewer needs.", "Catch-up, continue watching at the right episode and minute, skip intro and credits, Picture in Picture and downloads."),
+   ("22:30", "Everything a viewer needs.", "Continue watching at the right episode and minute, skip intro and credits, Picture in Picture. Catch-up on the Mac; downloads on Mac, Windows and Android."),
    ("23:00", "In your language.", "31 languages, each in its own script, right to left included."),
   ],
   guide_more="Every feature",
@@ -406,7 +406,7 @@ ONAIR = {
    ("21:00", "נמצא תוך כדי הקלדה.", "כל חיפוש לוקח פחות מרבע שנייה בספרייה של 100,000 כותרים, בבדיקות שלנו."),
    ("21:30", "מנגן את מה שנגנים אחרים מפילים.", "מנוע mpv מנגן שידורי TS ו-HLS שבורים, מתחבר מחדש כשערוץ חי נופל, ומפענח וידאו בחומרה."),
    ("22:00", "נבנה לכל מסך.", "Swift ב-Mac, ב-iPhone וב-iPad. ‏Flutter ו-Kotlin ב-Android, ב-Android TV וב-Windows. בלי Electron ובלי דפדפן מוסתר."),
-   ("22:30", "כל מה שצופה צריך.", "צפייה בהיסטוריה, המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה והורדות."),
+   ("22:30", "כל מה שצופה צריך.", "המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה. צפייה בהיסטוריה ב-Mac; הורדות ב-Mac, ב-Windows וב-Android."),
    ("23:00", "בשפה שלכם.", "31 שפות, כל אחת בכתב שלה, כולל מימין לשמאל."),
   ],
   guide_more="כל התכונות",
@@ -552,7 +552,7 @@ WHY = {
    ("Found as you type.", "Your library lives in a local SQLite database with full-text search. Our automated tests fill it with 100,000 titles and check that each search returns in under a quarter of a second.", "Tests/IPTVCoreTests/SearchTests.swift", "The search speed test"),
    ("Plays the streams others drop.", "Playback runs on mpv, the engine behind many video players. It plays broken TS and HLS streams, reconnects by itself when a live channel drops, and decodes video in hardware.", "Sources/IPTVPlayer/PlaybackWatch.swift", "The live reconnect logic"),
    ("Made for each screen.", "Swift and SwiftUI on Mac, iPhone and iPad. Flutter with a Kotlin layer on Android and Android TV, and with a small C++ shell on Windows. No Electron and no web view, so it starts fast and stays light.", "", ""),
-   ("Everything a viewer needs.", "Catch-up on channels whose provider supports it, continue watching at the right episode and minute, skip intro and credits, Picture in Picture, downloads for offline viewing, several playlists in one library.", "FEATURES", "The full feature list"),
+   ("Everything a viewer needs.", "Continue watching at the right episode and minute, skip intro and credits, Picture in Picture and several playlists in one library. On the Mac also catch-up on channels whose provider supports it; on Mac, Windows and Android also downloads for offline viewing.", "FEATURES", "The full feature list"),
    ("In your language.", "31 languages, each in its own script, including Hebrew, Arabic, Persian and Urdu from right to left.", "Sources/IPTVMac/Resources", "The 31 translations"),
   ],
   limits_h="What it does not do (yet)",
@@ -576,7 +576,7 @@ WHY = {
    ("נמצא תוך כדי הקלדה.", "הספרייה שלכם שמורה במסד SQLite מקומי עם חיפוש טקסט מלא. הבדיקות האוטומטיות שלנו ממלאות אותו ב-100,000 כותרים ובודקות שכל חיפוש חוזר בפחות מרבע שנייה.", "Tests/IPTVCoreTests/SearchTests.swift", "בדיקת מהירות החיפוש"),
    ("מנגן את מה שנגנים אחרים מפילים.", "הניגון רץ על mpv, המנוע שמאחורי נגני וידאו רבים. הוא מנגן שידורי TS ו-HLS שבורים, מתחבר מחדש לבד כשערוץ חי נופל, ומפענח וידאו בחומרה.", "Sources/IPTVPlayer/PlaybackWatch.swift", "לוגיקת החיבור מחדש"),
    ("נבנה לכל מסך.", "Swift ו-SwiftUI ב-Mac, ב-iPhone וב-iPad. ‏Flutter עם שכבת Kotlin ב-Android וב-Android TV, ועם מעטפת C++ קטנה ב-Windows. בלי Electron ובלי דפדפן מוסתר, ולכן הוא נפתח מהר ונשאר קל.", "", ""),
-   ("כל מה שצופה צריך.", "צפייה בהיסטוריה בערוצים שהספק תומך בהם, המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה, הורדות לצפייה בלי רשת, וכמה רשימות בספרייה אחת.", "FEATURES", "רשימת התכונות המלאה"),
+   ("כל מה שצופה צריך.", "המשך צפייה בפרק ובדקה הנכונים, דילוג על הפתיח והכתוביות, תמונה בתוך תמונה וכמה רשימות בספרייה אחת. ב-Mac גם צפייה בהיסטוריה בערוצים שהספק תומך בהם; ב-Mac, ב-Windows וב-Android גם הורדות לצפייה בלי רשת.", "FEATURES", "רשימת התכונות המלאה"),
    ("בשפה שלכם.", "31 שפות, כל אחת בכתב שלה, כולל עברית, ערבית, פרסית ואורדו מימין לשמאל.", "Sources/IPTVMac/Resources", "31 התרגומים"),
   ],
   limits_h="מה הוא עוד לא עושה",
@@ -588,4 +588,182 @@ WHY = {
           "אין אפליקציה ל-Apple TV."],
   compare_h="בהשוואה לנגנים אחרים", compare_p="השוואות עובדה מול עובדה, עם המקורות והתאריך שבו נבדקו.",
  ),
+}
+
+
+# ---- Hebrew guides (phase 5): same slugs as the English ones under he/guides/; %DL% %PLATFORM% %SUPPORT% %HOME% are filled in by build.py ----
+GUIDE_UI = {
+ "en": dict(crumb="Guides", more="More guides", toc="On this page", cmd="Install in one line", updated="Updated", disc="IPTVMac is a media player; it does not include or host any content.", dl="Download IPTVMac"),
+ "he": dict(crumb="מדריכים", more="עוד מדריכים", toc="בעמוד הזה", cmd="התקנה בשורה אחת", updated="עודכן", disc="IPTVMac הוא נגן מדיה; הוא לא כולל ולא מארח שום תוכן.", dl="הורדת IPTVMac"),
+}
+GUIDES_HE = {
+ "xtream-codes-on-mac": dict(title="איך צופים ב-IPTV של Xtream Codes ב-Mac | IPTVMac", h1="איך צופים ב-IPTV של Xtream Codes ב-Mac", short="מה צריך מהספק ואיך מגדירים.",
+  desc="שלב אחר שלב: מה כוללת כניסת Xtream Codes ואיך מוסיפים אותה ל-IPTVMac, נגן IPTV חינמי ומקורי ל-Mac, כדי לקבל שידורים חיים, סרטים וסדרות.",
+  answer="מתקינים את IPTVMac, בוחרים Xtream Codes ומזינים את כתובת השרת, שם המשתמש והסיסמה שקיבלתם מהספק. IPTVMac מוריד את רשימת הערוצים פעם אחת ואז מחפש בה מיד.",
+  body="""
+<h2>מה צריך מהספק</h2>
+<p>לכניסת Xtream Codes יש שלושה חלקים: כתובת שרת (למשל <code>http://example.com:8080</code>), שם משתמש וסיסמה. הספק מציג אותם בחשבון שלכם או בהודעת הפתיחה. IPTVMac לא מספק ערוצים; הוא מנגן את המקור שאתם מוסיפים.</p>
+<h2>הגדרה ב-IPTVMac</h2>
+<ol>
+<li><a href="%DL%">מתקינים את IPTVMac</a> ‏(Mac עם Apple Silicon, ‏macOS 14 ומעלה).</li>
+<li>בהפעלה הראשונה נפתח המדריך. בוחרים <strong>Xtream Codes</strong> וממלאים שם, כתובת שרת, שם משתמש וסיסמה.</li>
+<li>לוחצים <strong>בדוק חיבור</strong> ואז <strong>שמור וסנכרן</strong>. IPTVMac מוריד את הערוצים החיים, הסרטים והסדרות פעם אחת, שומר אותם במחשב ומציג אותם בלשוניות.</li>
+<li>מקלידים בשדה החיפוש כדי למצוא כותר: בקטגוריה, בחלק או בכל מקום.</li>
+</ol>
+<h2>אם שום דבר לא מתנגן</h2>
+<ul>
+<li><strong>בודקים את הסיסמה.</strong> בהגדרות יש "שינוי סיסמה". יש ספקים שעונים על פרטים שגויים בקודי HTTP לא רגילים במקום הודעה ברורה.</li>
+<li><strong>בודקים את מספר החיבורים.</strong> חשבונות רבים מאפשרים חיבור אחד בכל פעם. סוגרים נגנים אחרים ולא צופים בזמן שהורדה רצה.</li>
+<li><strong>מרעננים את הרשימה.</strong> כפתור הרענון בסרגל מוריד את הרשימות מחדש.</li>
+</ul>
+<h2>כדאי לדעת</h2>
+<p>צפייה בהיסטוריה עובדת בערוצים שהספק שומר להם ארכיון. הסיסמה נשמרת במסד הנתונים המקומי של IPTVMac, וקריאה רק למשתמש שלכם.</p>
+""", faq=[("מה זו כניסת Xtream Codes?", "כתובת שרת, שם משתמש וסיסמה שספק ה-IPTV נותן לכם. הנגן משתמש בהם כדי להוריד את רשימות הערוצים, הסרטים והסדרות."),
+          ("האם IPTVMac כולל ערוצים?", "לא. IPTVMac הוא נגן בלבד. מוסיפים את פרטי הכניסה מספק שמותר לכם להשתמש בו.")]),
+ "m3u-playlist-on-mac": dict(title="איך מנגנים רשימת M3U ב-Mac | IPTVMac", h1="איך מנגנים רשימת M3U ב-Mac", short="מוסיפים קישור לרשימה ומקבלים שידור חי, סרטים וסדרות.",
+  desc="איך פותחים קישור לרשימת M3U או M3U8 ב-Mac עם IPTVMac, נגן IPTV חינמי ומקורי: מוסיפים את הקישור, מדפדפים בשידור חי, בסרטים ובסדרות, ומחפשים מיד.",
+  answer="מתקינים את IPTVMac, בוחרים M3U ומזינים שם ואת הקישור לרשימה. IPTVMac קורא את הרשימה וממיין אותה לשידור חי, סרטים וסדרות.",
+  body="""
+<h2>מה צריך</h2>
+<p>את הקישור (URL) לרשימת M3U או M3U8 ממקור שמותר לכם להשתמש בו. IPTVMac מקבל קישור; פתיחת קובץ .m3u מקומי עוד לא נתמכת.</p>
+<h2>אין לכם רשימה?</h2>
+<p>הפרויקט העצמאי בקוד פתוח <a href="https://github.com/iptv-org/iptv" rel="noopener">iptv-org</a> מפרסם רשימות M3U של ערוצים זמינים לציבור מכל העולם, למשל <code>https://iptv-org.github.io/iptv/index.m3u</code>. ‏IPTVMac לא קשור אליו, והאם שידור זמין או מותר במדינה שלכם תלוי בערוץ: משתמשים רק במה שמותר.</p>
+<h2>מוסיפים ב-IPTVMac</h2>
+<ol>
+<li><a href="%DL%">מתקינים את IPTVMac</a> ‏(Mac עם Apple Silicon, ‏macOS 14 ומעלה).</li>
+<li>במדריך ההפעלה הראשונה, או בהגדרות, בוחרים <strong>M3U</strong>, מזינים שם ומדביקים את הקישור.</li>
+<li>לוחצים <strong>שמור וסנכרן</strong>. IPTVMac מוריד את הרשימה ובונה את הרשימות. ה-<code>group-title</code> של כל רשומה הופך לקטגוריה שלה, וה-<code>tvg-logo</code> לסמל שלה.</li>
+</ol>
+<h2>איך הרשומות ממוינות</h2>
+<p>קובץ M3U לא אומר אם רשומה היא ערוץ, סרט או סדרה, ולכן IPTVMac מחליט: קישור שמכיל <code>/movie/</code> או <code>/series/</code> הוא סרט או סדרה, אחר כך נבדק שם הקבוצה, וקבצים שמסתיימים ב-.mp4, ‏.mkv או .avi נחשבים לסרטים. כל השאר שידור חי.</p>
+""", faq=[("אפשר לפתוח קובץ .m3u מקומי?", "עוד לא. IPTVMac מקבל את הקישור (URL) לרשימה."),
+          ("איך IPTVMac מחליט מה סרט ומה סדרה?", "לפי נתיב הקישור (/movie/ או /series/), אחר כך לפי שם הקבוצה, ואחר כך לפי סיומת הקובץ. כל השאר נחשב שידור חי.")]),
+ "picture-in-picture-iptv-mac": dict(title="תמונה בתוך תמונה ל-IPTV ב-Mac | IPTVMac", h1="תמונה בתוך תמונה ל-IPTV ב-Mac", short="משאירים שידור בחלון צף בזמן שעושים משהו אחר.",
+  desc="איך משאירים שידור IPTV בחלון צף ב-Mac בזמן שגולשים או עובדים, עם כפתור תמונה בתוך תמונה בנגן של IPTVMac. חלון שנשאר מעל כל האפליקציות ובכל Space.",
+  answer="מפעילים ערוץ או סרט ב-IPTVMac ולוחצים על כפתור תמונה בתוך תמונה בנגן. הווידאו עובר לחלון צף קטן שנשאר מעל אפליקציות אחרות ובכל Space.",
+  body="""
+<h2>מפעילים</h2>
+<ol>
+<li>מנגנים ערוץ, סרט או פרק ב-<a href="%DL%">IPTVMac</a>.</li>
+<li>לוחצים על כפתור תמונה בתוך תמונה בפקדי הנגן.</li>
+<li>הווידאו עובר לחלון צף בפינת המסך, וחלון IPTVMac חוזר לרשימות כדי שתבחרו משהו אחר.</li>
+</ol>
+<h2>מה החלון הצף עושה</h2>
+<ul>
+<li>הוא נשאר מעל אפליקציות אחרות ובכל Space, גם מעל אפליקציות במסך מלא.</li>
+<li>כשהעכבר מעליו מופיעים עצירה, סגירה וכפתור שמחזיר את הווידאו לחלון הראשי.</li>
+<li>אפשר לגרור אותו לכל מקום ולשנות את גודלו.</li>
+</ul>
+<h2>לתשומת לב</h2>
+<p>זה החלון הצף של IPTVMac עצמו, לא תמונה בתוך תמונה של Safari או QuickTime. הוא עובד עם כל מקור ש-IPTVMac יכול לנגן.</p>
+""", faq=[("זה עובד בערוצים חיים?", "כן. זה עובד בערוצים חיים, בסרטים ובפרקים."),
+          ("זו תמונה בתוך תמונה של המערכת?", "לא. זה החלון הצף של IPTVMac, שנשאר תמיד למעלה ומופיע גם מעל אפליקציות במסך מלא.")]),
+ "xtream-codes-on-fire-tv": dict(title="איך מוסיפים Xtream Codes ב-Fire TV | IPTVMac", h1="איך מוסיפים IPTV של Xtream Codes ב-Fire TV", short="מתקינים עם Downloader ומוסיפים את הכניסה עם השלט.",
+  desc="מתקינים את IPTVMac ב-Fire TV, ב-Android TV או ב-Google TV עם האפליקציה Downloader, מוסיפים את כניסת ה-Xtream Codes ומדפדפים בשידור חי, סרטים וסדרות.",
+  answer="מתקינים את Downloader בטלוויזיה, משתמשים בו כדי להתקין את IPTVMac, ואז פותחים את IPTVMac ומזינים את כתובת השרת, שם המשתמש והסיסמה מהספק.",
+  body="""
+<h2>מה צריך</h2>
+<p>מכשיר Fire TV, ‏Android TV או Google TV עם Android 8 ומעלה (ב-Fire TV זה Fire OS 7 ומעלה), ואת כניסת ה-Xtream Codes מהספק: כתובת שרת, שם משתמש וסיסמה. ‏IPTVMac לא מספק ערוצים.</p>
+<h2>מתקינים את IPTVMac</h2>
+<ol>
+<li>בטלוויזיה מתקינים את <strong>Downloader</strong> (ב-Fire TV מחנות Amazon, ב-Android TV וב-Google TV מ-Google Play) ופותחים אותו.</li>
+<li>מקלידים את הכתובת של קובץ הטלוויזיה 32 ביט מ<a href="%PLATFORM%">עמוד ה-Android TV</a>. אם הטלוויזיה אומרת שהקובץ לא תואם, משתמשים בקובץ ה-64 ביט.</li>
+<li>מאשרים ל-Downloader להתקין אפליקציות כשהטלוויזיה שואלת, ואז מתקינים ופותחים את IPTVMac.</li>
+</ol>
+<h2>מוסיפים את הכניסה</h2>
+<ol>
+<li>בוחרים <strong>Xtream Codes</strong> וממלאים עם השלט שם, כתובת שרת, שם משתמש וסיסמה.</li>
+<li>בוחרים <strong>בדוק חיבור</strong> ואז <strong>שמור וסנכרן</strong>. IPTVMac מוריד את הערוצים, הסרטים והסדרות פעם אחת ושומר אותם בטלוויזיה.</li>
+</ol>
+<h2>עם השלט</h2>
+<ul><li>OK בוחר, Back עולה שלב אחד, ולחיצה ארוכה על Back סוגרת את האפליקציה.</li><li>העדכונים בינתיים ידניים: מתקינים את קובץ הטלוויזיה החדש מעל הישן, והמקורות נשארים.</li></ul>
+""", faq=[("זה עובד על כל Fire TV?", "צריך Android 8 ומעלה, שב-Fire TV פירושו Fire OS 7 ומעלה. מנסים קודם את קובץ ה-32 ביט; הוא רץ כמעט על כל מכשיר."),
+          ("IPTVMac חינמי ב-Fire TV?", "כן. חינמי ובקוד פתוח, בלי פרסומות ובלי חשבון.")]),
+ "m3u-playlist-on-iphone": dict(title="איך מנגנים רשימת M3U ב-iPhone וב-iPad | IPTVMac", h1="איך מנגנים רשימת M3U ב-iPhone וב-iPad", short="חינם ב-App Store: מדביקים את הקישור ומדפדפים.",
+  desc="מוסיפים קישור לרשימת M3U או M3U8 ל-IPTVMac ב-iPhone או ב-iPad: חינם ב-App Store, בלי פרסומות, ממוין לשידור חי, סרטים וסדרות, עם חיפוש תוך כדי הקלדה.",
+  answer="מתקינים את IPTVMac מה-App Store, בוחרים M3U, נותנים למקור שם ומדביקים את הקישור לרשימה. האפליקציה ממיינת אותה לשידור חי, סרטים וסדרות.",
+  body="""
+<h2>מה צריך</h2>
+<p>iPhone או iPad עם iOS 17 ומעלה, ואת הקישור (URL) לרשימת M3U או M3U8 ממקור שמותר לכם להשתמש בו.</p>
+<h2>מוסיפים את הרשימה</h2>
+<ol>
+<li>מורידים את IPTVMac מה-<a href="%DL%">App Store</a>. חינם, בלי פרסומות ובלי רכישות בתוך האפליקציה.</li>
+<li>פותחים, בוחרים <strong>M3U</strong>, מקלידים שם ומדביקים את הקישור.</li>
+<li>לוחצים <strong>בדוק חיבור</strong> ואז <strong>שמור וסנכרן</strong>.</li>
+</ol>
+<h2>איך הרשומות ממוינות</h2>
+<p>קובץ M3U לא אומר אם רשומה היא ערוץ, סרט או סדרה, ולכן IPTVMac מחליט לפי הקישור ושם הקבוצה, וקבצים כמו .mp4 או .mkv נחשבים לסרטים. כל השאר שידור חי. ה-<code>group-title</code> של רשומה הופך לקטגוריה שלה.</p>
+<h2>טיפים</h2>
+<ul><li>החיפוש מוצא כותרים תוך כדי הקלדה, בקטגוריה, בחלק או בכל מקום.</li><li>מסמנים ערוצים בכוכב כדי לשמור אותם במועדפים; המשך הצפייה זוכר את הפרק ואת הדקה.</li></ul>
+""", faq=[("IPTVMac חינמי ב-iPhone?", "כן. בלי פרסומות, בלי מנוי, בלי רכישות בתוך האפליקציה ובלי חשבון."),
+          ("הוא כולל ערוצים?", "לא. IPTVMac הוא נגן בלבד; מוסיפים את הקישור לרשימה ממקור שמותר לכם להשתמש בו.")]),
+ "iptv-player-windows": dict(title="איך צופים ב-IPTV ב-Windows 10 ו-11 | IPTVMac", h1="איך צופים ב-IPTV ב-Windows 10 ו-11", short="מתקינים בלי הרשאות מנהל, מוסיפים מקור ומשתמשים בקיצורים.",
+  desc="מגדירים נגן IPTV חינמי ב-Windows 10 או 11: מתקינים את IPTVMac בלי הרשאות מנהל, מוסיפים כניסת Xtream Codes או קישור M3U, ומשתמשים בקיצורי המקלדת.",
+  answer="מורידים את המתקין של IPTVMac, מריצים אותו (בלי הרשאות מנהל), ומוסיפים כניסת Xtream Codes או קישור M3U.",
+  body="""
+<h2>התקנה</h2>
+<ol>
+<li>מורידים את <a href="%DL%">המתקין של IPTVMac</a> ‏(Windows 10 או 11, ‏64 ביט). הוא מתקין למשתמש שלכם בלבד.</li>
+<li>אם Windows SmartScreen אומר שהוא הגן על המחשב, בוחרים <strong>More info</strong> ואז <strong>Run anyway</strong>. האפליקציה עוד לא חתומה בתעודה בתשלום; קוד המקור פתוח.</li>
+<li>לא רוצים להתקין? ב<a href="%PLATFORM%">עמוד ה-Windows</a> יש גם zip נייד.</li>
+</ol>
+<h2>מוסיפים מקור</h2>
+<p>בוחרים <strong>Xtream Codes</strong> (כתובת שרת, שם משתמש וסיסמה) או <strong>M3U</strong> (שם וקישור לרשימה), ואז <strong>בדוק חיבור</strong> ואז <strong>שמור וסנכרן</strong>.</p>
+<h2>קיצורי מקלדת</h2>
+<ul><li><kbd>רווח</kbd> עוצר, החיצים מדלגים, <kbd>F</kbd> ממלא את המסך.</li><li>ההורדות שומרות סרטים ופרקים לצפייה בלי חיבור.</li></ul>
+<h2>עדכונים</h2>
+<p>האפליקציה מודיעה כשיוצאת גרסה חדשה. מריצים את המתקין החדש מעל הישן, והמקורות וההגדרות נשארים.</p>
+""", faq=[("צריך הרשאות מנהל?", "לא. המתקין מתקין למשתמש שלכם בלבד, וה-zip הנייד רץ בלי התקנה."),
+          ("למה SmartScreen מזהיר?", "האפליקציה עוד לא חתומה בתעודת חתימת קוד בתשלום. בוחרים More info ואז Run anyway.")]),
+ "iptv-on-android": dict(title="איך מגדירים IPTV בטלפון Android | IPTVMac", h1="איך מגדירים IPTV בטלפון Android", short="מתקינים את ה-APK פעם אחת ומוסיפים כניסה או רשימה.",
+  desc="מתקינים את ה-APK החינמי של IPTVMac בטלפון או בטאבלט Android, מאשרים את ההתקנה פעם אחת, ומוסיפים כניסת Xtream Codes או קישור M3U. בלי חשבון ובלי פרסומות.",
+  answer="מורידים את ה-APK‏ arm64-v8a, פותחים ומאשרים את ההתקנה, ואז מוסיפים ב-IPTVMac כניסת Xtream Codes או קישור M3U.",
+  body="""
+<h2>איזה קובץ</h2>
+<p>ה-APK‏ <code>arm64-v8a</code> מתאים לכמעט כל טלפון וטאבלט מ-2017 ואילך. ב<a href="%PLATFORM%">עמוד ה-Android</a> יש קישורים לאחרים.</p>
+<h2>התקנה</h2>
+<ol>
+<li>מורידים את <a href="%DL%">ה-APK</a> בטלפון ופותחים אותו.</li>
+<li>Android מבקש לאשר התקנות מהדפדפן או מאפליקציית הקבצים: מאשרים. אם Play Protect מזהיר על אפליקציה מחוץ ל-Play Store, בוחרים "התקן בכל זאת".</li>
+<li>פותחים את IPTVMac, בוחרים <strong>Xtream Codes</strong> או <strong>M3U</strong>, ממלאים את הפרטים, ואז <strong>בדוק חיבור</strong> ואז <strong>שמור וסנכרן</strong>.</li>
+</ol>
+<h2>בנגן</h2>
+<ul><li>הקשה כפולה לדילוג, החלקה לווליום ולבהירות, לחיצה ארוכה ל-2x.</li><li>הקול ממשיך כשהמסך כבוי, ותמונה בתוך תמונה שומרת על התמונה בזמן שמשתמשים באפליקציות אחרות.</li></ul>
+<h2>עדכונים</h2>
+<p>באנר מודיע כשיוצאת גרסה חדשה. לוחצים "עדכן עכשיו", והנתונים נשארים.</p>
+""", faq=[("ה-APK בטוח?", "הוא חתום במפתח של הפרויקט, ובעמוד הגרסה מופיע סכום ה-SHA-256 שלו. קוד המקור פתוח."),
+          ("למה הוא לא ב-Play Store?", "בינתיים מתקינים מקובץ ישיר. Android מבקש לאשר את זה פעם אחת.")]),
+ "catch-up-iptv-mac": dict(title="איך צופים בתוכניות שעברו (Catch-up) ב-Mac | IPTVMac", h1="איך צופים בתוכניות שכבר שודרו ב-Mac", short="צופים בתוכנית שכבר שודרה, כשהספק שומר ארכיון.",
+  desc="צופים ב-Mac בתוכניות IPTV שכבר שודרו: איך צפייה בהיסטוריה עובדת עם Xtream Codes, באילו ערוצים יש אותה, ואיך מפעילים תוכנית שעברה ב-IPTVMac.",
+  answer="מנגנים ערוץ חי שתומך בזה, לוחצים בנגן על \"צפייה בהיסטוריה\" ובוחרים תוכנית מהרשימה. הספק צריך לשמור ארכיון לאותו ערוץ.",
+  body="""
+<h2>מה זה</h2>
+<p>יש ספקים שמקליטים את הערוצים שלהם לכמה ימים. הנגן יכול אז לבקש תוכנית שכבר שודרה. ב-IPTVMac זה עובד עם כניסות Xtream Codes ב-Mac.</p>
+<h2>באילו ערוצים יש את זה</h2>
+<p>ליד ערוצים עם ארכיון מופיע ברשימה סמל שעון קטן. כמה אפשר לחזור אחורה תלוי בספק.</p>
+<h2>צופים בתוכנית שעברה</h2>
+<ol>
+<li>מנגנים את הערוץ ב-<a href="%DL%">IPTVMac</a>.</li>
+<li>לוחצים בפקדי הנגן על כפתור השעון, <strong>צפייה בהיסטוריה</strong>.</li>
+<li>בוחרים תוכנית מהרשימה. אם אין לערוץ לוח שידורים, בוחרים ידנית שעת התחלה ואורך.</li>
+<li>כפתור <strong>Live</strong> מחזיר לשידור הנוכחי של הערוץ.</li>
+</ol>
+""", faq=[("למה אין כפתור צפייה בהיסטוריה?", "לערוץ אין ארכיון אצל הספק, או שהמקור הוא רשימת M3U. צפייה בהיסטוריה דורשת כניסת Xtream Codes."),
+          ("כמה אחורה אפשר לחזור?", "כמה שהספק שומר את הארכיון לאותו ערוץ, בדרך כלל כמה ימים.")]),
+ "iptv-buffering": dict(title="ה-IPTV נתקע? מה לבדוק | IPTVMac", h1="ה-IPTV ממשיך להיתקע? מה לבדוק", short="חיבורים, הרשת, הספק והגדרות הנגן.",
+  desc="שידור IPTV שנתקע או קופא? בודקים את מספר החיבורים, את הרשת, את הספק ואת הגדרות הנגן. צעדים מעשיים למשתמשי IPTVMac בכל מכשיר.",
+  answer="רוב התקיעות מגיעות מהספק או מהרשת, לא מהנגן. סוגרים נגנים אחרים שמשתמשים באותה כניסה, מנסים חיבור בכבל, משווים כמה ערוצים, וב-Mac מגדילים את מאגר הרשת בהגדרות.",
+  body="""
+<h2>חיבור אחד בכל פעם</h2>
+<p>הרבה חשבונות IPTV מאפשרים חיבור יחיד (<code>max_connections</code>). נגן נוסף, מכשיר אחר או הורדה שרצה על אותה כניסה יכולים לגרום לשידור להיתקע. סוגרים את האחרים ומנסים שוב.</p>
+<h2>הרשת</h2>
+<p>חיבור יציב חשוב יותר מחיבור מהיר. אם אפשר, מנסים כבל במקום Wi-Fi, או מתקרבים לנתב, ובודקים אם התקיעות נעלמות.</p>
+<h2>הספק</h2>
+<p>אם כל הערוצים נתקעים, או רק בשעות הערב העמוסות, הבעיה היא בדרך כלל השרת של הספק. אם ערוץ אחד נתקע ב-IPTVMac וגם בנגן אחר, זו הבעיה של אותו שידור.</p>
+<h2>הגדרות הנגן</h2>
+<ul><li>ב-Mac יש בהגדרות <strong>מאגר רשת</strong>: קטן, רגיל או גדול. מאגר גדול יותר עוזר בחיבור איטי או לא יציב.</li><li>IPTVMac מתחבר מחדש לבד כששידור חי נופל, כך שנפילה קצרה לא דורשת הפעלה מחדש.</li></ul>
+<h2>עדיין תקוע?</h2>
+<p><a href="%SUPPORT%">עמוד התמיכה</a> מסביר איך מדווחים על בעיה בלי לשתף את פרטי הכניסה.</p>
+""", faq=[("זה IPTVMac או הספק?", "אם אותו ערוץ נתקע גם בנגן אחר, זה הספק או הרשת. אם הוא נתקע רק ב-IPTVMac, מדווחים בעמוד התמיכה."),
+          ("מאגר גדול יותר עוזר?", "בחיבור איטי או לא יציב, כן. ב-Mac הוא בהגדרות, תחת מאגר רשת.")]),
 }

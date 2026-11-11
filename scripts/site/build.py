@@ -272,7 +272,7 @@ HOME = {
   android_h="Android and Android TV", android_dl="Android (APK)", ios_dl="iPhone and iPad (App Store)",
   ios_kicker="New on the App Store", ios_h="IPTVMac for iPhone and iPad.<br><em>Completely free.</em>",
   ios_p="The same player, search and 31 languages as on the Mac, made for the iPhone and the iPad. Download it from the App Store and add your source.",
-  ios_pts=["Free to download and free to use", "No ads, no subscription, no in-app purchases", "No account, no analytics: nothing is sent to us", "Picture in Picture, subtitles, catch-up and downloads"],
+  ios_pts=["Free to download and free to use", "No ads, no subscription, no in-app purchases", "No account, no analytics: nothing is sent to us", "Picture in Picture, subtitles, continue watching and skip intro"],
   ios_free="Free", ios_note="iOS 17 or later · iPhone and iPad", ios_badge_alt="Download on the App Store",
   ios_alt=("IPTVMac on the iPhone: movies", "IPTVMac on the iPhone: live channels", "IPTVMac on the iPhone: movie details"), android_p="IPTVMac for Android is available as an APK: download it (Android 8 or later; the arm64-v8a file suits almost every phone), allow installs from your browser or Files app, and install. The release notes have the details and the SHA-256 checksums. For Android TV, Google TV and Fire TV (first version, for installing directly): take the 32-bit file, or the 64-bit one if the TV says it is not compatible, and install it with the Downloader app or from a USB stick; it works with the remote control.",
   foot="IPTVMac is a media player. It does not include or host any content; use only sources you are authorized to access. IPTVMac is not affiliated with iptv-org.",
@@ -364,7 +364,7 @@ HOME = {
   android_h="Android ו-Android TV", android_dl="Android (APK)", ios_dl="iPhone ו-iPad (App Store)",
   ios_kicker="חדש ב-App Store", ios_h="IPTVMac ל-iPhone ול-iPad.<br><em>חינמית לגמרי.</em>",
   ios_p="אותו נגן, אותו חיפוש ואותן 31 שפות כמו ב-Mac, מותאמים ל-iPhone ול-iPad. מורידים מה-App Store ומוסיפים את המקור שלכם.",
-  ios_pts=["חינם להורדה וחינם לשימוש", "בלי פרסומות, בלי מנוי ובלי רכישות בתוך האפליקציה", "בלי חשבון ובלי מעקב: שום דבר לא נשלח אלינו", "תמונה בתוך תמונה, כתוביות, צפייה בהיסטוריה והורדות"],
+  ios_pts=["חינם להורדה וחינם לשימוש", "בלי פרסומות, בלי מנוי ובלי רכישות בתוך האפליקציה", "בלי חשבון ובלי מעקב: שום דבר לא נשלח אלינו", "תמונה בתוך תמונה, כתוביות, המשך צפייה ודילוג על הפתיח"],
   ios_free="חינם", ios_note="iOS 17 ומעלה · iPhone ו-iPad", ios_badge_alt="הורדה מה-App Store",
   ios_alt=("IPTVMac ב-iPhone: סרטים", "IPTVMac ב-iPhone: ערוצים חיים", "IPTVMac ב-iPhone: פרטי סרט"), android_p="IPTVMac ל-Android זמין כ-APK: מורידים את ה-APK (Android 8 ומעלה; הקובץ arm64-v8a מתאים לכמעט כל טלפון), מאשרים התקנה מהדפדפן או מאפליקציית הקבצים, ומתקינים. בהערות הגרסה יש פרטים וסכומי SHA-256. ל-Android TV, ל-Google TV ול-Fire TV (גרסה ראשונה, להתקנה ישירה): לוקחים את קובץ ה-32 ביט, או את ה-64 ביט אם הטלוויזיה אומרת שהוא לא תואם, ומתקינים עם האפליקציה Downloader או מכונן USB; היא עובדת עם השלט.",
   foot="IPTVMac הוא נגן. הוא לא כולל ולא מארח תוכן כלשהו; השתמשו רק במקורות שמותר לכם לגשת אליהם. IPTVMac אינו קשור ל-iptv-org.",
@@ -646,7 +646,7 @@ def home(code):
 <p class="fine">{e(c["free_note"])}</p><a class="btn" href="{FREE_REPO}" rel="noopener">{e(c["free_btn"])}</a></div></div></section>
 <section class="faq-sec" id="faq" aria-labelledby="faq-h"><div class="wrap faq-grid"><h2 id="faq-h">{e(c["faq_h"])}</h2>
 <div class="faqs">{"".join(f'<details name="faq"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in c["faq"])}</div></div></section>
-<section class="guides" id="guides" aria-labelledby="guides-h"><div class="wrap"><h2 id="guides-h">{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="{u}"><strong lang="en" dir="ltr">{e(t)}</strong><span>{e(s)}</span>{ICON_CHEV}<span class="sr">{e(c["guide_go"])}</span></a>' for u, t, s in c["guides"])}</div></div></section>
+<section class="guides" id="guides" aria-labelledby="guides-h"><div class="wrap"><h2 id="guides-h">{e(c["guides_h"])}</h2><div class="glist">{"".join(f'<a href="guides/{g["slug"]}.html"><strong>{e(pages.GUIDES_HE[g["slug"]]["h1"] if he else g["h1"])}</strong><span>{e(pages.GUIDES_HE[g["slug"]]["short"] if he else g["short"])}</span>{ICON_CHEV}<span class="sr">{e(c["guide_go"])}</span></a>' for g in GUIDES)}</div></div></section>
 '''
     # closing
     out += f'''<section class="finale" id="get" data-fx-scene aria-labelledby="get-h"><div class="wrap"><p class="sign" aria-hidden="true"><i></i>{e(pages.ONAIR[code]["on_air"])}</p><h2 id="get-h"><span class="l">{e(c["cta_l"][0])}</span> <span class="l">{e(c["cta_l"][1])}</span></h2>
@@ -665,7 +665,7 @@ def home(code):
 
 # ---------- guides ----------
 GUIDES = [
- dict(slug="xtream-codes-on-mac", title="How to watch Xtream Codes IPTV on a Mac | IPTVMac",
+ dict(slug="xtream-codes-on-mac", plat="mac", short="What you need from your provider and how to set it up.", title="How to watch Xtream Codes IPTV on a Mac | IPTVMac",
   h1="How to watch Xtream Codes IPTV on a Mac",
   desc="Step by step: what an Xtream Codes login contains, and how to add it to IPTVMac, a free native IPTV player for Mac, to get live TV, movies and series.",
   answer="Install IPTVMac, choose Xtream Codes, and enter the server address, username and password your provider gave you. IPTVMac downloads the channel list once and then searches it instantly.",
@@ -689,7 +689,7 @@ GUIDES = [
 <p>Catch-up (watching past programs) works on channels where your provider supports it. The password is stored in IPTVMac's local database, readable only by your user.</p>
 """, faq=[("What is an Xtream Codes login?", "It is a server address, a username and a password that your IPTV provider gives you. A player uses them to download your channel, movie and series lists."),
           ("Does IPTVMac include Xtream Codes channels?", "No. IPTVMac is only a player. You add the login from a provider you are authorized to use.")]),
- dict(slug="m3u-playlist-on-mac", title="How to play an M3U playlist on a Mac | IPTVMac",
+ dict(slug="m3u-playlist-on-mac", plat="mac", short="Add a playlist link and get Live, Movies and Series.", title="How to play an M3U playlist on a Mac | IPTVMac",
   h1="How to play an M3U playlist on a Mac",
   desc="How to open an M3U or M3U8 playlist link on a Mac with IPTVMac, a free native IPTV player: add the link, browse Live, Movies and Series, and search instantly.",
   answer="Install IPTVMac, choose M3U, and enter a name and the playlist link. IPTVMac reads the playlist and sorts it into Live, Movies and Series.",
@@ -714,7 +714,7 @@ GUIDES = [
 </ul>
 """, faq=[("Can IPTVMac open a local .m3u file?", "Not yet. IPTVMac takes the playlist link (URL)."),
           ("How does IPTVMac decide what is a movie or a series?", "By the URL path (/movie/ or /series/), then by the group name, then by the file ending. Everything else is treated as live.")]),
- dict(slug="picture-in-picture-iptv-mac", title="Picture in Picture for IPTV on a Mac | IPTVMac",
+ dict(slug="picture-in-picture-iptv-mac", plat="mac", short="Keep a stream in a floating window while you do something else.", title="Picture in Picture for IPTV on a Mac | IPTVMac",
   h1="Picture in Picture for IPTV on a Mac",
   desc="How to keep an IPTV stream in a floating window on a Mac while you browse or work, using the Picture in Picture button in IPTVMac.",
   answer="Start any channel or movie in IPTVMac and click the Picture in Picture button in the player. The video moves to a small floating window that stays on top of other apps and across Spaces.",
@@ -737,43 +737,167 @@ GUIDES = [
 <p>This is IPTVMac's own floating window, not the system Picture in Picture of Safari or QuickTime. It works with every source IPTVMac can play.</p>
 """, faq=[("Does Picture in Picture work on live channels?", "Yes. It works for live channels, movies and episodes."),
           ("Is it the system Picture in Picture?", "No. It is IPTVMac's own always-on-top floating window, which also appears over full screen apps.")]),
+ dict(slug="xtream-codes-on-fire-tv", plat="tv", short="Install with Downloader, then add your login with the remote.",
+  title="How to add Xtream Codes IPTV on Fire TV | IPTVMac", h1="How to add Xtream Codes IPTV on a Fire TV",
+  desc="Install IPTVMac on a Fire TV, Android TV or Google TV with the Downloader app, then add your Xtream Codes login and browse live TV, movies and series.",
+  answer="Install the Downloader app on the TV, use it to install IPTVMac, then open IPTVMac and enter the server address, username and password from your provider.",
+  body="""
+<h2>What you need</h2>
+<p>A Fire TV, Android TV or Google TV device with Android 8 or later (on Fire TV that means Fire OS 7 or later), and the Xtream Codes login from your provider: a server address, a username and a password. IPTVMac does not provide any channels.</p>
+<h2>Install IPTVMac</h2>
+<ol>
+<li>On the TV, install the <strong>Downloader</strong> app (on Fire TV from the Amazon store, on Android TV and Google TV from Google Play) and open it.</li>
+<li>Type the address of the 32-bit TV file from the <a href="%PLATFORM%">Android TV page</a>. If the TV says the file is not compatible, use the 64-bit file instead.</li>
+<li>Allow Downloader to install apps when the TV asks, then install and open IPTVMac.</li>
+</ol>
+<h2>Add your login</h2>
+<ol>
+<li>Choose <strong>Xtream Codes</strong> and fill in a name, the server address, the username and the password with the remote.</li>
+<li>Select <strong>Test connection</strong>, then <strong>Save and sync</strong>. IPTVMac downloads your live channels, movies and series once and keeps them on the TV.</li>
+</ol>
+<h2>Using the remote</h2>
+<ul><li>OK selects, Back goes up one level, and holding Back closes the app.</li><li>Updates are manual for now: install the new TV file over the old one; your sources stay.</li></ul>
+""", faq=[("Does it work on every Fire TV?", "It needs Android 8 or later, which on Fire TV means Fire OS 7 or later. Try the 32-bit file first; it runs on almost every device."),
+          ("Is IPTVMac free on Fire TV?", "Yes. It is free and open source, with no ads and no account.")]),
+ dict(slug="m3u-playlist-on-iphone", plat="iphone", short="Free from the App Store: paste the link and browse.",
+  title="How to play an M3U playlist on iPhone and iPad | IPTVMac", h1="How to play an M3U playlist on iPhone and iPad",
+  desc="Add an M3U or M3U8 playlist link to IPTVMac on iPhone or iPad: free on the App Store, no ads, sorted into Live, Movies and Series, searchable as you type.",
+  answer="Install IPTVMac from the App Store, choose M3U, give the source a name and paste the playlist link. The app sorts it into Live, Movies and Series.",
+  body="""
+<h2>What you need</h2>
+<p>An iPhone or iPad with iOS 17 or later, and the link (URL) of an M3U or M3U8 playlist from a source you are allowed to use.</p>
+<h2>Add the playlist</h2>
+<ol>
+<li>Get IPTVMac from the <a href="%DL%">App Store</a>. It is free, with no ads and no in-app purchases.</li>
+<li>Open it, choose <strong>M3U</strong>, type a name and paste the playlist link.</li>
+<li>Tap <strong>Test connection</strong>, then <strong>Save and sync</strong>.</li>
+</ol>
+<h2>How the entries are sorted</h2>
+<p>An M3U file does not say whether an entry is a channel, a movie or a series, so IPTVMac decides from the link and the group name, and treats files such as .mp4 or .mkv as movies. Everything else is live. The <code>group-title</code> of an entry becomes its category.</p>
+<h2>Tips</h2>
+<ul><li>Search finds titles as you type, inside a category, a section or everywhere.</li><li>Star channels to keep them under Favorites; continue watching remembers the episode and the minute.</li></ul>
+""", faq=[("Is IPTVMac free on iPhone?", "Yes. No ads, no subscription, no in-app purchases and no account."),
+          ("Does it include channels?", "No. IPTVMac is only a player; you add the playlist link from a source you are allowed to use.")]),
+ dict(slug="iptv-player-windows", plat="windows", short="Install without admin rights, add your source, use the shortcuts.",
+  title="How to watch IPTV on Windows 10 and 11 | IPTVMac", h1="How to watch IPTV on Windows 10 and 11",
+  desc="Set up a free IPTV player on Windows 10 or 11: install IPTVMac without admin rights, add your Xtream Codes login or M3U link, and use the keyboard shortcuts.",
+  answer="Download the IPTVMac installer, run it (no administrator rights needed), and add your Xtream Codes login or M3U link.",
+  body="""
+<h2>Install</h2>
+<ol>
+<li>Download the <a href="%DL%">IPTVMac installer</a> (Windows 10 or 11, 64-bit). It installs for your user only.</li>
+<li>If Windows SmartScreen says it protected your PC, choose <strong>More info</strong>, then <strong>Run anyway</strong>. The app is not signed with a paid certificate yet; the source code is public.</li>
+<li>Prefer not to install? The <a href="%PLATFORM%">Windows page</a> also has a portable zip.</li>
+</ol>
+<h2>Add your source</h2>
+<p>Choose <strong>Xtream Codes</strong> (server address, username and password) or <strong>M3U</strong> (a name and the playlist link), then <strong>Test connection</strong> and <strong>Save and sync</strong>.</p>
+<h2>Keyboard shortcuts</h2>
+<ul><li><kbd>Space</kbd> pauses, the arrow keys seek, <kbd>F</kbd> fills the screen.</li><li>Downloads save movies and episodes for watching without a connection.</li></ul>
+<h2>Updates</h2>
+<p>The app tells you when a new version is out. Run the new installer over the old one; your sources and settings stay.</p>
+""", faq=[("Do I need administrator rights?", "No. The installer installs for your user only, and the portable zip runs without installing."),
+          ("Why does SmartScreen warn?", "The app is not signed with a paid code-signing certificate yet. Choose More info, then Run anyway.")]),
+ dict(slug="iptv-on-android", plat="android", short="Install the APK once, then add your login or playlist.",
+  title="How to set up IPTV on an Android phone | IPTVMac", h1="How to set up IPTV on an Android phone",
+  desc="Install the free IPTVMac APK on an Android phone or tablet, allow the install once, and add your Xtream Codes login or M3U link. No account and no ads.",
+  answer="Download the arm64-v8a APK, open it and allow the install, then add your Xtream Codes login or M3U link in IPTVMac.",
+  body="""
+<h2>Which file</h2>
+<p>The <code>arm64-v8a</code> APK suits almost every phone and tablet made since 2017. The <a href="%PLATFORM%">Android page</a> links the others.</p>
+<h2>Install</h2>
+<ol>
+<li>Download the <a href="%DL%">APK</a> on the phone and open it.</li>
+<li>Android asks to allow installs from your browser or Files app: allow it. If Play Protect warns about an app from outside the Play Store, choose <strong>Install anyway</strong>.</li>
+<li>Open IPTVMac, choose <strong>Xtream Codes</strong> or <strong>M3U</strong>, fill in your details, then <strong>Test connection</strong> and <strong>Save and sync</strong>.</li>
+</ol>
+<h2>In the player</h2>
+<ul><li>Double-tap to skip, swipe for volume and brightness, hold for 2x.</li><li>Sound keeps playing with the screen off, and Picture in Picture keeps the picture while you use other apps.</li></ul>
+<h2>Updates</h2>
+<p>A banner tells you when a new version is out. Tap <strong>Update now</strong>; your data stays.</p>
+""", faq=[("Is the APK safe?", "It is signed with the project's own key, and the release page lists its SHA-256 checksum. The source code is public."),
+          ("Why is it not on the Play Store?", "It is installed from a direct file for now. Android asks you to allow that once.")]),
+ dict(slug="catch-up-iptv-mac", plat="mac", short="Watch a program that already aired, where your provider keeps an archive.",
+  title="How to watch past programs (catch-up) on a Mac | IPTVMac", h1="How to watch past programs (catch-up) on a Mac",
+  desc="Watch IPTV programs that already aired on a Mac: how catch-up works with Xtream Codes, which channels support it, and how to start a past program in IPTVMac.",
+  answer="Play a live channel that supports catch-up, click Watch from the past in the player, and pick a program from the guide. Your provider must keep an archive for that channel.",
+  body="""
+<h2>What catch-up is</h2>
+<p>Some providers record their channels for a few days. A player can then ask for a program that already aired. In IPTVMac this works with Xtream Codes logins on the Mac.</p>
+<h2>Which channels have it</h2>
+<p>Channels with an archive show a small clock icon in the channel list. How far back you can go depends on your provider.</p>
+<h2>Watch a past program</h2>
+<ol>
+<li>Play the channel in <a href="%DL%">IPTVMac</a>.</li>
+<li>Click the clock button, <strong>Watch from the past</strong>, in the player controls.</li>
+<li>Pick a program from the list. If the channel has no program guide, pick a start time and a length by hand.</li>
+<li>The <strong>Live</strong> button takes you back to the channel's current broadcast.</li>
+</ol>
+""", faq=[("Why is there no Watch from the past button?", "The channel has no archive at your provider, or the source is an M3U playlist. Catch-up needs an Xtream Codes login."),
+          ("How far back can I go?", "As far as your provider keeps the archive for that channel, often a few days.")]),
+ dict(slug="iptv-buffering", plat="", short="Connections, the network, the provider and the player settings.",
+  title="IPTV keeps buffering? What to check | IPTVMac", h1="IPTV keeps buffering? What to check",
+  desc="IPTV stream buffering or freezing? Check the number of connections, the network, the provider and the player settings. Practical steps for IPTVMac users.",
+  answer="Most buffering comes from the provider or the network, not the player. Close other players that use the same login, try a wired connection, compare a few channels, and on the Mac raise the network buffer in Settings.",
+  body="""
+<h2>One connection at a time</h2>
+<p>Many IPTV accounts allow a single connection (<code>max_connections</code>). A second player, another device or a running download on the same login can make the stream stall. Close the others and try again.</p>
+<h2>The network</h2>
+<p>A steady connection matters more than a fast one. If you can, try a cable instead of Wi-Fi, or move closer to the router, and see whether the stalls stop.</p>
+<h2>The provider</h2>
+<p>If every channel buffers, or only at busy evening hours, the problem is usually the provider's server. If one channel buffers in IPTVMac and also in another player, it is that stream.</p>
+<h2>Player settings</h2>
+<ul><li>On the Mac, Settings has a <strong>Network buffer</strong>: Small, Normal or Large. A larger buffer helps on a slow or unstable connection.</li><li>IPTVMac reconnects a dropped live stream by itself, so a short drop does not need a restart.</li></ul>
+<h2>Still stuck?</h2>
+<p>The <a href="%SUPPORT%">support page</a> explains how to report a problem without sharing your login.</p>
+""", faq=[("Is it IPTVMac or my provider?", "If the same channel stalls in another player too, it is the provider or the network. If it only stalls in IPTVMac, report it on the support page."),
+          ("Does a larger buffer help?", "On a slow or unstable connection, yes. On the Mac it is in Settings, under Network buffer.")]),
 ]
 
 def slug(t): return re.sub(r"[^a-z0-9]+", "-", re.sub(r"<[^>]+>", "", t).lower()).strip("-")
 
-def guide(g):
-    c = HOME["en"]
-    canon = BASE + f"guides/{g['slug']}.html"
-    ld = [{"@context": "https://schema.org", "@type": "Article", "headline": g["h1"], "description": g["desc"],
-           "datePublished": UPDATED, "dateModified": UPDATED, "inLanguage": "en", "mainEntityOfPage": canon,
+def guide(g, code="en"):
+    """A guide in English (guides/<slug>.html) or Hebrew (he/guides/<slug>.html); both carry hreflang to each other."""
+    he = code == "he"; c = HOME[code]; ui = pages.GUIDE_UI[code]; up = "../" * (2 if he else 1); lp = "he/" if he else ""
+    t = {**g, **pages.GUIDES_HE[g["slug"]]} if he else g
+    canon = BASE + f"{lp}guides/{g['slug']}.html"
+    alts = [("en", BASE + f"guides/{g['slug']}.html"), ("he", BASE + f"he/guides/{g['slug']}.html"), ("x-default", BASE + f"guides/{g['slug']}.html")]
+    rec, _ = device_recs(code)
+    dkey = {"mac": "mac", "windows": "windows", "iphone": "ios", "android": "android", "tv": "tv"}.get(g["plat"])
+    dl_href, dl_label = (rec[dkey][0], rec[dkey][1]) if dkey else (f"{up}{lp}download/", ui["dl"])
+    fill = lambda x: (x.replace("%DL%", dl_href).replace("%PLATFORM%", f"{up}{lp}{g['plat'] or 'download'}/")
+                       .replace("%SUPPORT%", f"{up}{lp}support/").replace("%HOME%", f"{up}{lp}"))
+    ld = [{"@context": "https://schema.org", "@type": "Article", "headline": t["h1"], "description": t["desc"],
+           "datePublished": g.get("published", UPDATED), "dateModified": g.get("modified", UPDATED), "inLanguage": code, "mainEntityOfPage": canon,
            "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"},
            "publisher": {"@type": "Person", "name": "Goelir"}, "image": BASE + "social-preview.png"},
-          faq_ld(g["faq"]), {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
-              {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE},
-              {"@type": "ListItem", "position": 2, "name": g["h1"], "item": canon}]}]
+          faq_ld(t["faq"]), {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE + lp},
+              {"@type": "ListItem", "position": 2, "name": t["h1"], "item": canon}]}]
     toc = []
     def ident(m):
-        i = slug(m.group(1)); toc.append((i, m.group(1)))
+        i = slug(m.group(1)) or f"s{len(toc) + 1}"; toc.append((i, m.group(1)))
         return f'<h2 id="{i}">{m.group(1)}</h2>'
-    body = re.sub(r"<h2>(.*?)</h2>", ident, g["body"])
-    out = head(g["title"], g["desc"], canon, "en", 1, og_type="article", extra_ld=ld)
-    out += header_html(c, 1, home=False)
-    related = "".join(f'<li><a href="{o["slug"]}.html">{e(o["h1"])}</a></li>' for o in GUIDES if o is not g)
-    tocs = "".join(f'<a href="#{i}">{t}</a>' for i, t in toc)
+    body = re.sub(r"<h2>(.*?)</h2>", ident, fill(t["body"]))
+    out = head(t["title"], t["desc"], canon, code, 2 if he else 1, alts, og_type="article", extra_ld=ld)
+    out += header_html(c, 2 if he else 1, home=False, home_rel="../" if he else None, alt_href=("../../" if he else "../he/") + f"guides/{g['slug']}.html")
+    related = "".join(f'<li><a href="{o["slug"]}.html">{e(pages.GUIDES_HE[o["slug"]]["h1"] if he else o["h1"])}</a></li>' for o in GUIDES if o is not g)
+    tocs = "".join(f'<a href="#{i}">{x}</a>' for i, x in toc)
+    btn = (appstore_badge(c, he, up, 56) if g["plat"] == "iphone" else f'<a class="btn fill" href="{dl_href}"{" rel=noopener" if dl_href.startswith("http") else ""}>{ICON_DL}{e(dl_label)}</a>')
+    side_cmd = f'<div class="side-cta"><p class="side-h">{e(ui["cmd"])}</p>{cmd_block(c)}</div>' if g["plat"] == "mac" else ""
     out += f'''<main id="main"><div class="wrap g-wrap"><div class="g-grid">
-<article class="g-main"><nav class="crumbs" aria-label="Breadcrumb"><a href="../">IPTVMac</a> / <a href="../#guides">Guides</a></nav>
-<h1>{e(g["h1"])}</h1>
-<p class="answer">{e(g["answer"])}</p>
+<article class="g-main"><nav class="crumbs" aria-label="{e(legal.UI[code]["bc"])}"><a href="../">IPTVMac</a> / <a href="../#guides">{e(ui["crumb"])}</a></nav>
+<h1>{e(t["h1"])}</h1>
+<p class="answer">{e(t["answer"])}</p>
 <div class="prose">{body}</div>
-<p style="margin-top:36px"><a class="btn fill" href="{DOWNLOAD}">{ICON_DL}Download IPTVMac for Mac</a></p>
-<div class="g-foot"><h2>More guides</h2><ul>{related}</ul><p class="fine">Updated {UPDATED}. IPTVMac is a media player; it does not include or host any content.</p></div></article>
-<aside class="g-side"><nav class="toc" aria-label="On this page"><p class="side-h">On this page</p>{tocs}</nav>
-<div class="side-cta"><p class="side-h">Install in one line</p>{cmd_block(c)}</div></aside>
+<p style="margin-top:36px">{btn}</p>
+<div class="g-foot"><h2>{e(ui["more"])}</h2><ul>{related}</ul><p class="fine">{e(ui["updated"])} {g.get("modified", UPDATED)}. {e(ui["disc"])}</p></div></article>
+<aside class="g-side"><nav class="toc" aria-label="{e(ui["toc"])}"><p class="side-h">{e(ui["toc"])}</p>{tocs}</nav>
+{side_cmd}</aside>
 </div></div></main>
 '''
-    out += footer_html(c, 1, home=False)
-    out += script_tag("../", c, mods=False) + '</body></html>\n'
-    (DOCS / "guides" / f"{g['slug']}.html").write_text(out)
+    out += footer_html(c, 2 if he else 1, home=False, home_rel="../" if he else None)
+    out += script_tag(up, c, mods=False) + '</body></html>\n'
+    d = DOCS / lp / "guides"; d.mkdir(parents=True, exist_ok=True); (d / f"{g['slug']}.html").write_text(out)
 
 # ---------- privacy policy and support page (EN + HE) ----------
 def legal_page(kind, code):
@@ -1064,7 +1188,10 @@ def changelog_page(code):
 # ---------- crawler files ----------
 def crawler_files():
     en_of = {BASE: BASE, BASE + "he/": BASE}              # page url -> its English url; every entry lists both language versions
-    urls = [BASE, BASE + "he/"] + [BASE + f"guides/{g['slug']}.html" for g in GUIDES]
+    urls = [BASE, BASE + "he/"]
+    for g in GUIDES:
+        en_u, he_u = BASE + f"guides/{g['slug']}.html", BASE + f"he/guides/{g['slug']}.html"
+        urls += [en_u, he_u]; en_of[en_u] = en_of[he_u] = en_u
     for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS, "why"]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for u in urls:
@@ -1129,7 +1256,7 @@ IPTVMac is not an IPTV provider and does not sell subscriptions or channels.
 if __name__ == "__main__":
     publish_assets()
     home("en"); home("he")
-    for g in GUIDES: guide(g)
+    for g in GUIDES: guide(g, "en"); guide(g, "he")
     for k in legal.LEGAL:
         for code in ("en", "he"): legal_page(k, code)
     for code in ("en", "he"): download_page(code); features_page(code); changelog_page(code)
