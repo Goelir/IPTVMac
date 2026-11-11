@@ -192,6 +192,19 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-11", "mac", "0.9.9", "v0.9.9", {
+   "en": ["**A calmer, more professional look:** small corners instead of rounded pills on badges, the speed control, notices and hover highlights, and square-ended progress bars. With the Multicolor system accent, the app uses its own blue.",
+          "**Passwords in the Keychain, if you want:** Settings > Playlists > \"Store passwords in the Keychain\". Off (the default) keeps them in the app's private database; on moves every saved password to your login keychain."],
+   "he": ["**מראה רגוע ומקצועי יותר:** פינות קטנות במקום צורות קפסולה בתגיות, בבקרת המהירות, בהודעות ובהדגשה מתחת לסמן, ופסי התקדמות עם קצוות ישרים. כשצבע ההדגשה של המערכת הוא \"צבעוני\", האפליקציה משתמשת בכחול שלה.",
+          "**סיסמאות ב-Keychain, אם רוצים:** הגדרות > רשימות > \"שמור סיסמאות ב-Keychain\". כבוי (ברירת המחדל) משאיר אותן במסד הנתונים הפרטי של האפליקציה; פעיל מעביר את כל הסיסמאות השמורות ל-Keychain של המשתמש."]}),
+ ("2026-11-11", "windows", "1.0.5", "windows-v1.0.5", {
+   "en": ["**A calmer, more professional look:** a deep blue in place of the violet, small corners instead of rounded pills on filters, buttons, fields and the selected tab, quieter stand-in posters, and stronger colors with Windows' contrast themes."],
+   "he": ["**מראה רגוע ומקצועי יותר:** כחול עמוק במקום הסגול, פינות קטנות במקום צורות קפסולה במסננים, בכפתורים, בשדות ובלשונית שנבחרה, פוסטרים חלופיים שקטים יותר, וצבעים חזקים יותר בערכות הניגודיות של Windows."]}),
+ ("2026-11-11", "android", "1.0.8", "android-v1.0.8", {
+   "en": ["**A calmer, more professional look:** a deep blue in place of the violet, small corners instead of rounded pills on filters, buttons, fields and the selected tab, and quieter stand-in posters for titles without artwork.",
+          "**High contrast:** with Android's high-contrast text setting on, the app uses stronger colors and borders."],
+   "he": ["**מראה רגוע ומקצועי יותר:** כחול עמוק במקום הסגול, פינות קטנות במקום צורות קפסולה במסננים, בכפתורים, בשדות ובלשונית שנבחרה, ופוסטרים חלופיים שקטים יותר לכותרים בלי תמונה.",
+          "**ניגודיות גבוהה:** כשהגדרת הטקסט בניגודיות גבוהה של Android פעילה, האפליקציה משתמשת בצבעים ובקווים חזקים יותר."]}),
  ("2026-11-07", "mac", "0.9.8", "v0.9.8", {
    "en": ["**Full screen in Light Mode, second fix:** a panel could flash on and off during full-screen playback. The window is now set up for full-screen video once, when full screen starts, instead of on every window update."],
    "he": ["**מסך מלא ב-Light Mode, תיקון שני:** פאנל יכול היה להבהב בזמן ניגון במסך מלא. עכשיו החלון מוכן לווידאו במסך מלא פעם אחת, כשהמסך המלא מתחיל, ולא בכל עדכון של החלון."]}),
