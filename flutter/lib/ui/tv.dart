@@ -268,6 +268,11 @@ class _TvShellState extends State<TvShell> {
     FocusManager.instance.addListener(_focusChanged);
     HardwareKeyboard.instance.addHandler(_key);
     WidgetsBinding.instance.addPostFrameCallback((_) => _rescue());
+    // the focused widget can also move with no focus change or scroll (a details sheet grows when its plot arrives): measure
+    // after every frame the app draws anyway; this asks for no extra frames, a frame is only added when the ring has to move
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      if (mounted && _follow == 0) WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+    });
   }
 
   final _longBack = LongBackExit();
