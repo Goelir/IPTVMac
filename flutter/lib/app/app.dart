@@ -33,6 +33,8 @@ class IptvApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: Brand.theme(Brightness.light),
             darkTheme: Brand.theme(Brightness.dark),
+            highContrastTheme: Brand.theme(Brightness.light, high: true),
+            highContrastDarkTheme: Brand.theme(Brightness.dark, high: true),
             themeMode: mode,
             locale: locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,

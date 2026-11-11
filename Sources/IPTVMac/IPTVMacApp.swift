@@ -77,7 +77,7 @@ struct IPTVMacApp: App {
     }
 
     var body: some Scene {
-        WindowGroup(id: "main") { MainWindow(model: model) }
+        WindowGroup(id: "main") { MainWindow(model: model).brandAccent() }
         // One window only (a second would fight the first for the single video view): File > Show Window brings it back, even after a close.
         .commands {
             CommandGroup(replacing: .newItem) { Button(L("menu.showWindow")) { model.showMainWindow() }.keyboardShortcut("n") }
@@ -93,6 +93,6 @@ struct IPTVMacApp: App {
             }
             CommandGroup(replacing: .systemServices) {}   // the app menu's "Services" (no text service applies to a video player)
         }
-        Settings { SettingsView().environment(model) }
+        Settings { SettingsView().environment(model).brandAccent() }
     }
 }

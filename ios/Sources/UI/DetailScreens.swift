@@ -132,7 +132,7 @@ struct DetailSheet: View {
                             Button { Haptics.press(); dismiss(); model.play(item) } label: {
                                 HStack(spacing: 8) { Image(systemName: "play.fill"); Text(L(resumable ? "info.resume" : "info.play")) }.font(.headline).foregroundStyle(.white).frame(maxWidth: .infinity, minHeight: 36)
                             }
-                            .buttonStyle(.borderedProminent).controlSize(.large)
+                            .buttonStyle(.borderedProminent).squared().controlSize(.large)
                         }
                     } secondary: {
                         if let url = info?.trailerURL { IconAction(symbol: "play.rectangle", label: L("info.trailer")) { trailer = TrailerLink(url: url) }.transition(.opacity) }
@@ -182,7 +182,7 @@ struct DetailSheet: View {
             VStack(alignment: .leading, spacing: 10) {
                 Label { Text(L("info.error")) } icon: { Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange) }
                 Text(message).font(.caption).foregroundStyle(.secondary)
-                Button(L("player.retry")) { attempt += 1 }.buttonStyle(.bordered)
+                Button(L("player.retry")) { attempt += 1 }.buttonStyle(.bordered).squared()
             }
         case .loaded(let i) where i.hasContent: facts(i)
         case .loaded: Label { Text(L("info.empty")) } icon: { Image(systemName: "info.circle") }.font(.callout).foregroundStyle(.secondary)
@@ -245,7 +245,7 @@ struct SeriesScreen: View {
                 } else if let error {
                     Section {
                         ContentUnavailableView { Label(L("info.error"), systemImage: "exclamationmark.triangle.fill") } description: { Text(error) }
-                            actions: { Button(L("player.retry")) { attempt += 1 }.buttonStyle(.bordered) }
+                            actions: { Button(L("player.retry")) { attempt += 1 }.buttonStyle(.bordered).squared() }
                     }.listRowBackground(Color.clear)
                 } else if episodes.isEmpty {
                     Section { ContentUnavailableView(L("series.noEpisodes"), systemImage: "rectangle.stack") }.listRowBackground(Color.clear)
@@ -288,7 +288,7 @@ struct SeriesScreen: View {
                         HStack(spacing: 8) { Image(systemName: "play.fill"); Text(String(format: L(next.resume ? "series.continueEp" : "series.playEp"), next.episode.season, next.episode.number)) }
                             .font(.headline).foregroundStyle(.white).frame(maxWidth: .infinity, minHeight: 36)
                     }
-                    .buttonStyle(.borderedProminent).controlSize(.large)
+                    .buttonStyle(.borderedProminent).squared().controlSize(.large)
                 }
             } secondary: {
                 if let url = info?.trailerURL { IconAction(symbol: "play.rectangle", label: L("info.trailer")) { trailer = TrailerLink(url: url) } }

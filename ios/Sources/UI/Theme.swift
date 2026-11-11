@@ -7,16 +7,21 @@ import IPTVCore
 // built from iOS parts: system text styles (Dynamic Type), system materials for bars, semantic colors for text.
 
 enum Brand {
-    private static func color(_ light: UInt32, _ dark: UInt32) -> Color {
+    /// Light, dark, and the Increase Contrast versions of both (nil = the same as without it).
+    private static func color(_ light: UInt32, _ dark: UInt32, high: (UInt32, UInt32)? = nil) -> Color {
         func ui(_ h: UInt32) -> UIColor { UIColor(red: CGFloat((h >> 16) & 255) / 255, green: CGFloat((h >> 8) & 255) / 255, blue: CGFloat(h & 255) / 255, alpha: 1) }
-        return Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? ui(dark) : ui(light) })
+        return Color(uiColor: UIColor { t in
+            let d = t.userInterfaceStyle == .dark
+            if let high, t.accessibilityContrast == .high { return ui(d ? high.1 : high.0) }
+            return ui(d ? dark : light)
+        })
     }
     /// Screen ground: a cool off-white, and a deep broadcast blue (the website's "On air" family, a little darker for long viewing).
     static let canvas = color(0xF4F6FA, 0x0B1426)
     /// Rows and grouped forms.
-    static let surface = color(0xFFFFFF, 0x121E35)
+    static let surface = color(0xFFFFFF, 0x121E35, high: (0xFFFFFF, 0x18284A))
     /// Chips, logo tiles, the quiet fill under things.
-    static let raised = color(0xE8ECF3, 0x1A2944)
+    static let raised = color(0xE8ECF3, 0x1A2944, high: (0xD5DCE8, 0x2A3E64))
     /// Corner radii: small parts (chips, badges, buttons) and content (posters, cards). No capsules for controls.
     static let radiusSmall: CGFloat = 7
     static let radiusCard: CGFloat = 10
@@ -36,6 +41,8 @@ extension View {
     /// `.animation(_:value:)` that does nothing when Reduce Motion is on.
     func motion<V: Equatable>(_ animation: Animation = .smooth(duration: 0.25), value: V) -> some View { modifier(MotionModifier(animation: animation, value: value)) }
     func brandRows() -> some View { listRowBackground(Brand.surface) }
+    /// The house button shape: small corners. Content buttons only: toolbar buttons keep the system's Liquid Glass capsule.
+    func squared() -> some View { buttonBorderShape(.roundedRectangle(radius: Brand.radiusSmall)) }
     /// iPad: a centered form-sized sheet instead of a phone-style card hanging off one edge (iOS 18+; before that the system default).
     @ViewBuilder func formSheet() -> some View { if #available(iOS 18.0, *) { presentationSizing(.form) } else { self } }
 }

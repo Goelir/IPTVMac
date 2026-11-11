@@ -18,7 +18,6 @@ import SwiftUI
         WindowGroup {
             RootView()
                 .environment(model)
-                .buttonBorderShape(.roundedRectangle(radius: Brand.radiusSmall))   // the house shape: small corners, no capsules
                 .task {
                     await model.start()
                     #if DEBUG

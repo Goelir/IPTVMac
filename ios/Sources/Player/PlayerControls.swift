@@ -417,8 +417,8 @@ struct UpNextCard: View {
                         .contentTransition(.numericText(countsDown: true))
                 }
                 Spacer(minLength: 4)
-                Button(L("next.now")) { player.playUpNextNow() }.buttonStyle(.borderedProminent).controlSize(.small)
-                Button(L("next.cancel")) { player.upNext.cancel() }.buttonStyle(.bordered).controlSize(.small).tint(.white)
+                Button(L("next.now")) { player.playUpNextNow() }.buttonStyle(.borderedProminent).squared().controlSize(.small)
+                Button(L("next.cancel")) { player.upNext.cancel() }.buttonStyle(.bordered).squared().controlSize(.small).tint(.white)
             }
             .foregroundStyle(.white)
             .padding(.horizontal, 14).padding(.vertical, 10)
@@ -436,8 +436,8 @@ struct ErrorCard: View {
                 Text(message).font(.headline).multilineTextAlignment(.center)
                 Text(L("player.errorHint")).font(.footnote).foregroundStyle(.white.opacity(0.7)).multilineTextAlignment(.center)
                 HStack(spacing: 12) {
-                    Button(L("player.retry")) { player.retry() }.buttonStyle(.borderedProminent)
-                    Button(L("player.close")) { player.onClose?() }.buttonStyle(.bordered).tint(.white)
+                    Button(L("player.retry")) { player.retry() }.buttonStyle(.borderedProminent).squared()
+                    Button(L("player.close")) { player.onClose?() }.buttonStyle(.bordered).squared().tint(.white)
                 }.padding(.top, 4)
             }
             .foregroundStyle(.white)

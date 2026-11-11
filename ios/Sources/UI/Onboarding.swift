@@ -61,7 +61,7 @@ struct LogoTile: View {
             Image("LogoMark").resizable().scaledToFit().padding(size * 0.1)
         }
         .frame(width: size, height: size)
-        .shadow(color: Color(red: 0.3, green: 0.2, blue: 0.8).opacity(0.5), radius: size * 0.28, y: size * 0.12)
+        .shadow(color: .black.opacity(0.28), radius: size * 0.22, y: size * 0.10)
         .accessibilityHidden(true)
     }
 }
@@ -77,7 +77,7 @@ private struct Welcome: View {
     private var actions: some View {
         VStack(spacing: 12) {
             Button { Haptics.tap(); start(nil) } label: { Text(L("account.add")).font(.headline).frame(maxWidth: .infinity, minHeight: 36) }
-                .buttonStyle(.borderedProminent).controlSize(.large)
+                .buttonStyle(.borderedProminent).squared().controlSize(.large)
             ViewThatFits(in: .horizontal) {
                 HStack(spacing: 10) { hint; PasteLink { var d = SourceDraft(); d.apply(pasted: $0); start(d) } }
                 VStack(spacing: 8) { hint; PasteLink { var d = SourceDraft(); d.apply(pasted: $0); start(d) } }
@@ -128,7 +128,7 @@ struct PasteLink: View {
             guard let s = strings.first?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return }
             Haptics.success(); done(s)
         }
-        .labelStyle(.titleAndIcon).buttonBorderShape(.roundedRectangle(radius: Brand.radiusSmall)).tint(.accentColor)
+        .labelStyle(.titleAndIcon).squared().tint(.accentColor)
     }
 }
 
@@ -266,7 +266,7 @@ struct SourceFormView: View {
             }
             .font(.headline).frame(maxWidth: .infinity, minHeight: 36)
         }
-        .buttonStyle(.borderedProminent).controlSize(.large)
+        .buttonStyle(.borderedProminent).squared().controlSize(.large)
         .disabled(!draft.canTest || state == .testing)
     }
 

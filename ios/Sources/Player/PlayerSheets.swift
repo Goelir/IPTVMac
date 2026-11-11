@@ -36,9 +36,9 @@ struct SpeedSheet: View {
                     Image(systemName: "hare.fill")
                 }.foregroundStyle(.secondary)
                 HStack {
-                    Button(L("player.speedReset")) { player.setSpeed(1) }.buttonStyle(.bordered).disabled(player.speed == 1)
+                    Button(L("player.speedReset")) { player.setSpeed(1) }.buttonStyle(.bordered).squared().disabled(player.speed == 1)
                     Spacer()
-                    Button(L("player.close")) { dismiss() }.buttonStyle(.borderedProminent)
+                    Button(L("player.close")) { dismiss() }.buttonStyle(.borderedProminent).squared()
                 }
             }
             .padding(20)
@@ -63,9 +63,9 @@ struct SubtitleAdjustSheet: View {
                 HStack { Text(L("settings.subdelay")); Spacer(); Text(String(format: "%+.1f", player.subDelay)).monospacedDigit().foregroundStyle(.secondary) }
             }
             HStack {
-                Button(L("player.speedReset")) { player.subScale = 1; player.subDelay = 0 }.buttonStyle(.bordered).disabled(player.subScale == 1 && player.subDelay == 0)
+                Button(L("player.speedReset")) { player.subScale = 1; player.subDelay = 0 }.buttonStyle(.bordered).squared().disabled(player.subScale == 1 && player.subDelay == 0)
                 Spacer()
-                Button(L("player.close")) { dismiss() }.buttonStyle(.borderedProminent)
+                Button(L("player.close")) { dismiss() }.buttonStyle(.borderedProminent).squared()
             }
         }
         .padding(20)

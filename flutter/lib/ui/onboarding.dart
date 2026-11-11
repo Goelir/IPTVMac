@@ -20,7 +20,7 @@ class LogoTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size * 0.225),
             gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF5C8CF0), Color(0xFF7A4FE0)]),
-            boxShadow: [BoxShadow(color: const Color(0xFF4D33CC).withValues(alpha: 0.4), blurRadius: size * 0.28, offset: Offset(0, size * 0.12))],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.28), blurRadius: size * 0.22, offset: Offset(0, size * 0.10))],
           ),
           child: Icon(Icons.live_tv_rounded, size: size * 0.5, color: Colors.white),
         ),

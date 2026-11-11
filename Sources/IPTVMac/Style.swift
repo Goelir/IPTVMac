@@ -180,3 +180,20 @@ struct Artwork: View {
         }
     }
 }
+
+// MARK: - Accent
+
+/// The brand blue, only while the system accent is Multicolor: then macOS lets the app pick; any other choice is the user's.
+/// Light 7.2:1 on white; dark 4.1:1 on the window and 4.1:1 under white button text (system blue is 3.7:1 there).
+enum BrandAccent {
+    static var applies: Bool { UserDefaults.standard.object(forKey: "AppleAccentColor") == nil }
+    static let color = Color(nsColor: NSColor(name: nil) { a in
+        a.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            ? NSColor(srgbRed: 0x42 / 255, green: 0x78 / 255, blue: 0xEA / 255, alpha: 1)
+            : NSColor(srgbRed: 0x1F / 255, green: 0x4F / 255, blue: 0xBF / 255, alpha: 1)
+    })
+}
+
+extension View {
+    @ViewBuilder func brandAccent() -> some View { if BrandAccent.applies { tint(BrandAccent.color) } else { self } }
+}

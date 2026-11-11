@@ -155,6 +155,7 @@ struct ChipButton: View {
             .foregroundStyle(selected ? Color.white : Color.primary)
             .padding(.horizontal, 14).frame(minHeight: 34)
             .background(selected ? Color.accentColor : Brand.raised, in: RoundedRectangle(cornerRadius: Brand.radiusSmall, style: .continuous))
+            .overlay { if !selected { RoundedRectangle(cornerRadius: Brand.radiusSmall, style: .continuous).strokeBorder(Color.primary.opacity(0.10)) } }
             .frame(minHeight: 44).contentShape(Rectangle())
         }
         .buttonStyle(PressStyle(scale: 0.95))
@@ -251,13 +252,13 @@ private struct EmptyResults: View {
             ContentUnavailableView.search(text: model.searchText)
         } else if model.selectedCategory == "__fav" {
             ContentUnavailableView { Label(L("empty.favorites"), systemImage: "star") } description: { Text(L(type == .live ? "empty.favorites.live" : "empty.favorites.hint")) }
-                actions: { Button(L("cat.all")) { model.selectedCategory = "__all" }.buttonStyle(.bordered) }
+                actions: { Button(L("cat.all")) { model.selectedCategory = "__all" }.buttonStyle(.bordered).squared() }
         } else if model.selectedCategory == "__hist" {
             ContentUnavailableView { Label(L("empty.continue"), systemImage: "clock") } description: { Text(L("empty.continue.hint")) }
-                actions: { Button(L("cat.all")) { model.selectedCategory = "__all" }.buttonStyle(.bordered) }
+                actions: { Button(L("cat.all")) { model.selectedCategory = "__all" }.buttonStyle(.bordered).squared() }
         } else {
             ContentUnavailableView { Label(L("empty.none"), systemImage: AppSection(type).symbol) } description: { Text(L("empty.none.hint")) }
-                actions: { Button(L("sync.now")) { Task { await model.sync() } }.buttonStyle(.borderedProminent) }
+                actions: { Button(L("sync.now")) { Task { await model.sync() } }.buttonStyle(.borderedProminent).squared() }
         }
     }
 }
