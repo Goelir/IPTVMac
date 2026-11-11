@@ -259,5 +259,8 @@
   "playerSkipSaved": "player.skipSaved",
   "playerSkipRefused": "player.skipRefused",
   "continueRemove": "continue.remove",
-  "settingsFavoritesAZ": "settings.favoritesAZ"
+  "settingsFavoritesAZ": "settings.favoritesAZ",
+  "settingsKeychain": "settings.keychain",
+  "settingsKeychainNote": "settings.keychainNote",
+  "settingsKeychainFailed": "settings.keychainFailed"
 }

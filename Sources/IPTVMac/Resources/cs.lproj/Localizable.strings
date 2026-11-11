@@ -259,3 +259,6 @@
 "player.skipRefused" = "V tomto místě to nejde";
 "continue.remove" = "Odebrat z Pokračovat ve sledování";
 "settings.favoritesAZ" = "Řadit oblíbené podle názvu (A–Z)";
+"settings.keychain" = "Ukládat hesla do Klíčenky";
+"settings.keychainNote" = "Vyp.: hesla zůstávají v soukromé databázi aplikace. Zap.: macOS je uchovává ve vaší přihlašovací klíčence.";
+"settings.keychainFailed" = "Klíčenka hesla nepřijala. Nic se nezměnilo.";

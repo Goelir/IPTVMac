@@ -260,5 +260,8 @@
   "playerSkipSaved": "Bu dizinin tüm bölümleri için kaydedildi",
   "playerSkipRefused": "Bu noktada mümkün değil",
   "continueRemove": "İzlemeye devam et listesinden kaldır",
-  "settingsFavoritesAZ": "Favorileri ada göre sırala (A–Z)"
+  "settingsFavoritesAZ": "Favorileri ada göre sırala (A–Z)",
+  "settingsKeychain": "Parolaları Anahtar Zinciri''nde sakla",
+  "settingsKeychainNote": "Kapalı: parolalar uygulamanın özel veritabanında kalır. Açık: macOS onları giriş anahtar zincirinizde saklar.",
+  "settingsKeychainFailed": "Anahtar Zinciri parolaları kabul etmedi. Hiçbir şey değişmedi."
 }

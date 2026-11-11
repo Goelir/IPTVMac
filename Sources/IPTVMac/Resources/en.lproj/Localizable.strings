@@ -259,3 +259,6 @@
 "player.skipRefused" = "Not possible at this point";
 "continue.remove" = "Remove from Continue watching";
 "settings.favoritesAZ" = "Sort favorites by name (A–Z)";
+"settings.keychain" = "Store passwords in the Keychain";
+"settings.keychainNote" = "Off: passwords stay in the app's private database. On: macOS keeps them in your login keychain.";
+"settings.keychainFailed" = "The Keychain did not accept the passwords. Nothing was changed.";

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Impossible à cet endroit";
 "continue.remove" = "Retirer de Reprendre la lecture";
 "settings.favoritesAZ" = "Trier les favoris par nom (A–Z)";
+"settings.keychain" = "Enregistrer les mots de passe dans le trousseau";
+"settings.keychainNote" = "Désactivé : les mots de passe restent dans la base de données privée de l'app. Activé : macOS les garde dans votre trousseau de session.";
+"settings.keychainFailed" = "Le trousseau n'a pas accepté les mots de passe. Rien n'a été modifié.";

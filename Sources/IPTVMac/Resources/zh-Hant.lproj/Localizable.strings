@@ -259,3 +259,6 @@
 "player.skipRefused" = "此處無法設定";
 "continue.remove" = "從「繼續觀看」中移除";
 "settings.favoritesAZ" = "依名稱排序我的最愛 (A–Z)";
+"settings.keychain" = "將密碼儲存在鑰匙圈中";
+"settings.keychainNote" = "關閉：密碼保存在 App 的私人資料庫中。開啟：macOS 將其保存在你的登入鑰匙圈中。";
+"settings.keychainFailed" = "鑰匙圈未接受這些密碼。未做任何變更。";

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Ezen a ponton nem lehetséges";
 "continue.remove" = "Eltávolítás a Folytatás listáról";
 "settings.favoritesAZ" = "Kedvencek rendezése név szerint (A–Z)";
+"settings.keychain" = "Jelszavak tárolása a Kulcskarikában";
+"settings.keychainNote" = "Ki: a jelszavak az app saját adatbázisában maradnak. Be: a macOS a bejelentkezési kulcskarikában tárolja őket.";
+"settings.keychainFailed" = "A Kulcskarika nem fogadta el a jelszavakat. Semmi sem változott.";

@@ -260,5 +260,8 @@
   "playerSkipSaved": "Salvato per tutti gli episodi di questa serie",
   "playerSkipRefused": "Non possibile in questo punto",
   "continueRemove": "Rimuovi da Continua a guardare",
-  "settingsFavoritesAZ": "Ordina i preferiti per nome (A–Z)"
+  "settingsFavoritesAZ": "Ordina i preferiti per nome (A–Z)",
+  "settingsKeychain": "Salva le password nel portachiavi",
+  "settingsKeychainNote": "Disattivato: le password restano nel database privato dell''app. Attivato: macOS le conserva nel portachiavi di login.",
+  "settingsKeychainFailed": "Il portachiavi non ha accettato le password. Non è stato cambiato nulla."
 }

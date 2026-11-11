@@ -260,5 +260,8 @@
   "playerSkipSaved": "इस सीरीज़ के सभी एपिसोड के लिए सहेजा गया",
   "playerSkipRefused": "इस जगह यह संभव नहीं है",
   "continueRemove": "देखना जारी रखें से हटाएँ",
-  "settingsFavoritesAZ": "पसंदीदा को नाम के क्रम में लगाएँ (A–Z)"
+  "settingsFavoritesAZ": "पसंदीदा को नाम के क्रम में लगाएँ (A–Z)",
+  "settingsKeychain": "पासवर्ड Keychain में सहेजें",
+  "settingsKeychainNote": "बंद: पासवर्ड ऐप के निजी डेटाबेस में रहते हैं। चालू: macOS उन्हें आपकी लॉगिन Keychain में रखता है।",
+  "settingsKeychainFailed": "Keychain ने पासवर्ड स्वीकार नहीं किए। कुछ नहीं बदला।"
 }

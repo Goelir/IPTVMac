@@ -259,3 +259,6 @@
 "player.skipRefused" = "Không thể ở thời điểm này";
 "continue.remove" = "Xóa khỏi Xem tiếp";
 "settings.favoritesAZ" = "Sắp xếp mục yêu thích theo tên (A–Z)";
+"settings.keychain" = "Lưu mật khẩu trong Chuỗi khóa";
+"settings.keychainNote" = "Tắt: mật khẩu nằm trong cơ sở dữ liệu riêng của ứng dụng. Bật: macOS giữ chúng trong chuỗi khóa đăng nhập của bạn.";
+"settings.keychainFailed" = "Chuỗi khóa không nhận mật khẩu. Không có gì thay đổi.";

@@ -260,5 +260,8 @@
   "playerSkipSaved": "บันทึกไว้สำหรับทุกตอนของซีรีส์นี้แล้ว",
   "playerSkipRefused": "ทำไม่ได้ตรงจุดนี้",
   "continueRemove": "ลบออกจากดูต่อ",
-  "settingsFavoritesAZ": "เรียงรายการโปรดตามชื่อ (A–Z)"
+  "settingsFavoritesAZ": "เรียงรายการโปรดตามชื่อ (A–Z)",
+  "settingsKeychain": "เก็บรหัสผ่านในพวงกุญแจ",
+  "settingsKeychainNote": "ปิด: รหัสผ่านอยู่ในฐานข้อมูลส่วนตัวของแอป เปิด: macOS เก็บไว้ในพวงกุญแจเข้าสู่ระบบของคุณ",
+  "settingsKeychainFailed": "พวงกุญแจไม่รับรหัสผ่าน ไม่มีการเปลี่ยนแปลงใดๆ"
 }

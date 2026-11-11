@@ -259,3 +259,6 @@
 "player.skipRefused" = "この位置では設定できません";
 "continue.remove" = "「続きを見る」から削除";
 "settings.favoritesAZ" = "お気に入りを名前順に並べる (A–Z)";
+"settings.keychain" = "パスワードをキーチェーンに保存";
+"settings.keychainNote" = "オフ：パスワードはアプリ専用のデータベースに保存されます。オン：macOS がログインキーチェーンに保存します。";
+"settings.keychainFailed" = "キーチェーンがパスワードを受け付けませんでした。何も変更されていません。";

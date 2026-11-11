@@ -260,5 +260,8 @@
   "playerSkipSaved": "برای همهٔ قسمت‌های این سریال ذخیره شد",
   "playerSkipRefused": "در این نقطه ممکن نیست",
   "continueRemove": "حذف از ادامهٔ تماشا",
-  "settingsFavoritesAZ": "مرتب‌سازی علاقه‌مندی‌ها بر اساس نام (الف–ی)"
+  "settingsFavoritesAZ": "مرتب‌سازی علاقه‌مندی‌ها بر اساس نام (الف–ی)",
+  "settingsKeychain": "ذخیره گذرواژه‌ها در Keychain",
+  "settingsKeychainNote": "خاموش: گذرواژه‌ها در پایگاه داده خصوصی برنامه می‌مانند. روشن: macOS آن‌ها را در Keychain ورود شما نگه می‌دارد.",
+  "settingsKeychainFailed": "Keychain گذرواژه‌ها را نپذیرفت. چیزی تغییر نکرد."
 }

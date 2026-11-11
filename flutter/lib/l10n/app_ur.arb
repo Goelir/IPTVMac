@@ -260,5 +260,8 @@
   "playerSkipSaved": "اس سیریز کی تمام اقساط کے لیے محفوظ ہو گیا",
   "playerSkipRefused": "اس مقام پر ممکن نہیں",
   "continueRemove": "دیکھنا جاری رکھیں سے ہٹائیں",
-  "settingsFavoritesAZ": "پسندیدہ کو نام کے مطابق ترتیب دیں (الف–ے)"
+  "settingsFavoritesAZ": "پسندیدہ کو نام کے مطابق ترتیب دیں (الف–ے)",
+  "settingsKeychain": "پاس ورڈ Keychain میں محفوظ کریں",
+  "settingsKeychainNote": "بند: پاس ورڈ ایپ کے نجی ڈیٹا بیس میں رہتے ہیں۔ آن: macOS انہیں آپ کی لاگ اِن Keychain میں رکھتا ہے۔",
+  "settingsKeychainFailed": "Keychain نے پاس ورڈ قبول نہیں کیے۔ کچھ تبدیل نہیں ہوا۔"
 }

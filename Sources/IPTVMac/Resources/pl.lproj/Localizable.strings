@@ -259,3 +259,6 @@
 "player.skipRefused" = "Nie można w tym miejscu";
 "continue.remove" = "Usuń z Kontynuuj oglądanie";
 "settings.favoritesAZ" = "Sortuj ulubione według nazwy (A–Z)";
+"settings.keychain" = "Przechowuj hasła w pęku kluczy";
+"settings.keychainNote" = "Wył.: hasła zostają w prywatnej bazie danych aplikacji. Wł.: macOS trzyma je w Twoim pęku kluczy logowania.";
+"settings.keychainFailed" = "Pęk kluczy nie przyjął haseł. Nic nie zostało zmienione.";

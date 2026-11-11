@@ -260,5 +260,8 @@
   "playerSkipSaved": "تم الحفظ لجميع حلقات هذا المسلسل",
   "playerSkipRefused": "غير ممكن في هذه اللحظة",
   "continueRemove": "إزالة من متابعة المشاهدة",
-  "settingsFavoritesAZ": "ترتيب المفضلة حسب الاسم (أ–ي)"
+  "settingsFavoritesAZ": "ترتيب المفضلة حسب الاسم (أ–ي)",
+  "settingsKeychain": "حفظ كلمات المرور في سلسلة المفاتيح",
+  "settingsKeychainNote": "إيقاف: تبقى كلمات المرور في قاعدة بيانات التطبيق الخاصة. تشغيل: يحفظها macOS في سلسلة مفاتيح تسجيل الدخول.",
+  "settingsKeychainFailed": "لم تقبل سلسلة المفاتيح كلمات المرور. لم يتغير شيء."
 }

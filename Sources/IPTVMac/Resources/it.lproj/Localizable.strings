@@ -259,3 +259,6 @@
 "player.skipRefused" = "Non possibile in questo punto";
 "continue.remove" = "Rimuovi da Continua a guardare";
 "settings.favoritesAZ" = "Ordina i preferiti per nome (A–Z)";
+"settings.keychain" = "Salva le password nel portachiavi";
+"settings.keychainNote" = "Disattivato: le password restano nel database privato dell'app. Attivato: macOS le conserva nel portachiavi di login.";
+"settings.keychainFailed" = "Il portachiavi non ha accettato le password. Non è stato cambiato nulla.";

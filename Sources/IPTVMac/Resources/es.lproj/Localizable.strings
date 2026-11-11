@@ -259,3 +259,6 @@
 "player.skipRefused" = "No es posible en este punto";
 "continue.remove" = "Quitar de Seguir viendo";
 "settings.favoritesAZ" = "Ordenar favoritos por nombre (A–Z)";
+"settings.keychain" = "Guardar contraseñas en el llavero";
+"settings.keychainNote" = "Desactivado: las contraseñas quedan en la base de datos privada de la app. Activado: macOS las guarda en tu llavero de inicio de sesión.";
+"settings.keychainFailed" = "El llavero no aceptó las contraseñas. No se cambió nada.";

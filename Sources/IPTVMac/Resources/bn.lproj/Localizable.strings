@@ -259,3 +259,6 @@
 "player.skipRefused" = "এই মুহূর্তে সম্ভব নয়";
 "continue.remove" = "দেখা চালিয়ে যাওয়া থেকে সরান";
 "settings.favoritesAZ" = "পছন্দের তালিকা নামের ক্রমে সাজান (A–Z)";
+"settings.keychain" = "পাসওয়ার্ড Keychain-এ রাখুন";
+"settings.keychainNote" = "বন্ধ: পাসওয়ার্ড অ্যাপের নিজস্ব ডেটাবেসে থাকে। চালু: macOS সেগুলো আপনার লগইন Keychain-এ রাখে।";
+"settings.keychainFailed" = "Keychain পাসওয়ার্ড গ্রহণ করেনি। কিছুই বদলায়নি।";

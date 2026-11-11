@@ -259,3 +259,6 @@
 "player.skipRefused" = "Невъзможно в този момент";
 "continue.remove" = "Премахни от Продължи гледането";
 "settings.favoritesAZ" = "Подреждане на любимите по име (А–Я)";
+"settings.keychain" = "Пази паролите в Keychain";
+"settings.keychainNote" = "Изключено: паролите остават в личната база данни на приложението. Включено: macOS ги пази във вашия Keychain за вход.";
+"settings.keychainFailed" = "Keychain не прие паролите. Нищо не е променено.";

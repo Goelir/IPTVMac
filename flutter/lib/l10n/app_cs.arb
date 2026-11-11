@@ -260,5 +260,8 @@
   "playerSkipSaved": "Uloženo pro všechny epizody tohoto seriálu",
   "playerSkipRefused": "V tomto místě to nejde",
   "continueRemove": "Odebrat z Pokračovat ve sledování",
-  "settingsFavoritesAZ": "Řadit oblíbené podle názvu (A–Z)"
+  "settingsFavoritesAZ": "Řadit oblíbené podle názvu (A–Z)",
+  "settingsKeychain": "Ukládat hesla do Klíčenky",
+  "settingsKeychainNote": "Vyp.: hesla zůstávají v soukromé databázi aplikace. Zap.: macOS je uchovává ve vaší přihlašovací klíčence.",
+  "settingsKeychainFailed": "Klíčenka hesla nepřijala. Nic se nezměnilo."
 }

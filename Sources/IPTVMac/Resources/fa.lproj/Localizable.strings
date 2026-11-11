@@ -259,3 +259,6 @@
 "player.skipRefused" = "در این نقطه ممکن نیست";
 "continue.remove" = "حذف از ادامهٔ تماشا";
 "settings.favoritesAZ" = "مرتب‌سازی علاقه‌مندی‌ها بر اساس نام (الف–ی)";
+"settings.keychain" = "ذخیره گذرواژه‌ها در Keychain";
+"settings.keychainNote" = "خاموش: گذرواژه‌ها در پایگاه داده خصوصی برنامه می‌مانند. روشن: macOS آن‌ها را در Keychain ورود شما نگه می‌دارد.";
+"settings.keychainFailed" = "Keychain گذرواژه‌ها را نپذیرفت. چیزی تغییر نکرد.";

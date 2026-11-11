@@ -260,5 +260,8 @@
   "playerSkipSaved": "Für alle Folgen dieser Serie gespeichert",
   "playerSkipRefused": "An dieser Stelle nicht möglich",
   "continueRemove": "Aus „Weiterschauen“ entfernen",
-  "settingsFavoritesAZ": "Favoriten nach Name sortieren (A–Z)"
+  "settingsFavoritesAZ": "Favoriten nach Name sortieren (A–Z)",
+  "settingsKeychain": "Passwörter im Schlüsselbund speichern",
+  "settingsKeychainNote": "Aus: Passwörter bleiben in der privaten Datenbank der App. Ein: macOS bewahrt sie in deinem Anmelde-Schlüsselbund auf.",
+  "settingsKeychainFailed": "Der Schlüsselbund hat die Passwörter nicht angenommen. Nichts wurde geändert."
 }

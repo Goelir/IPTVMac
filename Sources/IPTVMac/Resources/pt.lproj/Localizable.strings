@@ -259,3 +259,6 @@
 "player.skipRefused" = "Não é possível neste ponto";
 "continue.remove" = "Remover de Continuar assistindo";
 "settings.favoritesAZ" = "Ordenar favoritos por nome (A–Z)";
+"settings.keychain" = "Guardar senhas nas Chaves";
+"settings.keychainNote" = "Desligado: as senhas ficam no banco de dados privado do app. Ligado: o macOS as guarda nas suas chaves de início de sessão.";
+"settings.keychainFailed" = "As Chaves não aceitaram as senhas. Nada foi alterado.";

@@ -259,3 +259,6 @@
 "player.skipRefused" = "इस जगह यह संभव नहीं है";
 "continue.remove" = "देखना जारी रखें से हटाएँ";
 "settings.favoritesAZ" = "पसंदीदा को नाम के क्रम में लगाएँ (A–Z)";
+"settings.keychain" = "पासवर्ड Keychain में सहेजें";
+"settings.keychainNote" = "बंद: पासवर्ड ऐप के निजी डेटाबेस में रहते हैं। चालू: macOS उन्हें आपकी लॉगिन Keychain में रखता है।";
+"settings.keychainFailed" = "Keychain ने पासवर्ड स्वीकार नहीं किए। कुछ नहीं बदला।";

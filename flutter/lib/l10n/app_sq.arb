@@ -260,5 +260,8 @@
   "playerSkipSaved": "Ruajtur për të gjitha episodet e këtij seriali",
   "playerSkipRefused": "Nuk është e mundur në këtë pikë",
   "continueRemove": "Hiqe nga Vazhdo shikimin",
-  "settingsFavoritesAZ": "Rendit të preferuarat sipas emrit (A–Zh)"
+  "settingsFavoritesAZ": "Rendit të preferuarat sipas emrit (A–Zh)",
+  "settingsKeychain": "Ruaj fjalëkalimet në Keychain",
+  "settingsKeychainNote": "Joaktiv: fjalëkalimet mbeten në bazën private të të dhënave të aplikacionit. Aktiv: macOS i mban në keychain-in tënd të hyrjes.",
+  "settingsKeychainFailed": "Keychain nuk i pranoi fjalëkalimet. Nuk ndryshoi asgjë."
 }

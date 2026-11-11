@@ -260,5 +260,8 @@
   "playerSkipSaved": "Mentve a sorozat összes epizódjához",
   "playerSkipRefused": "Ezen a ponton nem lehetséges",
   "continueRemove": "Eltávolítás a Folytatás listáról",
-  "settingsFavoritesAZ": "Kedvencek rendezése név szerint (A–Z)"
+  "settingsFavoritesAZ": "Kedvencek rendezése név szerint (A–Z)",
+  "settingsKeychain": "Jelszavak tárolása a Kulcskarikában",
+  "settingsKeychainNote": "Ki: a jelszavak az app saját adatbázisában maradnak. Be: a macOS a bejelentkezési kulcskarikában tárolja őket.",
+  "settingsKeychainFailed": "A Kulcskarika nem fogadta el a jelszavakat. Semmi sem változott."
 }

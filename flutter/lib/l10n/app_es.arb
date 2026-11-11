@@ -260,5 +260,8 @@
   "playerSkipSaved": "Guardado para todos los episodios de esta serie",
   "playerSkipRefused": "No es posible en este punto",
   "continueRemove": "Quitar de Seguir viendo",
-  "settingsFavoritesAZ": "Ordenar favoritos por nombre (A–Z)"
+  "settingsFavoritesAZ": "Ordenar favoritos por nombre (A–Z)",
+  "settingsKeychain": "Guardar contraseñas en el llavero",
+  "settingsKeychainNote": "Desactivado: las contraseñas quedan en la base de datos privada de la app. Activado: macOS las guarda en tu llavero de inicio de sesión.",
+  "settingsKeychainFailed": "El llavero no aceptó las contraseñas. No se cambió nada."
 }

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Nuk është e mundur në këtë pikë";
 "continue.remove" = "Hiqe nga Vazhdo shikimin";
 "settings.favoritesAZ" = "Rendit të preferuarat sipas emrit (A–Zh)";
+"settings.keychain" = "Ruaj fjalëkalimet në Keychain";
+"settings.keychainNote" = "Joaktiv: fjalëkalimet mbeten në bazën private të të dhënave të aplikacionit. Aktiv: macOS i mban në keychain-in tënd të hyrjes.";
+"settings.keychainFailed" = "Keychain nuk i pranoi fjalëkalimet. Nuk ndryshoi asgjë.";

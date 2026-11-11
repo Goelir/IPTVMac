@@ -259,3 +259,6 @@
 "player.skipRefused" = "Nu este posibil în acest punct";
 "continue.remove" = "Elimină din Continuă vizionarea";
 "settings.favoritesAZ" = "Sortează favoritele după nume (A–Z)";
+"settings.keychain" = "Păstrează parolele în Keychain";
+"settings.keychainNote" = "Dezactivat: parolele rămân în baza de date privată a aplicației. Activat: macOS le păstrează în keychain-ul tău de autentificare.";
+"settings.keychainFailed" = "Keychain nu a acceptat parolele. Nu s-a schimbat nimic.";

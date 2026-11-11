@@ -113,6 +113,17 @@ final class AppModel: LibraryModel {
     private var swapScheduled = false
     #endif
 
+    static let keychainKey = "passwordsInKeychain"
+    /// Where passwords live (Settings > Playlists > Keychain); `secrets` is this same store.
+    let passwordStore: SwitchableSecretStore
+
+    /// Moves every saved password to (or out of) the login keychain. false: the keychain refused, nothing changed.
+    func storePasswordsInKeychain(_ on: Bool) -> Bool {
+        do { try passwordStore.use(keychain: on, ids: accounts.compactMap(\.id)) } catch { return false }
+        UserDefaults.standard.set(on, forKey: Self.keychainKey)
+        return true
+    }
+
     init() {
         let opened: (db: AppDatabase, movedAside: String?)
         do {
@@ -122,7 +133,9 @@ final class AppModel: LibraryModel {
             a.messageText = L("db.error.title"); a.informativeText = "\(error.localizedDescription)\n\n\(L("db.error.body"))"
             a.runModal(); exit(1)
         }
-        super.init(db: opened.db, dbMovedAside: opened.movedAside)
+        passwordStore = SwitchableSecretStore(database: DatabaseSecretStore(db: opened.db), keychain: KeychainSecretStore(),
+                                              usesKeychain: UserDefaults.standard.bool(forKey: Self.keychainKey))
+        super.init(db: opened.db, secrets: passwordStore, dbMovedAside: opened.movedAside)
         for n in [NSWindow.willEnterFullScreenNotification, NSWindow.willExitFullScreenNotification, NSWindow.didEnterFullScreenNotification,
                   NSWindow.didExitFullScreenNotification, NSWindow.didEndSheetNotification, NSWindow.didDeminiaturizeNotification,
                   NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification, NSApplication.didUnhideNotification] {

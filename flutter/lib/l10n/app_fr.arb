@@ -260,5 +260,8 @@
   "playerSkipSaved": "Enregistré pour tous les épisodes de cette série",
   "playerSkipRefused": "Impossible à cet endroit",
   "continueRemove": "Retirer de Reprendre la lecture",
-  "settingsFavoritesAZ": "Trier les favoris par nom (A–Z)"
+  "settingsFavoritesAZ": "Trier les favoris par nom (A–Z)",
+  "settingsKeychain": "Enregistrer les mots de passe dans le trousseau",
+  "settingsKeychainNote": "Désactivé : les mots de passe restent dans la base de données privée de l''app. Activé : macOS les garde dans votre trousseau de session.",
+  "settingsKeychainFailed": "Le trousseau n''a pas accepté les mots de passe. Rien n''a été modifié."
 }

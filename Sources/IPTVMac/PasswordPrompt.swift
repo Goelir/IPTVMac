@@ -1,7 +1,7 @@
 import SwiftUI
 import IPTVCore
 
-/// Asks for the account password when none is stored (the app no longer uses the Keychain).
+/// Asks for the account password when none is stored (in the app database, or the login keychain when Settings says so).
 struct PasswordPrompt: View {
     @Environment(AppModel.self) var model
     @Environment(\.dismiss) var dismiss

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Inte möjligt på den här punkten";
 "continue.remove" = "Ta bort från Fortsätt titta";
 "settings.favoritesAZ" = "Sortera favoriter efter namn (A–Ö)";
+"settings.keychain" = "Spara lösenord i nyckelringen";
+"settings.keychainNote" = "Av: lösenorden stannar i appens privata databas. På: macOS sparar dem i din inloggningsnyckelring.";
+"settings.keychainFailed" = "Nyckelringen tog inte emot lösenorden. Inget ändrades.";

@@ -259,3 +259,6 @@
 "player.skipRefused" = "此处无法设置";
 "continue.remove" = "从“继续观看”中移除";
 "settings.favoritesAZ" = "按名称排序收藏 (A–Z)";
+"settings.keychain" = "将密码存储在钥匙串中";
+"settings.keychainNote" = "关闭：密码保存在应用的私有数据库中。打开：macOS 将其保存在你的登录钥匙串中。";
+"settings.keychainFailed" = "钥匙串未接受这些密码。未做任何更改。";

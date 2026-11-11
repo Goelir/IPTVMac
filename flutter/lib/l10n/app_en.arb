@@ -419,5 +419,8 @@
   "playerSkipSaved": "Saved for every episode of this series",
   "playerSkipRefused": "Not possible at this point",
   "continueRemove": "Remove from Continue watching",
-  "settingsFavoritesAZ": "Sort favorites by name (A–Z)"
+  "settingsFavoritesAZ": "Sort favorites by name (A–Z)",
+  "settingsKeychain": "Store passwords in the Keychain",
+  "settingsKeychainNote": "Off: passwords stay in the app''s private database. On: macOS keeps them in your login keychain.",
+  "settingsKeychainFailed": "The Keychain did not accept the passwords. Nothing was changed."
 }

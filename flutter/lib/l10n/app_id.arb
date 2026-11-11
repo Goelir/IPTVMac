@@ -260,5 +260,8 @@
   "playerSkipSaved": "Disimpan untuk semua episode serial ini",
   "playerSkipRefused": "Tidak bisa di titik ini",
   "continueRemove": "Hapus dari Lanjutkan menonton",
-  "settingsFavoritesAZ": "Urutkan favorit menurut nama (A–Z)"
+  "settingsFavoritesAZ": "Urutkan favorit menurut nama (A–Z)",
+  "settingsKeychain": "Simpan kata sandi di Keychain",
+  "settingsKeychainNote": "Mati: kata sandi tetap di database pribadi aplikasi. Nyala: macOS menyimpannya di keychain login Anda.",
+  "settingsKeychainFailed": "Keychain tidak menerima kata sandi. Tidak ada yang diubah."
 }

@@ -259,3 +259,6 @@
 "player.skipRefused" = "לא אפשרי ברגע הזה";
 "continue.remove" = "הסר מהמשך צפייה";
 "settings.favoritesAZ" = "מיון המועדפים לפי שם (א–ת)";
+"settings.keychain" = "שמור סיסמאות ב-Keychain";
+"settings.keychainNote" = "כבוי: הסיסמאות נשמרות במסד הנתונים הפרטי של האפליקציה. פעיל: macOS שומר אותן ב-Keychain של המשתמש.";
+"settings.keychainFailed" = "ה-Keychain לא קיבל את הסיסמאות. דבר לא שונה.";

@@ -260,5 +260,8 @@
   "playerSkipSaved": "已為此影集所有集數儲存",
   "playerSkipRefused": "此處無法設定",
   "continueRemove": "從「繼續觀看」中移除",
-  "settingsFavoritesAZ": "依名稱排序我的最愛 (A–Z)"
+  "settingsFavoritesAZ": "依名稱排序我的最愛 (A–Z)",
+  "settingsKeychain": "將密碼儲存在鑰匙圈中",
+  "settingsKeychainNote": "關閉：密碼保存在 App 的私人資料庫中。開啟：macOS 將其保存在你的登入鑰匙圈中。",
+  "settingsKeychainFailed": "鑰匙圈未接受這些密碼。未做任何變更。"
 }

@@ -259,3 +259,6 @@
 "player.skipRefused" = "An dieser Stelle nicht möglich";
 "continue.remove" = "Aus „Weiterschauen“ entfernen";
 "settings.favoritesAZ" = "Favoriten nach Name sortieren (A–Z)";
+"settings.keychain" = "Passwörter im Schlüsselbund speichern";
+"settings.keychainNote" = "Aus: Passwörter bleiben in der privaten Datenbank der App. Ein: macOS bewahrt sie in deinem Anmelde-Schlüsselbund auf.";
+"settings.keychainFailed" = "Der Schlüsselbund hat die Passwörter nicht angenommen. Nichts wurde geändert.";

@@ -260,5 +260,8 @@
   "playerSkipSaved": "Sparat för alla avsnitt i serien",
   "playerSkipRefused": "Inte möjligt på den här punkten",
   "continueRemove": "Ta bort från Fortsätt titta",
-  "settingsFavoritesAZ": "Sortera favoriter efter namn (A–Ö)"
+  "settingsFavoritesAZ": "Sortera favoriter efter namn (A–Ö)",
+  "settingsKeychain": "Spara lösenord i nyckelringen",
+  "settingsKeychainNote": "Av: lösenorden stannar i appens privata databas. På: macOS sparar dem i din inloggningsnyckelring.",
+  "settingsKeychainFailed": "Nyckelringen tog inte emot lösenorden. Inget ändrades."
 }

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Tidak bisa di titik ini";
 "continue.remove" = "Hapus dari Lanjutkan menonton";
 "settings.favoritesAZ" = "Urutkan favorit menurut nama (A–Z)";
+"settings.keychain" = "Simpan kata sandi di Keychain";
+"settings.keychainNote" = "Mati: kata sandi tetap di database pribadi aplikasi. Nyala: macOS menyimpannya di keychain login Anda.";
+"settings.keychainFailed" = "Keychain tidak menerima kata sandi. Tidak ada yang diubah.";

@@ -259,3 +259,6 @@
 "player.skipRefused" = "Bu noktada mümkün değil";
 "continue.remove" = "İzlemeye devam et listesinden kaldır";
 "settings.favoritesAZ" = "Favorileri ada göre sırala (A–Z)";
+"settings.keychain" = "Parolaları Anahtar Zinciri'nde sakla";
+"settings.keychainNote" = "Kapalı: parolalar uygulamanın özel veritabanında kalır. Açık: macOS onları giriş anahtar zincirinizde saklar.";
+"settings.keychainFailed" = "Anahtar Zinciri parolaları kabul etmedi. Hiçbir şey değişmedi.";

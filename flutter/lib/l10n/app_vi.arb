@@ -260,5 +260,8 @@
   "playerSkipSaved": "Đã lưu cho mọi tập của phim này",
   "playerSkipRefused": "Không thể ở thời điểm này",
   "continueRemove": "Xóa khỏi Xem tiếp",
-  "settingsFavoritesAZ": "Sắp xếp mục yêu thích theo tên (A–Z)"
+  "settingsFavoritesAZ": "Sắp xếp mục yêu thích theo tên (A–Z)",
+  "settingsKeychain": "Lưu mật khẩu trong Chuỗi khóa",
+  "settingsKeychainNote": "Tắt: mật khẩu nằm trong cơ sở dữ liệu riêng của ứng dụng. Bật: macOS giữ chúng trong chuỗi khóa đăng nhập của bạn.",
+  "settingsKeychainFailed": "Chuỗi khóa không nhận mật khẩu. Không có gì thay đổi."
 }

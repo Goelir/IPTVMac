@@ -260,5 +260,8 @@
   "playerSkipSaved": "Bewaard voor alle afleveringen van deze serie",
   "playerSkipRefused": "Niet mogelijk op dit punt",
   "continueRemove": "Verwijderen uit Verder kijken",
-  "settingsFavoritesAZ": "Favorieten sorteren op naam (A–Z)"
+  "settingsFavoritesAZ": "Favorieten sorteren op naam (A–Z)",
+  "settingsKeychain": "Wachtwoorden in de sleutelhanger bewaren",
+  "settingsKeychainNote": "Uit: wachtwoorden blijven in de privédatabase van de app. Aan: macOS bewaart ze in je inlogsleutelhanger.",
+  "settingsKeychainFailed": "De sleutelhanger heeft de wachtwoorden niet geaccepteerd. Er is niets gewijzigd."
 }

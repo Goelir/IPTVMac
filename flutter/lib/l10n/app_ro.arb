@@ -260,5 +260,8 @@
   "playerSkipSaved": "Salvat pentru toate episoadele acestui serial",
   "playerSkipRefused": "Nu este posibil în acest punct",
   "continueRemove": "Elimină din Continuă vizionarea",
-  "settingsFavoritesAZ": "Sortează favoritele după nume (A–Z)"
+  "settingsFavoritesAZ": "Sortează favoritele după nume (A–Z)",
+  "settingsKeychain": "Păstrează parolele în Keychain",
+  "settingsKeychainNote": "Dezactivat: parolele rămân în baza de date privată a aplicației. Activat: macOS le păstrează în keychain-ul tău de autentificare.",
+  "settingsKeychainFailed": "Keychain nu a acceptat parolele. Nu s-a schimbat nimic."
 }

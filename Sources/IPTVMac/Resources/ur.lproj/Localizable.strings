@@ -259,3 +259,6 @@
 "player.skipRefused" = "اس مقام پر ممکن نہیں";
 "continue.remove" = "دیکھنا جاری رکھیں سے ہٹائیں";
 "settings.favoritesAZ" = "پسندیدہ کو نام کے مطابق ترتیب دیں (الف–ے)";
+"settings.keychain" = "پاس ورڈ Keychain میں محفوظ کریں";
+"settings.keychainNote" = "بند: پاس ورڈ ایپ کے نجی ڈیٹا بیس میں رہتے ہیں۔ آن: macOS انہیں آپ کی لاگ اِن Keychain میں رکھتا ہے۔";
+"settings.keychainFailed" = "Keychain نے پاس ورڈ قبول نہیں کیے۔ کچھ تبدیل نہیں ہوا۔";

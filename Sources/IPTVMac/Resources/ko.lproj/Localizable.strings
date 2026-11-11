@@ -259,3 +259,6 @@
 "player.skipRefused" = "이 위치에서는 할 수 없습니다";
 "continue.remove" = "계속 시청에서 삭제";
 "settings.favoritesAZ" = "즐겨찾기를 이름순으로 정렬 (가–힣)";
+"settings.keychain" = "암호를 키체인에 저장";
+"settings.keychainNote" = "끔: 암호는 앱의 비공개 데이터베이스에 남습니다. 켬: macOS가 로그인 키체인에 보관합니다.";
+"settings.keychainFailed" = "키체인이 암호를 받지 않았습니다. 변경된 것이 없습니다.";

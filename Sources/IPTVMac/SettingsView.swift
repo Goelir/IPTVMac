@@ -146,6 +146,8 @@ struct PlaylistSettings: View {
     @AppStorage("refreshHours") private var refreshHours = 0
     @State private var clearing: ClearKind?
     @State private var message: String?
+    @State private var keychainFailed = false
+    @State private var inKeychain = UserDefaults.standard.bool(forKey: AppModel.keychainKey)
 
     var body: some View {
         Form {
@@ -162,6 +164,15 @@ struct PlaylistSettings: View {
                     }
                 }
                 Button(L("account.add")) { model.showGuide = true }
+            }
+            Section {
+                Toggle(L("settings.keychain"), isOn: Binding(get: { inKeychain }, set: { on in
+                    let ok = model.storePasswordsInKeychain(on)
+                    keychainFailed = !ok
+                    if ok { inKeychain = on }
+                }))
+                Text(L(keychainFailed ? "settings.keychainFailed" : "settings.keychainNote")).font(.caption)
+                    .foregroundStyle(keychainFailed ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary))
             }
             .task { for a in model.accounts { await model.refreshSubscription(a) } }
             Section {

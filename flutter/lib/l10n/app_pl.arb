@@ -260,5 +260,8 @@
   "playerSkipSaved": "Zapisano dla wszystkich odcinków tego serialu",
   "playerSkipRefused": "Nie można w tym miejscu",
   "continueRemove": "Usuń z Kontynuuj oglądanie",
-  "settingsFavoritesAZ": "Sortuj ulubione według nazwy (A–Z)"
+  "settingsFavoritesAZ": "Sortuj ulubione według nazwy (A–Z)",
+  "settingsKeychain": "Przechowuj hasła w pęku kluczy",
+  "settingsKeychainNote": "Wył.: hasła zostają w prywatnej bazie danych aplikacji. Wł.: macOS trzyma je w Twoim pęku kluczy logowania.",
+  "settingsKeychainFailed": "Pęk kluczy nie przyjął haseł. Nic nie zostało zmienione."
 }

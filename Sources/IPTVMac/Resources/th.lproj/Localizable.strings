@@ -259,3 +259,6 @@
 "player.skipRefused" = "ทำไม่ได้ตรงจุดนี้";
 "continue.remove" = "ลบออกจากดูต่อ";
 "settings.favoritesAZ" = "เรียงรายการโปรดตามชื่อ (A–Z)";
+"settings.keychain" = "เก็บรหัสผ่านในพวงกุญแจ";
+"settings.keychainNote" = "ปิด: รหัสผ่านอยู่ในฐานข้อมูลส่วนตัวของแอป เปิด: macOS เก็บไว้ในพวงกุญแจเข้าสู่ระบบของคุณ";
+"settings.keychainFailed" = "พวงกุญแจไม่รับรหัสผ่าน ไม่มีการเปลี่ยนแปลงใดๆ";

@@ -260,5 +260,8 @@
   "playerSkipSaved": "Запазено за всички епизоди на сериала",
   "playerSkipRefused": "Невъзможно в този момент",
   "continueRemove": "Премахни от Продължи гледането",
-  "settingsFavoritesAZ": "Подреждане на любимите по име (А–Я)"
+  "settingsFavoritesAZ": "Подреждане на любимите по име (А–Я)",
+  "settingsKeychain": "Пази паролите в Keychain",
+  "settingsKeychainNote": "Изключено: паролите остават в личната база данни на приложението. Включено: macOS ги пази във вашия Keychain за вход.",
+  "settingsKeychainFailed": "Keychain не прие паролите. Нищо не е променено."
 }
