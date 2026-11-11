@@ -1049,3 +1049,11 @@ html[lang="he"] .hero.onair h1 { font-size: clamp(3.6rem, 1.6rem + 7.6vw, 9.8rem
 .limits li::marker { color: var(--tally); }
 .guide-more { display: flex; flex-wrap: wrap; gap: 4px 26px; }
 html .g-main h1, html[lang="he"] .g-main h1 { font-size: clamp(2.4rem, 1.4rem + 3vw, 4.4rem); line-height: 1; }   /* a guide title is a sentence: smaller than a page headline */
+/* /compare/ */
+.cmp table td:last-child { white-space: normal; font-family: var(--sans); color: var(--mute); }
+.cmp th[scope="row"] { white-space: normal; min-width: 10rem; color: var(--ink); }
+.cmp td:nth-child(2) { color: var(--ink); }
+.cmp thead th:nth-child(2) { color: var(--tally); }
+.cmp-short h2 { font: 800 clamp(1.6rem, 1.2rem + 1.2vw, 2.4rem)/1 var(--display); margin-bottom: 16px; }
+.src a { color: var(--acc-ink); overflow-wrap: anywhere; }
+.pghero.slim .hero-copy:only-child { grid-column: 1 / -1; }

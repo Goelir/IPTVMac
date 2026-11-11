@@ -19,4 +19,18 @@ Pages are written from this file. Recheck the rows about other apps every 6 mont
 
 ## Other apps (phase 4)
 
-Not filled in yet. One row per fact, with the source URL (store listing or the app's own site) and the date read.
+Read on 2026-11-11 (US store pages). The full tables are in `COMPARE` and the source lists in `SRC` in `scripts/site/pages.py`.
+
+| App | Fact on the site | Source |
+|---|---|---|
+| IPTV Smarters Pro | App Store build "Smarters Player Lite": free, in-app purchase "Buy Premium Version $1.99", "Contains Advertising", privacy label "Data Used to Track You: Usage Data", Mac build "Designed for iPad", version 1.4.2 of 2026-09-11 | https://apps.apple.com/us/app/smarters-player-lite/id1628995509 |
+| IPTV Smarters Pro | Recurring premium plan; premium includes PiP, external EPG, parental control; proprietary ("proprietary code") | https://getiptvsmarters.com/terms |
+| IPTV Smarters Pro | Platforms: Android, Android TV, iOS/iPadOS/Apple TV, macOS, Windows, LG and Samsung TVs | https://getiptvsmarters.com/download |
+| IPTV Smarters Pro | Catch-up, EPG, PiP, M3U, API login listed; downloads/recording not listed | https://getiptvsmarters.com/features |
+| IPTV Smarters Pro | Google Play listing com.nst.iptvsmarterstvbox returned 404 | https://play.google.com/store/apps/details?id=com.nst.iptvsmarterstvbox |
+| TiviMate | In-app purchases $0.99-$33.99 per item; no "Contains ads"; "not optimized for touch devices such as phones or tablets"; M3U, Xtream Codes, Stalker; EPG grid, catch-up, recording, multiview; updated 2026-06-22 | https://play.google.com/store/apps/details?id=ar.tvplayer.tv |
+| TiviMate | Data safety: device IDs and app interactions for analytics, email for account management | https://play.google.com/store/apps/datasafety?id=ar.tvplayer.tv |
+| TiviMate | Lifetime purchase and subscriptions; proprietary (no reverse engineering); Premium account by email | https://tivimate.com/terms-of-use |
+| VLC | "Completely Free - no spyware, no ads and no user tracking"; platforms; version 3.0.24 of 2026-09-22 | https://www.videolan.org/vlc/ , https://www.videolan.org/news.html |
+| VLC | Reads M3U/M3U8 playlists; no official Xtream Codes, XMLTV/EPG grid for M3U channels or catch-up found | https://wiki.videolan.org/Documentation:Modules/playlist |
+| VLC | Picture in Picture popup on Android | https://play.google.com/store/apps/details?id=org.videolan.vlc |

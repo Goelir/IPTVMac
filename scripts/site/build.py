@@ -279,7 +279,7 @@ HOME = {
   foot_about="A free, open source IPTV player for Mac, Windows, Android and Android TV.",
   foot_cols=[("Explore", [("#why", "Why IPTVMac"), ("#search", "Search"), ("#iphone", "iPhone and iPad"), ("#devices", "Devices"), ("#guides", "Guides")]),
              ("Platforms", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone and iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
-             ("Product", [("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
+             ("Product", [("why/", "Why IPTVMac"), ("compare/", "Compare"), ("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
              ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
   alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Windows, iPhone and iPad, Android and Android TV. If you need Linux or something different:",
   alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
@@ -371,7 +371,7 @@ HOME = {
   foot_about="נגן IPTV חינמי ובקוד פתוח ל-Mac, ל-Android ול-Android TV.",
   foot_cols=[("בעמוד", [("#why", "למה IPTVMac"), ("#search", "חיפוש"), ("#iphone", "iPhone ו-iPad"), ("#devices", "מכשירים"), ("#guides", "מדריכים")]),
              ("פלטפורמות", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone ו-iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
-             ("המוצר", [("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
+             ("המוצר", [("why/", "למה IPTVMac"), ("compare/", "השוואה"), ("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
              ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
   alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Windows, ב-iPhone וב-iPad, ב-Android וב-Android TV. אם אתם צריכים Linux או משהו אחר:",
   alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
@@ -970,14 +970,15 @@ def devstack(up, alts):
 
 def product_page(kind, code, title, desc, hero_html, body, ld_extra=()):
     c = HOME[code]; he = code == "he"
-    depth = 2 if he else 1; rel = "../"; up = "../" * depth
+    nest = kind.count("/")   # compare/vlc sits one level deeper than download
+    depth = (2 if he else 1) + nest; rel = "../" * (1 + nest); up = "../" * depth
     path = f"{'he/' if he else ''}{kind}/"; canon = BASE + path
     alts = [("en", BASE + f"{kind}/"), ("he", BASE + f"he/{kind}/"), ("x-default", BASE + f"{kind}/")]
     ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "IPTVMac", "item": BASE + ("he/" if he else "")},
             {"@type": "ListItem", "position": 2, "name": re.split(r"[:|]", title)[0].strip(), "item": canon}]}, *ld_extra]
     out = head(title, desc, canon, code, depth, alts, extra_ld=ld)
-    out += header_html(c, depth, home=False, home_rel=rel, alt_href=("../../" if he else "../he/") + f"{kind}/")
+    out += header_html(c, depth, home=False, home_rel=rel, alt_href=("../" * (2 + nest) if he else "../" * (1 + nest) + "he/") + f"{kind}/")
     out += f'<main id="main">{hero_html}{body}</main>\n'
     out += footer_html(c, depth, home=False, home_rel=rel)
     only = {k: v for k, v in HAS.items() if k == "fx"}
@@ -1138,7 +1139,7 @@ def why_page(code):
     comp = ""
     if comps:
         comp = (f'<section class="guides" aria-labelledby="cmp-h"><div class="wrap"><h2 id="cmp-h">{e(w["compare_h"])}</h2><p class="pg-sub">{e(w["compare_p"])}</p><div class="glist">'
-                + "".join(f'<a href="{up}{lp}compare/{k}/"><strong>{e(x["h1"][0])}</strong><span>{e(x["lede"])}</span>{ICON_CHEV}</a>' for k, x in comps) + '</div></div></section>\n')
+                + "".join(f'<a href="{up}{lp}compare/{k}/"><strong>{e(" ".join(x["h1"]))}</strong><span>{e(x["lede"])}</span>{ICON_CHEV}</a>' for k, x in comps) + '</div></div></section>\n')
     actions = (f'<div class="actions"><a class="btn fill big" id="dl-main" href="{DOWNLOAD}"{recs}><span class="lbl">{e(rec["mac"][1])}</span></a><span id="hero-store">{appstore_badge(c, he, up, 64)}</span></div>'
                f'<p class="meta" id="dl-meta">{e(rec["mac"][2])}</p>')
     hero = (f'<section class="hero pghero slim" id="hero" aria-labelledby="h1"><div class="hero-copy">{crumbs(code, w["crumb"])}<h1 id="h1">{"".join(f"<span class=l>{e(x)}</span>" for x in w["h1"])}</h1>'
@@ -1146,6 +1147,34 @@ def why_page(code):
     body = (f'<section class="pg-band" style="padding-top:0"><div class="wrap"><ol class="pfs why-list">{rows}</ol></div></section>\n'
             f'<section class="pg-band" style="padding-top:0" aria-labelledby="lim-h"><div class="wrap pg-two"><h2 class="pg-h" id="lim-h">{e(w["limits_h"])}</h2><ul class="limits">{lim}</ul></div></section>\n' + comp)
     product_page("why", code, w["title"], w["desc"], hero, body)
+
+def compare_pages(code):
+    """/compare/ (the hub) and one page per other app: the short version, the fact table, the sources and the date they were read."""
+    C = pages.COMPARE[code]; he = code == "he"; lp = "he/" if he else ""
+    items = ""
+    for k, x in C["pages"]:
+        items += f'<a href="{k}/"><strong>{e(" ".join(x["h1"]))}</strong><span>{e(x["lede"])}</span>{ICON_CHEV}</a>'
+    hero = (f'<section class="hero pghero slim" id="hero" aria-labelledby="h1"><div class="hero-copy">{crumbs(code, C["hub_crumb"])}<h1 id="h1">{"".join(f"<span class=l>{e(x)}</span>" for x in C["hub_h1"])}</h1>'
+            f'<p class="lede">{e(C["hub_lede"])}</p></div></section>\n')
+    body = f'<section class="guides" aria-labelledby="hub-h"><div class="wrap"><h2 class="sr" id="hub-h">{e(C["hub_crumb"])}</h2><div class="glist">{items}</div><p class="pg-fine">{e(C["checked"])} {e(C["tm"])}</p></div></section>\n'
+    product_page("compare", code, C["hub_title"], C["hub_desc"], hero, body)
+    for k, x in C["pages"]:
+        src = pages.SRC[{"iptv-smarters": "smarters"}.get(k, k)]
+        rows = "".join(f'<tr><th scope="row">{e(a)}</th><td>{e(b)}</td><td>{e(cc)}</td></tr>' for a, b, cc in x["rows"])
+        table = (f'<div class="tbl cmp"><table><thead><tr><th scope="col"><span class="sr">{e(C["hub_crumb"])}</span></th><th scope="col">{e(C["col_us"])}</th><th scope="col">{e(x["name"])}</th></tr></thead><tbody>{rows}</tbody></table></div>')
+        short = (f'<div class="pg-two cmp-short"><div><h2>{e(C["ours"])}</h2><ul class="limits">{"".join(f"<li>{e(t)}</li>" for t in x["ours"])}</ul></div>'
+                 f'<div><h2>{e(C["stronger"])}: {e(x["name"])}</h2><ul class="limits">{"".join(f"<li>{e(t)}</li>" for t in x["theirs"])}</ul></div></div>')
+        sources = "".join(f'<li><a href="{u}" rel="noopener nofollow">{e(t)}</a></li>' for t, u in src)
+        bc = f'<nav class="crumbs" aria-label="{e(legal.UI[code]["bc"])}"><a href="../../">IPTVMac</a> / <a href="../">{e(C["hub_crumb"])}</a></nav>'
+        hero = (f'<section class="hero pghero slim" id="hero" aria-labelledby="h1"><div class="hero-copy">{bc}<h1 id="h1">{"".join(f"<span class=l>{e(y)}</span>" for y in x["h1"])}</h1>'
+                f'<p class="lede">{e(x["lede"])}</p></div></section>\n')
+        body = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="short-h"><div class="wrap"><h2 class="pg-h sr" id="short-h">{e(C["short_h"])}</h2>{short}</div></section>\n'
+                f'<section class="pg-band" style="padding-top:0" aria-label="{e(x["title"])}"><div class="wrap">{table}<p class="pg-fine">{e(C["checked"])}</p></div></section>\n'
+                f'<section class="pg-band" style="padding-top:0" aria-labelledby="src-h"><div class="wrap"><h2 class="pg-h" id="src-h">{e(C["sources_h"])}</h2><ul class="limits src">{sources}</ul><p class="pg-fine">{e(C["tm"])}</p></div></section>\n')
+        ld = {"@context": "https://schema.org", "@type": "Article", "headline": x["title"], "description": x["desc"], "inLanguage": code,
+              "datePublished": pages.CHECKED, "dateModified": pages.CHECKED, "author": {"@type": "Person", "name": "Goelir", "url": "https://github.com/Goelir"},
+              "mainEntityOfPage": BASE + f"{lp}compare/{k}/"}
+        product_page(f"compare/{k}", code, x["title"], x["desc"], hero, body, (ld,))
 
 def features_page(code):
     c = HOME[code]; f = pages.FEATURES[code]; ui = pages.UI[code]; he = code == "he"; up = "../" * (2 if he else 1)
@@ -1192,10 +1221,10 @@ def crawler_files():
     for g in GUIDES:
         en_u, he_u = BASE + f"guides/{g['slug']}.html", BASE + f"he/guides/{g['slug']}.html"
         urls += [en_u, he_u]; en_of[en_u] = en_of[he_u] = en_u
-    for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS, "why"]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
+    for k in list(legal.LEGAL) + ["download", "features", "changelog", *PLATFORM_KEYS, "why", "compare", *(f"compare/{k}" for k, _ in pages.COMPARE["en"]["pages"])]: urls += [BASE + f"{k}/", BASE + f"he/{k}/"]; en_of[BASE + f"{k}/"] = en_of[BASE + f"he/{k}/"] = BASE + f"{k}/"
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
     for u in urls:
-        sm += f"<url><loc>{u}</loc><lastmod>{"2026-11-11" if any(f"/{k}/" in u for k in (*PLATFORM_KEYS, "why")) else "2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
+        sm += f"<url><loc>{u}</loc><lastmod>{"2026-11-11" if any(f"/{k}/" in u for k in (*PLATFORM_KEYS, "why", "compare")) else "2026-10-27" if any(f"/{k}/" in u for k in ("download", "features", "changelog")) else legal.EFFECTIVE if u in en_of and u not in (BASE, BASE + 'he/') else UPDATED}</lastmod>"
         if u in en_of:
             en = en_of[u]; he = en.replace(BASE, BASE + "he/", 1) if en != BASE else BASE + "he/"
             sm += f'<xhtml:link rel="alternate" hreflang="en" href="{en}"/><xhtml:link rel="alternate" hreflang="he" href="{he}"/>'
@@ -1262,6 +1291,6 @@ if __name__ == "__main__":
     for code in ("en", "he"): download_page(code); features_page(code); changelog_page(code)
     for code in ("en", "he"):
         for key in PLATFORM_KEYS: platform_page(key, code)
-        why_page(code)
+        why_page(code); compare_pages(code)
     crawler_files()
     print("site built:", ", ".join(sorted(p.name for p in DOCS.rglob("*.html"))))
