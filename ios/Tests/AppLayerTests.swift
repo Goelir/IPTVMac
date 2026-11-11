@@ -37,7 +37,7 @@ final class AppLayerTests: XCTestCase {
         XCTAssertEqual(Monogram.initials("  "), "")
         XCTAssertEqual(Monogram.initials("CNN"), "C")
         XCTAssertEqual(Monogram.hue("Planet Docs"), Monogram.hue("Planet Docs"))   // the same name always gets the same colour, in every launch
-        XCTAssertTrue((0.56...0.96).contains(Monogram.hue("anything")))
+        XCTAssertTrue((0.50...0.68).contains(Monogram.hue("anything")))
     }
 
     func testSectionsMapToTheModelsTypes() {

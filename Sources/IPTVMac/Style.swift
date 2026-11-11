@@ -33,7 +33,7 @@ extension View {
     func hoverHighlight(radius: CGFloat = 8) -> some View { modifier(HoverHighlight(radius: radius)) }
 }
 
-/// Round icon button: a faint disc under the pointer, a darker one and a small press while clicked.
+/// Icon button: a faint rounded square under the pointer (like toolbar buttons), a darker one and a small press while clicked.
 struct IconButtonStyle: ButtonStyle {
     var tint: Color = .primary
     var size: CGFloat = 28
@@ -51,10 +51,10 @@ private struct IconButtonBody: View {
     var body: some View {
         configuration.label
             .frame(width: size, height: size)
-            .background(Circle().fill(tint.opacity(configuration.isPressed ? 0.28 : hover ? 0.16 : 0)))
+            .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(tint.opacity(configuration.isPressed ? 0.28 : hover ? 0.16 : 0)))
             .scaleEffect(configuration.isPressed && !reduce ? 0.92 : 1)
             .opacity(enabled ? 1 : 0.4)
-            .contentShape(Circle())
+            .contentShape(Rectangle())
             .onHover { hover = $0 }
             .animation(reduce ? nil : .easeOut(duration: 0.12), value: hover)
             .animation(reduce ? nil : .easeOut(duration: 0.08), value: configuration.isPressed)
@@ -91,11 +91,11 @@ struct DownloadBar: View {
 
     var body: some View {
         let p = min(max(progress, 0), 1)
-        Capsule().fill(Color.primary.opacity(0.12))
+        RoundedRectangle(cornerRadius: 1.5).fill(Color.primary.opacity(0.12))
             .frame(height: 5)
             .overlay {
                 GeometryReader { g in
-                    Capsule().fill(paused ? Color.secondary : Color.accentColor)
+                    RoundedRectangle(cornerRadius: 1.5).fill(paused ? Color.secondary : Color.accentColor)
                         .frame(width: max(g.size.height, g.size.width * p))
                         .frame(maxWidth: .infinity, alignment: .leading)   // leading: fills from the right in right-to-left layouts
                 }

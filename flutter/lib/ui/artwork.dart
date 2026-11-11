@@ -55,25 +55,25 @@ class Monogram extends StatelessWidget {
     return (letters.isEmpty ? (t.isEmpty ? '' : String.fromCharCode(t.runes.first)) : letters).toUpperCase();
   }
 
-  /// Blue to magenta, the family of the logo; stable across launches (djb2 like the Apple apps).
+  /// Teal to broadcast blue, quiet enough for a wall of them; stable across launches (djb2 like the Apple apps).
   static double hue(String name) {
     var h = 5381;
     for (final u in name.runes) {
       h = (h * 33 + u) & 0xFFFFFFFF;
     }
-    return 0.56 + 0.40 * (h % 1000) / 1000;
+    return 0.50 + 0.18 * (h % 1000) / 1000;
   }
 
   @override
   Widget build(BuildContext context) {
-    final h = hue(name) * 360, h2 = (hue(name) + 0.05) % 1 * 360;
+    final h = hue(name) * 360, h2 = (hue(name) + 0.03) % 1 * 360;
     return ExcludeSemantics(
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [HSVColor.fromAHSV(1, h, 0.55, 0.78).toColor(), HSVColor.fromAHSV(1, h2, 0.70, 0.52).toColor()],
+            colors: [HSVColor.fromAHSV(1, h, 0.42, 0.66).toColor(), HSVColor.fromAHSV(1, h2, 0.55, 0.40).toColor()],
           ),
         ),
         child: Center(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iptvmac/ui/theme.dart';
 import 'package:iptvmac/app/library_model.dart';
 import 'package:iptvmac/downloads/download_entry.dart';
 import 'package:iptvmac/downloads/downloads_model.dart';
@@ -134,7 +135,7 @@ class _Row extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: cs.onSurface.withValues(alpha: 0.06))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Brand.radiusCard), side: BorderSide(color: cs.onSurface.withValues(alpha: 0.06))),
       child: InkWell(
         onTap: e.status == DownloadStatus.done && !e.missing ? () => _play(context) : null,
         child: Padding(

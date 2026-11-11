@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:iptvmac/ui/theme.dart';
 import 'package:iptvmac/app/device.dart';
 
 /// Android TV / Google TV / Fire TV: what the shell adds when [isTelevision] is true. On a phone or tablet none of this is in the tree.
@@ -330,8 +331,8 @@ class _TvShellState extends State<TvShell> {
     final mq = MediaQuery.of(context);
     final scale = mq.textScaler.scale(14) / 14 * tvTextScale;
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final ring = dark ? Colors.white : const Color(0xFF1A1040);
-    final edge = dark ? const Color(0xFF1A1040) : Colors.white;
+    final ring = dark ? Colors.white : const Color(0xFF0B1426);
+    final edge = dark ? const Color(0xFF0B1426) : Colors.white;
     return MediaQuery(
       data: mq.copyWith(textScaler: TextScaler.linear(scale)),
       child: NotificationListener<ScrollNotification>(
@@ -347,8 +348,8 @@ class _TvShellState extends State<TvShell> {
               child: IgnorePointer(
                 child: DecoratedBox(
                   key: const Key('tv-focus-ring'),
-                  decoration: BoxDecoration(border: Border.all(color: ring, width: 3), borderRadius: BorderRadius.circular(14)),
-                  child: Padding(padding: const EdgeInsets.all(3), child: DecoratedBox(decoration: BoxDecoration(border: Border.all(color: edge, width: 1.5), borderRadius: BorderRadius.circular(11)))),
+                  decoration: BoxDecoration(border: Border.all(color: ring, width: 3), borderRadius: BorderRadius.circular(Brand.radiusCard + 3)),
+                  child: Padding(padding: const EdgeInsets.all(3), child: DecoratedBox(decoration: BoxDecoration(border: Border.all(color: edge, width: 1.5), borderRadius: BorderRadius.circular(Brand.radiusCard)))),
                 ),
               ),
             ),

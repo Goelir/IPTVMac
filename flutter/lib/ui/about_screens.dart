@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iptvmac/ui/theme.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/l10n/app_localizations.dart';
 import 'package:iptvmac/ui/onboarding.dart';
@@ -47,7 +48,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Card(
               clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Brand.radiusCard)),
               child: Column(children: [
                 ListTile(
                   key: const Key('privacy-link'),

@@ -154,7 +154,7 @@ struct ChipButton: View {
             .font(.subheadline.weight(.medium))
             .foregroundStyle(selected ? Color.white : Color.primary)
             .padding(.horizontal, 14).frame(minHeight: 34)
-            .background(selected ? Color.accentColor : Brand.raised, in: Capsule())
+            .background(selected ? Color.accentColor : Brand.raised, in: RoundedRectangle(cornerRadius: Brand.radiusSmall, style: .continuous))
             .frame(minHeight: 44).contentShape(Rectangle())
         }
         .buttonStyle(PressStyle(scale: 0.95))

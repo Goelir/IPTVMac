@@ -38,7 +38,7 @@ class PlaylistBadge extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(maxWidth: 120),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(color: onArtwork ? Colors.black.withValues(alpha: 0.62) : cs.onSurface.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: onArtwork ? Colors.black.withValues(alpha: 0.62) : cs.onSurface.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(4)),
       child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.labelSmall?.copyWith(color: onArtwork ? Colors.white : cs.onSurfaceVariant)),
     );
   }
@@ -56,7 +56,7 @@ class ChannelLogo extends StatelessWidget {
         width: size,
         height: size,
         padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHigh, borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHigh, borderRadius: BorderRadius.circular(10)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: ArtworkImage(url: artUri(item.icon), maxPixel: 160, fit: BoxFit.contain, placeholder: Monogram(name: item.name)),
@@ -241,7 +241,7 @@ class PosterCell extends StatelessWidget {
                 end: 5,
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.62), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.62), borderRadius: BorderRadius.circular(5)),
                   child: const Icon(Icons.star_rounded, size: 16, color: Colors.amber),
                 ),
               ),

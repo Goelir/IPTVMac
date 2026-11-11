@@ -47,7 +47,7 @@ class OnboardingScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       body: DecoratedBox(
-        decoration: BoxDecoration(gradient: RadialGradient(center: Alignment.topCenter, radius: 1.1, colors: [Brand.accentFill.withValues(alpha: 0.28), Colors.transparent])),
+        decoration: BoxDecoration(gradient: RadialGradient(center: Alignment.topCenter, radius: 1.1, colors: [Brand.accentFill.withValues(alpha: 0.18), Colors.transparent])),
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, c) => SingleChildScrollView(
@@ -69,7 +69,7 @@ class OnboardingScreen extends StatelessWidget {
                         const SizedBox(height: 22),
                         Container(
                           padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(color: cs.surfaceContainerLow.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(14)),
+                          decoration: BoxDecoration(color: cs.surfaceContainerLow.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(Brand.radiusCard)),
                           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Icon(Icons.info_outline, color: cs.primary),
                             const SizedBox(width: 12),

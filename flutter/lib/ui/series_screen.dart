@@ -1,5 +1,6 @@
 import 'dart:math' show max;
 import 'package:flutter/material.dart';
+import 'package:iptvmac/ui/theme.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:iptvmac/ui/bidi.dart';
 import 'package:iptvmac/app/library_model.dart';
@@ -128,7 +129,7 @@ class _SeriesScreenState extends State<SeriesScreen> {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         child: Card(
           clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: cs.onSurface.withValues(alpha: 0.06))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Brand.radiusCard), side: BorderSide(color: cs.onSurface.withValues(alpha: 0.06))),
           child: Column(children: [for (final e in eps) _episodeRow(context, e)]),
         ),
       ));

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:iptvmac/ui/theme.dart';
 import 'package:iptvmac/app/device.dart';
 import 'package:intl/intl.dart';
 import 'package:iptvmac/app/library_model.dart';
@@ -61,7 +62,7 @@ class _Section extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (title != null) Padding(padding: const EdgeInsets.fromLTRB(4, 0, 4, 8), child: Semantics(header: true, child: Text(title!, style: t.titleSmall?.copyWith(color: cs.primary)))),
-        Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), clipBehavior: Clip.antiAlias, child: Column(children: children)),
+        Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Brand.radiusCard)), clipBehavior: Clip.antiAlias, child: Column(children: children)),
         if (note != null) Padding(padding: const EdgeInsets.fromLTRB(4, 8, 4, 0), child: DefaultTextStyle.merge(style: t.bodySmall?.copyWith(color: cs.onSurfaceVariant), child: note!)),
       ]),
     );

@@ -12,7 +12,7 @@ struct PlaylistBadge: View {
             Text(name).font(.caption2.weight(.medium)).lineLimit(1)
                 .foregroundStyle(onArtwork ? AnyShapeStyle(.white) : AnyShapeStyle(.secondary))
                 .padding(.horizontal, 7).padding(.vertical, 2)
-                .background(onArtwork ? Color.black.opacity(0.62) : Color.primary.opacity(0.08), in: Capsule())
+                .background(onArtwork ? Color.black.opacity(0.62) : Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 4, style: .continuous))
         }
     }
 }
@@ -89,8 +89,8 @@ struct PosterCell: View {
                 .overlay(alignment: .bottom) {
                     if let f = entry?.fraction {
                         ZStack(alignment: .leading) {
-                            Capsule().fill(.white.opacity(0.35))
-                            GeometryReader { g in Capsule().fill(Color.accentColor).frame(width: g.size.width * f) }
+                            RoundedRectangle(cornerRadius: 1.5).fill(.white.opacity(0.35))
+                            GeometryReader { g in RoundedRectangle(cornerRadius: 1.5).fill(Color.accentColor).frame(width: g.size.width * f) }
                         }.frame(height: 4).padding(.horizontal, 8).padding(.bottom, 8).shadow(color: .black.opacity(0.5), radius: 2, y: 1)
                     }
                 }
@@ -121,8 +121,8 @@ struct PosterCell: View {
         let label = "\(L("info.details")), \(item.name)"
         return Button { model.openInfo = item } label: {
             Image(systemName: "info").font(.system(size: 11, weight: .bold)).foregroundStyle(.white)
-                .frame(width: 24, height: 24).background(Color.black.opacity(0.62), in: Circle())
-                .contentShape(Circle())
+                .frame(width: 24, height: 24).background(Color.black.opacity(0.62), in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain).focused($infoFocused)
         .help(L("info.details")).accessibilityLabel(label)

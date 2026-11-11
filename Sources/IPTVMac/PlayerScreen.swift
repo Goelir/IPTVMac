@@ -71,8 +71,8 @@ struct PlayerScreen: View {
                         Button(L("next.now")) { model.playUpNextNow() }.buttonStyle(.borderedProminent)
                         Button(L("next.cancel")) { model.cancelUpNext() }
                     }
-                    .padding(14).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.12)) }
+                    .padding(14).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay { RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(.white.opacity(0.12)) }
                     .foregroundStyle(.white)
                     .padding(.bottom, 96)
                 }
@@ -94,7 +94,7 @@ struct PlayerScreen: View {
                 VStack {
                     Spacer()
                     Text(L(n == .saved ? "player.skipSaved" : "player.skipRefused")).font(.callout).padding(.horizontal, 14).padding(.vertical, 8)
-                        .background(.black.opacity(0.75), in: Capsule()).foregroundStyle(.white).padding(.bottom, 150)
+                        .background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 8, style: .continuous)).foregroundStyle(.white).padding(.bottom, 150)
                 }
                 .transition(.opacity)
             }
@@ -286,8 +286,8 @@ struct PlayerScreen: View {
         }
         .buttonStyle(IconButtonStyle(tint: .white)).font(.title3)
         .padding(.horizontal, 14).padding(.vertical, 8)
-        .background(.black.opacity(0.62), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.12)) }
+        .background(.black.opacity(0.62), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(.white.opacity(0.12)) }
         .padding(.horizontal, 16).padding(.bottom, 14)
     }
 

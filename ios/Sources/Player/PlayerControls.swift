@@ -95,8 +95,8 @@ struct SpeedButton: View {
             } else {
                 Text(PlaybackSpeed.label(player.speed)).font(.callout.weight(.bold).monospacedDigit()).foregroundStyle(tint)
                     .padding(.horizontal, 10).frame(minWidth: 44, minHeight: 30)
-                    .background { Capsule().fill(.yellow.opacity(player.speed == 1 ? 0 : 0.18)) }
-                    .overlay { Capsule().strokeBorder(tint.opacity(0.5)) }
+                    .background { RoundedRectangle(cornerRadius: 6, style: .continuous).fill(.yellow.opacity(player.speed == 1 ? 0 : 0.18)) }
+                    .overlay { RoundedRectangle(cornerRadius: 6, style: .continuous).strokeBorder(tint.opacity(0.5)) }
                     .frame(minHeight: 44)
             }
         }
@@ -192,14 +192,14 @@ struct SkipOfferButton: View {
             VStack(alignment: .trailing, spacing: 8) {
                 if let n = sc.notice {
                     Text(L(n == .saved ? "player.skipSaved" : "player.skipRefused")).font(.footnote).foregroundStyle(.white)
-                        .padding(.horizontal, 12).padding(.vertical, 7).background(.black.opacity(0.75), in: Capsule())
+                        .padding(.horizontal, 12).padding(.vertical, 7).background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .transition(.opacity)
                 }
                 if let offer = sc.offer, !player.upNext.isCounting {
                     Button { player.doSkip(offer) } label: {
                         Label(L(offer == .credits ? "player.skipCredits" : "player.skipIntro"), systemImage: "forward.end.fill")
                             .font(.subheadline.weight(.semibold)).foregroundStyle(.black)
-                            .padding(.horizontal, 16).padding(.vertical, 11).background(.white, in: Capsule())
+                            .padding(.horizontal, 16).padding(.vertical, 11).background(.white, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                     }
                     .buttonStyle(PlayerPressStyle())
                     .transition(.move(edge: .trailing).combined(with: .opacity))

@@ -17,8 +17,8 @@ struct OnboardingView: View {
                         Welcome(showsAction: false) { _ in }.frame(maxWidth: 460, maxHeight: 660)
                         SourceFormView(mode: .add, draft: draft, presentation: .embedded)
                             .frame(width: 480, height: 660)
-                            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(Color.primary.opacity(0.08)))
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.primary.opacity(0.08)))
                             .shadow(color: .black.opacity(0.14), radius: 30, y: 14)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -46,7 +46,7 @@ private struct WelcomeGround: View {
     var body: some View {
         ZStack(alignment: .top) {
             Brand.canvas
-            RadialGradient(colors: [Color.accentColor.opacity(0.30), .clear], center: .top, startRadius: 0, endRadius: 460).frame(height: 520)
+            RadialGradient(colors: [Color.accentColor.opacity(0.18), .clear], center: .top, startRadius: 0, endRadius: 460).frame(height: 520)
         }.ignoresSafeArea()
     }
 }
@@ -103,7 +103,7 @@ private struct Welcome: View {
                         Image(systemName: "info.circle").foregroundStyle(Brand.accentText)
                     }
                     .padding(14).frame(maxWidth: 460, alignment: .leading)
-                    .background(Brand.surface.opacity(0.8), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(Brand.surface.opacity(0.8), in: RoundedRectangle(cornerRadius: Brand.radiusCard, style: .continuous))
                     if showsAction && type.isAccessibilitySize { actions }          // big text: the buttons scroll with the page
                 }
                 .padding(.horizontal, 24).padding(.vertical, 24)
@@ -128,7 +128,7 @@ struct PasteLink: View {
             guard let s = strings.first?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return }
             Haptics.success(); done(s)
         }
-        .labelStyle(.titleAndIcon).buttonBorderShape(.capsule).tint(.accentColor)
+        .labelStyle(.titleAndIcon).buttonBorderShape(.roundedRectangle(radius: Brand.radiusSmall)).tint(.accentColor)
     }
 }
 

@@ -12,9 +12,9 @@ struct SpeedButton: View {
         Button { open.toggle() } label: {
             Text(PlaybackSpeed.label(speed)).font(.callout.weight(.bold)).monospacedDigit().foregroundStyle(tint)
                 .frame(minWidth: 36).padding(.horizontal, 8).padding(.vertical, 3)
-                .background { Capsule().fill(.yellow.opacity(speed == 1 ? 0 : 0.18)) }
-                .overlay { Capsule().strokeBorder(tint.opacity(0.45)) }
-                .contentShape(Capsule())
+                .background { RoundedRectangle(cornerRadius: 5, style: .continuous).fill(.yellow.opacity(speed == 1 ? 0 : 0.18)) }
+                .overlay { RoundedRectangle(cornerRadius: 5, style: .continuous).strokeBorder(tint.opacity(0.45)) }
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .help(L("player.speed"))

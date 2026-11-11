@@ -11,12 +11,15 @@ enum Brand {
         func ui(_ h: UInt32) -> UIColor { UIColor(red: CGFloat((h >> 16) & 255) / 255, green: CGFloat((h >> 8) & 255) / 255, blue: CGFloat(h & 255) / 255, alpha: 1) }
         return Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? ui(dark) : ui(light) })
     }
-    /// Screen ground: a cool off-white, and the website's near-black violet (not pure black).
-    static let canvas = color(0xF6F5FB, 0x0A0912)
+    /// Screen ground: a cool off-white, and a deep broadcast blue (the website's "On air" family, a little darker for long viewing).
+    static let canvas = color(0xF4F6FA, 0x0B1426)
     /// Rows and grouped forms.
-    static let surface = color(0xFFFFFF, 0x15132A)
+    static let surface = color(0xFFFFFF, 0x121E35)
     /// Chips, logo tiles, the quiet fill under things.
-    static let raised = color(0xECEBF6, 0x1F1C3A)
+    static let raised = color(0xE8ECF3, 0x1A2944)
+    /// Corner radii: small parts (chips, badges, buttons) and content (posters, cards). No capsules for controls.
+    static let radiusSmall: CGFloat = 7
+    static let radiusCard: CGFloat = 10
     /// The violet for text and glyphs (the fill violet is too dark for text on dark grounds).
     static let accentText = Color("AccentText")
 }
@@ -199,17 +202,17 @@ struct Monogram: View {
         let letters = words.prefix(2).compactMap(\.first)
         return (letters.isEmpty ? String(name.trimmingCharacters(in: .whitespaces).prefix(1)) : String(letters)).uppercased()
     }
-    /// Blue to magenta, the family of the logo; stable across launches (Swift's own hash is not).
+    /// Teal to broadcast blue, quiet enough for a wall of them; stable across launches (Swift's own hash is not).
     static func hue(_ name: String) -> Double {
         var h: UInt32 = 5381
         for u in name.unicodeScalars { h = h &* 33 &+ u.value }
-        return 0.56 + 0.40 * Double(h % 1000) / 1000
+        return 0.50 + 0.18 * Double(h % 1000) / 1000
     }
 
     var body: some View {
         let h = Self.hue(name)
         ZStack {
-            LinearGradient(colors: [Color(hue: h, saturation: 0.55, brightness: 0.78), Color(hue: (h + 0.05).truncatingRemainder(dividingBy: 1), saturation: 0.70, brightness: 0.52)],
+            LinearGradient(colors: [Color(hue: h, saturation: 0.42, brightness: 0.66), Color(hue: (h + 0.03).truncatingRemainder(dividingBy: 1), saturation: 0.55, brightness: 0.40)],
                            startPoint: .topLeading, endPoint: .bottomTrailing)
             Text(Self.initials(name)).font(font.weight(.semibold)).foregroundStyle(.white).minimumScaleFactor(0.5).lineLimit(1).padding(4)
         }
@@ -251,8 +254,9 @@ struct ProgressBar: View {
     var track: Color = .white.opacity(0.35)
     var body: some View {
         let p = min(max(value, 0), 1)
-        Capsule().fill(track).frame(height: height)
-            .overlay(alignment: .leading) { GeometryReader { g in Capsule().fill(Color.accentColor).frame(width: max(height, g.size.width * p)) } }
+        let bar = RoundedRectangle(cornerRadius: 1.5, style: .continuous)
+        bar.fill(track).frame(height: height)
+            .overlay(alignment: .leading) { GeometryReader { g in bar.fill(Color.accentColor).frame(width: max(height, g.size.width * p)) } }
             .accessibilityElement().accessibilityValue("\(Int(p * 100))%")
     }
 }

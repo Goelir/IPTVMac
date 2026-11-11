@@ -13,7 +13,7 @@ struct PlaylistBadge: View {
             Text(name).font(.caption2.weight(.medium)).lineLimit(1)
                 .foregroundStyle(onArtwork ? AnyShapeStyle(.white) : AnyShapeStyle(.secondary))
                 .padding(.horizontal, 7).padding(.vertical, 2)
-                .background(onArtwork ? Color.black.opacity(0.62) : Color.primary.opacity(0.08), in: Capsule())
+                .background(onArtwork ? Color.black.opacity(0.62) : Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 4, style: .continuous))
         }
     }
 }
@@ -27,7 +27,7 @@ private struct ChannelLogo: View {
             Brand.raised
             ArtworkImage(url: DebugArt.url(item), maxPixel: 160, fill: false) { Monogram(name: item.name) }.padding(6)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
@@ -135,7 +135,7 @@ struct PosterCell: View {
                 PosterImage(item: item)
                     .overlay(alignment: .topLeading) { PlaylistBadge(item: item, onArtwork: true).padding(5) }
                     .overlay(alignment: .topTrailing) {
-                        if fav { Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow).padding(5).background(Color.black.opacity(0.62), in: Circle()).padding(5) }
+                        if fav { Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow).padding(5).background(Color.black.opacity(0.62), in: RoundedRectangle(cornerRadius: 5, style: .continuous)).padding(5) }
                     }
                     .overlay { if current { RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(Color.accentColor, lineWidth: 3) } }
                     .overlay(alignment: .bottom) {
