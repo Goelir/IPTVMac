@@ -534,7 +534,7 @@ html[lang="he"] .pghero h1 { font-size: clamp(2.8rem, 1.8rem + 4vw, 5.6rem); }
 .dv-tv .scr { aspect-ratio: 16 / 9; border-radius: 8px; border: clamp(3px, .45vw, 6px) solid #0b0b11; }
 .dv-tv::after { content: ""; display: block; width: 24%; height: clamp(7px, 1vw, 13px); margin: 0 auto; background: linear-gradient(#34343f, #17171d); clip-path: polygon(14% 0, 86% 0, 100% 100%, 0 100%); }
 .dv-phone { inset-inline-end: 11%; bottom: -17%; width: 15.5%; transform: translateZ(120px); }
-.dv-phone .scr { aspect-ratio: 540 / 1210; border-radius: clamp(10px, 1.7vw, 24px); border: clamp(3px, .4vw, 5px) solid #0b0b11; }
+.dv-phone .scr { aspect-ratio: 540 / 1200; border-radius: clamp(10px, 1.7vw, 24px); border: clamp(3px, .4vw, 5px) solid #0b0b11; }
 @media (prefers-reduced-motion: no-preference) {
   .dv-tv { animation: lift var(--d4) var(--ease) .7s backwards; }
   .dv-phone { animation: lift var(--d4) var(--ease) 1s backwards; }
@@ -582,7 +582,7 @@ html[lang="he"] .pg-h { line-height: 1.1; letter-spacing: -.01em; font-weight: 6
 .view img { display: block; width: 100%; height: auto; }
 .tvf { max-width: 560px; } .tvf .scr { border-radius: 10px; border: clamp(4px, .6vw, 8px) solid #0b0b11; overflow: hidden; box-shadow: var(--win-shadow); background: #000; aspect-ratio: 16 / 9; }
 .tvf::after { content: ""; display: block; width: 22%; height: 14px; margin: 0 auto; background: linear-gradient(#34343f, #17171d); clip-path: polygon(14% 0, 86% 0, 100% 100%, 0 100%); }
-.phf { max-width: 230px; } .phf .scr { aspect-ratio: 540 / 1210; border-radius: 30px; border: 6px solid #0b0b11; overflow: hidden; box-shadow: var(--win-shadow); background: #000; }
+.phf { max-width: 230px; } .phf .scr { aspect-ratio: 540 / 1200; border-radius: 30px; border: 6px solid #0b0b11; overflow: hidden; box-shadow: var(--win-shadow); background: #000; }
 .phf img, .tvf img { height: 100%; object-fit: cover; object-position: top; }
 .view .soon-card { display: grid; justify-items: center; gap: 14px; padding: 36px 12px; text-align: center; color: var(--mute); }
 .view .soon-card img { width: 96px; height: 96px; border-radius: 22px; box-shadow: var(--win-shadow); }

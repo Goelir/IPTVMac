@@ -566,7 +566,7 @@ def ios_section(c, he, up):
 
 def devices_section(c, he, up):
     d = DEVICES["he" if he else "en"]
-    SIZES = {"03-movies.webp": (1200, 754), "windows-welcome.webp": (1006, 712), "android-live.webp": (540, 1210), "tv-live.webp": (1280, 720)}   # pixel sizes of the files, so the browser reserves the space
+    SIZES = {"03-movies.webp": (1200, 754), "windows-welcome.webp": (1006, 712), "android-live.webp": (540, 1200), "tv-live.webp": (1280, 720)}   # pixel sizes of the files, so the browser reserves the space
     def card(h, req, steps, shot, alt, acts, cls=""):
         li = "".join(f"<li>{e(x)}</li>" for x in steps)
         w, hh = SIZES[shot]
@@ -966,7 +966,7 @@ def devstack(up, alts):
                 f'<img src="{up}assets/hero-window-1400.jpg" width="1800" height="1186" alt="{e(alts[0])}" fetchpriority="high" decoding="async"></picture>')
     return (f'<div class="devstack"><div class="win hero-win">{hero_pic}</div>'
             f'<figure class="dv dv-tv" data-depth="1.2"><div class="scr">{shot(up, "tv-live", alts[2], w=1280, h=720)}</div></figure>'
-            f'<figure class="dv dv-phone" data-depth="2.2"><div class="scr">{shot(up, "android-live", alts[1], w=540, h=1210)}</div></figure></div>')
+            f'<figure class="dv dv-phone" data-depth="2.2"><div class="scr">{shot(up, "android-live", alts[1], w=540, h=1200)}</div></figure></div>')
 
 def product_page(kind, code, title, desc, hero_html, body, ld_extra=()):
     c = HOME[code]; he = code == "he"
@@ -1027,7 +1027,7 @@ def download_page(code):
       + panel("windows", wn["h"], wn["req"], f'<div class="win">{pic("windows-welcome", d["alt_win"], 1006, 712)}</div>',
             f'<div class="acts">{btn(win_file("setup"), wn["btn"])}<span class="sz">v{WIN_VER} · {WIN_SIZES["setup"]} MB</span></div>',
             f'<p class="alt">{e(wn["portable"])} <a href="{win_file("portable")}" rel="noopener">IPTVMac-Windows-{WIN_VER}-portable.zip ({WIN_SIZES["portable"]} MB)</a></p>', wn["steps"], wn["note"].format(s=WIN_SIZES["setup"]))
-      + panel("android", an["h"], an["req"], f'<div class="phf"><div class="scr">{pic("android-live", d["alt_phone"], 540, 1210)}</div></div>',
+      + panel("android", an["h"], an["req"], f'<div class="phf"><div class="scr">{pic("android-live", d["alt_phone"], 540, 1200)}</div></div>',
             f'<div class="acts">{btn(apk("arm64-v8a"), an["btn"])}<span class="sz">v{AND_VER} · {ANDROID_SIZES["arm64-v8a"]} MB</span></div>', f'<p class="alt">{e(an["other"])} {other}</p>', an["steps"], an["note"])
       + panel("tv", tv["h"], tv["req"], f'<div class="tvf"><div class="scr">{pic("tv-live", d["alt_tv"], 1280, 720)}</div></div>',
             f'<div class="acts">{btn(apk("tv-32bit"), tv["btn32"])}<span class="sz">{ANDROID_SIZES["tv-32bit"]} MB</span>{btn(apk("tv-64bit"), tv["btn64"], "")}<span class="sz">{ANDROID_SIZES["tv-64bit"]} MB</span></div>',
@@ -1062,7 +1062,7 @@ def download_page(code):
     product_page("download", code, d["title"], d["desc"], hero, marquee(d["marquee"]) + pick + files + store + two + help_, ld)
 
 PLATFORM_KEYS = ("mac", "windows", "iphone", "android", "tv")   # URL /<key>/ and /he/<key>/
-SHOT_SIZES = {"ios-": (560, 1217), "android-": (540, 1210), "tv-": (1280, 720)}   # pixel sizes by file prefix; everything else is a 1200x754 Mac screenshot
+SHOT_SIZES = {"ios-": (560, 1217), "android-": (540, 1200), "tv-": (1280, 720)}   # pixel sizes by file prefix; everything else is a 1200x754 Mac screenshot
 
 def shot_size(name):
     return next((v for k, v in SHOT_SIZES.items() if name.startswith(k)), (1200, 754))
