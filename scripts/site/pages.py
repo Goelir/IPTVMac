@@ -192,6 +192,9 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-12", "android", "1.0.9", "android-v1.0.9", {
+   "en": ["**TV: the focus frame stays on the right button.** The first time a title's details opened, the frame could stay below the Play button once the description arrived and made the panel taller. It now follows the button."],
+   "he": ["**טלוויזיה: מסגרת הפוקוס נשארת על הכפתור הנכון.** בפתיחה הראשונה של פרטי כותר, המסגרת יכלה להישאר מתחת לכפתור \"נגן\" אחרי שהתיאור הגיע והגדיל את החלון. עכשיו היא עוקבת אחרי הכפתור."]}),
  ("2026-11-11", "mac", "0.9.9", "v0.9.9", {
    "en": ["**A calmer, more professional look:** small corners instead of rounded pills on badges, the speed control, notices and hover highlights, and square-ended progress bars. With the Multicolor system accent, the app uses its own blue.",
           "**Passwords in the Keychain, if you want:** Settings > Playlists > \"Store passwords in the Keychain\". Off (the default) keeps them in the app's private database; on moves every saved password to your login keychain."],
