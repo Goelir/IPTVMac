@@ -23,7 +23,7 @@ The iPhone and iPad app is on the App Store, and its full source code is here on
 | **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
 | **Price** | Free. | Free (GPL-3.0). |
 
-The App Store app also installs on Macs with Apple Silicon: search for IPTVMac in the Mac App Store, and it runs as the iPad app. The full Mac app, with catch-up, downloads and its own updates, is only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases), and so are Windows, Android and Android TV. The Mac and Android apps update themselves from GitHub.
+The App Store app also works on Macs with Apple Silicon: search for IPTVMac in the Mac App Store. The full Mac app, with catch-up, downloads and its own updates, is only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases), and so are Windows, Android and Android TV. The Mac and Android apps update themselves from GitHub.
 
 ## Installing on a TV with the Downloader app
 
