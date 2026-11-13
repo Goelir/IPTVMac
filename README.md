@@ -64,7 +64,25 @@ The iPhone and iPad app is on the App Store, and its full source code is here on
 | **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
 | **Price** | Free. | Free (GPL-3.0). |
 
-The App Store app also works on Macs with Apple Silicon: search for IPTVMac in the Mac App Store. The full Mac app, with catch-up, downloads and its own updates, is only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases), and so are Windows, Android and Android TV. The Mac and Android apps update themselves from GitHub.
+### On a Mac: the App Store app or the Mac app from GitHub?
+
+The App Store app also works on Macs with Apple Silicon (search for IPTVMac in the Mac App Store). The Mac app from [GitHub Releases](https://github.com/Goelir/IPTVMac/releases) is a separate app made for the Mac. The differences:
+
+| | App Store app | Mac app from GitHub |
+|---|---|---|
+| **Devices** | iPhone, iPad, and Macs with Apple Silicon (macOS 14 or later). | Macs with Apple Silicon (macOS 14 or later). |
+| **Made for** | Touch screens; on a Mac it runs in a window. | The Mac: menus, keyboard shortcuts, mouse and trackpad. |
+| **Install** | The App Store. | A DMG from GitHub Releases, signed with an Apple Developer ID and notarized by Apple. |
+| **Updates** | Automatic, through the App Store, after Apple has reviewed each version. | The app updates itself from GitHub, usually a little earlier. |
+| **Catch-up** (programs that already aired) | No. | Yes, where your Xtream provider supports it. |
+| **Downloads** for offline viewing | No. | Yes. |
+| **Picture in Picture** | The system window. | Its own floating window that stays on top and follows you across Spaces. |
+| **Preview on the time bar** | While you drag. | When you point at it. |
+| **Passwords** | The Keychain. | The app's private database, or the Keychain if you choose (Settings > Playlists). |
+| **Search, favorites, continue watching, skip intro and credits, 31 languages** | Yes. | Yes. |
+| **Price** | Free. No ads, no tracking, no purchases. | Free (GPL-3.0). No ads, no tracking. |
+
+Windows, Android and Android TV are only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases). The Mac and Android apps update themselves from GitHub.
 
 ## Why IPTVMac
 
