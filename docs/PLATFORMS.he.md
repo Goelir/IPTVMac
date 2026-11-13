@@ -25,7 +25,7 @@
 | **מה בפנים** | אותו קוד. בלי פרסומות, בלי מעקב ובלי רכישות. | אותו קוד. בלי פרסומות, בלי מעקב ובלי רכישות. |
 | **מחיר** | חינם. | חינם (GPL-3.0). |
 
-Mac, Windows, Android ו-Android TV לא נמצאות בחנות אפליקציות: הקבצים ב-[GitHub Releases](https://github.com/Goelir/IPTVMac/releases) הם הגרסאות היחידות. אפליקציות ה-Mac וה-Android מתעדכנות מעצמן מ-GitHub.
+אפליקציית ה-App Store מותקנת גם ב-Mac עם Apple Silicon: מחפשים את IPTVMac ב-App Store של ה-Mac, והיא רצה כאפליקציית ה-iPad. אפליקציית ה-Mac המלאה, עם צפייה בתוכניות שעברו, הורדות ועדכונים משלה, נמצאת רק ב-[GitHub Releases](https://github.com/Goelir/IPTVMac/releases), וכך גם Windows, Android ו-Android TV. אפליקציות ה-Mac וה-Android מתעדכנות מעצמן מ-GitHub.
 
 ## התקנה בטלוויזיה עם האפליקציה Downloader
 
