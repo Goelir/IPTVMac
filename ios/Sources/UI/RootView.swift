@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 import IPTVCore
 import IPTVAppKit
 
@@ -9,6 +10,7 @@ struct RootView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var ui = UIState()
     @AppStorage("appearance") private var appearance = "system"
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         @Bindable var model = model
@@ -27,6 +29,10 @@ struct RootView: View {
         .onChange(of: model.playing?.id) {
             if let item = model.playing?.item { ui.lastPlayedID = item.id }
             if model.playing != nil { model.openSeries = nil; ui.openInfo = nil } else { ui.scrollTarget = ui.lastPlayedID }
+            // the App Store rating request: only right after the player closed, never while watching (ReviewPrompt has the rules)
+            if model.playing == nil, ReviewPrompt().shouldAsk(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") {
+                Task { try? await Task.sleep(for: .seconds(1)); requestReview() }   // after the player's fade-out
+            }
         }
         .onChange(of: ui.section) {
             model.searchText = ""

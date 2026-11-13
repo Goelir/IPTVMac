@@ -7,6 +7,7 @@ import IPTVAppKit
 @MainActor @Observable
 final class PhoneModel: LibraryModel {
     var player: PhonePlayer?
+    @ObservationIgnored private var playStarted: Date?   // when the player opened (zapping in it is the same session), for ReviewPrompt
 
     init() {
         let opened: (db: AppDatabase, movedAside: String?)
@@ -17,6 +18,7 @@ final class PhoneModel: LibraryModel {
         }
         super.init(db: opened.db, secrets: KeychainSecretStore(legacy: DatabaseSecretStore(db: opened.db)), dbMovedAside: opened.movedAside)   // passwords in the iOS Keychain
         syncMessage = failure
+        ReviewPrompt().noteLaunch()
     }
 
     override func startPlayback(_ r: PlayRequest) {
@@ -29,10 +31,11 @@ final class PhoneModel: LibraryModel {
             guard let self, let cur = self.playing else { return }
             self.saveProgress(cur, position: position, duration: duration)
         }
-        player = p
+        player = p; playStarted = .now
     }
 
     override func stopPlayback() {
+        if let s = playStarted { ReviewPrompt().notePlayback(watched: Date.now.timeIntervalSince(s)); playStarted = nil }
         player?.close(); player = nil
         playing = nil
     }
