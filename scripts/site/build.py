@@ -32,7 +32,7 @@ WIN_REL = REPO + "/releases/tag/windows-v" + WIN_VER
 def apk(name): return f"{ANDROID_DL}/IPTVMac-Android-{AND_VER}-{name}.apk"
 APP_STORE = "https://apps.apple.com/app/id6821761790"   # the iPhone and iPad app (released 2026-11-05)
 APP_STORE_ID = "6821761790"
-IOS_VERSION = "1.0.1"   # the version on the App Store (bump when an iPhone update goes live)
+IOS_VERSION = "1.0.2"   # the version on the App Store (bump when an iPhone update goes live)
 ANDROID_APK = REPO + "/releases/tag/android-v1.0.10"   # the Android release is published with latest=false on purpose: releases/latest (the Mac updater and install.sh) must stay the Mac release
 FREE_REPO = "https://github.com/iptv-org/iptv"
 FREE_M3U = "https://iptv-org.github.io/iptv/index.m3u"
