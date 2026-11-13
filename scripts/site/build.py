@@ -1043,10 +1043,14 @@ def download_page(code):
     table = f'<div class="tbl"><table><thead><tr><th scope="col">{e(cols[0])}</th><th scope="col">{e(cols[1])}</th><th scope="col">{e(cols[2])}</th></tr></thead><tbody>{rows}</tbody></table></div>'
     files = f'<section class="pg-band" style="padding-top:0" aria-labelledby="files-h"><div class="wrap"><h2 class="pg-h" id="files-h" data-rv>{e(d["files_h"])}</h2><p class="pg-sub" data-rv>{e(d["files_p"])}</p><div data-rv>{table}</div></div></section>\n'
     sc = d["store_cols"]
-    srows = "".join(f'<tr><th scope="row">{e(a)}</th><td>{e(b)}</td><td>{e(c_)}</td></tr>' for a, b, c_ in d["store_rows"])
+    srows = "".join(f'<tr><th scope="row">{e(a)}</th><td data-label="{e(sc[1])}">{e(b)}</td><td data-label="{e(sc[2])}">{e(c_)}</td></tr>' for a, b, c_ in d["store_rows"])
     store = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="store-h"><div class="wrap"><h2 class="pg-h" id="store-h" data-rv>{e(d["store_h"])}</h2><p class="pg-sub" data-rv>{e(d["store_p"])}</p>'
-             f'<div data-rv><div class="tbl"><table><thead><tr><th scope="col">{e(sc[0])}</th><th scope="col">{e(sc[1])}</th><th scope="col">{e(sc[2])}</th></tr></thead><tbody>{srows}</tbody></table></div></div>'
+             f'<div data-rv><div class="tbl tbl-vs"><table><thead><tr><th scope="col">{e(sc[0])}</th><th scope="col">{e(sc[1])}</th><th scope="col">{e(sc[2])}</th></tr></thead><tbody>{srows}</tbody></table></div></div>'
              f'<p class="pg-fine" data-rv>{e(d["store_note"])}</p></div></section>\n')
+    mc = d["mac_cols"]
+    mrows = "".join(f'<tr><th scope="row">{e(a)}</th><td data-label="{e(mc[1])}">{e(b)}</td><td data-label="{e(mc[2])}">{e(c_)}</td></tr>' for a, b, c_ in d["mac_rows"])
+    store += (f'<section class="pg-band" style="padding-top:0" aria-labelledby="mac-store-h"><div class="wrap"><h2 class="pg-h" id="mac-store-h" data-rv>{e(d["mac_h"])}</h2><p class="pg-sub" data-rv>{e(d["mac_p"])}</p>'
+              f'<div data-rv><div class="tbl tbl-vs"><table><thead><tr><th scope="col">{e(mc[0])}</th><th scope="col">{e(mc[1])}</th><th scope="col">{e(mc[2])}</th></tr></thead><tbody>{mrows}</tbody></table></div></div></div></section>\n')
     verify = "".join(f"<p>{md(x)}</p>" for x in d["verify_p"])
     two = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="verify-h"><div class="wrap pg-two"><div data-rv><h2 id="verify-h">{e(d["verify_h"])}</h2>{verify}'
            f'<p><a class="link" href="{ANDROID_APK}" rel="noopener">{ICON_GH}{e(d["sums"])}</a></p></div>'

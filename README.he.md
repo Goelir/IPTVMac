@@ -76,7 +76,7 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 
 | | אפליקציית ה-App Store | אפליקציית ה-Mac מ-GitHub |
 |---|---|---|
-| **מכשירים** | iPhone, ‏iPad, ו-Mac עם Apple Silicon (‏macOS 14 ומעלה). | Mac עם Apple Silicon (‏macOS 14 ומעלה). |
+| **מכשירים** | iPhone, ‏iPad, ו-Mac עם Apple Silicon ו-macOS 14 ומעלה. | Mac עם Apple Silicon ו-macOS 14 ומעלה. |
 | **נבנתה בשביל** | מסכי מגע; ב-Mac היא רצה בחלון. | ה-Mac: תפריטים, קיצורי מקלדת, עכבר ומשטח מגע. |
 | **התקנה** | ה-App Store. | קובץ DMG מ-GitHub Releases, חתום ב-Developer ID ומאושר על ידי Apple. |
 | **עדכונים** | אוטומטיים דרך ה-App Store, אחרי ש-Apple בדקה כל גרסה. | האפליקציה מתעדכנת מעצמה מ-GitHub, בדרך כלל קצת קודם. |

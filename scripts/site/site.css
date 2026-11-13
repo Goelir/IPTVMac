@@ -609,6 +609,17 @@ html[lang="he"] .pg-h { line-height: 1.1; letter-spacing: -.01em; font-weight: 6
 .tbl thead th { font: 450 .78rem var(--mono); color: var(--mute); text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
 .tbl tbody td:last-child { white-space: nowrap; color: var(--mute); font-family: var(--mono); font-size: .875rem; }
 .tbl th[scope="row"] { white-space: nowrap; }
+/* comparison tables (App Store or GitHub): both answer columns read the same and wrap; on a phone each row becomes a small card */
+.tbl.tbl-vs tbody td:last-child { white-space: normal; color: inherit; font-family: inherit; font-size: inherit; }
+.tbl.tbl-vs th[scope="row"] { white-space: normal; min-width: 9em; }
+@media (max-width: 640px) {
+  .tbl.tbl-vs thead { display: none; }
+  .tbl.tbl-vs table, .tbl.tbl-vs tbody, .tbl.tbl-vs tr, .tbl.tbl-vs th, .tbl.tbl-vs td { display: block; }
+  .tbl.tbl-vs tr { border-block-end: 1px solid var(--line); padding-block: 6px; }
+  .tbl.tbl-vs tbody tr:last-child { border-block-end: 0; }
+  .tbl.tbl-vs th, .tbl.tbl-vs td { border: 0; padding-block: 6px; }
+  .tbl.tbl-vs td::before { content: attr(data-label); display: block; font-size: .8125rem; color: var(--mute); }
+}
 .tbl a { color: var(--ink); text-decoration: none; }
 .tbl code, .pg-two code { color: var(--ink); background: var(--s2); border-radius: 5px; padding: 1px 6px; overflow-wrap: anywhere; }
 .pg-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 6vw, 96px); }
