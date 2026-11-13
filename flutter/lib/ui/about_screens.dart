@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 const privacyUrl = 'https://goelir.github.io/IPTVMac/privacy/';
 const sourceUrl = 'https://github.com/Goelir/IPTVMac';
+const coffeeUrl = 'https://buymeacoffee.com/elijr';
 
 Future<void> _open(String url) async {
   try {
@@ -70,6 +71,15 @@ class AboutScreen extends StatelessWidget {
                   },
                 ),
                 ListTile(leading: const Icon(Icons.code), title: Text(l.aboutSource), trailing: const Icon(Icons.open_in_new, size: 18), onTap: () => _open(sourceUrl)),
+                // voluntary support; the address is shown because a TV often has no browser to open it with
+                ListTile(
+                  key: const Key('coffee-link'),
+                  leading: const Icon(Icons.coffee_outlined),
+                  title: Text(l.aboutCoffee),
+                  subtitle: const Text('buymeacoffee.com/elijr'),
+                  trailing: const Icon(Icons.open_in_new, size: 18),
+                  onTap: () => _open(coffeeUrl),
+                ),
               ]),
             ),
           ]),

@@ -92,6 +92,11 @@ struct IPTVMacApp: App {
                 Divider()
             }
             CommandGroup(replacing: .systemServices) {}   // the app menu's "Services" (no text service applies to a video player)
+            #if !APPSTORE
+            CommandGroup(after: .help) {                  // voluntary support for the developer; not in the App Store build (Apple's payment rules)
+                Button(L("about.coffee")) { if let u = URL(string: "https://buymeacoffee.com/elijr") { NSWorkspace.shared.open(u) } }
+            }
+            #endif
         }
         Settings { SettingsView().environment(model).brandAccent() }
     }

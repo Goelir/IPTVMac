@@ -18,6 +18,7 @@
   "aboutPrivacy": "Integritet",
   "aboutPrivacyBody": "IPTVMac samlar inte in några uppgifter om dig. Det finns inget konto, ingen analys, ingen reklam och ingen spårning.\n\nDina källor, favoriter och din visningshistorik stannar på den här enheten. Appen ansluter bara till de adresser du lägger till själv: leverantörens server, spellista, tablå, logotyper och strömmar.\n\nLeverantörens lösenord lagras i iOS Keychain, bara på den här enheten. De ingår aldrig i en säkerhetskopia.\n\nIPTVMac innehåller inga kanaler, filmer eller spellistor. Du tar med din egen källa.",
   "aboutSource": "Källkod och licens",
+  "aboutCoffee": "Bjud mig på en kaffe",
   "aboutVersion": "Version",
   "catTitle": "Kategorier",
   "commonCancel": "Avbryt",

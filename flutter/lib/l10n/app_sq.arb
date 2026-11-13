@@ -18,6 +18,7 @@
   "aboutPrivacy": "Privatësia",
   "aboutPrivacyBody": "IPTVMac nuk mbledh asnjë të dhënë për ju. Nuk ka llogari, analitikë, reklama apo gjurmim.\n\nBurimet, të preferuarat dhe historiku i shikimit mbeten në këtë pajisje. Aplikacioni lidhet vetëm me adresat që shtoni vetë: serverin e ofruesit tuaj, listën e luajtjes, udhëzuesin e programit, logot dhe transmetimet.\n\nFjalëkalimet e ofruesit ruhen vetëm në iOS Keychain në këtë pajisje. Ato nuk përfshihen kurrë në një skedar kopjeruajtjeje.\n\nIPTVMac nuk përfshin kanale, filma apo lista luajtjeje. Burimin e sillni ju.",
   "aboutSource": "Kodi burimor dhe licenca",
+  "aboutCoffee": "Më blini një kafe",
   "aboutVersion": "Versioni",
   "catTitle": "Kategoritë",
   "commonCancel": "Anulo",

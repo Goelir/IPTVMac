@@ -16,6 +16,7 @@
 "about.privacy" = "Privacy";
 "about.privacy.body" = "IPTVMac non raccoglie alcun dato su di te. Non ha account, analisi, pubblicità né tracciamento.\n\nLe tue sorgenti, i preferiti e la cronologia di visione restano su questo dispositivo. L’app si collega solo agli indirizzi che aggiungi tu: il server del tuo provider, la playlist, la guida TV, i loghi e gli stream.\n\nLe password del provider sono conservate nell’iOS Keychain solo su questo dispositivo. Non sono mai incluse in un file di backup.\n\nIPTVMac non include canali, film né playlist. La sorgente la porti tu.";
 "about.source" = "Codice sorgente e licenza";
+"about.coffee" = "Offrimi un caffè";
 "about.version" = "Versione";
 "cat.title" = "Categorie";
 "common.cancel" = "Annulla";

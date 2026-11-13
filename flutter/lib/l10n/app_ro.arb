@@ -18,6 +18,7 @@
   "aboutPrivacy": "Confidențialitate",
   "aboutPrivacyBody": "IPTVMac nu colectează nicio dată despre tine. Nu are cont, analize, publicitate sau urmărire.\n\nSursele, favoritele și istoricul vizionărilor rămân pe acest dispozitiv. Aplicația se conectează doar la adresele pe care le adaugi tu: serverul furnizorului, lista de redare, ghidul de programe, logourile și fluxurile.\n\nParolele furnizorilor sunt păstrate în iOS Keychain numai pe acest dispozitiv. Ele nu sunt incluse niciodată într-un fișier de rezervă.\n\nIPTVMac nu include canale, filme sau liste de redare. Sursa o aduci tu.",
   "aboutSource": "Cod sursă și licență",
+  "aboutCoffee": "Cumpără-mi o cafea",
   "aboutVersion": "Versiune",
   "catTitle": "Categorii",
   "commonCancel": "Anulează",

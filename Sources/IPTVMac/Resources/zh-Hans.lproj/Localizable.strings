@@ -16,6 +16,7 @@
 "about.privacy" = "隐私";
 "about.privacy.body" = "IPTVMac 不会收集任何关于你的数据。它没有账户、没有分析、没有广告，也没有跟踪。\n\n你的播放源、收藏和观看记录都只保存在这台设备上。App 只会连接你自己添加的地址：服务商的服务器、播放列表、节目指南、台标和视频流。\n\n服务商密码仅保存在这台设备的 iOS Keychain 中，绝不会包含在备份文件里。\n\nIPTVMac 不包含任何频道、电影或播放列表，播放源需要你自己提供。";
 "about.source" = "源代码与许可证";
+"about.coffee" = "请我喝杯咖啡";
 "about.version" = "版本";
 "cat.title" = "分类";
 "common.cancel" = "取消";

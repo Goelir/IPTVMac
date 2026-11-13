@@ -18,6 +18,7 @@
   "aboutPrivacy": "Prywatność",
   "aboutPrivacyBody": "IPTVMac nie zbiera żadnych danych o Tobie. Nie ma konta, analityki, reklam ani śledzenia.\n\nTwoje źródła, ulubione i historia oglądania zostają na tym urządzeniu. Aplikacja łączy się tylko z adresami, które dodajesz samodzielnie: serwerem dostawcy, playlistą, przewodnikiem po programach, logo i strumieniami.\n\nHasła dostawców są przechowywane w iOS Keychain wyłącznie na tym urządzeniu. Nigdy nie trafiają do pliku kopii zapasowej.\n\nIPTVMac nie zawiera kanałów, filmów ani playlist. Źródło musisz mieć własne.",
   "aboutSource": "Kod źródłowy i licencja",
+  "aboutCoffee": "Postaw mi kawę",
   "aboutVersion": "Wersja",
   "catTitle": "Kategorie",
   "commonCancel": "Anuluj",

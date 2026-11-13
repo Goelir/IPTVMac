@@ -16,6 +16,7 @@
 "about.privacy" = "Adatvédelem";
 "about.privacy.body" = "Az IPTVMac nem gyűjt Önről semmilyen adatot. Nincs fiók, nincs analitika, nincs reklám és nincs nyomon követés.\n\nA források, a kedvencek és a megtekintési előzmények ezen az eszközön maradnak. Az alkalmazás csak az Ön által megadott címekhez csatlakozik: a szolgáltató szerveréhez, a lejátszási listához, a műsorújsághoz, a logókhoz és a streamekhez.\n\nA szolgáltatói jelszavak kizárólag ezen az eszközön, az iOS Keychainben vannak tárolva. Biztonsági mentési fájlba soha nem kerülnek bele.\n\nAz IPTVMac nem tartalmaz csatornákat, filmeket vagy lejátszási listákat. A forrást Önnek kell hoznia.";
 "about.source" = "Forráskód és licenc";
+"about.coffee" = "Hívjon meg egy kávéra";
 "about.version" = "Verzió";
 "cat.title" = "Kategóriák";
 "common.cancel" = "Mégse";

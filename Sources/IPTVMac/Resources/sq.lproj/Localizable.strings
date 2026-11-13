@@ -16,6 +16,7 @@
 "about.privacy" = "Privatësia";
 "about.privacy.body" = "IPTVMac nuk mbledh asnjë të dhënë për ju. Nuk ka llogari, analitikë, reklama apo gjurmim.\n\nBurimet, të preferuarat dhe historiku i shikimit mbeten në këtë pajisje. Aplikacioni lidhet vetëm me adresat që shtoni vetë: serverin e ofruesit tuaj, listën e luajtjes, udhëzuesin e programit, logot dhe transmetimet.\n\nFjalëkalimet e ofruesit ruhen vetëm në iOS Keychain në këtë pajisje. Ato nuk përfshihen kurrë në një skedar kopjeruajtjeje.\n\nIPTVMac nuk përfshin kanale, filma apo lista luajtjeje. Burimin e sillni ju.";
 "about.source" = "Kodi burimor dhe licenca";
+"about.coffee" = "Më blini një kafe";
 "about.version" = "Versioni";
 "cat.title" = "Kategoritë";
 "common.cancel" = "Anulo";

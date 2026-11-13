@@ -18,6 +18,7 @@
   "aboutPrivacy": "Privacy",
   "aboutPrivacyBody": "IPTVMac verzamelt geen gegevens over jou. Er is geen account, geen analyse, geen reclame en geen tracking.\n\nJe bronnen, favorieten en kijkgeschiedenis blijven op dit apparaat. De app maakt alleen verbinding met de adressen die je zelf toevoegt: de server van je aanbieder, afspeellijst, tv-gids, logo’s en streams.\n\nWachtwoorden van aanbieders worden alleen op dit apparaat bewaard in de iOS Keychain. Ze worden nooit opgenomen in een reservekopiebestand.\n\nIPTVMac bevat geen zenders, films of afspeellijsten. Je neemt zelf een bron mee.",
   "aboutSource": "Broncode en licentie",
+  "aboutCoffee": "Trakteer me op een koffie",
   "aboutVersion": "Versie",
   "catTitle": "Categorieën",
   "commonCancel": "Annuleer",

@@ -16,6 +16,7 @@
 "about.privacy" = "Quyền riêng tư";
 "about.privacy.body" = "IPTVMac không thu thập bất kỳ dữ liệu nào về bạn. Ứng dụng không có tài khoản, không phân tích, không quảng cáo và không theo dõi.\n\nCác nguồn, mục yêu thích và lịch sử xem của bạn chỉ nằm trên thiết bị này. Ứng dụng chỉ kết nối đến những địa chỉ do chính bạn thêm vào: máy chủ, danh sách phát, lịch phát sóng, logo và luồng phát của nhà cung cấp.\n\nMật khẩu nhà cung cấp chỉ được lưu trong iOS Keychain trên thiết bị này. Chúng không bao giờ nằm trong tệp sao lưu.\n\nIPTVMac không có sẵn kênh, phim hay danh sách phát nào. Bạn tự mang nguồn của mình đến.";
 "about.source" = "Mã nguồn và giấy phép";
+"about.coffee" = "Mời tôi một ly cà phê";
 "about.version" = "Phiên bản";
 "cat.title" = "Danh mục";
 "common.cancel" = "Hủy";
