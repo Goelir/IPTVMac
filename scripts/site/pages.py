@@ -194,6 +194,15 @@ FEATURES = {
 # ---------- What's new ----------
 # (date, platform, version, link-tag, {en: [bullets], he: [bullets]}); platform is "mac" or "android"; the tag is the GitHub release tag
 CHANGES = [
+ ("2026-11-13", "mac", "0.9.10", "v0.9.10", {
+   "en": ["**Support the project, if you want:** Help > Buy me a coffee. IPTVMac stays free, with nothing locked; this is entirely voluntary."],
+   "he": ["**תמיכה בפרויקט, אם רוצים:** עזרה > קנו לי קפה. IPTVMac נשארת חינמית, בלי שום דבר נעול; זה לגמרי מרצון."]}),
+ ("2026-11-13", "windows", "1.0.6", "windows-v1.0.6", {
+   "en": ["**Support the project, if you want:** Settings > About > Buy me a coffee. IPTVMac stays free, with nothing locked; this is entirely voluntary."],
+   "he": ["**תמיכה בפרויקט, אם רוצים:** הגדרות > אודות > קנו לי קפה. IPTVMac נשארת חינמית, בלי שום דבר נעול; זה לגמרי מרצון."]}),
+ ("2026-11-13", "android", "1.0.10", "android-v1.0.10", {
+   "en": ["**Support the project, if you want:** Settings > About > Buy me a coffee (on a TV the address is shown, to open on a phone). IPTVMac stays free, with nothing locked; this is entirely voluntary."],
+   "he": ["**תמיכה בפרויקט, אם רוצים:** הגדרות > אודות > קנו לי קפה (בטלוויזיה מוצגת הכתובת, כדי לפתוח אותה בטלפון). IPTVMac נשארת חינמית, בלי שום דבר נעול; זה לגמרי מרצון."]}),
  ("2026-11-12", "android", "1.0.9", "android-v1.0.9", {
    "en": ["**TV: the focus frame stays on the right button.** The first time a title's details opened, the frame could stay below the Play button once the description arrived and made the panel taller. It now follows the button."],
    "he": ["**טלוויזיה: מסגרת הפוקוס נשארת על הכפתור הנכון.** בפתיחה הראשונה של פרטי כותר, המסגרת יכלה להישאר מתחת לכפתור \"נגן\" אחרי שהתיאור הגיע והגדיל את החלון. עכשיו היא עוקבת אחרי הכפתור."]}),
