@@ -277,7 +277,9 @@ struct SourceFormView: View {
     private func test() async {
         focus = nil; state = .testing
         do {
-            try await LibraryModel.testConnection(kind: draft.kind, server: draft.server, username: draft.username, password: draft.password, url: draft.url)
+            // editing: an empty field means "keep the saved password", so the test uses that one
+            let password = draft.password.isEmpty ? (editing?.id.flatMap { model.secrets.password(for: $0) } ?? "") : draft.password
+            try await LibraryModel.testConnection(kind: draft.kind, server: draft.server, username: draft.username, password: password, url: draft.url)
             Haptics.success(); state = .ok
         } catch { Haptics.failure(); state = .failed("\(L("onb.test.fail")): \(error.localizedDescription)") }
     }

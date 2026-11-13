@@ -68,6 +68,7 @@ private struct SkipRipple: View {
             .clipped()
             .frame(width: g.size.width, height: g.size.height, alignment: left ? .leading : .trailing)
         }
+        .environment(\.layoutDirection, .leftToRight)      // the side is the physical side of the tap, in every language
         .onAppear { withAnimation(.easeOut(duration: 0.3)) { grown = true } }
     }
 }
@@ -92,6 +93,7 @@ private struct LevelHUD: View {
         .playerSurface(radius: 18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: left ? .leading : .trailing)
         .padding(left ? .leading : .trailing, 28)
+        .environment(\.layoutDirection, .leftToRight)      // brightness on the physical left, volume on the right, in every language
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(L(left ? "player.brightness" : "player.volume"))
         .accessibilityValue("\(Int((value * 100).rounded()))%")

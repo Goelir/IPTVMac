@@ -27,9 +27,9 @@ final class PhoneModel: LibraryModel {
         if let p = player { p.replace(with: r, keeper: seriesPrefsKeeper(for: r)); playing = r; return }
         playing = r
         let p = PhonePlayer(request: r, keeper: seriesPrefsKeeper(for: r))
-        p.onSaveProgress = { [weak self] position, duration in
+        p.onSaveProgress = { [weak self] position, duration, background in
             guard let self, let cur = self.playing else { return }
-            self.saveProgress(cur, position: position, duration: duration)
+            self.saveProgress(cur, position: position, duration: duration, background: background)
         }
         player = p; playStarted = .now
     }

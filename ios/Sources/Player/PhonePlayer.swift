@@ -25,7 +25,7 @@ final class PhonePlayer {
     @ObservationIgnored private let system = PlayerSystem()
 
     /// The model hands out the saved position: (position, duration).
-    @ObservationIgnored var onSaveProgress: ((_ position: Double, _ duration: Double) -> Void)?
+    @ObservationIgnored var onSaveProgress: ((_ position: Double, _ duration: Double, _ background: Bool) -> Void)?
     @ObservationIgnored var onClose: (() -> Void)?
     @ObservationIgnored private weak var model: PhoneModel?
 
@@ -97,7 +97,7 @@ final class PhonePlayer {
         core.mpv.apply(videoScale)
         core.mpv.apply(BufferSize(rawValue: d.string(forKey: "bufferSize") ?? "") ?? .normal)
         applySubtitleStyle()
-        core.onSaveProgress = { [weak self] position, duration, _ in self?.onSaveProgress?(position, duration) }
+        core.onSaveProgress = { [weak self] position, duration, background in self?.onSaveProgress?(position, duration, background) }   // the periodic save runs off the main thread (a sync may be writing)
         core.onEndChanged = { [weak self] ended in self?.endChanged(ended) }
         core.onSleep = { [weak self] in self?.onClose?() }
         system.activate(commands, seekStep: seekStep) { [weak self] in

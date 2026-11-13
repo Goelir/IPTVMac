@@ -8,6 +8,11 @@ import IPTVAppKit
 struct RootView: View {
     @Environment(PhoneModel.self) private var model
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("hiddenCategoryWords") private var hiddenWords = ""
+    /// The layout follows the size class, except while the player is open: on a Plus or Pro Max the player turns the phone to landscape,
+    /// which would swap the tabs for the split view underneath and lose the place in the list.
+    @State private var split: Bool?
     @State private var ui = UIState()
     @AppStorage("appearance") private var appearance = "system"
     @Environment(\.requestReview) private var requestReview
@@ -17,7 +22,7 @@ struct RootView: View {
         @Bindable var ui = ui
         Group {
             if model.accounts.isEmpty { OnboardingView() }
-            else if sizeClass == .regular { SplitLayout() }
+            else if split ?? (sizeClass == .regular) { SplitLayout() }
             else { TabLayout() }
         }
         .preferredColorScheme(appearance == "light" ? .light : appearance == "dark" ? .dark : nil)
@@ -31,14 +36,26 @@ struct RootView: View {
             if model.playing != nil { model.openSeries = nil; ui.openInfo = nil } else { ui.scrollTarget = ui.lastPlayedID }
             // the App Store rating request: only right after the player closed, never while watching (ReviewPrompt has the rules)
             if model.playing == nil, ReviewPrompt().shouldAsk(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") {
-                Task { try? await Task.sleep(for: .seconds(1)); requestReview() }   // after the player's fade-out
+                Task { try? await Task.sleep(for: .seconds(1)); if model.playing == nil { requestReview() } }   // after the player's fade-out, unless something started again
             }
         }
         .onChange(of: ui.section) {
             model.searchText = ""
             if let t = ui.section.itemType, t != model.tab { model.tab = t }
         }
-        .task(id: ContinueKey(all: model.allPlaylists, account: model.account?.id, syncing: model.syncing, idle: model.playing == nil, count: model.accounts.count, removed: model.continueChanged)) {
+        .onChange(of: sizeClass) { if model.player == nil { split = sizeClass == .regular } }
+        .onChange(of: model.player == nil) { _, closed in
+            guard closed else { return }   // the phone turns back after the player; then catch up with anything that changed meanwhile
+            Task { try? await Task.sleep(for: .seconds(1)); if model.player == nil { split = sizeClass == .regular } }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // "Only when the app opens": iOS usually resumes the app instead of starting it again, so coming back counts as opening
+            // once the last sync is more than 6 hours old
+            guard phase == .active, model.refreshHours == 0, !model.syncing, !model.accounts.isEmpty, model.playing == nil,
+                  Date().timeIntervalSince(model.lastSync ?? .distantPast) > 6 * 3600 else { return }
+            Task { await model.sync() }
+        }
+        .task(id: ContinueKey(all: model.allPlaylists, account: model.account?.id, syncing: model.syncing, idle: model.playing == nil, count: model.accounts.count, removed: model.continueChanged, hidden: hiddenWords)) {
             await ui.reloadContinue(model)
         }
         .task {
@@ -48,7 +65,7 @@ struct RootView: View {
         }
     }
 
-    private struct ContinueKey: Hashable { var all: Bool; var account: Int64?; var syncing: Bool; var idle: Bool; var count: Int; var removed: Int }
+    private struct ContinueKey: Hashable { var all: Bool; var account: Int64?; var syncing: Bool; var idle: Bool; var count: Int; var removed: Int; var hidden: String }
 }
 
 // MARK: iPhone

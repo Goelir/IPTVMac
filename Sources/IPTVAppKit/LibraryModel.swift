@@ -436,10 +436,10 @@ open class LibraryModel {
         }
     }
 
-    /// The hidden words changed: the sidebar and the lists are filtered again (a selected category that is now hidden is left).
     /// Settings > "Sort favorites A to Z" changed: the Favorites list is read again in the new order.
     public func favoritesOrderChanged() { if selectedCategory == "__fav" { scheduleSearch() } }
 
+    /// The hidden words changed: the sidebar and the lists are filtered again (a selected category that is now hidden is left).
     public func hiddenCategoriesChanged() {
         loadCategories()
         if !selectedCategory.hasPrefix("__"), !categories.contains(where: { categoryTag($0) == selectedCategory }) { selectedCategory = "__all" }

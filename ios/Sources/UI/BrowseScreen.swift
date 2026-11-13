@@ -268,7 +268,7 @@ extension View {
     func syncRefreshable(_ model: PhoneModel, _ ui: UIState) -> some View {
         refreshable {
             ui.pulling = true
-            await model.sync()
+            await Task { await model.sync() }.value   // not cancelled when the list goes away (another tab) before the sync ends
             ui.pulling = false
             if model.syncMessage == nil { Haptics.success() } else { Haptics.failure() }
         }
