@@ -22,10 +22,11 @@ Completely free and open source. No accounts, no ads, no analytics.
 ![Android 8+](https://img.shields.io/badge/Android-8%2B-3ddc84?style=flat-square&logo=android&logoColor=white)
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/elijr)
 
 [**Download for Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**Download for Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.5) &nbsp;|&nbsp; [**iPhone and iPad (App Store)**](https://apps.apple.com/app/id6821761790) &nbsp;|&nbsp; [**Android and Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.9) &nbsp;|&nbsp; [**All downloads**](https://goelir.github.io/IPTVMac/download/)
 
-If IPTVMac is useful to you, a ⭐ on GitHub helps others find it.
+If IPTVMac is useful to you, a ⭐ on GitHub helps others find it, and you can [buy me a coffee](https://buymeacoffee.com/elijr) to support its development.
 
 <sub>[Website](https://goelir.github.io/IPTVMac/) · [What's new](https://goelir.github.io/IPTVMac/changelog/) · [Install](#install) · [Features](#features) · [FAQ](#faq) · [עברית](README.he.md)</sub>
 
@@ -259,6 +260,12 @@ See [SECURITY.md](SECURITY.md) for how updates are protected, the known limits, 
 Bug reports, translations and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Never paste your server address, username or password in an issue.
 
 To build from source, see [docs/BUILDING.md](docs/BUILDING.md).
+
+## Support the project
+
+IPTVMac is free on every platform, with no ads and nothing locked, and it stays that way. If it is useful to you and you want to help its development, you can [buy me a coffee](https://buymeacoffee.com/elijr). It is entirely voluntary.
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-elijr-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/elijr)
 
 ## License
 

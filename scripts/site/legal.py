@@ -179,6 +179,8 @@ LEGAL = {
 @FAQ@
 <h2>Contact</h2>
 <p>Bugs, questions and feature requests all go to <a href="@ISSUES@" rel="noopener">GitHub issues</a>. IPTVMac is maintained by one developer, so replies are best effort. The source code is public at <a href="@REPO@" rel="noopener">@REPO@</a>. @EMAIL@</p>
+<h2>Support the project</h2>
+<p>IPTVMac is free on every platform, with no ads and nothing locked, and it stays that way. If it is useful to you and you want to help its development, you can <a href="@COFFEE@" rel="noopener">buy me a coffee</a>. It is entirely voluntary.</p>
 """,
   ),
   "he": dict(
@@ -241,6 +243,8 @@ LEGAL = {
 @FAQ@
 <h2>יצירת קשר</h2>
 <p>באגים, שאלות ובקשות לתכונות מופנים אל <a href="@ISSUES@" rel="noopener">הפניות ב-GitHub</a>. IPTVMac מתוחזקת על ידי מפתח אחד, ולכן מענה ניתן במאמץ סביר. קוד המקור פומבי ב-<a href="@REPO@" rel="noopener">@REPO@</a>. @EMAIL@</p>
+<h2>תמיכה בפרויקט</h2>
+<p>IPTVMac חינמית בכל הפלטפורמות, בלי פרסומות ובלי שום דבר נעול, וכך היא תישאר. אם היא מועילה לכם ואתם רוצים לעזור לפיתוח שלה, אפשר <a href="@COFFEE@" rel="noopener">לקנות לי קפה</a>. זה לגמרי מרצון.</p>
 """,
   ),
  },

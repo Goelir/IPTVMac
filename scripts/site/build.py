@@ -40,6 +40,7 @@ YT_INSTALL = "https://youtu.be/TgaoFEEMg48"
 INSTALL_CMD = "curl -fsSL https://raw.githubusercontent.com/Goelir/IPTVMac/main/install.sh | bash"
 UPDATED = "2026-10-06"
 ISSUES = REPO + "/issues"
+COFFEE = "https://buymeacoffee.com/elijr"   # voluntary support for the developer: the apps stay free with nothing locked
 CONTACT_EMAIL = "shayanaccs736@gmail.com"   # public contact address for the privacy and support pages. Apple's "Support URL" must lead to real contact information (an email address is the usual one): set it, then rebuild. Empty = the GitHub issues page is the only contact.
 DEMO_PLAYLIST = BASE + "review/ReviewPlaylist.m3u"   # docs/review/ReviewPlaylist.m3u, the open-licence test playlist (also the App Review playlist, see appstore/review-notes.txt)
 e = html.escape
@@ -280,7 +281,7 @@ HOME = {
   foot_cols=[("Explore", [("#why", "Why IPTVMac"), ("#search", "Search"), ("#iphone", "iPhone and iPad"), ("#devices", "Devices"), ("#guides", "Guides")]),
              ("Platforms", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone and iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
              ("Product", [("why/", "Why IPTVMac"), ("compare/", "Compare"), ("features/", "Features"), ("download/", "Download"), ("changelog/", "What's new"), ("#faq", "Questions"), ("#free", "Free playlists")]),
-             ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support")])],
+             ("Project", [(REPO, "GitHub"), (DOWNLOAD, "Releases"), ("https://www.gnu.org/licenses/gpl-3.0.html", "GPL-3.0 license"), (REPO + "#contributing-translations", "Translate IPTVMac"), ("privacy/", "Privacy policy"), ("support/", "Support"), (COFFEE, "Buy me a coffee")])],
   alt_h="Other IPTV players.", alt_p="IPTVMac runs on Mac, Windows, iPhone and iPad, Android and Android TV. If you need Linux or something different:",
   alt=["IPTVnator is free and open source and also runs on Windows and Linux.", "VLC can open an M3U playlist directly.", "IPTV Smarters Pro has a desktop app for macOS."],
   credit='Demo footage: "Sintel" by the Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. All titles and channels on this page are invented.',
@@ -372,7 +373,7 @@ HOME = {
   foot_cols=[("בעמוד", [("#why", "למה IPTVMac"), ("#search", "חיפוש"), ("#iphone", "iPhone ו-iPad"), ("#devices", "מכשירים"), ("#guides", "מדריכים")]),
              ("פלטפורמות", [("mac/", "Mac"), ("windows/", "Windows"), ("iphone/", "iPhone ו-iPad"), ("android/", "Android"), ("tv/", "Android TV")]),
              ("המוצר", [("why/", "למה IPTVMac"), ("compare/", "השוואה"), ("features/", "תכונות"), ("download/", "הורדה"), ("changelog/", "מה חדש"), ("#faq", "שאלות נפוצות"), ("#free", "רשימות חינמיות")]),
-             ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה")])],
+             ("הפרויקט", [(REPO, "GitHub"), (DOWNLOAD, "גרסאות"), ("https://www.gnu.org/licenses/gpl-3.0.html", "רישיון GPL-3.0"), (REPO + "#contributing-translations", "תרגום IPTVMac"), ("privacy/", "מדיניות פרטיות"), ("support/", "תמיכה"), (COFFEE, "קנו לי קפה")])],
   alt_h="נגני IPTV אחרים.", alt_p="IPTVMac פועל ב-Mac, ב-Windows, ב-iPhone וב-iPad, ב-Android וב-Android TV. אם אתם צריכים Linux או משהו אחר:",
   alt=["IPTVnator חינמי ובקוד פתוח ופועל גם ב-Windows וב-Linux.", "VLC יכול לפתוח רשימת M3U ישירות.", "ל-IPTV Smarters Pro יש אפליקציית שולחן עבודה ל-macOS."],
   credit='קטעי הדגמה: "Sintel" של Blender Foundation, <a href="https://durian.blender.org" rel="noopener">CC BY 3.0</a>. כל הכותרים והערוצים בעמוד בדויים.',
@@ -909,7 +910,7 @@ def legal_page(kind, code):
     faq = "".join(f"<h3>{e(q)}</h3><p>{e(a)}</p>" for q, a in p.get("faq", []))
     body = p["body"].replace("@FAQ@", faq)
     body = body.replace(" @EMAIL@", " " + ui["email"].replace("@MAIL@", CONTACT_EMAIL) if CONTACT_EMAIL else "")
-    for k, v in {"@ISSUES@": ISSUES, "@REPO@": REPO, "@DEMO@": DEMO_PLAYLIST, "@PRIVACY@": "../privacy/", "@SUPPORT@": "../support/",
+    for k, v in {"@ISSUES@": ISSUES, "@REPO@": REPO, "@DEMO@": DEMO_PLAYLIST, "@PRIVACY@": "../privacy/", "@SUPPORT@": "../support/", "@COFFEE@": COFFEE,
                  "@GUIDES@": "../" * depth + "guides/"}.items(): body = body.replace(k, v)
     toc = []
     def ident(m):
@@ -1054,6 +1055,7 @@ def download_page(code):
     hl = d["help_links"]
     help_ = (f'<section class="pg-band" style="padding-top:0" aria-labelledby="help-h"><div class="wrap"><div class="help" data-rv><h2 class="pg-h" id="help-h">{e(d["help_h"])}</h2><p>{e(d["help_p"])}</p>'
              f'<div class="actions"><a class="btn fill" href="../{hl[0][1]}">{e(hl[0][0])}</a><a class="btn" href="../{hl[1][1]}">{e(hl[1][0])}</a></div></div>'
+             f'<p class="pg-fine">{e(d["coffee"])} <a href="{COFFEE}" rel="noopener">{e(d["coffee_link"])}</a></p>'
              f'<p class="pg-fine">{e(d["disclaimer"])}</p></div></section>\n')
     ld = [{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "IPTVMac", "applicationCategory": "MultimediaApplication",
            "operatingSystem": "macOS 14+, Windows 10+, iOS 17+, Android 8+", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": DOWNLOAD, "softwareVersion": VERSION,
@@ -1254,6 +1256,7 @@ Platform pages: Mac {BASE}mac/ , Windows {BASE}windows/ , iPhone and iPad {BASE}
 Features: {BASE}features/
 Release notes: {BASE}changelog/
 Support: {BASE}support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
+Support the developer (voluntary, nothing is locked): {COFFEE}
 
 ## Guides
 """ + "".join(f"- [{g['h1']}]({BASE}guides/{g['slug']}.html): {g['answer']}\n" for g in GUIDES) + f"""

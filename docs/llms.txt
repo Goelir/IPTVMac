@@ -13,6 +13,7 @@ Platform pages: Mac https://goelir.github.io/IPTVMac/mac/ , Windows https://goel
 Features: https://goelir.github.io/IPTVMac/features/
 Release notes: https://goelir.github.io/IPTVMac/changelog/
 Support: https://goelir.github.io/IPTVMac/support/ (how to add a source, troubleshooting, how to report a bug without sharing a login)
+Support the developer (voluntary, nothing is locked): https://buymeacoffee.com/elijr
 
 ## Guides
 - [How to watch Xtream Codes IPTV on a Mac](https://goelir.github.io/IPTVMac/guides/xtream-codes-on-mac.html): Install IPTVMac, choose Xtream Codes, and enter the server address, username and password your provider gave you. IPTVMac downloads the channel list once and then searches it instantly.

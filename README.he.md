@@ -26,12 +26,13 @@ Xtream Codes ו-M3U, חיפוש מיידי, נגן מובנה עם כתוביו�
 ![Android 8+](https://img.shields.io/badge/Android-8%2B-3ddc84?style=flat-square&logo=android&logoColor=white)
 ![Android TV](https://img.shields.io/badge/Android%20TV-Google%20TV%20%7C%20Fire%20TV-3ddc84?style=flat-square&logo=androidtv&logoColor=white)
 [![Stars](https://img.shields.io/github/stars/Goelir/IPTVMac?style=flat-square&logo=github&color=eac54f)](https://github.com/Goelir/IPTVMac/stargazers)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/elijr)
 
 </div>
 
 [**הורדה ל-Mac**](https://github.com/Goelir/IPTVMac/releases/latest) &nbsp;|&nbsp; [**הורדה ל-Windows**](https://github.com/Goelir/IPTVMac/releases/tag/windows-v1.0.5) &nbsp;|&nbsp; [**iPhone ו-iPad (App Store)**](https://apps.apple.com/app/id6821761790) &nbsp;|&nbsp; [**Android ו-Android TV (APK)**](https://github.com/Goelir/IPTVMac/releases/tag/android-v1.0.9) &nbsp;|&nbsp; [**כל ההורדות**](https://goelir.github.io/IPTVMac/he/download/)
 
-אם IPTVMac מועיל לכם, ⭐ ב-GitHub עוזר לאחרים למצוא אותו.
+אם IPTVMac מועיל לכם, ⭐ ב-GitHub עוזר לאחרים למצוא אותו, ואפשר [לקנות לי קפה](https://buymeacoffee.com/elijr) כדי לתמוך בפיתוח.
 
 <sub>[אתר](https://goelir.github.io/IPTVMac/he/) · [מה חדש](https://goelir.github.io/IPTVMac/he/changelog/) · [התקנה](#התקנה) · [יכולות](#יכולות) · [שאלות נפוצות](#שאלות-נפוצות) · [English](README.md)</sub>
 
@@ -275,6 +276,12 @@ https://iptv-org.github.io/iptv/index.m3u
 דיווחי באגים, תרגומים ו-pull requests יתקבלו בברכה: ראו [CONTRIBUTING.md](CONTRIBUTING.md). לעולם אל תדביקו בדיווח כתובת שרת, שם משתמש או סיסמה.
 
 לבנייה מקוד המקור ראו [docs/BUILDING.he.md](docs/BUILDING.he.md).
+
+## תמיכה בפרויקט
+
+IPTVMac חינמית בכל הפלטפורמות, בלי פרסומות ובלי שום דבר נעול, וכך היא תישאר. אם היא מועילה לכם ואתם רוצים לעזור לפיתוח שלה, אפשר [לקנות לי קפה](https://buymeacoffee.com/elijr). זה לגמרי מרצון.
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-elijr-ffdd00?style=flat-square&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/elijr)
 
 ## רישיון
 
