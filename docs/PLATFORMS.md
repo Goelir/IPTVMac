@@ -20,7 +20,7 @@ The iPhone and iPad app is on the App Store, and its full source code is here on
 | **Install** | One tap in the App Store. | You build it: a Mac with Xcode, then `scripts/ios-setup.sh`, then run it on your iPhone or iPad (see [the iPhone and iPad entry above](#iphone-and-ipad)). |
 | **Updates** | Automatic, through the App Store, after Apple has reviewed each version. | When you choose: pull the newest source and build again. GitHub is usually a little ahead of the App Store. |
 | **Signing** | The project's own Apple developer account. | Your own Apple ID. With a free Apple account the app runs for 7 days and you install it again; a paid account lasts a year. |
-| **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
+| **What is inside** | The same code. No ads, no tracking, no paid features; optional tips through Apple. | The same code. No ads, no tracking, no paid features. |
 | **Price** | Free. | Free (GPL-3.0). |
 
 The App Store app also works on Macs with Apple Silicon: search for IPTVMac in the Mac App Store. The full Mac app, with catch-up, downloads and its own updates, is only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases), and so are Windows, Android and Android TV. The Mac and Android apps update themselves from GitHub.

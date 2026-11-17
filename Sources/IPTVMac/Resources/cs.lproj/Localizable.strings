@@ -17,6 +17,11 @@
 "about.privacy.body" = "IPTVMac o vás neshromažďuje žádná data. Nemá účet, analytiku, reklamy ani sledování.\n\nVaše zdroje, oblíbené a historie sledování zůstávají v tomto zařízení. Aplikace se připojuje jen k adresám, které sami přidáte: k serveru poskytovatele, playlistu, programu, logům a streamům.\n\nHesla poskytovatelů jsou uložena v iOS Keychain jen v tomto zařízení. Nikdy nejsou součástí záložního souboru.\n\nIPTVMac neobsahuje žádné kanály, filmy ani playlisty. Zdroj si přinášíte sami.";
 "about.source" = "Zdrojový kód a licence";
 "about.coffee" = "Kupte mi kávu";
+"tips.title" = "Podpořte IPTVMac";
+"tips.footer" = "Dobrovolné spropitné přes Apple. Nic neodemyká: všechny funkce zůstávají zdarma pro všechny.";
+"tips.thanks" = "Děkujeme za vaši podporu!";
+"tips.pending" = "Čeká se na schválení.";
+"tips.failed" = "Spropitné neprošlo. Zkuste to později.";
 "about.version" = "Verze";
 "cat.title" = "Kategorie";
 "common.cancel" = "Zrušit";

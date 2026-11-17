@@ -17,6 +17,11 @@
 "about.privacy.body" = "IPTVMac tidak mengumpulkan data apa pun tentang Anda. Tidak ada akun, analitik, iklan, maupun pelacakan.\n\nSumber, favorit, dan riwayat tontonan Anda tetap berada di perangkat ini. Aplikasi hanya terhubung ke alamat yang Anda tambahkan sendiri: server penyedia, daftar putar, panduan program, logo, dan aliran siaran.\n\nKata sandi penyedia disimpan di iOS Keychain hanya di perangkat ini. Kata sandi tidak pernah disertakan dalam file cadangan.\n\nIPTVMac tidak menyertakan saluran, film, atau daftar putar. Anda membawa sumber sendiri.";
 "about.source" = "Kode sumber dan lisensi";
 "about.coffee" = "Traktir saya kopi";
+"tips.title" = "Dukung IPTVMac";
+"tips.footer" = "Tip opsional melalui Apple. Tip tidak membuka apa pun: semua fitur tetap gratis untuk semua orang.";
+"tips.thanks" = "Terima kasih atas dukungan Anda!";
+"tips.pending" = "Menunggu persetujuan.";
+"tips.failed" = "Tip tidak berhasil. Coba lagi nanti.";
 "about.version" = "Versi";
 "cat.title" = "Kategori";
 "common.cancel" = "Batal";

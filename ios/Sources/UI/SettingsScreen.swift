@@ -193,6 +193,7 @@ private struct ClearSection: View {
 
 struct AboutScreen: View {
     @Environment(\.openURL) private var openURL
+    @State private var tips = TipJar.shared
     private var version: String {
         let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
         let b = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
@@ -212,6 +213,7 @@ struct AboutScreen: View {
                 .accessibilityElement(children: .combine)
             }
             Section { Text(L("onb.noChannels")).font(.callout).foregroundStyle(.secondary) }.brandRows()
+            if !tips.products.isEmpty { tipSection }
             Section {
                 NavigationLink(value: SettingsRoute.privacy) { Label(L("about.privacy"), systemImage: "hand.raised") }
                 NavigationLink(value: SettingsRoute.acknowledgements) { Label(L("about.acknowledgements"), systemImage: "doc.text") }
@@ -220,6 +222,36 @@ struct AboutScreen: View {
         }
         .scrollContentBackground(.hidden).background(Brand.canvas)
         .navigationTitle(L("settings.about")).navigationBarTitleDisplayMode(.inline)
+        .task { await tips.load() }
+        .onChange(of: tips.status) { _, s in if s == .thanked { Haptics.success() } else if s == .failed { Haptics.failure() } }
+    }
+
+    /// Optional tips through Apple (TipJar): name and price from App Store Connect, a thank-you line after a tip. Unlocks nothing.
+    private var tipSection: some View {
+        Section {
+            ForEach(tips.products, id: \.id) { p in
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(p.displayName)
+                        if !p.description.isEmpty { Text(p.description).font(.caption).foregroundStyle(.secondary) }
+                    }
+                    Spacer(minLength: 8)
+                    Button { Haptics.press(); Task { await tips.buy(p) } } label: {
+                        if tips.status == .buying(p.id) { ProgressView() } else { Text(p.displayPrice).monospacedDigit() }
+                    }
+                    .buttonStyle(.bordered).squared()
+                    .disabled({ if case .buying = tips.status { return true } else { return false } }())
+                    .accessibilityLabel("\(p.displayName), \(p.displayPrice)")
+                }
+            }
+            switch tips.status {
+            case .thanked: Label(L("tips.thanks"), systemImage: "heart.fill").foregroundStyle(Brand.accentText)
+            case .pending: Label(L("tips.pending"), systemImage: "hourglass").foregroundStyle(.secondary)
+            case .failed: Label(L("tips.failed"), systemImage: "exclamationmark.triangle").foregroundStyle(.secondary)
+            default: EmptyView()
+            }
+        } header: { Text(L("tips.title")) } footer: { Text(L("tips.footer")) }
+        .brandRows()
     }
 }
 

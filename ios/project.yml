@@ -101,5 +101,5 @@ targets:
 schemes:
   IPTVPhone:
     build: { targets: { IPTVPhone: all } }
-    run: { config: Debug }
+    run: { config: Debug, storeKitConfiguration: Tests/Tips.storekit }   # tips in the simulator from the local StoreKit file, no App Store
     test: { config: Debug, targets: [IPTVPhoneTests, IPTVPhoneUITests] }

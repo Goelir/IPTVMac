@@ -9,6 +9,7 @@ import SwiftUI
         #endif
         // Logos and posters: a bigger share of the shared URL cache (it also backs "Clear image cache").
         URLCache.shared = URLCache(memoryCapacity: 48 << 20, diskCapacity: 400 << 20)
+        TipJar.shared.listen()    // finishes tips that completed while the app was closed (Ask to Buy)
         let m = PhoneModel()
         m.loadAccounts()          // before the first frame: a returning user must not see the welcome screen for an instant
         _model = State(initialValue: m)

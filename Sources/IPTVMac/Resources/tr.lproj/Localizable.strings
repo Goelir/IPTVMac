@@ -17,6 +17,11 @@
 "about.privacy.body" = "IPTVMac hakkınızda hiçbir veri toplamaz. Hesap, analiz, reklam ve izleme yoktur.\n\nKaynaklarınız, favorileriniz ve izleme geçmişiniz bu cihazda kalır. Uygulama yalnızca sizin eklediğiniz adreslere bağlanır: sağlayıcınızın sunucusu, oynatma listesi, program rehberi, logolar ve yayınlar.\n\nSağlayıcı parolaları yalnızca bu cihazdaki iOS Keychain’de saklanır. Hiçbir zaman yedek dosyasına dahil edilmez.\n\nIPTVMac kanal, film veya oynatma listesi içermez. Kaynağı siz getirirsiniz.";
 "about.source" = "Kaynak kodu ve lisans";
 "about.coffee" = "Bana bir kahve ısmarlayın";
+"tips.title" = "IPTVMac'i destekleyin";
+"tips.footer" = "Apple üzerinden isteğe bağlı bahşiş. Hiçbir şeyin kilidini açmaz: tüm özellikler herkes için ücretsiz kalır.";
+"tips.thanks" = "Desteğiniz için teşekkürler!";
+"tips.pending" = "Onay bekleniyor.";
+"tips.failed" = "Bahşiş gerçekleşmedi. Daha sonra tekrar deneyin.";
 "about.version" = "Sürüm";
 "cat.title" = "Kategoriler";
 "common.cancel" = "İptal";

@@ -17,6 +17,11 @@
 "about.privacy.body" = "IPTVMac 不會蒐集任何關於你的資料。它沒有帳號、沒有分析、沒有廣告，也沒有追蹤。\n\n你的來源、我的最愛和觀看紀錄都只會保存在這部裝置上。App 只會連線到你自己加入的位址：供應商的伺服器、播放清單、節目表、頻道標誌和串流。\n\n供應商密碼僅儲存在這部裝置的 iOS Keychain 中，絕不會包含在備份檔案裡。\n\nIPTVMac 不包含任何頻道、電影或播放清單，來源需要你自己提供。";
 "about.source" = "原始碼與授權";
 "about.coffee" = "請我喝杯咖啡";
+"tips.title" = "支持 IPTVMac";
+"tips.footer" = "透過 Apple 的自願打賞。打賞不會解鎖任何內容：所有功能對所有人都維持免費。";
+"tips.thanks" = "感謝你的支持！";
+"tips.pending" = "正在等待核准。";
+"tips.failed" = "打賞未成功。請稍後再試。";
 "about.version" = "版本";
 "cat.title" = "分類";
 "common.cancel" = "取消";

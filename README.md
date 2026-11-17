@@ -9,7 +9,7 @@ Xtream Codes and M3U, instant search, a built-in player with subtitles, Picture 
 Completely free and open source. No accounts, no ads, no analytics.
 
 <a href="https://apps.apple.com/app/id6821761790"><img src="docs/assets/app-store-badge-en.svg" alt="Download on the App Store" height="56"></a><br>
-**iPhone and iPad: on the App Store, completely free.** No ads, no subscription, no in-app purchases.
+**iPhone and iPad: on the App Store, completely free.** No ads, no subscription, no paid features. An optional tip through Apple unlocks nothing.
 
 <br>
 
@@ -61,7 +61,7 @@ The iPhone and iPad app is on the App Store, and its full source code is here on
 | **Install** | One tap in the App Store. | You build it: a Mac with Xcode, then `scripts/ios-setup.sh`, then run it on your iPhone or iPad (see [docs/PLATFORMS.md](docs/PLATFORMS.md#windows-iphone-android-and-android-tv)). |
 | **Updates** | Automatic, through the App Store, after Apple has reviewed each version. | When you choose: pull the newest source and build again. GitHub is usually a little ahead of the App Store. |
 | **Signing** | The project's own Apple developer account. | Your own Apple ID. With a free Apple account the app runs for 7 days and you install it again; a paid account lasts a year. |
-| **What is inside** | The same code. No ads, no tracking, no purchases. | The same code. No ads, no tracking, no purchases. |
+| **What is inside** | The same code. No ads, no tracking, no paid features; optional tips through Apple. | The same code. No ads, no tracking, no paid features. |
 | **Price** | Free. | Free (GPL-3.0). |
 
 ### On a Mac: the App Store app or the Mac app from GitHub?
@@ -80,7 +80,7 @@ The App Store app also works on Macs with Apple Silicon (search for IPTVMac in t
 | **Preview on the time bar** | While you drag. | When you point at it. |
 | **Passwords** | The Keychain. | The app's private database, or the Keychain if you choose (Settings > Playlists). |
 | **Search, favorites, continue watching, skip intro and credits, 31 languages** | Yes. | Yes. |
-| **Price** | Free. No ads, no tracking, no purchases. | Free (GPL-3.0). No ads, no tracking. |
+| **Price** | Free. No ads, no tracking, no paid features; optional tips through Apple. | Free (GPL-3.0). No ads, no tracking. |
 
 Windows, Android and Android TV are only on [GitHub Releases](https://github.com/Goelir/IPTVMac/releases). The Mac and Android apps update themselves from GitHub.
 
