@@ -2,13 +2,13 @@ import Foundation
 import Observation
 import StoreKit
 
-/// Optional tips through Apple's In-App Purchase: three consumable products that unlock nothing (every feature is free for everyone).
+/// Optional tips through Apple's In-App Purchase: four consumable products that unlock nothing (every feature is free for everyone).
 /// The products and their prices live in App Store Connect; until they are approved `products` stays empty and the About screen
 /// shows no tip section at all. Nothing is stored: a tip has no effect inside the app besides the thank-you line.
 @MainActor @Observable
 final class TipJar {
     static let shared = TipJar()
-    static let productIDs = ["io.github.goelir.IPTVMac.tip.small", "io.github.goelir.IPTVMac.tip.medium", "io.github.goelir.IPTVMac.tip.large"]
+    static let productIDs = ["tip_small", "tip_coffee", "tip_lunch", "tip_super"]   // as created in App Store Connect; shown by price
 
     enum Status: Equatable { case idle, buying(String), thanked, pending, failed }
 

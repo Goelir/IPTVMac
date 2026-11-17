@@ -1,41 +1,77 @@
 {
-  "identifier" : "6F3A1C2E",
-  "nonRenewingSubscriptions" : [ ],
-  "products" : [
+  "identifier": "6F3A1C2E",
+  "nonRenewingSubscriptions": [],
+  "products": [
     {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "6821761901",
-      "localizations" : [ { "description" : "A small thank-you.", "displayName" : "Small tip", "locale" : "en_US" } ],
-      "productID" : "io.github.goelir.IPTVMac.tip.small",
-      "referenceName" : "Small tip",
-      "type" : "Consumable"
+      "displayPrice": "0.99",
+      "familyShareable": false,
+      "internalID": "6821761901",
+      "localizations": [
+        {
+          "description": "A small thank-you.",
+          "displayName": "Small Tip",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "tip_small",
+      "referenceName": "Small Tip",
+      "type": "Consumable"
     },
     {
-      "displayPrice" : "2.99",
-      "familyShareable" : false,
-      "internalID" : "6821761902",
-      "localizations" : [ { "description" : "A coffee for the developer.", "displayName" : "Medium tip", "locale" : "en_US" } ],
-      "productID" : "io.github.goelir.IPTVMac.tip.medium",
-      "referenceName" : "Medium tip",
-      "type" : "Consumable"
+      "displayPrice": "2.99",
+      "familyShareable": false,
+      "internalID": "6821761902",
+      "localizations": [
+        {
+          "description": "A coffee for the developer.",
+          "displayName": "Buy Me a Coffee",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "tip_coffee",
+      "referenceName": "Buy Me a Coffee",
+      "type": "Consumable"
     },
     {
-      "displayPrice" : "4.99",
-      "familyShareable" : false,
-      "internalID" : "6821761903",
-      "localizations" : [ { "description" : "A big thank-you.", "displayName" : "Large tip", "locale" : "en_US" } ],
-      "productID" : "io.github.goelir.IPTVMac.tip.large",
-      "referenceName" : "Large tip",
-      "type" : "Consumable"
+      "displayPrice": "9.99",
+      "familyShareable": false,
+      "internalID": "6821761903",
+      "localizations": [
+        {
+          "description": "Lunch for the developer.",
+          "displayName": "Buy Me Lunch",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "tip_lunch",
+      "referenceName": "Buy Me Lunch",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "19.99",
+      "familyShareable": false,
+      "internalID": "6821761904",
+      "localizations": [
+        {
+          "description": "Directly funds future development.",
+          "displayName": "Amazing support",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "tip_super",
+      "referenceName": "Amazing support",
+      "type": "Consumable"
     }
   ],
-  "settings" : {
-    "_failTransactionsEnabled" : false,
-    "_locale" : "en_US",
-    "_storefront" : "USA",
-    "_storeKitErrors" : [ ]
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": []
   },
-  "subscriptionGroups" : [ ],
-  "version" : { "major" : 3, "minor" : 0 }
+  "subscriptionGroups": [],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
 }
