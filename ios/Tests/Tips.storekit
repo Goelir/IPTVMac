@@ -23,7 +23,7 @@
       "internalID": "6821761902",
       "localizations": [
         {
-          "description": "A coffee for the developer.",
+          "description": "Fuel a late-night coding session with a cup of coffee.",
           "displayName": "Buy Me a Coffee",
           "locale": "en_US"
         }
@@ -53,13 +53,13 @@
       "internalID": "6821761904",
       "localizations": [
         {
-          "description": "Directly funds future development.",
-          "displayName": "Amazing support",
+          "description": "Amazing support that directly funds future features.",
+          "displayName": "Super Supporter Tip",
           "locale": "en_US"
         }
       ],
       "productID": "tip_super",
-      "referenceName": "Amazing support",
+      "referenceName": "Super Supporter Tip",
       "type": "Consumable"
     }
   ],
